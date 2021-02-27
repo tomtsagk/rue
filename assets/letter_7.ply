@@ -1,0 +1,30 @@
+ply
+format ascii 1.0
+comment Created by Blender 2.79 (sub 0) - www.blender.org, source file: 'font-lowpoly.blend'
+element vertex 8
+property float x
+property float y
+property float z
+element face 12
+property list uchar uint vertex_indices
+end_header
+-0.185838 0.160178 0.064341
+0.045982 0.126336 0.064341
+0.194888 0.231247 0.064341
+-0.167224 -0.369453 0.064341
+-0.263372 0.158643 -0.083797
+0.258134 0.275115 -0.083797
+0.017135 0.110206 -0.083797
+-0.202681 -0.438517 -0.083797
+3 0 1 2
+3 1 3 2
+3 4 5 6
+3 6 5 7
+3 0 4 6
+3 3 7 5
+3 3 1 6
+3 0 2 5
+3 1 0 6
+3 2 3 5
+3 7 3 6
+3 4 0 5

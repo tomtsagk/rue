@@ -1,0 +1,135 @@
+(include "intro.ddh")
+
+# Init intro
+(class_function dd_world_main create (group)
+	(group
+
+	# initialise animation values
+	(dd_clearColour 0 0 0 1)
+	(= this.counter 0)
+	(= this.positive 1)
+	(= this.delay 30)
+
+	# initialise dd logo
+	(this.logo.load (asset "assets/logo.ply" DD_PLY))
+	(this.logo.set_colour 0 0 0)
+
+	# initialise dd sound
+	(this.sound.load (asset "assets/dd_theme.asset" 0) 0)
+	(= this.soundPlayed 0)
+
+	# used for resizing
+	(= this.scale 1)
+
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setColorFront 0.0 0.0 0.0)
+	(this.font.setColorBack 0.0 0.0 0.0)
+
+	)
+) # create
+
+(class_function dd_world_main onload (group)
+	(group
+	)
+)
+
+# Resize to keep the logo constantly visible
+(class_function dd_world_main resize (group)
+	(group
+
+	(def float height)
+	(= height (/ (dd_screen_height_get 5) 3.5)) # height of logo
+	(def float width)
+	(= width (/ (dd_screen_width_get 5) 6.3)) # width of logo
+
+	(if (< width height)
+		(= this.scale width)
+	# else
+		(= this.scale height)
+	)
+
+	)
+) # resize
+
+# update - update animations
+(class_function dd_world_main update (group)
+	(group
+
+	# on delay do nothing
+	(if (> this.delay 0)
+		(= this.delay (- this.delay 1))
+	# else
+		(group
+
+		# update clear colour
+		(dd_clearColour (* this.counter 0.8) (* this.counter 0.6) (* this.counter 1) 1)
+
+		# advance animation
+		(if this.positive
+			(group
+			(= this.counter (+ this.counter 0.02))
+
+			(if (&& (> this.counter 0.25) (== this.soundPlayed 0))
+				(group
+				#(this.sound.play)
+				(= this.soundPlayed 1)
+				)
+			)
+			(if (>= this.counter 1)
+				(group
+				(= this.counter 1)
+				(= this.positive 0)
+				(= this.delay 100)
+				)
+			)
+			)
+		# negative advance of animation
+			(group
+			(= this.counter (- this.counter 0.02))
+			(if (<= this.counter 0)
+				(group
+				(= this.counter 0)
+				(dd_clearColour 0 0 0 1)
+				)
+			)
+			)
+		)
+		)
+	) # if delay
+
+	)
+) # update
+
+# draw
+# zoom-out so the world is visible
+# rotate the world
+# draw the cube
+(class_function dd_world_main draw (group)
+	(group
+	(dd_translatef 0 0 -5)
+	(dd_scalef this.scale this.scale this.scale)
+	(dd_translatef 0 0.5 0)
+	(this.logo.draw)
+	(dd_translatef 0 -1.5 0)
+	(dd_scalef 0.8 0.8 0.1)
+	(this.font.draw "dark dimension")
+	)
+)
+
+(class_function dd_world_main key_input (group char key)
+	(group
+	(if (== key 27)
+		(= dd_flag_exit 1) # exit game
+	)
+	)
+)
+
+
+# Clean intro world
+(class_function dd_world_main clean (group)
+	(group
+	#(this.sound.clean)
+	#(this.logo.clean)
+	#(dd_world_clean this)
+	)
+)

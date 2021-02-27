@@ -1,0 +1,39 @@
+# dark dimension intro
+(class dd_world_main dd_world
+	(group
+
+	# tracking timing
+	(def float counter)
+	(def int positive)
+	(def int delay)
+
+	# dark dimension logo
+	(def dd_meshColour logo)
+
+	(def dd_sound sound)
+	(def int soundPlayed)
+
+	(def float scale)
+
+	(def dd_string3d font)
+
+	# constractor
+	(function create (group))
+	(function onload (group))
+	(function resize (group))
+
+	# update - update animations
+	(function update (group))
+
+	# draw
+	# zoom-out so the world is visible
+	# rotate the world
+	# draw the cube
+	(function draw (group))
+
+	(function key_input (group char key))
+
+	(function clean (group))
+
+	)
+) # main world
