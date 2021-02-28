@@ -128,8 +128,5 @@
 # Clean intro world
 (class_function dd_world_main clean (group)
 	(group
-	#(this.sound.clean)
-	#(this.logo.clean)
-	#(dd_world_clean this)
 	)
 )
