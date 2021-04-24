@@ -1,5 +1,5 @@
 # dark dimension intro
-(class dd_world_main dd_world
+(class world_intro dd_world
 	(group
 
 	# tracking timing
@@ -18,22 +18,22 @@
 	(def dd_string3d font)
 
 	# constractor
-	(function create (group))
-	(function onload (group))
-	(function resize (group))
+	(function void create (group))
+	(function void onload (group))
+	(function void resize (group))
 
 	# update - update animations
-	(function update (group))
+	(function void update (group))
 
 	# draw
 	# zoom-out so the world is visible
 	# rotate the world
 	# draw the cube
-	(function draw (group))
+	(function void draw (group))
 
-	(function key_input (group char key))
+	(function void key_input (group char key))
 
-	(function clean (group))
+	(function void clean (group))
 
 	)
 ) # main world

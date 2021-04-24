@@ -58,7 +58,7 @@ android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ -I .
+	avdl -c $< -o $@ -I include
 
 
 ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ply
@@ -81,7 +81,7 @@ ${NATIVE_OUT}: ${NATIVE_OBJ}
 # android - compile files
 #
 ${DIRECTORY_ANDROID_OBJ}/%.c: src/%.dd ${HEADERS}
-	avdl --android -t $< -o $@ -I .
+	avdl --android -t $< -o $@ -I include
 
 #
 # make any directory needed

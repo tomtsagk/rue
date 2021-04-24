@@ -1,0 +1,132 @@
+(include "game.ddh")
+
+(class_function world_game void create (group)
+	(group
+
+	# camera control
+	(= this.rotX 0)
+	(= this.rotY 0)
+	(= this.targetRotX 0)
+	(= this.targetRotY 0)
+	(= this.holdRotX -1)
+	(= this.holdRotY -1)
+
+	# center of world
+	(dd_matrix_identity this.matCenter)
+	(dd_matrix_translate this.matCenter 0 -5 -10)
+
+	# stage
+	(this.stage.load (asset "assets/stage_1.asset" DD_PLY))
+
+	(this.myMesh.load (asset "assets/logo.asset" DD_PLY))
+	(this.myMesh.set_colour 0 1 0)
+
+	(= this.playersTotal 10)
+
+	#(this.myCard.load (asset "assets/card.ply" DD_PLY))
+	#(this.myCard.loadTexture (asset "assets/card_action_1_childish_king.bmp" 0))
+
+	#(this.cards[0].load (asset "assets/card.ply" DD_PLY))
+	#(this.cards[0].loadTexture (asset "assets/card_action_1_childish_king.bmp" 0))
+
+	(echo "game create")
+	(dd_clearColour 0.5 0 0 1)
+
+	)
+)
+
+(class_function world_game void onload (group)
+	(group
+	)
+)
+
+#(class_function world_game void resize (group)
+#	(group
+#	)
+#)
+
+(class_function world_game void update (group)
+	(group
+
+	# calculate new camera look at point
+	(if (>= this.holdRotX 0)
+		(group
+		(= this.targetRotX (+ this.targetRotX (- (dd_mouse_x) this.holdRotX)))
+		(= this.holdRotX (dd_mouse_x))
+
+		(= this.targetRotY (- this.targetRotY (- (dd_mouse_y) this.holdRotY)))
+		(= this.holdRotY (dd_mouse_y))
+		)
+	)
+
+	# slowly approach camera look at point
+	(= this.rotX (dd_math_ease_linear 0.1 this.rotX this.targetRotX))
+	(= this.rotY (dd_math_ease_linear 0.1 this.rotY this.targetRotY))
+
+	)
+) # update
+
+(class_function world_game void draw (group)
+	(group
+
+	# camera
+	(dd_rotatef this.rotY -1 0 0)
+	(dd_rotatef this.rotX 0 1 0)
+
+	# center of world
+	(dd_multMatrixf this.matCenter)
+
+	# stage
+	(this.stage.draw)
+
+	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_push)
+		(dd_rotatef (* 36 i) 0 1 0)
+		(dd_translatef 0 0 5)
+
+		(if (== i 0)
+			(group
+			(dd_rotatef -10 1 0 0)
+			(dd_translatef 0 -2 0)
+			)
+		)
+		(this.player[i].draw)
+		(dd_matrix_pop)
+		)
+	)
+
+	)
+)
+
+(class_function world_game void key_input (group char key)
+	(group
+	(if (== key 27)
+		(= dd_flag_exit 1) # exit game
+	)
+	)
+)
+
+(class_function world_game void clean (group)
+	(group
+	)
+)
+
+(class_function world_game void mouse_input (group int button int type)
+	(group
+
+	# control the camera look at point when click and dragging
+	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+		(group
+		(= this.holdRotX (dd_mouse_x))
+		(= this.holdRotY (dd_mouse_y))
+		)
+	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+		(group
+		(= this.holdRotX -1)
+		(= this.holdRotY -1)
+		)
+	)
+
+	)
+) # mouse input

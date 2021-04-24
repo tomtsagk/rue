@@ -1,0 +1,36 @@
+#(include "intro.ddh")
+(include "player.ddh")
+
+# game world
+(class world_game dd_world
+	(group
+
+	# camera control
+	(def float rotX)
+	(def float rotY)
+	(def float targetRotX)
+	(def float targetRotY)
+	(def float holdRotX)
+	(def float holdRotY)
+
+	# center of world
+	(def dd_matrix matCenter)
+
+	# stage
+	(def dd_meshColour stage)
+
+	(def dd_meshColour myMesh)
+	(def Player player[10])
+	(def int playersTotal)
+
+	(function void create (group))
+	(function void onload (group))
+	#(function void resize (group))
+	(function void update (group))
+	(function void draw (group))
+	(function void key_input (group char key))
+	(function void mouse_input (group int button int type))
+	(function void clean (group))
+
+	)
+) # game world

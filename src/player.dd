@@ -1,0 +1,47 @@
+(include "player.ddh")
+
+(class_function Player void create (group)
+	(group
+	(= this.cards 0)
+	(this.cardMesh.load (asset "assets/card.asset" DD_PLY))
+	(this.cardMesh.loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
+	(dd_matrix_identity this.mat1)
+	(dd_matrix_translate this.mat1 0 0 -5)
+
+	(= this.cardsTotal 5)
+	(def float width (+ (* (dd_screen_width_get 5) 2) 2.6))
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_identity this.mat[i])
+		(dd_matrix_translate this.mat[i] (+ (/ width -2) (* (/ width (+ this.cardsTotal 1)) (+ i 1))) 0 -5)
+		)
+	)
+	#(for (def int i 0) (< i 3) (= i (+ i 1))
+	#	(group
+	#	(= this.cards[i] 0)
+	#	)
+	#)
+	)
+)
+
+(class_function Player void draw (group)
+	(group
+
+	#(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+	(for (def int i 0) (< i 1) (= i (+ i 1))
+		(group
+		(dd_matrix_push)
+		(dd_translatef 0 2 0)
+		#(dd_multMatrixf this.mat[i])
+		(this.cardMesh.draw)
+		(dd_matrix_pop)
+		)
+	)
+
+	)
+)
+
+(class_function Player void clean (group)
+	(group
+	)
+)

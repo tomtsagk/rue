@@ -1,0 +1,21 @@
+# player class
+(class Player dd_matrix
+	(group
+
+	(def int cards)
+	(def dd_meshTexture cardMesh)
+
+	(def dd_matrix mat1)
+	(def dd_matrix mat[50])
+	(def int cardsTotal)
+
+	(function void create (group))
+	#(function onload (group))
+	#(function resize (group))
+	#(function update (group))
+	(function void draw (group))
+	#(function key_input (group char key))
+	(function void clean (group))
+
+	)
+) # game world

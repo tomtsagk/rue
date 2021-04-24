@@ -1,18 +1,20 @@
 #
 # include the default world
 #
-(include "intro.ddh")
+#(include "intro.ddh")
+(include "game.ddh")
 
 #
 # Initialise the game and its stats
 #
-(function dd_gameInit (group)
+(function void dd_gameInit (group)
 	(group
 
 	(dd_string3d_activate (asset "assets/letter_?.asset" PLY))
 
 	(dd_setGameTitle "Project Rose")
-	(dd_world_set_default dd_world_main)
+	#(dd_world_set_default world_intro)
+	(dd_world_set_default world_game)
 
 	)
 )

@@ -1,7 +1,7 @@
 (include "intro.ddh")
 
 # Init intro
-(class_function dd_world_main create (group)
+(class_function world_intro void create (group)
 	(group
 
 	# initialise animation values
@@ -11,11 +11,12 @@
 	(= this.delay 30)
 
 	# initialise dd logo
-	(this.logo.load (asset "assets/logo.ply" DD_PLY))
+	#(this.logo.load (asset "assets/logo.ply" DD_PLY))
+	(this.logo.load (asset "assets/logo.asset" DD_PLY))
 	(this.logo.set_colour 0 0 0)
 
 	# initialise dd sound
-	(this.sound.load (asset "assets/dd_theme.asset" 0) 0)
+	(this.sound.load (asset "assets/dd_theme.asset" DD_PLY) 0)
 	(= this.soundPlayed 0)
 
 	# used for resizing
@@ -28,13 +29,13 @@
 	)
 ) # create
 
-(class_function dd_world_main onload (group)
+(class_function world_intro void onload (group)
 	(group
 	)
 )
 
 # Resize to keep the logo constantly visible
-(class_function dd_world_main resize (group)
+(class_function world_intro void resize (group)
 	(group
 
 	(def float height)
@@ -52,7 +53,7 @@
 ) # resize
 
 # update - update animations
-(class_function dd_world_main update (group)
+(class_function world_intro void update (group)
 	(group
 
 	# on delay do nothing
@@ -89,6 +90,7 @@
 			(if (<= this.counter 0)
 				(group
 				(= this.counter 0)
+				(dd_world_prepareReady world_intro 1)
 				(dd_clearColour 0 0 0 1)
 				)
 			)
@@ -104,8 +106,9 @@
 # zoom-out so the world is visible
 # rotate the world
 # draw the cube
-(class_function dd_world_main draw (group)
+(class_function world_intro void draw (group)
 	(group
+
 	(dd_translatef 0 0 -5)
 	(dd_scalef this.scale this.scale this.scale)
 	(dd_translatef 0 0.5 0)
@@ -113,10 +116,11 @@
 	(dd_translatef 0 -1.5 0)
 	(dd_scalef 0.8 0.8 0.1)
 	(this.font.draw "dark dimension")
+
 	)
 )
 
-(class_function dd_world_main key_input (group char key)
+(class_function world_intro void key_input (group char key)
 	(group
 	(if (== key 27)
 		(= dd_flag_exit 1) # exit game
@@ -126,7 +130,7 @@
 
 
 # Clean intro world
-(class_function dd_world_main clean (group)
+(class_function world_intro void clean (group)
 	(group
 	)
 )
