@@ -1,0 +1,14 @@
+# card class
+(class Card dd_matrix
+	(group
+
+	(def int id)
+	(def ref dd_meshTexture mesh)
+
+	(function void create (group))
+	(function void clean (group))
+
+	(function void draw (group))
+
+	)
+) # card

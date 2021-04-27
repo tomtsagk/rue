@@ -18,8 +18,15 @@
 
 	# stage
 	(def dd_meshColour stage)
+	(def dd_meshColour table)
 
-	(def dd_meshColour myMesh)
+	# card meshes
+	(def dd_meshTexture meshes[10])
+
+	# cards
+	(def Card cards[20])
+
+	# players
 	(def Player player[10])
 	(def int playersTotal)
 

@@ -1,5 +1,7 @@
 (include "game.ddh")
 
+(def extern ref dd_meshColour newCardMesh)
+(def extern ref Card newCard)
 (class_function world_game void create (group)
 	(group
 
@@ -13,24 +15,38 @@
 
 	# center of world
 	(dd_matrix_identity this.matCenter)
-	(dd_matrix_translate this.matCenter 0 -5 -10)
+	(dd_matrix_translate this.matCenter 0 -4 -5)
 
 	# stage
 	(this.stage.load (asset "assets/stage_1.asset" DD_PLY))
+	(this.table.load (asset "assets/table_1.asset" DD_PLY))
 
-	(this.myMesh.load (asset "assets/logo.asset" DD_PLY))
-	(this.myMesh.set_colour 0 1 0)
+	# card meshes
+	(this.meshes[0].load (asset "assets/card.asset" DD_PLY))
+	(this.meshes[0].loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
 
-	(= this.playersTotal 10)
+	# cards
+	(= this.cards[0].mesh this.meshes[0])
+	(= this.cards[1].mesh this.meshes[0])
+	(= this.cards[2].mesh this.meshes[0])
+	(= this.cards[3].mesh this.meshes[0])
+	(= this.cards[4].mesh this.meshes[0])
+	(= this.cards[5].mesh this.meshes[0])
 
-	#(this.myCard.load (asset "assets/card.ply" DD_PLY))
-	#(this.myCard.loadTexture (asset "assets/card_action_1_childish_king.bmp" 0))
+	# players
+	(= this.playersTotal 8)
 
-	#(this.cards[0].load (asset "assets/card.ply" DD_PLY))
-	#(this.cards[0].loadTexture (asset "assets/card_action_1_childish_king.bmp" 0))
-
-	(echo "game create")
-	(dd_clearColour 0.5 0 0 1)
+	(this.player[3].addCard this.cards[0])
+	(this.player[3].addCard this.cards[1])
+	(this.player[6].addCard this.cards[2])
+	(this.player[2].addCard this.cards[3])
+	(this.player[5].addCard this.cards[4])
+	(this.player[6].addCard this.cards[5])
+	#(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
+	#(for (def int j 0) (< j 6) (= j (+ j 1))
+	#	(this.player[i].addCard2 this.cards[0])
+	#)
+	#)
 
 	)
 )
@@ -78,12 +94,19 @@
 
 	# stage
 	(this.stage.draw)
+	(this.table.draw)
 
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
 		(group
 		(dd_matrix_push)
-		(dd_rotatef (* 36 i) 0 1 0)
+		(dd_rotatef (+ 15 (* (/ 330.0 this.playersTotal) i)) 0 1 0)
 		(dd_translatef 0 0 5)
+
+		(if (< i (/ this.playersTotal 2))
+			(dd_rotatef 10 0 1 0)
+		(> i (/ this.playersTotal 2))
+			(dd_rotatef -10 0 1 0)
+		)
 
 		(if (== i 0)
 			(group
@@ -92,6 +115,7 @@
 			)
 		)
 		(this.player[i].draw)
+		#(this.cards[0].draw)
 		(dd_matrix_pop)
 		)
 	)

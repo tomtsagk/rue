@@ -1,0 +1,21 @@
+(include "card.ddh")
+
+(class_function Card void create (group)
+	(group
+
+	(= this.id 0)
+
+	)
+)
+
+(class_function Card void draw (group)
+	(group
+	(dd_multMatrixf this)
+	(this.mesh.draw)
+	)
+)
+
+(class_function Card void clean (group)
+	(group
+	)
+)

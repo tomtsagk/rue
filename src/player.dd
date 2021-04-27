@@ -2,46 +2,91 @@
 
 (class_function Player void create (group)
 	(group
-	(= this.cards 0)
+
+	# player itself
+	(this.mesh.load (asset "assets/character.asset" DD_PLY))
+	(this.mesh.loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
+
 	(this.cardMesh.load (asset "assets/card.asset" DD_PLY))
 	(this.cardMesh.loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
-	(dd_matrix_identity this.mat1)
-	(dd_matrix_translate this.mat1 0 0 -5)
 
-	(= this.cardsTotal 5)
-	(def float width (+ (* (dd_screen_width_get 5) 2) 2.6))
-	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
-		(group
-		(dd_matrix_identity this.mat[i])
-		(dd_matrix_translate this.mat[i] (+ (/ width -2) (* (/ width (+ this.cardsTotal 1)) (+ i 1))) 0 -5)
-		)
-	)
-	#(for (def int i 0) (< i 3) (= i (+ i 1))
-	#	(group
-	#	(= this.cards[i] 0)
-	#	)
-	#)
+	# individual cards
+	(= this.cardsTotal 0)
+
+	# font
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setColorFront 1.0 1.0 1.0)
+	(this.font.setColorBack 0.0 0.0 0.0)
+
 	)
 )
 
 (class_function Player void draw (group)
 	(group
 
-	#(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
-	(for (def int i 0) (< i 1) (= i (+ i 1))
+	(dd_matrix_push)
+
+	# draw player
+	(dd_rotatef 180 0 1 0)
+	(this.mesh.draw)
+	(dd_rotatef 180 0 1 0)
+
+	# translation for cards
+	(dd_translatef 0 2.5 -0.3)
+	(dd_scalef 0.15 0.15 0.15)
+
+	# draw cards
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
 		(dd_matrix_push)
-		(dd_translatef 0 2 0)
-		#(dd_multMatrixf this.mat[i])
-		(this.cardMesh.draw)
+		(this.cards2[i].draw)
+
+		#(def int cardid this.cards3.id)
+		#(echo "card draw id: " cardid)
+		#(this.cards3.draw)
+		#(this.cards2[i].draw)
+		#(dd_multMatrixf this.cards[i])
+		#(this.cardMesh.draw)
 		(dd_matrix_pop)
 		)
 	)
+
+	# draw number of cards
+	(dd_rotatef 180 0 1 0)
+	(dd_translatef 0 0 0.6)
+	(dd_scalef 3 3 3)
+	(this.font.drawInt this.cardsTotal)
+	(def int temp this.cardsTotal)
+
+	(dd_matrix_pop)
 
 	)
 )
 
 (class_function Player void clean (group)
 	(group
+	)
+)
+
+# add new card to the hand
+(def ref dd_meshColour newCardMesh)
+(def ref Card newCard)
+
+(class_function Player void addCard (group Card card)
+	(group
+	(= this.cards2[this.cardsTotal] card)
+	(= this.cardsTotal (+ this.cardsTotal 1))
+	(this.calculateCardPositions)
+	)
+)
+
+(class_function Player void calculateCardPositions (group)
+	(group
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_identity this.cards2[i])
+		(dd_matrix_translate this.cards2[i] (- (* i 2.7) (/ (* (- this.cardsTotal 1) 2.7) 2)) 0 0)
+		)
+	)
 	)
 )

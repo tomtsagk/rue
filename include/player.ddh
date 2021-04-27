@@ -1,21 +1,29 @@
+(include "card.ddh")
+
 # player class
 (class Player dd_matrix
 	(group
 
-	(def int cards)
+	# player itself
+	(def dd_meshTexture mesh)
+
+	# cards
+	(def Card cards[10])
+	(def int cardsTotal)
+	(def ref Card cards2[10])
+	(def ref Card cards3)
+
+	# temp
+	(def dd_string3d font)
 	(def dd_meshTexture cardMesh)
 
-	(def dd_matrix mat1)
-	(def dd_matrix mat[50])
-	(def int cardsTotal)
-
+	# functions
 	(function void create (group))
-	#(function onload (group))
-	#(function resize (group))
-	#(function update (group))
 	(function void draw (group))
-	#(function key_input (group char key))
 	(function void clean (group))
 
+	(function void addCard (group Card card))
+	(function void calculateCardPositions (group))
+
 	)
-) # game world
+) # player
