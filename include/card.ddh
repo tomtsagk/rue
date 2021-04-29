@@ -4,6 +4,7 @@
 
 	(def int id)
 	(def ref dd_meshTexture mesh)
+	(def ref dd_meshTexture meshBack)
 
 	(function void create (group))
 	(function void clean (group))

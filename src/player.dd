@@ -3,9 +3,11 @@
 (class_function Player void create (group)
 	(group
 
+	(= this.isUser 0)
+
 	# player itself
 	(this.mesh.load (asset "assets/character.asset" DD_PLY))
-	(this.mesh.loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
+	(this.mesh.loadTexture (asset "assets/character_1.asset" DD_PLY))
 
 	(this.cardMesh.load (asset "assets/card.asset" DD_PLY))
 	(this.cardMesh.loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
@@ -22,6 +24,42 @@
 )
 
 (class_function Player void draw (group)
+	(group
+
+	(if this.isUser
+		(this.drawUser)
+		(this.drawAI)
+	)
+
+	)
+)
+
+(class_function Player void drawUser (group)
+	(group
+
+	(dd_matrix_push)
+
+	# translation for cards
+	#(dd_translatef 0 3.5 0)
+	#(dd_rotatef -30 1 0 0)
+	#(dd_translatef 0 0 -1.2)
+	#(dd_scalef 0.15 0.15 0.15)
+
+	# draw cards
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_push)
+		(this.cards2[i].draw)
+		(dd_matrix_pop)
+		)
+	)
+
+	(dd_matrix_pop)
+
+	)
+)
+
+(class_function Player void drawAI (group)
 	(group
 
 	(dd_matrix_push)
@@ -76,7 +114,11 @@
 	(group
 	(= this.cards2[this.cardsTotal] card)
 	(= this.cardsTotal (+ this.cardsTotal 1))
-	(this.calculateCardPositions)
+
+	(if this.isUser
+		(this.calculateCardPositionsUser)
+		(this.calculateCardPositions)
+	)
 	)
 )
 
@@ -86,6 +128,21 @@
 		(group
 		(dd_matrix_identity this.cards2[i])
 		(dd_matrix_translate this.cards2[i] (- (* i 2.7) (/ (* (- this.cardsTotal 1) 2.7) 2)) 0 0)
+		)
+	)
+	)
+)
+
+(class_function Player void calculateCardPositionsUser (group)
+	(group
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_identity this.cards2[i])
+		(dd_matrix_translate this.cards2[i] 0 3.7 0)
+		(dd_matrix_rotate this.cards2[i] (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
+		(dd_matrix_rotate this.cards2[i] -35 1 0 0)
+		(dd_matrix_translate this.cards2[i] 0 0 -1.2)
+		(dd_matrix_scale this.cards2[i] 0.15 0.15 0.15)
 		)
 	)
 	)

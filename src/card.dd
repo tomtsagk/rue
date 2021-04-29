@@ -12,6 +12,7 @@
 	(group
 	(dd_multMatrixf this)
 	(this.mesh.draw)
+	(this.meshBack.draw)
 	)
 )
 

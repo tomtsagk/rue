@@ -21,14 +21,18 @@
 	(def dd_meshColour table)
 
 	# card meshes
-	(def dd_meshTexture meshes[10])
+	(def dd_meshTexture cardBack)
+	(def dd_meshTexture cardFront[10])
 
 	# cards
-	(def Card cards[20])
+	(def int cardsTotal)
+	(def Card cards[48])
 
 	# players
 	(def Player player[10])
 	(def int playersTotal)
+
+	(def float rotating)
 
 	(function void create (group))
 	(function void onload (group))

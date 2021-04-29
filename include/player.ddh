@@ -4,6 +4,9 @@
 (class Player dd_matrix
 	(group
 
+	# user works a bit different than AI
+	(def int isUser)
+
 	# player itself
 	(def dd_meshTexture mesh)
 
@@ -20,10 +23,13 @@
 	# functions
 	(function void create (group))
 	(function void draw (group))
+	(function void drawUser (group))
+	(function void drawAI (group))
 	(function void clean (group))
 
 	(function void addCard (group Card card))
 	(function void calculateCardPositions (group))
+	(function void calculateCardPositionsUser (group))
 
 	)
 ) # player

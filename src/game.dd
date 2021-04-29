@@ -21,32 +21,40 @@
 	(this.stage.load (asset "assets/stage_1.asset" DD_PLY))
 	(this.table.load (asset "assets/table_1.asset" DD_PLY))
 
-	# card meshes
-	(this.meshes[0].load (asset "assets/card.asset" DD_PLY))
-	(this.meshes[0].loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
+	# card back
+	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
+	(this.cardBack.loadTexture (asset "assets/card_border_texture.asset" DD_PLY))
+
+	# card cardFront
+	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[0].loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
+
+	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[1].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
 
 	# cards
-	(= this.cards[0].mesh this.meshes[0])
-	(= this.cards[1].mesh this.meshes[0])
-	(= this.cards[2].mesh this.meshes[0])
-	(= this.cards[3].mesh this.meshes[0])
-	(= this.cards[4].mesh this.meshes[0])
-	(= this.cards[5].mesh this.meshes[0])
+	(= this.cardsTotal 48)
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(def int index (dd_math_rand 2))
+		(= this.cards[i].mesh this.cardFront[index])
+		(= this.cards[i].meshBack this.cardBack)
+		)
+	)
 
 	# players
 	(= this.playersTotal 8)
+	(= this.player[0].isUser 1)
+	(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
+	(for (def int j 0) (< j 5) (= j (+ j 1))
+		(group
+		(def int index (+ (* i 5) j))
+		(this.player[i].addCard this.cards[index])
+		)
+	)
+	)
 
-	(this.player[3].addCard this.cards[0])
-	(this.player[3].addCard this.cards[1])
-	(this.player[6].addCard this.cards[2])
-	(this.player[2].addCard this.cards[3])
-	(this.player[5].addCard this.cards[4])
-	(this.player[6].addCard this.cards[5])
-	#(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
-	#(for (def int j 0) (< j 6) (= j (+ j 1))
-	#	(this.player[i].addCard2 this.cards[0])
-	#)
-	#)
+	(= this.rotating 0)
 
 	)
 )
@@ -63,6 +71,8 @@
 
 (class_function world_game void update (group)
 	(group
+
+	(= this.rotating (+ this.rotating 1))
 
 	# calculate new camera look at point
 	(if (>= this.holdRotX 0)
@@ -96,6 +106,7 @@
 	(this.stage.draw)
 	(this.table.draw)
 
+	# draw every player apart from self
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
 		(group
 		(dd_matrix_push)
@@ -108,17 +119,22 @@
 			(dd_rotatef -10 0 1 0)
 		)
 
-		(if (== i 0)
-			(group
-			(dd_rotatef -10 1 0 0)
-			(dd_translatef 0 -2 0)
-			)
-		)
 		(this.player[i].draw)
-		#(this.cards[0].draw)
 		(dd_matrix_pop)
 		)
 	)
+
+	# draw player
+	(dd_matrix_push)
+	(dd_translatef 0 0 5)
+	(this.player[0].draw)
+	(dd_matrix_pop)
+
+	(dd_translatef 0 3.5 0)
+	(dd_rotatef this.rotating 0 1 0)
+	(dd_scalef 0.5 0.5 0.5)
+	(this.cardBack.draw)
+	(this.cardFront[1].draw)
 
 	)
 )
