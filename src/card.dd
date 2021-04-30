@@ -4,15 +4,18 @@
 	(group
 
 	(= this.id 0)
+	(dd_matrix_identity this.target)
 
 	)
 )
 
 (class_function Card void draw (group)
 	(group
+	(dd_matrix_push)
 	(dd_multMatrixf this)
 	(this.mesh.draw)
 	(this.meshBack.draw)
+	(dd_matrix_pop)
 	)
 )
 

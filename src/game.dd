@@ -27,32 +27,74 @@
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[0].loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
+	(this.cardFront[0].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
 
 	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[1].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
+	(this.cardFront[1].loadTexture (asset "assets/card_action_3.asset" DD_PLY))
+
+	(this.cardFront[2].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[2].loadTexture (asset "assets/card_action_4.asset" DD_PLY))
+
+	(this.cardFront[3].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[3].loadTexture (asset "assets/card_action_5.asset" DD_PLY))
+
+	(this.cardFront[4].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[4].loadTexture (asset "assets/card_action_6.asset" DD_PLY))
 
 	# cards
 	(= this.cardsTotal 48)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(def int index (dd_math_rand 2))
+		(def int index (dd_math_rand 5))
 		(= this.cards[i].mesh this.cardFront[index])
 		(= this.cards[i].meshBack this.cardBack)
+		(dd_matrix_identity this.cards[i])
 		)
 	)
 
-	# players
-	(= this.playersTotal 8)
-	(= this.player[0].isUser 1)
-	(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
-	(for (def int j 0) (< j 5) (= j (+ j 1))
+	# deck
+	(dd_matrix_identity this.deckMatrix)
+	(dd_matrix_translate this.deckMatrix 0 2 0)
+	(dd_matrix_rotate this.deckMatrix 90 1 0 0)
+	(dd_matrix_scale this.deckMatrix 0.2 0.2 0.2)
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(def int index (+ (* i 5) j))
-		(this.player[i].addCard this.cards[index])
+		(= this.deck[i] this.cards[i])
+		(dd_matrix_mult this.cards[i].target this.deckMatrix)
+		(dd_matrix_copy this.cards[i] this.cards[i].target)
 		)
 	)
+
+	# players 3-8
+	(= this.playersTotal 8)
+	(= this.player[0].isUser 1)
+
+	# init player positions
+	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_identity this.player[i])
+		(dd_matrix_rotate this.player[i] (+ 15 (* (/ 330.0 this.playersTotal) i)) 0 1 0)
+		(dd_matrix_translate this.player[i] 0 0 5)
+
+		(if (< i (/ this.playersTotal 2))
+			(dd_matrix_rotate this.player[i] 10 0 1 0)
+		(> i (/ this.playersTotal 2))
+			(dd_matrix_rotate this.player[i] -10 0 1 0)
+		)
+
+		(dd_matrix_rotate this.player[i] 180 0 1 0)
+		)
 	)
+	(dd_matrix_identity this.player[0])
+	(dd_matrix_translate this.player[0] 0 0 5)
+#	(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
+#	(for (def int j 0) (< j 5) (= j (+ j 1))
+#		(group
+#		(def int index (+ (* i 5) j))
+#		(this.player[i].addCard this.cards[index])
+#		)
+#	)
+#	)
 
 	(= this.rotating 0)
 
@@ -89,6 +131,13 @@
 	(= this.rotX (dd_math_ease_linear 0.1 this.rotX this.targetRotX))
 	(= this.rotY (dd_math_ease_linear 0.1 this.rotY this.targetRotY))
 
+	# update all cards to approach target
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_approach this.cards[i] this.cards[i].target 0.1)
+		)
+	)
+
 	)
 ) # update
 
@@ -106,19 +155,22 @@
 	(this.stage.draw)
 	(this.table.draw)
 
+	# draw deck
+	(dd_matrix_push)
+	#(dd_multMatrixf this.deckMatrix)
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(if this.deck[i]
+			(this.deck[i].draw)
+		)
+		)
+	)
+	(dd_matrix_pop)
+
 	# draw every player apart from self
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
 		(group
 		(dd_matrix_push)
-		(dd_rotatef (+ 15 (* (/ 330.0 this.playersTotal) i)) 0 1 0)
-		(dd_translatef 0 0 5)
-
-		(if (< i (/ this.playersTotal 2))
-			(dd_rotatef 10 0 1 0)
-		(> i (/ this.playersTotal 2))
-			(dd_rotatef -10 0 1 0)
-		)
-
 		(this.player[i].draw)
 		(dd_matrix_pop)
 		)
@@ -126,15 +178,16 @@
 
 	# draw player
 	(dd_matrix_push)
-	(dd_translatef 0 0 5)
+	#(dd_translatef 0 0 5)
 	(this.player[0].draw)
 	(dd_matrix_pop)
 
-	(dd_translatef 0 3.5 0)
-	(dd_rotatef this.rotating 0 1 0)
-	(dd_scalef 0.5 0.5 0.5)
-	(this.cardBack.draw)
-	(this.cardFront[1].draw)
+	# rotating card
+#	(dd_translatef 0 3.5 0)
+#	(dd_rotatef this.rotating 0 1 0)
+#	(dd_scalef 0.5 0.5 0.5)
+#	(this.cardBack.draw)
+#	(this.cardFront[1].draw)
 
 	)
 )
@@ -143,7 +196,23 @@
 	(group
 	(if (== key 27)
 		(= dd_flag_exit 1) # exit game
-	)
+	# test 'd' give random card to random player
+	(== key 100)
+		(group
+		(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+			(group
+			(if this.deck[i]
+				(group
+				(def int index (dd_math_rand this.playersTotal))
+				(this.player[index].addCard this.deck[i])
+				(= this.deck[i] 0)
+				(= i 100)
+				)
+			)
+			)
+		)
+		) # 'd' button
+	) # key input
 	)
 )
 

@@ -28,6 +28,10 @@
 	(def int cardsTotal)
 	(def Card cards[48])
 
+	# deck
+	(def dd_matrix deckMatrix)
+	(def ref Card deck[48])
+
 	# players
 	(def Player player[10])
 	(def int playersTotal)

@@ -62,41 +62,21 @@
 (class_function Player void drawAI (group)
 	(group
 
-	(dd_matrix_push)
-
 	# draw player
-	(dd_rotatef 180 0 1 0)
+	(dd_matrix_push)
+	(dd_multMatrixf this)
 	(this.mesh.draw)
-	(dd_rotatef 180 0 1 0)
-
-	# translation for cards
-	(dd_translatef 0 2.5 -0.3)
-	(dd_scalef 0.15 0.15 0.15)
+	(dd_translatef 0 2.2 0.4)
+	(dd_scalef 0.5 0.5 0.5)
+	(this.font.drawInt this.cardsTotal)
+	(dd_matrix_pop)
 
 	# draw cards
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_push)
 		(this.cards2[i].draw)
-
-		#(def int cardid this.cards3.id)
-		#(echo "card draw id: " cardid)
-		#(this.cards3.draw)
-		#(this.cards2[i].draw)
-		#(dd_multMatrixf this.cards[i])
-		#(this.cardMesh.draw)
-		(dd_matrix_pop)
 		)
 	)
-
-	# draw number of cards
-	(dd_rotatef 180 0 1 0)
-	(dd_translatef 0 0 0.6)
-	(dd_scalef 3 3 3)
-	(this.font.drawInt this.cardsTotal)
-	(def int temp this.cardsTotal)
-
-	(dd_matrix_pop)
 
 	)
 )
@@ -112,6 +92,11 @@
 
 (class_function Player void addCard (group Card card)
 	(group
+
+	# apply limit
+	(if (>= this.cardsTotal 10)
+		(echo "CANNOT GIVE MORE CARDS")
+	(group
 	(= this.cards2[this.cardsTotal] card)
 	(= this.cardsTotal (+ this.cardsTotal 1))
 
@@ -120,14 +105,21 @@
 		(this.calculateCardPositions)
 	)
 	)
+	)
+
+	)
 )
 
 (class_function Player void calculateCardPositions (group)
 	(group
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_identity this.cards2[i])
-		(dd_matrix_translate this.cards2[i] (- (* i 2.7) (/ (* (- this.cardsTotal 1) 2.7) 2)) 0 0)
+		(dd_matrix_identity this.cards2[i].target)
+		(dd_matrix_mult this.cards2[i].target this)
+		(dd_matrix_translate this.cards2[i].target 0 2.5 0.3)
+		(dd_matrix_scale this.cards2[i].target 0.15 0.15 0.15)
+		(dd_matrix_translate this.cards2[i].target (- (* i 2.7) (/ (* (- this.cardsTotal 1) 2.7) 2)) 0 0)
+		(dd_matrix_rotate this.cards2[i].target 180 0 1 0)
 		)
 	)
 	)
@@ -137,12 +129,14 @@
 	(group
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_identity this.cards2[i])
-		(dd_matrix_translate this.cards2[i] 0 3.7 0)
-		(dd_matrix_rotate this.cards2[i] (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
-		(dd_matrix_rotate this.cards2[i] -35 1 0 0)
-		(dd_matrix_translate this.cards2[i] 0 0 -1.2)
-		(dd_matrix_scale this.cards2[i] 0.15 0.15 0.15)
+		(dd_matrix_identity this.cards2[i].target)
+		(dd_matrix_mult this.cards2[i].target this)
+		(dd_matrix_translate this.cards2[i].target 0 3.7 0)
+		(dd_matrix_rotate this.cards2[i].target (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
+		(dd_matrix_rotate this.cards2[i].target -35 1 0 0)
+		(dd_matrix_translate this.cards2[i].target 0 0 -1.2)
+		(dd_matrix_rotate this.cards2[i].target 15 1 0 0)
+		(dd_matrix_scale this.cards2[i].target 0.15 0.15 0.15)
 		)
 	)
 	)

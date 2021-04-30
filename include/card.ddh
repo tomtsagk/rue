@@ -6,6 +6,8 @@
 	(def ref dd_meshTexture mesh)
 	(def ref dd_meshTexture meshBack)
 
+	(def dd_matrix target)
+
 	(function void create (group))
 	(function void clean (group))
 
