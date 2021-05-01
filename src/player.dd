@@ -9,9 +9,6 @@
 	(this.mesh.load (asset "assets/character.asset" DD_PLY))
 	(this.mesh.loadTexture (asset "assets/character_1.asset" DD_PLY))
 
-	(this.cardMesh.load (asset "assets/card.asset" DD_PLY))
-	(this.cardMesh.loadTexture (asset "assets/card_action_1_childish_king.asset" DD_PLY))
-
 	# individual cards
 	(= this.cardsTotal 0)
 
@@ -19,6 +16,14 @@
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.font.setColorFront 1.0 1.0 1.0)
 	(this.font.setColorBack 0.0 0.0 0.0)
+
+	# selection
+	(= this.selectedCard -1)
+	(= this.selectedCard2 0)
+	(dd_matrix_identity this.selectedMatrix)
+	(dd_matrix_translate this.selectedMatrix 0 2 2)
+	(dd_matrix_rotate this.selectedMatrix 90 1 0 0)
+	(dd_matrix_scale this.selectedMatrix 0.15 0.15 0.15)
 
 	)
 )
@@ -31,30 +36,23 @@
 		(this.drawAI)
 	)
 
+	# draw cards
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(this.cards[i].draw)
+		)
+	)
+
+	# draw selected card
+	(if this.selectedCard2
+		(this.selectedCard2.draw)
+	)
+
 	)
 )
 
 (class_function Player void drawUser (group)
 	(group
-
-	(dd_matrix_push)
-
-	# translation for cards
-	#(dd_translatef 0 3.5 0)
-	#(dd_rotatef -30 1 0 0)
-	#(dd_translatef 0 0 -1.2)
-	#(dd_scalef 0.15 0.15 0.15)
-
-	# draw cards
-	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
-		(group
-		(dd_matrix_push)
-		(this.cards2[i].draw)
-		(dd_matrix_pop)
-		)
-	)
-
-	(dd_matrix_pop)
 
 	)
 )
@@ -70,13 +68,6 @@
 	(dd_scalef 0.5 0.5 0.5)
 	(this.font.drawInt this.cardsTotal)
 	(dd_matrix_pop)
-
-	# draw cards
-	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
-		(group
-		(this.cards2[i].draw)
-		)
-	)
 
 	)
 )
@@ -97,7 +88,7 @@
 	(if (>= this.cardsTotal 10)
 		(echo "CANNOT GIVE MORE CARDS")
 	(group
-	(= this.cards2[this.cardsTotal] card)
+	(= this.cards[this.cardsTotal] card)
 	(= this.cardsTotal (+ this.cardsTotal 1))
 
 	(if this.isUser
@@ -114,12 +105,12 @@
 	(group
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_identity this.cards2[i].target)
-		(dd_matrix_mult this.cards2[i].target this)
-		(dd_matrix_translate this.cards2[i].target 0 2.5 0.3)
-		(dd_matrix_scale this.cards2[i].target 0.15 0.15 0.15)
-		(dd_matrix_translate this.cards2[i].target (- (* i 2.7) (/ (* (- this.cardsTotal 1) 2.7) 2)) 0 0)
-		(dd_matrix_rotate this.cards2[i].target 180 0 1 0)
+		(dd_matrix_identity this.cards[i].target)
+		(dd_matrix_mult this.cards[i].target this)
+		(dd_matrix_translate this.cards[i].target 0 2.5 0.3)
+		(dd_matrix_scale this.cards[i].target 0.15 0.15 0.15)
+		(dd_matrix_translate this.cards[i].target (- (* i 2.7) (/ (* (- this.cardsTotal 1) 2.7) 2)) 0 0)
+		(dd_matrix_rotate this.cards[i].target 180 0 1 0)
 		)
 	)
 	)
@@ -129,15 +120,57 @@
 	(group
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_identity this.cards2[i].target)
-		(dd_matrix_mult this.cards2[i].target this)
-		(dd_matrix_translate this.cards2[i].target 0 3.7 0)
-		(dd_matrix_rotate this.cards2[i].target (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
-		(dd_matrix_rotate this.cards2[i].target -35 1 0 0)
-		(dd_matrix_translate this.cards2[i].target 0 0 -1.2)
-		(dd_matrix_rotate this.cards2[i].target 15 1 0 0)
-		(dd_matrix_scale this.cards2[i].target 0.15 0.15 0.15)
+		(dd_matrix_identity this.cards[i].target)
+		(dd_matrix_mult this.cards[i].target this)
+		(dd_matrix_translate this.cards[i].target 0 3.7 0)
+		(dd_matrix_rotate this.cards[i].target (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
+		(dd_matrix_rotate this.cards[i].target -35 1 0 0)
+		(dd_matrix_translate this.cards[i].target 0 0 -1.2)
+		(dd_matrix_rotate this.cards[i].target 15 1 0 0)
+		(dd_matrix_scale this.cards[i].target 0.15 0.15 0.15)
 		)
 	)
+	)
+)
+
+(class_function Player void selectCard (group)
+	(group
+
+	(if (<= this.cardsTotal 0)
+		(group
+		(echo "cannot select card, no cards left")
+		)
+		(group
+
+		(def int index (dd_math_rand this.cardsTotal))
+		(= this.selectedCard (dd_math_rand this.cardsTotal))
+		(= this.selectedCard2 this.cards[index])
+		(dd_matrix_identity this.selectedCard2.target)
+		(dd_matrix_mult this.selectedCard2.target this)
+		(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
+
+		# remove card from array
+		(for (def int i (+ index 1)) (< i this.cardsTotal) (= i (+ i 1))
+			(group
+			(def int prevIndex (- i 1))
+			(= this.cards[prevIndex] this.cards[i])
+			)
+		)
+
+		(= this.cardsTotal (- this.cardsTotal 1))
+		(if this.isUser
+			(this.calculateCardPositionsUser)
+			(this.calculateCardPositions)
+		)
+
+		)
+	)
+
+	)
+)
+
+(class_function Player void deselectCard (group)
+	(group
+	(= this.selectedCard -1)
 	)
 )

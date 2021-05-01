@@ -6,6 +6,8 @@
 	(= this.id 0)
 	(dd_matrix_identity this.target)
 
+	(= this.hidden 0)
+
 	)
 )
 
@@ -13,7 +15,9 @@
 	(group
 	(dd_matrix_push)
 	(dd_multMatrixf this)
-	(this.mesh.draw)
+	(if (== this.hidden 0)
+		(this.mesh.draw)
+	)
 	(this.meshBack.draw)
 	(dd_matrix_pop)
 	)

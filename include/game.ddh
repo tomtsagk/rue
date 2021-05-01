@@ -5,6 +5,16 @@
 (class world_game dd_world
 	(group
 
+	# game states
+	(def int stateCurrent)
+	(def int stateNext)
+	(def float stateAnimation)
+	(def int stateValue)
+	(def int waitingPlayerCard)
+
+	# font
+	(def dd_string3d font)
+
 	# camera control
 	(def float rotX)
 	(def float rotY)
@@ -31,8 +41,10 @@
 	# deck
 	(def dd_matrix deckMatrix)
 	(def ref Card deck[48])
+	(def int deckTotal)
 
 	# players
+	(def int startingPlayer)
 	(def Player player[10])
 	(def int playersTotal)
 
@@ -46,6 +58,8 @@
 	(function void key_input (group char key))
 	(function void mouse_input (group int button int type))
 	(function void clean (group))
+
+	(function void drawCard (group int playerIndex))
 
 	)
 ) # game world

@@ -11,14 +11,15 @@
 	(def dd_meshTexture mesh)
 
 	# cards
-	(def Card cards[10])
 	(def int cardsTotal)
-	(def ref Card cards2[10])
-	(def ref Card cards3)
+	(def ref Card cards[10])
 
-	# temp
+	# font
 	(def dd_string3d font)
-	(def dd_meshTexture cardMesh)
+
+	(def int selectedCard)
+	(def dd_matrix selectedMatrix)
+	(def ref Card selectedCard2)
 
 	# functions
 	(function void create (group))
@@ -30,6 +31,9 @@
 	(function void addCard (group Card card))
 	(function void calculateCardPositions (group))
 	(function void calculateCardPositionsUser (group))
+
+	(function void selectCard (group))
+	(function void deselectCard (group))
 
 	)
 ) # player

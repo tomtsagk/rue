@@ -2,11 +2,18 @@
 (class Card dd_matrix
 	(group
 
+	# id of card - determines it's effect
 	(def int id)
+
+	# front and back of the card
 	(def ref dd_meshTexture mesh)
 	(def ref dd_meshTexture meshBack)
 
+	# it's desired location (where it constantly moves to)
 	(def dd_matrix target)
+
+	# if true, do not render its actual front side (hidden from user)
+	(def int hidden)
 
 	(function void create (group))
 	(function void clean (group))

@@ -1,9 +1,27 @@
 (include "game.ddh")
 
+# game static states
+(def int STATE_IDLE 0)
+(def int STATE_DELAY 1)
+(def int STATE_INIT 2)
+(def int STATE_PLAYCARDS 3)
+
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
 (class_function world_game void create (group)
 	(group
+
+	# game states
+	(= this.stateCurrent STATE_DELAY)
+	(= this.stateNext STATE_INIT)
+	(= this.stateAnimation 100)
+	(= this.stateValue 0)
+	(= this.waitingPlayerCard 0)
+
+	# font
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setColorFront 1.0 1.0 1.0)
+	(this.font.setColorBack 0.0 0.0 0.0)
 
 	# camera control
 	(= this.rotX 0)
@@ -54,20 +72,23 @@
 
 	# deck
 	(dd_matrix_identity this.deckMatrix)
-	(dd_matrix_translate this.deckMatrix 0 2 0)
+	(dd_matrix_translate this.deckMatrix -0.5 2 0)
 	(dd_matrix_rotate this.deckMatrix 90 1 0 0)
 	(dd_matrix_scale this.deckMatrix 0.2 0.2 0.2)
+	(= this.deckTotal 0)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
 		(= this.deck[i] this.cards[i])
 		(dd_matrix_mult this.cards[i].target this.deckMatrix)
 		(dd_matrix_copy this.cards[i] this.cards[i].target)
+		(= this.deckTotal (+ this.deckTotal 1))
 		)
 	)
 
 	# players 3-8
 	(= this.playersTotal 8)
 	(= this.player[0].isUser 1)
+	(= this.startingPlayer 0)
 
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
@@ -87,15 +108,8 @@
 	)
 	(dd_matrix_identity this.player[0])
 	(dd_matrix_translate this.player[0] 0 0 5)
-#	(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
-#	(for (def int j 0) (< j 5) (= j (+ j 1))
-#		(group
-#		(def int index (+ (* i 5) j))
-#		(this.player[i].addCard this.cards[index])
-#		)
-#	)
-#	)
 
+	# temp rotating card
 	(= this.rotating 0)
 
 	)
@@ -113,6 +127,98 @@
 
 (class_function world_game void update (group)
 	(group
+
+	# idle state - do nothing
+	(if (== this.stateCurrent STATE_IDLE)
+		(group)
+	# delay for next state
+	(== this.stateCurrent STATE_DELAY)
+		(group
+		(= this.stateAnimation (- this.stateAnimation 1))
+		(if (<= this.stateAnimation 0)
+			(group
+			(= this.stateCurrent this.stateNext)
+			(= this.stateNext 0)
+			(= this.stateValue 0)
+			)
+		)
+		)
+	# initialise game state - deal cards to players
+	(== this.stateCurrent STATE_INIT)
+		(group
+
+		# delay before dealing another card
+		(if (> this.stateAnimation 0)
+			(group
+			(= this.stateAnimation (- this.stateAnimation 1))
+			)
+		# deal one card to the next player
+			(group
+			(this.drawCard (% this.stateValue this.playersTotal))
+			(= this.stateValue (+ this.stateValue 1))
+			(= this.stateAnimation 5)
+
+			# dealt all cards
+			(if (>= this.stateValue (* this.playersTotal 6))
+				(group
+				(= this.stateCurrent STATE_PLAYCARDS)
+				(= this.startingPlayer (dd_math_rand this.playersTotal))
+				(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
+					(this.player[i].deselectCard)
+				)
+				(= this.stateValue this.startingPlayer)
+				)
+			)
+
+			)
+		) # deal cards
+
+		)
+	# each player selects one card to play
+	(== this.stateCurrent STATE_PLAYCARDS)
+		(group
+
+		(if this.waitingPlayerCard
+			(group)
+		# all players picked cards
+		(== this.stateValue (+ this.startingPlayer this.playersTotal))
+			(group
+			(echo "everyone picked a card")
+			(= this.stateCurrent STATE_IDLE)
+			)
+		# delay before selecting a card
+		(> this.stateAnimation 0)
+			(= this.stateAnimation (- this.stateAnimation 1))
+		# next player should select a card
+			(group
+
+			(def int playerIndex (% this.stateValue this.playersTotal))
+
+			# user has to select a card manually
+			(if (== playerIndex 0)
+				(group
+				(echo "waiting user to select a card")
+				(= this.waitingPlayerCard 1)
+				)
+			# AI will randomly select a card
+				(group
+				(this.player[playerIndex].selectCard)
+				(= this.stateAnimation 50)
+
+				(def int cardIndex this.player[playerIndex].selectedCard)
+				(echo "player: " playerIndex " picked card " cardIndex)
+
+				(= this.stateValue (+ this.stateValue 1))
+
+				)
+			) # user or AI select a card
+
+			)
+		) # check who has to play cards
+
+		)
+
+	) # states handling
 
 	(= this.rotating (+ this.rotating 1))
 
@@ -157,14 +263,20 @@
 
 	# draw deck
 	(dd_matrix_push)
-	#(dd_multMatrixf this.deckMatrix)
-	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+	(for (def int i 0) (< i this.deckTotal) (= i (+ i 1))
 		(group
 		(if this.deck[i]
 			(this.deck[i].draw)
 		)
 		)
 	)
+	(dd_multMatrixf this.deckMatrix)
+
+	# draw deck number
+	(dd_rotatef 180 1 0 0)
+	(dd_translatef 0 0 0.5)
+	(dd_rotatef 90 1 0 0)
+	(this.font.drawInt this.deckTotal)
 	(dd_matrix_pop)
 
 	# draw every player apart from self
@@ -199,19 +311,19 @@
 	# test 'd' give random card to random player
 	(== key 100)
 		(group
-		(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(this.drawCard (dd_math_rand this.playersTotal))
+		) # 'd' button
+	(== key 101)
+		(group
+		(if this.waitingPlayerCard
 			(group
-			(if this.deck[i]
-				(group
-				(def int index (dd_math_rand this.playersTotal))
-				(this.player[index].addCard this.deck[i])
-				(= this.deck[i] 0)
-				(= i 100)
-				)
-			)
+			(echo "user manually selected card")
+			(this.player[0].selectCard)
+			(= this.waitingPlayerCard 0)
+			(= this.stateValue (+ this.stateValue 1))
 			)
 		)
-		) # 'd' button
+		)
 	) # key input
 	)
 )
@@ -239,3 +351,57 @@
 
 	)
 ) # mouse input
+
+#
+# call it to make a player draw a card from the deck
+# `playerIndex` should be the index of that player
+#
+(class_function world_game void drawCard (group int playerIndex)
+	(group
+
+	# check player index validity
+	(if (|| (< playerIndex 0) (>= playerIndex this.playersTotal))
+		(group
+
+		(echo "INVALID PLAYER ID")
+
+		)
+	# not any cards left in deck
+	(<= this.deckTotal 0)
+		(group
+
+		# possibly shuffled the discard pile into the deck, shuffled, and attempt to re-draw
+		(echo "CANNOT DRAW MORE CARDS FROM THE DECK")
+
+		)
+	# deck has cards to draw from
+		(group
+
+		# get top card
+		(def int cardIndex (- this.deckTotal 1))
+
+		# player has too many cards already (should never happen)
+		#(def int index (dd_math_rand this.playersTotal))
+		(if (== this.player[playerIndex].cardsTotal 10)
+			(echo "CANNOT GIVE MORE CARDS, SKIP")
+		# player can handle one more card
+			(group
+			(this.player[playerIndex].addCard this.deck[cardIndex])
+
+			# if card goes to an opponent, hide it
+			(if (> playerIndex 0)
+				(= this.deck[cardIndex].hidden 1)
+			)
+
+			# remove card from deck
+			(= this.deck[cardIndex] 0)
+			(= this.deckTotal (- this.deckTotal 1))
+
+			)
+		) # player has too many cards
+
+		)
+	) #deck has cards to draw from
+
+	)
+) # draw card
