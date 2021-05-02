@@ -5,6 +5,8 @@
 (def int STATE_DELAY 1)
 (def int STATE_INIT 2)
 (def int STATE_PLAYCARDS 3)
+(def int STATE_REVEALCARDS 4)
+(def int STATE_ENDPHASE 5)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -85,8 +87,15 @@
 		)
 	)
 
+	# discard
+	(dd_matrix_identity this.discardMatrix)
+	(dd_matrix_translate this.discardMatrix 0.5 2 0)
+	(dd_matrix_rotate this.discardMatrix -90 1 0 0)
+	(dd_matrix_scale this.discardMatrix 0.2 0.2 0.2)
+	(= this.discardTotal 0)
+
 	# players 3-8
-	(= this.playersTotal 8)
+	(= this.playersTotal 4)
 	(= this.player[0].isUser 1)
 	(= this.startingPlayer 0)
 
@@ -106,8 +115,16 @@
 		(dd_matrix_rotate this.player[i] 180 0 1 0)
 		)
 	)
+
+	# user's custom matrices
 	(dd_matrix_identity this.player[0])
 	(dd_matrix_translate this.player[0] 0 0 5)
+
+	(dd_matrix_identity this.player[0].selectedMatrix)
+	(dd_matrix_translate this.player[0].selectedMatrix 0 2.01 -3.5)
+	(dd_matrix_rotate this.player[0].selectedMatrix 90 1 0 0)
+	(dd_matrix_rotate this.player[0].selectedMatrix 180 0 0 1)
+	(dd_matrix_scale this.player[0].selectedMatrix 0.15 0.15 0.15)
 
 	# temp rotating card
 	(= this.rotating 0)
@@ -159,13 +176,10 @@
 			(= this.stateAnimation 5)
 
 			# dealt all cards
-			(if (>= this.stateValue (* this.playersTotal 6))
+			(if (>= this.stateValue (* this.playersTotal 3))
 				(group
 				(= this.stateCurrent STATE_PLAYCARDS)
 				(= this.startingPlayer (dd_math_rand this.playersTotal))
-				(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
-					(this.player[i].deselectCard)
-				)
 				(= this.stateValue this.startingPlayer)
 				)
 			)
@@ -183,8 +197,10 @@
 		# all players picked cards
 		(== this.stateValue (+ this.startingPlayer this.playersTotal))
 			(group
-			(echo "everyone picked a card")
-			(= this.stateCurrent STATE_IDLE)
+			(= this.stateCurrent STATE_REVEALCARDS)
+			(= this.stateAnimation 50)
+			(= this.stateValue this.startingPlayer)
+			(= this.stateValue2 0)
 			)
 		# delay before selecting a card
 		(> this.stateAnimation 0)
@@ -197,7 +213,7 @@
 			# user has to select a card manually
 			(if (== playerIndex 0)
 				(group
-				(echo "waiting user to select a card")
+				(echo "waiting user input")
 				(= this.waitingPlayerCard 1)
 				)
 			# AI will randomly select a card
@@ -210,12 +226,94 @@
 
 				(= this.stateValue (+ this.stateValue 1))
 
+				(def int newIndex (% this.stateValue this.playersTotal))
+				(if (== newIndex 0) (= this.stateAnimation 0))
+
 				)
 			) # user or AI select a card
 
 			)
 		) # check who has to play cards
 
+		)
+
+	# reveal and execute cards
+	(== this.stateCurrent STATE_REVEALCARDS)
+		(group
+
+		(if
+		# waiting to next part
+		(> this.stateAnimation 0)
+			(group
+			(= this.stateAnimation (- this.stateAnimation 1.0))
+			)
+		# executing card
+		(== this.stateValue2 1)
+			(group
+			(def int playerIndex (% this.stateValue this.playersTotal))
+			(echo "executing: " playerIndex)
+			(= this.stateValue2 2)
+			(= this.stateAnimation 50)
+			)
+		# hiding card
+		(== this.stateValue2 2)
+			(group
+			(def int playerIndex (% this.stateValue this.playersTotal))
+
+			# put last card in deck
+			(this.addToDiscard this.player[playerIndex].selectedCard2)
+			(this.player[playerIndex].deselectCard)
+
+			(= this.stateValue2 0)
+			(= this.stateValue (+ this.stateValue 1))
+			(= this.stateAnimation 50)
+			)
+		# done executing
+		(== this.stateValue (+ this.startingPlayer this.playersTotal))
+			(group
+
+			(= this.stateCurrent STATE_ENDPHASE)
+			(= this.stateAnimation 0)
+			(= this.stateValue this.startingPlayer)
+
+			)
+		# reveal next card
+			(group
+
+			(def int playerIndex (% this.stateValue this.playersTotal))
+			(= this.player[playerIndex].selectedCard2.hidden 0)
+			(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
+			(= this.stateAnimation 50)
+			(= this.stateValue2 1)
+
+			)
+		)
+
+		)
+
+	(== this.stateCurrent STATE_ENDPHASE)
+		(group
+		# waiting to next part
+		(if (> this.stateAnimation 0)
+			(group
+			(= this.stateAnimation (- this.stateAnimation 1.0))
+			)
+		# done drawing
+		(== this.stateValue (+ this.startingPlayer this.playersTotal))
+			(group
+			(echo "done drawing")
+			(= this.stateCurrent STATE_PLAYCARDS)
+			(= this.startingPlayer (dd_math_rand this.playersTotal))
+			(= this.stateValue this.startingPlayer)
+			)
+		# next player draw card
+			(group
+			(def int playerIndex (% this.stateValue this.playersTotal))
+			(this.drawCard playerIndex)
+			(= this.stateAnimation 50)
+			(= this.stateValue (+ this.stateValue 1))
+			)
+		)
 		)
 
 	) # states handling
@@ -279,6 +377,23 @@
 	(this.font.drawInt this.deckTotal)
 	(dd_matrix_pop)
 
+	# draw discard
+	(dd_matrix_push)
+	(for (def int i 0) (< i this.discardTotal) (= i (+ i 1))
+		(group
+		(if this.discard[i]
+			(this.discard[i].draw)
+		)
+		)
+	)
+	(dd_multMatrixf this.discardMatrix)
+
+	# draw discard number
+	(dd_translatef 0 0 0.5)
+	(dd_rotatef 90 1 0 0)
+	(this.font.drawInt this.discardTotal)
+	(dd_matrix_pop)
+
 	# draw every player apart from self
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
 		(group
@@ -290,7 +405,6 @@
 
 	# draw player
 	(dd_matrix_push)
-	#(dd_translatef 0 0 5)
 	(this.player[0].draw)
 	(dd_matrix_pop)
 
@@ -321,6 +435,7 @@
 			(this.player[0].selectCard)
 			(= this.waitingPlayerCard 0)
 			(= this.stateValue (+ this.stateValue 1))
+			(= this.stateAnimation 50)
 			)
 		)
 		)
@@ -405,3 +520,16 @@
 
 	)
 ) # draw card
+
+(class_function world_game void addToDiscard (group Card card)
+	(group
+	(if (>= this.discardTotal 48)
+		(echo "Can't add card to discard")
+		(group
+		(= this.discard[this.discardTotal] card)
+		(= this.discardTotal (+ this.discardTotal 1))
+		(dd_matrix_copy card.target this.discardMatrix)
+		)
+	)
+	)
+)

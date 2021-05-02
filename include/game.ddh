@@ -10,6 +10,7 @@
 	(def int stateNext)
 	(def float stateAnimation)
 	(def int stateValue)
+	(def int stateValue2)
 	(def int waitingPlayerCard)
 
 	# font
@@ -43,6 +44,11 @@
 	(def ref Card deck[48])
 	(def int deckTotal)
 
+	# discard
+	(def dd_matrix discardMatrix)
+	(def ref Card discard[48])
+	(def int discardTotal)
+
 	# players
 	(def int startingPlayer)
 	(def Player player[10])
@@ -60,6 +66,7 @@
 	(function void clean (group))
 
 	(function void drawCard (group int playerIndex))
+	(function void addToDiscard (group Card card))
 
 	)
 ) # game world

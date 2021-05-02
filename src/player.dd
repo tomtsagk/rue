@@ -21,8 +21,9 @@
 	(= this.selectedCard -1)
 	(= this.selectedCard2 0)
 	(dd_matrix_identity this.selectedMatrix)
-	(dd_matrix_translate this.selectedMatrix 0 2 2)
+	(dd_matrix_translate this.selectedMatrix 0 2.01 3.5)
 	(dd_matrix_rotate this.selectedMatrix 90 1 0 0)
+	(dd_matrix_rotate this.selectedMatrix (- (dd_math_rand 20) 10) 0 0 1)
 	(dd_matrix_scale this.selectedMatrix 0.15 0.15 0.15)
 
 	)
