@@ -7,6 +7,7 @@
 (def int STATE_PLAYCARDS 3)
 (def int STATE_REVEALCARDS 4)
 (def int STATE_ENDPHASE 5)
+(def int STATE_DISCARDTODECK 6)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -80,10 +81,8 @@
 	(= this.deckTotal 0)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(= this.deck[i] this.cards[i])
-		(dd_matrix_mult this.cards[i].target this.deckMatrix)
+		(this.addToDeck this.cards[i])
 		(dd_matrix_copy this.cards[i] this.cards[i].target)
-		(= this.deckTotal (+ this.deckTotal 1))
 		)
 	)
 
@@ -95,7 +94,7 @@
 	(= this.discardTotal 0)
 
 	# players 3-8
-	(= this.playersTotal 4)
+	(= this.playersTotal 5)
 	(= this.player[0].isUser 1)
 	(= this.startingPlayer 0)
 
@@ -176,7 +175,7 @@
 			(= this.stateAnimation 5)
 
 			# dealt all cards
-			(if (>= this.stateValue (* this.playersTotal 3))
+			(if (>= this.stateValue (* this.playersTotal 8))
 				(group
 				(= this.stateCurrent STATE_PLAYCARDS)
 				(= this.startingPlayer (dd_math_rand this.playersTotal))
@@ -310,10 +309,41 @@
 			(group
 			(def int playerIndex (% this.stateValue this.playersTotal))
 			(this.drawCard playerIndex)
-			(= this.stateAnimation 50)
-			(= this.stateValue (+ this.stateValue 1))
+
+			# draw card succesfull
+			(if (== this.stateCurrent STATE_ENDPHASE)
+				(group
+				(= this.stateAnimation 5)
+				(= this.stateValue (+ this.stateValue 1))
+				)
+			)
 			)
 		)
+		)
+
+	(== this.stateCurrent STATE_DISCARDTODECK)
+		(group
+
+		# delay
+		(if (> this.stateAnimation 0)
+			(group
+			(= this.stateAnimation (- this.stateAnimation 1.0))
+			)
+		# no more discard pile
+		(<= this.discardTotal 0)
+			(group
+			(= this.stateCurrent this.stateNext)
+			)
+		# pass next card
+			(group
+			(def int discardIndex (- this.discardTotal 1))
+			(this.addToDeck this.discard[discardIndex])
+			(= this.discard[discardIndex] 0)
+			(= this.discardTotal (- this.discardTotal 1))
+			(= this.stateAnimation 5)
+			)
+		)
+
 		)
 
 	) # states handling
@@ -422,11 +452,6 @@
 	(group
 	(if (== key 27)
 		(= dd_flag_exit 1) # exit game
-	# test 'd' give random card to random player
-	(== key 100)
-		(group
-		(this.drawCard (dd_math_rand this.playersTotal))
-		) # 'd' button
 	(== key 101)
 		(group
 		(if this.waitingPlayerCard
@@ -474,19 +499,31 @@
 (class_function world_game void drawCard (group int playerIndex)
 	(group
 
-	# check player index validity
-	(if (|| (< playerIndex 0) (>= playerIndex this.playersTotal))
+	# if deck is empty, refill it from discard pile
+	# this should happen infinitely, and they should
+	# never run out
+	(if (&& (<= this.deckTotal 0) (> this.discardTotal 0))
 		(group
-
-		(echo "INVALID PLAYER ID")
-
+		(= this.stateNext this.stateCurrent)
+		(= this.stateCurrent STATE_DISCARDTODECK)
+		(= this.stateAnimation 0)
+#		(for (def int i 0) (< i this.discardTotal) (= i (+ i 1))
+#			(group
+#			(this.addToDeck this.discard[i])
+#			(= this.discard[i] 0)
+#			)
+#		)
+#		(= this.discardTotal 0)
 		)
+	# check player index validity (shouldn't happen)
+	(|| (< playerIndex 0) (>= playerIndex this.playersTotal))
+		(echo "INVALID PLAYER ID")
 	# not any cards left in deck
 	(<= this.deckTotal 0)
 		(group
 
-		# possibly shuffled the discard pile into the deck, shuffled, and attempt to re-draw
-		(echo "CANNOT DRAW MORE CARDS FROM THE DECK")
+		# deck is empty, and wasn'y replenished by discard pile
+		(echo "CANNOT DRAW MORE CARDS FROM THE DECK, DISCARD ALSO EMPTY")
 
 		)
 	# deck has cards to draw from
@@ -529,6 +566,21 @@
 		(= this.discard[this.discardTotal] card)
 		(= this.discardTotal (+ this.discardTotal 1))
 		(dd_matrix_copy card.target this.discardMatrix)
+		(dd_matrix_translate card.target 0 0 (* 0.01 this.discardTotal))
+		)
+	)
+	)
+)
+
+(class_function world_game void addToDeck (group Card card)
+	(group
+	(if (>= this.deckTotal 48)
+		(echo "Can't add card to deck")
+		(group
+		(= this.deck[this.deckTotal] card)
+		(= this.deckTotal (+ this.deckTotal 1))
+		(dd_matrix_copy card.target this.deckMatrix)
+		(dd_matrix_translate card.target 0 0 (* -0.01 this.deckTotal))
 		)
 	)
 	)

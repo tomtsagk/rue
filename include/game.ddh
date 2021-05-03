@@ -67,6 +67,7 @@
 
 	(function void drawCard (group int playerIndex))
 	(function void addToDiscard (group Card card))
+	(function void addToDeck (group Card card))
 
 	)
 ) # game world
