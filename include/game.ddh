@@ -12,6 +12,7 @@
 	(def int stateValue)
 	(def int stateValue2)
 	(def int waitingPlayerCard)
+	(def ref char stateText)
 
 	# font
 	(def dd_string3d font)

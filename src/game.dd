@@ -20,6 +20,7 @@
 	(= this.stateAnimation 100)
 	(= this.stateValue 0)
 	(= this.waitingPlayerCard 0)
+	(= this.stateText "setting up the table")
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -154,8 +155,7 @@
 		(if (<= this.stateAnimation 0)
 			(group
 			(= this.stateCurrent this.stateNext)
-			(= this.stateNext 0)
-			(= this.stateValue 0)
+			(= this.stateAnimation 50)
 			)
 		)
 		)
@@ -177,7 +177,10 @@
 			# dealt all cards
 			(if (>= this.stateValue (* this.playersTotal 8))
 				(group
-				(= this.stateCurrent STATE_PLAYCARDS)
+				(= this.stateText "playing cards")
+				(= this.stateCurrent STATE_DELAY)
+				(= this.stateNext STATE_PLAYCARDS)
+				(= this.stateAnimation 50)
 				(= this.startingPlayer (dd_math_rand this.playersTotal))
 				(= this.stateValue this.startingPlayer)
 				)
@@ -196,7 +199,9 @@
 		# all players picked cards
 		(== this.stateValue (+ this.startingPlayer this.playersTotal))
 			(group
-			(= this.stateCurrent STATE_REVEALCARDS)
+			(= this.stateText "revealing cards")
+			(= this.stateCurrent STATE_DELAY)
+			(= this.stateNext STATE_REVEALCARDS)
 			(= this.stateAnimation 50)
 			(= this.stateValue this.startingPlayer)
 			(= this.stateValue2 0)
@@ -271,8 +276,10 @@
 		(== this.stateValue (+ this.startingPlayer this.playersTotal))
 			(group
 
-			(= this.stateCurrent STATE_ENDPHASE)
-			(= this.stateAnimation 0)
+			(= this.stateText "end phase")
+			(= this.stateCurrent STATE_DELAY)
+			(= this.stateNext STATE_ENDPHASE)
+			(= this.stateAnimation 50)
 			(= this.stateValue this.startingPlayer)
 
 			)
@@ -301,7 +308,9 @@
 		(== this.stateValue (+ this.startingPlayer this.playersTotal))
 			(group
 			(echo "done drawing")
-			(= this.stateCurrent STATE_PLAYCARDS)
+			(= this.stateText "playing cards")
+			(= this.stateCurrent STATE_DELAY)
+			(= this.stateNext STATE_PLAYCARDS)
 			(= this.startingPlayer (dd_math_rand this.playersTotal))
 			(= this.stateValue this.startingPlayer)
 			)
@@ -378,6 +387,8 @@
 (class_function world_game void draw (group)
 	(group
 
+	(dd_matrix_push)
+
 	# camera
 	(dd_rotatef this.rotY -1 0 0)
 	(dd_rotatef this.rotX 0 1 0)
@@ -402,7 +413,7 @@
 
 	# draw deck number
 	(dd_rotatef 180 1 0 0)
-	(dd_translatef 0 0 0.5)
+	(dd_translatef 0 0 (+ (* 0.01 this.deckTotal) 0.5))
 	(dd_rotatef 90 1 0 0)
 	(this.font.drawInt this.deckTotal)
 	(dd_matrix_pop)
@@ -444,6 +455,14 @@
 #	(dd_scalef 0.5 0.5 0.5)
 #	(this.cardBack.draw)
 #	(this.cardFront[1].draw)
+
+	(dd_matrix_pop)
+
+	(glClear GL_DEPTH_BUFFER_BIT)
+
+	# states
+	(dd_translatef 0 0 -15)
+	(this.font.draw this.stateText)
 
 	)
 )
@@ -533,7 +552,6 @@
 		(def int cardIndex (- this.deckTotal 1))
 
 		# player has too many cards already (should never happen)
-		#(def int index (dd_math_rand this.playersTotal))
 		(if (== this.player[playerIndex].cardsTotal 10)
 			(echo "CANNOT GIVE MORE CARDS, SKIP")
 		# player can handle one more card
