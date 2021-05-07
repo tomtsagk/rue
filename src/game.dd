@@ -47,6 +47,9 @@
 	# stage
 	(this.stage.load (asset "assets/stage_1.asset" DD_PLY))
 	(this.table.load (asset "assets/table_1.asset" DD_PLY))
+	(this.tableArrow.load (asset "assets/table_arrow.asset" DD_PLY))
+	(= this.arrowRotation 0)
+	(= this.arrowRotationTarget 0)
 
 	# card back
 	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
@@ -213,7 +216,11 @@
 			)
 		# delay before selecting a card
 		(> this.stateAnimation 0)
+			(group
+			(def int playerIndex (% this.stateValue this.playersTotal))
+			(= this.arrowRotationTarget (+ 15 (* (/ 330.0 this.playersTotal) playerIndex)))
 			(= this.stateAnimation (- this.stateAnimation 1))
+			)
 		# next player should select a card
 			(group
 
@@ -224,6 +231,8 @@
 				(group
 				(echo "waiting user input")
 				(= this.waitingPlayerCard 1)
+				(= this.arrowRotationTarget 0)
+				(= this.arrowRotation (- this.arrowRotation 360))
 				)
 			# AI will randomly select a card
 				(group
@@ -296,6 +305,14 @@
 			(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
 			(= this.stateAnimation 50)
 			(= this.stateValue2 1)
+
+			(if (== playerIndex 0)
+				(group
+				(= this.arrowRotation (- this.arrowRotation 360))
+				(= this.arrowRotationTarget 0)
+				)
+				(= this.arrowRotationTarget (+ 15 (* (/ 330.0 this.playersTotal) playerIndex)))
+			)
 
 			)
 		)
@@ -371,7 +388,8 @@
 		# not rotating yet, check threshold
 		(if (== this.isRotating 0)
 			(group
-			(if (> (dd_math_abs (- (dd_mouse_x) this.holdRotX)) 15)
+			(if (|| (> (dd_math_abs (- (dd_mouse_x) this.holdRotX)) 15)
+			        (> (dd_math_abs (- (dd_mouse_y) this.holdRotY)) 15))
 				(group
 				(= this.isRotating 1)
 				(= this.holdRotX (dd_mouse_x))
@@ -407,6 +425,9 @@
 		)
 	)
 
+	# update table arrow
+	(= this.arrowRotation (dd_math_ease_linear 0.1 this.arrowRotation this.arrowRotationTarget))
+
 	)
 ) # update
 
@@ -425,6 +446,10 @@
 	# stage
 	(this.stage.draw)
 	(this.table.draw)
+	(dd_matrix_push)
+	(dd_rotatef this.arrowRotation 0 1 0)
+	(this.tableArrow.draw)
+	(dd_matrix_pop)
 
 	# draw deck
 	(dd_matrix_push)

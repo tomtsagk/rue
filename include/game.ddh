@@ -35,6 +35,9 @@
 	# stage
 	(def dd_meshColour stage)
 	(def dd_meshColour table)
+	(def dd_meshColour tableArrow)
+	(def float arrowRotation)
+	(def float arrowRotationTarget)
 
 	# card meshes
 	(def dd_meshTexture cardBack)
