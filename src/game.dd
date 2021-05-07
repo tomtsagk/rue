@@ -1,5 +1,7 @@
 (include "game.ddh")
 
+# -31 -55
+
 # game static states
 (def int STATE_IDLE 0)
 (def int STATE_DELAY 1)
@@ -34,6 +36,9 @@
 	(= this.targetRotY 0)
 	(= this.holdRotX -1)
 	(= this.holdRotY -1)
+
+	# looking at mesh
+	(this.lookat.load (asset "assets/looking_at.asset" DD_PLY))
 
 	# center of world
 	(dd_matrix_identity this.matCenter)
@@ -95,7 +100,7 @@
 	(= this.discardTotal 0)
 
 	# players 3-8
-	(= this.playersTotal 5)
+	(= this.playersTotal 8)
 	(= this.player[0].isUser 1)
 	(= this.startingPlayer 0)
 
@@ -104,7 +109,7 @@
 		(group
 		(dd_matrix_identity this.player[i])
 		(dd_matrix_rotate this.player[i] (+ 15 (* (/ 330.0 this.playersTotal) i)) 0 1 0)
-		(dd_matrix_translate this.player[i] 0 0 5)
+		(dd_matrix_translate this.player[i] 0 0 4)
 
 		(if (< i (/ this.playersTotal 2))
 			(dd_matrix_rotate this.player[i] 10 0 1 0)
@@ -175,7 +180,7 @@
 			(= this.stateAnimation 5)
 
 			# dealt all cards
-			(if (>= this.stateValue (* this.playersTotal 8))
+			(if (>= this.stateValue (* this.playersTotal 4))
 				(group
 				(= this.stateText "playing cards")
 				(= this.stateCurrent STATE_DELAY)
@@ -362,17 +367,38 @@
 	# calculate new camera look at point
 	(if (>= this.holdRotX 0)
 		(group
-		(= this.targetRotX (+ this.targetRotX (- (dd_mouse_x) this.holdRotX)))
-		(= this.holdRotX (dd_mouse_x))
 
-		(= this.targetRotY (- this.targetRotY (- (dd_mouse_y) this.holdRotY)))
-		(= this.holdRotY (dd_mouse_y))
+		# not rotating yet, check threshold
+		(if (== this.isRotating 0)
+			(group
+			(if (> (dd_math_abs (- (dd_mouse_x) this.holdRotX)) 15)
+				(group
+				(= this.isRotating 1)
+				(= this.holdRotX (dd_mouse_x))
+				(= this.holdRotY (dd_mouse_y))
+				)
+			)
+			)
+		# is rotating, keep rotating
+			(group
+			(= this.targetRotX (+ this.targetRotX (* (- (dd_mouse_x) this.holdRotX) 0.25)))
+			(= this.targetRotY (- this.targetRotY (* (- (dd_mouse_y) this.holdRotY) 0.25)))
+			(= this.holdRotX (dd_mouse_x))
+			(= this.holdRotY (dd_mouse_y))
+			)
+		)
 		)
 	)
 
 	# slowly approach camera look at point
 	(= this.rotX (dd_math_ease_linear 0.1 this.rotX this.targetRotX))
 	(= this.rotY (dd_math_ease_linear 0.1 this.rotY this.targetRotY))
+
+	(this.player[0].lookAtCard this.rotX this.rotY)
+
+	#(def float tempRotX this.rotX)
+	#(def float tempRotY this.rotY)
+	#(echo "rot: " tempRotX " | " tempRotY)
 
 	# update all cards to approach target
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
@@ -461,8 +487,17 @@
 	(glClear GL_DEPTH_BUFFER_BIT)
 
 	# states
-	(dd_translatef 0 0 -15)
+	(dd_matrix_push)
+	(dd_translatef 0 1 -15)
 	(this.font.draw this.stateText)
+	(dd_matrix_pop)
+
+	(glClear GL_DEPTH_BUFFER_BIT)
+
+	(dd_matrix_push)
+	(dd_translatef 0 0 -25)
+	(this.lookat.draw)
+	(dd_matrix_pop)
 
 	)
 )
@@ -473,15 +508,6 @@
 		(= dd_flag_exit 1) # exit game
 	(== key 101)
 		(group
-		(if this.waitingPlayerCard
-			(group
-			(echo "user manually selected card")
-			(this.player[0].selectCard)
-			(= this.waitingPlayerCard 0)
-			(= this.stateValue (+ this.stateValue 1))
-			(= this.stateAnimation 50)
-			)
-		)
 		)
 	) # key input
 	)
@@ -500,13 +526,31 @@
 		(group
 		(= this.holdRotX (dd_mouse_x))
 		(= this.holdRotY (dd_mouse_y))
+		(= this.isRotating 0)
 		)
 	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
 		(group
+
 		(= this.holdRotX -1)
 		(= this.holdRotY -1)
+
+		# was not rotating - click
+		(if (== this.isRotating 0)
+			(group
+			(if (&& this.waitingPlayerCard (>= this.player[0].userLookingAtCard 0))
+				(group
+				(echo "user manually selected card")
+				(this.player[0].selectCard)
+				(= this.waitingPlayerCard 0)
+				(= this.stateValue (+ this.stateValue 1))
+				(= this.stateAnimation 50)
+				)
+			)
+			)
 		)
-	)
+
+		)
+	) # mouse button released
 
 	)
 ) # mouse input
@@ -584,7 +628,7 @@
 		(= this.discard[this.discardTotal] card)
 		(= this.discardTotal (+ this.discardTotal 1))
 		(dd_matrix_copy card.target this.discardMatrix)
-		(dd_matrix_translate card.target 0 0 (* 0.01 this.discardTotal))
+		(dd_matrix_translate card.target 0 0 (* 0.01 (+ this.discardTotal 1)))
 		)
 	)
 	)
@@ -598,7 +642,7 @@
 		(= this.deck[this.deckTotal] card)
 		(= this.deckTotal (+ this.deckTotal 1))
 		(dd_matrix_copy card.target this.deckMatrix)
-		(dd_matrix_translate card.target 0 0 (* -0.01 this.deckTotal))
+		(dd_matrix_translate card.target 0 0 (* -0.01 (+ this.deckTotal 1)))
 		)
 	)
 	)

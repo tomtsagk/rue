@@ -11,19 +11,34 @@
 	)
 )
 
+# draw the card with its transformation matrix
 (class_function Card void draw (group)
 	(group
 	(dd_matrix_push)
-	(dd_multMatrixf this)
-	(if (== this.hidden 0)
-		(this.mesh.draw)
-	)
-	(this.meshBack.draw)
+	(this.applyMatrix)
+	(this.drawRaw)
 	(dd_matrix_pop)
 	)
 )
 
 (class_function Card void clean (group)
 	(group
+	)
+)
+
+# apply the card's matrix
+(class_function Card void applyMatrix (group)
+	(group
+	(dd_multMatrixf this)
+	)
+)
+
+# draw the card's mesh with no transformation
+(class_function Card void drawRaw (group)
+	(group
+	(if (== this.hidden 0)
+		(this.mesh.draw)
+	)
+	(this.meshBack.draw)
 	)
 )

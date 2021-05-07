@@ -21,10 +21,12 @@
 	(= this.selectedCard -1)
 	(= this.selectedCard2 0)
 	(dd_matrix_identity this.selectedMatrix)
-	(dd_matrix_translate this.selectedMatrix 0 2.01 3.5)
+	(dd_matrix_translate this.selectedMatrix 0 2.01 2.7)
 	(dd_matrix_rotate this.selectedMatrix 90 1 0 0)
 	(dd_matrix_rotate this.selectedMatrix (- (dd_math_rand 20) 10) 0 0 1)
 	(dd_matrix_scale this.selectedMatrix 0.15 0.15 0.15)
+
+	(= this.userLookingAtCard -1)
 
 	)
 )
@@ -40,7 +42,17 @@
 	# draw cards
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(this.cards[i].draw)
+		(if (== i this.userLookingAtCard)
+			(group
+			(dd_matrix_push)
+			(this.cards[i].applyMatrix)
+			(dd_scalef 1.1 1.1 1.1)
+			(this.cards[i].drawRaw)
+			(dd_matrix_pop)
+			)
+		# else
+			(this.cards[i].draw)
+		)
 		)
 	)
 
@@ -141,9 +153,23 @@
 		(group
 		(echo "cannot select card, no cards left")
 		)
+	(&& (< this.userLookingAtCard 0) (>= this.userLookingAtCard this.cardsTotal))
+		(group
+		(echo "cannot select card, out of bounds")
+		)
+	# else
 		(group
 
-		(def int index (dd_math_rand this.cardsTotal))
+		# get index, either by card being looked at, or random for AI
+		(def int index)
+		(if this.isUser
+			(group
+			(= index this.userLookingAtCard)
+			)
+			(group
+			(= index (dd_math_rand this.cardsTotal))
+			)
+		)
 		(= this.selectedCard (dd_math_rand this.cardsTotal))
 		(= this.selectedCard2 this.cards[index])
 		(dd_matrix_identity this.selectedCard2.target)
@@ -175,3 +201,27 @@
 	(= this.selectedCard -1)
 	)
 )
+
+(class_function Player void lookAtCard (group float rotX float rotY)
+	(group
+
+	(def int lookingAtCard -1)
+
+	# looking at the hand's layer (Y-axis)
+	(if (&& (< rotY -31) (> rotY -55))
+		(group
+
+		# looking at the hand - figure out which card
+		(if (&& (> rotX (* (/ (- this.cardsTotal 0.0) 2.0) -25)) (< rotX (* (/ (- this.cardsTotal 0) 2.0) 25)))
+			(group
+			(= lookingAtCard (/ (+ (/ (* this.cardsTotal 25) 2.0) rotX) 25))
+			)
+		)
+
+		)
+	) # looking at hand's layer
+
+	(= this.userLookingAtCard lookingAtCard)
+
+	)
+) # look at card

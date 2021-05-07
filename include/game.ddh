@@ -24,6 +24,10 @@
 	(def float targetRotY)
 	(def float holdRotX)
 	(def float holdRotY)
+	(def int isRotating)
+
+	# looking at
+	(def dd_meshColour lookat)
 
 	# center of world
 	(def dd_matrix matCenter)

@@ -13,6 +13,7 @@
 	# cards
 	(def int cardsTotal)
 	(def ref Card cards[10])
+	(def int userLookingAtCard)
 
 	# font
 	(def dd_string3d font)
@@ -34,6 +35,8 @@
 
 	(function void selectCard (group))
 	(function void deselectCard (group))
+
+	(function void lookAtCard (group float rotX float rotY))
 
 	)
 ) # player
