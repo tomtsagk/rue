@@ -20,7 +20,6 @@
 	(= this.stateCurrent STATE_DELAY)
 	(= this.stateNext STATE_INIT)
 	(= this.stateAnimation 100)
-	(= this.stateValue 0)
 	(= this.waitingPlayerCard 0)
 	(= this.stateText "setting up the table")
 
@@ -48,8 +47,6 @@
 	(this.stage.load (asset "assets/stage_1.asset" DD_PLY))
 	(this.table.load (asset "assets/table_1.asset" DD_PLY))
 	(this.tableArrow.load (asset "assets/table_arrow.asset" DD_PLY))
-	(= this.arrowRotation 0)
-	(= this.arrowRotationTarget 0)
 
 	# card back
 	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
@@ -105,7 +102,7 @@
 	# players 3-8
 	(= this.playersTotal 8)
 	(= this.player[0].isUser 1)
-	(= this.startingPlayer 0)
+	(= this.startingPlayer (dd_math_rand this.playersTotal))
 
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
@@ -138,14 +135,18 @@
 	(= this.rotating 0)
 
 	# rose player
-	(= this.rosePlayer 0)
+	(= this.rosePlayer this.startingPlayer)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
 	(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
 
-	(this.setRosePlayer 0)
+	(this.setRosePlayer this.rosePlayer)
 	(dd_matrix_copy this.roseCard this.roseCard.target)
+
+	(= this.stateValue this.startingPlayer)
+	(= this.arrowRotationTarget (+ 15 (* (/ 330.0 this.playersTotal) this.startingPlayer)))
+	(= this.arrowRotation this.arrowRotationTarget)
 
 	)
 )
@@ -193,13 +194,13 @@
 			(= this.stateAnimation 5)
 
 			# dealt all cards
-			(if (>= this.stateValue (* this.playersTotal 5))
+			(if (>= this.stateValue (+ this.startingPlayer (* this.playersTotal 5)))
 				(group
 				(= this.stateText "playing cards")
 				(= this.stateCurrent STATE_DELAY)
 				(= this.stateNext STATE_PLAYCARDS)
 				(= this.stateAnimation 50)
-				(= this.startingPlayer (dd_math_rand this.playersTotal))
+				#(= this.startingPlayer (dd_math_rand this.playersTotal))
 				(= this.stateValue this.startingPlayer)
 				)
 			)
@@ -349,7 +350,7 @@
 			(= this.stateText "playing cards")
 			(= this.stateCurrent STATE_DELAY)
 			(= this.stateNext STATE_PLAYCARDS)
-			(= this.startingPlayer (dd_math_rand this.playersTotal))
+			(= this.startingPlayer this.rosePlayer)
 			(= this.stateValue this.startingPlayer)
 			)
 		# next player draw card
@@ -428,7 +429,9 @@
 	(= this.rotX (dd_math_ease_linear 0.1 this.rotX this.targetRotX))
 	(= this.rotY (dd_math_ease_linear 0.1 this.rotY this.targetRotY))
 
-	(this.player[0].lookAtCard this.rotX this.rotY)
+	(if this.waitingPlayerCard
+		(this.player[0].lookAtCard this.rotX this.rotY)
+	)
 
 	#(def float tempRotX this.rotX)
 	#(def float tempRotY this.rotY)
@@ -589,6 +592,7 @@
 				(= this.waitingPlayerCard 0)
 				(= this.stateValue (+ this.stateValue 1))
 				(= this.stateAnimation 50)
+				(= this.player[0].userLookingAtCard -1)
 				)
 			)
 			)
