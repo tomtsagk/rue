@@ -137,6 +137,16 @@
 	# temp rotating card
 	(= this.rotating 0)
 
+	# rose player
+	(= this.rosePlayer 0)
+	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
+	(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
+	(= this.roseCard.mesh this.roseCardMesh)
+	(= this.roseCard.meshBack this.cardBack)
+
+	(this.setRosePlayer 0)
+	(dd_matrix_copy this.roseCard this.roseCard.target)
+
 	)
 )
 
@@ -183,7 +193,7 @@
 			(= this.stateAnimation 5)
 
 			# dealt all cards
-			(if (>= this.stateValue (* this.playersTotal 4))
+			(if (>= this.stateValue (* this.playersTotal 5))
 				(group
 				(= this.stateText "playing cards")
 				(= this.stateCurrent STATE_DELAY)
@@ -272,6 +282,12 @@
 			(echo "executing: " playerIndex)
 			(= this.stateValue2 2)
 			(= this.stateAnimation 50)
+
+			# example execution
+			(if (dd_math_rand 2)
+				(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
+			)
+
 			)
 		# hiding card
 		(== this.stateValue2 2)
@@ -424,6 +440,7 @@
 		(dd_matrix_approach this.cards[i] this.cards[i].target 0.1)
 		)
 	)
+	(dd_matrix_approach this.roseCard this.roseCard.target 0.1)
 
 	# update table arrow
 	(= this.arrowRotation (dd_math_ease_linear 0.1 this.arrowRotation this.arrowRotationTarget))
@@ -460,6 +477,7 @@
 		)
 		)
 	)
+	(this.roseCard.draw)
 	(dd_multMatrixf this.deckMatrix)
 
 	# draw deck number
@@ -513,12 +531,14 @@
 
 	# states
 	(dd_matrix_push)
-	(dd_translatef 0 1 -15)
+	(dd_translatef 0 5 -15)
 	(this.font.draw this.stateText)
 	(dd_matrix_pop)
 
+	# clear depth
 	(glClear GL_DEPTH_BUFFER_BIT)
 
+	# lookat mesh
 	(dd_matrix_push)
 	(dd_translatef 0 0 -25)
 	(this.lookat.draw)
@@ -670,5 +690,35 @@
 		(dd_matrix_translate card.target 0 0 (* -0.01 (+ this.deckTotal 1)))
 		)
 	)
+	)
+)
+
+(class_function world_game void setRosePlayer (group int playerId)
+	(group
+
+	# check playerId sanity
+	(if (|| (< playerId 0) (>= playerId this.playersTotal))
+		(echo "invalid player id")
+	# special functionality for user
+	(== playerId 0)
+		(group
+		(= this.rosePlayer playerId)
+		(dd_matrix_identity this.roseCard.target)
+		(dd_matrix_translate this.roseCard.target 0 2.01 2.2)
+		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
+		(dd_matrix_scale this.roseCard.target 0.15 0.15 0.15)
+		)
+	# position rose in front of another player
+		(group
+		(= this.rosePlayer playerId)
+		(dd_matrix_identity this.roseCard.target)
+		(dd_matrix_mult this.roseCard.target this.player[playerId])
+		(dd_matrix_translate this.roseCard.target 0 2.01 2.0)
+		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
+		(dd_matrix_rotate this.roseCard.target 180 0 0 1)
+		(dd_matrix_scale this.roseCard.target 0.15 0.15 0.15)
+		)
+	)
+
 	)
 )

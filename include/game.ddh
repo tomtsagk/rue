@@ -26,6 +26,11 @@
 	(def float holdRotY)
 	(def int isRotating)
 
+	# rose player
+	(def dd_meshTexture roseCardMesh)
+	(def int rosePlayer)
+	(def Card roseCard)
+
 	# looking at
 	(def dd_meshColour lookat)
 
@@ -76,6 +81,7 @@
 	(function void drawCard (group int playerIndex))
 	(function void addToDiscard (group Card card))
 	(function void addToDeck (group Card card))
+	(function void setRosePlayer (group int playerId))
 
 	)
 ) # game world

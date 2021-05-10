@@ -136,10 +136,10 @@
 		(dd_matrix_identity this.cards[i].target)
 		(dd_matrix_mult this.cards[i].target this)
 		(dd_matrix_translate this.cards[i].target 0 3.7 0)
-		(dd_matrix_rotate this.cards[i].target (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
-		(dd_matrix_rotate this.cards[i].target -35 1 0 0)
+		(dd_matrix_rotate this.cards[i].target (- (* -30 i) (* (/ (- this.cardsTotal 1) 2.0) -30)) 0 1 0)
+		(dd_matrix_rotate this.cards[i].target -43 1 0 0)
 		(dd_matrix_translate this.cards[i].target 0 0 -1.2)
-		(dd_matrix_rotate this.cards[i].target 15 1 0 0)
+		(dd_matrix_rotate this.cards[i].target 25 1 0 0)
 		(dd_matrix_scale this.cards[i].target 0.15 0.15 0.15)
 		)
 	)
@@ -208,13 +208,13 @@
 	(def int lookingAtCard -1)
 
 	# looking at the hand's layer (Y-axis)
-	(if (&& (< rotY -31) (> rotY -55))
+	(if (&& (< rotY -40) (> rotY -60))
 		(group
 
 		# looking at the hand - figure out which card
-		(if (&& (> rotX (* (/ (- this.cardsTotal 0.0) 2.0) -25)) (< rotX (* (/ (- this.cardsTotal 0) 2.0) 25)))
+		(if (&& (> rotX (* (/ (- this.cardsTotal 0.0) 2.0) -30)) (< rotX (* (/ (- this.cardsTotal 0) 2.0) 30)))
 			(group
-			(= lookingAtCard (/ (+ (/ (* this.cardsTotal 25) 2.0) rotX) 25))
+			(= lookingAtCard (/ (+ (/ (* this.cardsTotal 30) 2.0) rotX) 30))
 			)
 		)
 
