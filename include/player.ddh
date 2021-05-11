@@ -7,6 +7,9 @@
 	# user works a bit different than AI
 	(def int isUser)
 
+	# actual location (different than the displayed)
+	(def dd_matrix actual)
+
 	# player itself
 	(def dd_meshTexture mesh)
 

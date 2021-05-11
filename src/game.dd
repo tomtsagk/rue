@@ -81,7 +81,7 @@
 
 	# deck
 	(dd_matrix_identity this.deckMatrix)
-	(dd_matrix_translate this.deckMatrix -0.5 2 0)
+	(dd_matrix_translate this.deckMatrix -0.45 2 0)
 	(dd_matrix_rotate this.deckMatrix 90 1 0 0)
 	(dd_matrix_scale this.deckMatrix 0.2 0.2 0.2)
 	(= this.deckTotal 0)
@@ -94,7 +94,7 @@
 
 	# discard
 	(dd_matrix_identity this.discardMatrix)
-	(dd_matrix_translate this.discardMatrix 0.5 2 0)
+	(dd_matrix_translate this.discardMatrix 0.45 2 0)
 	(dd_matrix_rotate this.discardMatrix -90 1 0 0)
 	(dd_matrix_scale this.discardMatrix 0.2 0.2 0.2)
 	(= this.discardTotal 0)
@@ -118,6 +118,13 @@
 		)
 
 		(dd_matrix_rotate this.player[i] 180 0 1 0)
+
+		# players actual location
+		(dd_matrix_identity this.player[i].actual)
+		(dd_matrix_rotate this.player[i].actual (+ 0 (* (/ 360.0 this.playersTotal) i)) 0 1 0)
+		(dd_matrix_translate this.player[i].actual 0 0 4)
+		(dd_matrix_rotate this.player[i].actual 180 0 1 0)
+
 		)
 	)
 
@@ -125,8 +132,11 @@
 	(dd_matrix_identity this.player[0])
 	(dd_matrix_translate this.player[0] 0 0 5)
 
+	(dd_matrix_identity this.player[0].actual)
+	(dd_matrix_translate this.player[0].actual 0 0 5)
+
 	(dd_matrix_identity this.player[0].selectedMatrix)
-	(dd_matrix_translate this.player[0].selectedMatrix 0 2.01 -3.5)
+	(dd_matrix_translate this.player[0].selectedMatrix 0 2.01 -3.6)
 	(dd_matrix_rotate this.player[0].selectedMatrix 90 1 0 0)
 	(dd_matrix_rotate this.player[0].selectedMatrix 180 0 0 1)
 	(dd_matrix_scale this.player[0].selectedMatrix 0.15 0.15 0.15)
@@ -145,7 +155,7 @@
 	(dd_matrix_copy this.roseCard this.roseCard.target)
 
 	(= this.stateValue this.startingPlayer)
-	(= this.arrowRotationTarget (+ 15 (* (/ 330.0 this.playersTotal) this.startingPlayer)))
+	(= this.arrowRotationTarget (+ 0 (* (/ 360.0 this.playersTotal) this.startingPlayer)))
 	(= this.arrowRotation this.arrowRotationTarget)
 
 	)
@@ -229,7 +239,7 @@
 		(> this.stateAnimation 0)
 			(group
 			(def int playerIndex (% this.stateValue this.playersTotal))
-			(= this.arrowRotationTarget (+ 15 (* (/ 330.0 this.playersTotal) playerIndex)))
+			(= this.arrowRotationTarget (+ 0 (* (/ 360.0 this.playersTotal) playerIndex)))
 			(= this.stateAnimation (- this.stateAnimation 1))
 			)
 		# next player should select a card
@@ -328,7 +338,7 @@
 				(= this.arrowRotation (- this.arrowRotation 360))
 				(= this.arrowRotationTarget 0)
 				)
-				(= this.arrowRotationTarget (+ 15 (* (/ 330.0 this.playersTotal) playerIndex)))
+				(= this.arrowRotationTarget (+ 0 (* (/ 360.0 this.playersTotal) playerIndex)))
 			)
 
 			)
@@ -708,7 +718,7 @@
 		(group
 		(= this.rosePlayer playerId)
 		(dd_matrix_identity this.roseCard.target)
-		(dd_matrix_translate this.roseCard.target 0 2.01 2.2)
+		(dd_matrix_translate this.roseCard.target 0 2.01 2.1)
 		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
 		(dd_matrix_scale this.roseCard.target 0.15 0.15 0.15)
 		)
@@ -716,8 +726,8 @@
 		(group
 		(= this.rosePlayer playerId)
 		(dd_matrix_identity this.roseCard.target)
-		(dd_matrix_mult this.roseCard.target this.player[playerId])
-		(dd_matrix_translate this.roseCard.target 0 2.01 2.0)
+		(dd_matrix_mult this.roseCard.target this.player[playerId].actual)
+		(dd_matrix_translate this.roseCard.target 0 2.01 1.9)
 		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
 		(dd_matrix_rotate this.roseCard.target 180 0 0 1)
 		(dd_matrix_scale this.roseCard.target 0.15 0.15 0.15)

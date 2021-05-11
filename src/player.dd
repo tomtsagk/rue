@@ -21,9 +21,9 @@
 	(= this.selectedCard -1)
 	(= this.selectedCard2 0)
 	(dd_matrix_identity this.selectedMatrix)
-	(dd_matrix_translate this.selectedMatrix 0 2.01 2.7)
+	(dd_matrix_translate this.selectedMatrix 0 2.01 2.6)
 	(dd_matrix_rotate this.selectedMatrix 90 1 0 0)
-	(dd_matrix_rotate this.selectedMatrix (- (dd_math_rand 20) 10) 0 0 1)
+	#(dd_matrix_rotate this.selectedMatrix (- (dd_math_rand 20) 10) 0 0 1)
 	(dd_matrix_scale this.selectedMatrix 0.15 0.15 0.15)
 
 	(= this.userLookingAtCard -1)
@@ -173,7 +173,7 @@
 		(= this.selectedCard (dd_math_rand this.cardsTotal))
 		(= this.selectedCard2 this.cards[index])
 		(dd_matrix_identity this.selectedCard2.target)
-		(dd_matrix_mult this.selectedCard2.target this)
+		(dd_matrix_mult this.selectedCard2.target this.actual)
 		(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
 
 		# remove card from array
