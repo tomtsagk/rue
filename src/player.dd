@@ -15,7 +15,7 @@
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.font.setColorFront 1.0 1.0 1.0)
-	(this.font.setColorBack 0.0 0.0 0.0)
+	(this.font.setColorBack 0.8 0.8 0.8)
 
 	# selection
 	(= this.selectedCard -1)
@@ -24,7 +24,6 @@
 	(dd_matrix_translate this.selectedMatrix 0 2.01 2.6)
 	(dd_matrix_rotate this.selectedMatrix 90 1 0 0)
 	#(dd_matrix_rotate this.selectedMatrix (- (dd_math_rand 20) 10) 0 0 1)
-	(dd_matrix_scale this.selectedMatrix 0.15 0.15 0.15)
 
 	(= this.userLookingAtCard -1)
 
@@ -121,8 +120,7 @@
 		(dd_matrix_identity this.cards[i].target)
 		(dd_matrix_mult this.cards[i].target this)
 		(dd_matrix_translate this.cards[i].target 0 2.5 0.3)
-		(dd_matrix_scale this.cards[i].target 0.15 0.15 0.15)
-		(dd_matrix_translate this.cards[i].target (- (* i 2.7) (/ (* (- this.cardsTotal 1) 2.7) 2)) 0 0)
+		(dd_matrix_translate this.cards[i].target (- (* i 0.4) (/ (* (- this.cardsTotal 1) 0.4) 2)) 0 0)
 		(dd_matrix_rotate this.cards[i].target 180 0 1 0)
 		)
 	)
@@ -140,7 +138,6 @@
 		(dd_matrix_rotate this.cards[i].target -43 1 0 0)
 		(dd_matrix_translate this.cards[i].target 0 0 -1.2)
 		(dd_matrix_rotate this.cards[i].target 25 1 0 0)
-		(dd_matrix_scale this.cards[i].target 0.15 0.15 0.15)
 		)
 	)
 	)

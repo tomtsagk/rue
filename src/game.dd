@@ -26,7 +26,7 @@
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.font.setColorFront 1.0 1.0 1.0)
-	(this.font.setColorBack 0.0 0.0 0.0)
+	(this.font.setColorBack 0.8 0.8 0.8)
 
 	# camera control
 	(= this.rotX 0)
@@ -44,29 +44,34 @@
 	(dd_matrix_translate this.matCenter 0 -4 -5)
 
 	# stage
-	(this.stage.load (asset "assets/stage_1.asset" DD_PLY))
+	(this.stage.load (asset "assets/stage_2.asset" DD_PLY))
 	(this.table.load (asset "assets/table_1.asset" DD_PLY))
 	(this.tableArrow.load (asset "assets/table_arrow.asset" DD_PLY))
 
 	# card back
 	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
-	(this.cardBack.loadTexture (asset "assets/card_border_texture.asset" DD_PLY))
+	#(this.cardBack.loadTexture (asset "assets/card_border_texture.asset" DD_PLY))
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[0].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
+	#(this.cardFront[0].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
+	(this.cardFront[0].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 
 	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[1].loadTexture (asset "assets/card_action_3.asset" DD_PLY))
+	#(this.cardFront[1].loadTexture (asset "assets/card_action_3.asset" DD_PLY))
+	(this.cardFront[1].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 
 	(this.cardFront[2].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[2].loadTexture (asset "assets/card_action_4.asset" DD_PLY))
+	#(this.cardFront[2].loadTexture (asset "assets/card_action_4.asset" DD_PLY))
+	(this.cardFront[2].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 
 	(this.cardFront[3].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[3].loadTexture (asset "assets/card_action_5.asset" DD_PLY))
+	#(this.cardFront[3].loadTexture (asset "assets/card_action_5.asset" DD_PLY))
+	(this.cardFront[3].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 
 	(this.cardFront[4].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[4].loadTexture (asset "assets/card_action_6.asset" DD_PLY))
+	#(this.cardFront[4].loadTexture (asset "assets/card_action_6.asset" DD_PLY))
+	(this.cardFront[4].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 
 	# cards
 	(= this.cardsTotal 48)
@@ -81,9 +86,8 @@
 
 	# deck
 	(dd_matrix_identity this.deckMatrix)
-	(dd_matrix_translate this.deckMatrix -0.45 2 0)
+	(dd_matrix_translate this.deckMatrix -0.40 2 0)
 	(dd_matrix_rotate this.deckMatrix 90 1 0 0)
-	(dd_matrix_scale this.deckMatrix 0.2 0.2 0.2)
 	(= this.deckTotal 0)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
@@ -94,9 +98,8 @@
 
 	# discard
 	(dd_matrix_identity this.discardMatrix)
-	(dd_matrix_translate this.discardMatrix 0.45 2 0)
+	(dd_matrix_translate this.discardMatrix 0.40 2 0)
 	(dd_matrix_rotate this.discardMatrix -90 1 0 0)
-	(dd_matrix_scale this.discardMatrix 0.2 0.2 0.2)
 	(= this.discardTotal 0)
 
 	# players 3-8
@@ -139,7 +142,6 @@
 	(dd_matrix_translate this.player[0].selectedMatrix 0 2.01 -3.6)
 	(dd_matrix_rotate this.player[0].selectedMatrix 90 1 0 0)
 	(dd_matrix_rotate this.player[0].selectedMatrix 180 0 0 1)
-	(dd_matrix_scale this.player[0].selectedMatrix 0.15 0.15 0.15)
 
 	# temp rotating card
 	(= this.rotating 0)
@@ -147,7 +149,7 @@
 	# rose player
 	(= this.rosePlayer this.startingPlayer)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
-	(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
+	#(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
 
@@ -406,7 +408,7 @@
 
 	) # states handling
 
-	(= this.rotating (+ this.rotating 1))
+	(= this.rotating (+ this.rotating 0.5))
 
 	# calculate new camera look at point
 	(if (>= this.holdRotX 0)
@@ -495,8 +497,9 @@
 
 	# draw deck number
 	(dd_rotatef 180 1 0 0)
-	(dd_translatef 0 0 (+ (* 0.01 this.deckTotal) 0.5))
+	(dd_translatef 0 0 (+ (* 0.003 this.deckTotal) 0.1))
 	(dd_rotatef 90 1 0 0)
+	(dd_scalef 0.15 0.15 0.15)
 	(this.font.drawInt this.deckTotal)
 	(dd_matrix_pop)
 
@@ -512,8 +515,9 @@
 	(dd_multMatrixf this.discardMatrix)
 
 	# draw discard number
-	(dd_translatef 0 0 0.5)
+	(dd_translatef 0 0 (+ (* 0.003 this.discardTotal) 0.1))
 	(dd_rotatef 90 1 0 0)
+	(dd_scalef 0.15 0.15 0.15)
 	(this.font.drawInt this.discardTotal)
 	(dd_matrix_pop)
 
@@ -534,7 +538,7 @@
 	# rotating card
 #	(dd_translatef 0 3.5 0)
 #	(dd_rotatef this.rotating 0 1 0)
-#	(dd_scalef 0.5 0.5 0.5)
+#	(dd_scalef 5.0 5.0 5.0)
 #	(this.cardBack.draw)
 #	(this.cardFront[1].draw)
 
@@ -687,7 +691,7 @@
 		(= this.discard[this.discardTotal] card)
 		(= this.discardTotal (+ this.discardTotal 1))
 		(dd_matrix_copy card.target this.discardMatrix)
-		(dd_matrix_translate card.target 0 0 (* 0.01 (+ this.discardTotal 1)))
+		(dd_matrix_translate card.target 0 0 (* 0.003 (+ this.discardTotal 1)))
 		)
 	)
 	)
@@ -701,7 +705,7 @@
 		(= this.deck[this.deckTotal] card)
 		(= this.deckTotal (+ this.deckTotal 1))
 		(dd_matrix_copy card.target this.deckMatrix)
-		(dd_matrix_translate card.target 0 0 (* -0.01 (+ this.deckTotal 1)))
+		(dd_matrix_translate card.target 0 0 (* -0.003 (+ this.deckTotal 1)))
 		)
 	)
 	)
@@ -720,7 +724,6 @@
 		(dd_matrix_identity this.roseCard.target)
 		(dd_matrix_translate this.roseCard.target 0 2.01 2.1)
 		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
-		(dd_matrix_scale this.roseCard.target 0.15 0.15 0.15)
 		)
 	# position rose in front of another player
 		(group
@@ -730,7 +733,6 @@
 		(dd_matrix_translate this.roseCard.target 0 2.01 1.9)
 		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
 		(dd_matrix_rotate this.roseCard.target 180 0 0 1)
-		(dd_matrix_scale this.roseCard.target 0.15 0.15 0.15)
 		)
 	)
 
