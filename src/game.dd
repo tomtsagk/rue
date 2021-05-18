@@ -150,6 +150,7 @@
 	(= this.rosePlayer this.startingPlayer)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
 	#(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
+	(this.roseCardMesh.loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
 
