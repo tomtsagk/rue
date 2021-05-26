@@ -21,6 +21,7 @@
 	# font
 	(def dd_string3d font)
 
+	(def int highlightCard)
 	(def int selectedCard)
 	(def dd_matrix selectedMatrix)
 	(def ref Card selectedCard2)
@@ -36,6 +37,7 @@
 	(function void calculateCardPositions (group))
 	(function void calculateCardPositionsUser (group))
 
+	(function void highlightLookingCard (group))
 	(function void selectCard (group))
 	(function void deselectCard (group))
 

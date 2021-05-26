@@ -1,7 +1,5 @@
 (include "game.ddh")
 
-# -31 -55
-
 # game static states
 (def int STATE_IDLE 0)
 (def int STATE_DELAY 1)
@@ -30,9 +28,9 @@
 
 	# camera control
 	(= this.rotX 0)
-	(= this.rotY 0)
+	(= this.rotY -15)
 	(= this.targetRotX 0)
-	(= this.targetRotY 0)
+	(= this.targetRotY -15)
 	(= this.holdRotX -1)
 	(= this.holdRotY -1)
 
@@ -351,6 +349,7 @@
 
 	(== this.stateCurrent STATE_ENDPHASE)
 		(group
+
 		# waiting to next part
 		(if (> this.stateAnimation 0)
 			(group
@@ -369,7 +368,11 @@
 		# next player draw card
 			(group
 			(def int playerIndex (% this.stateValue this.playersTotal))
-			(this.drawCard playerIndex)
+
+			(if (== playerIndex this.rosePlayer)
+				(group)
+				(this.drawCard playerIndex)
+			)
 
 			# draw card succesfull
 			(if (== this.stateCurrent STATE_ENDPHASE)
@@ -600,14 +603,23 @@
 		# was not rotating - click
 		(if (== this.isRotating 0)
 			(group
-			(if (&& this.waitingPlayerCard (>= this.player[0].userLookingAtCard 0))
+			(if this.waitingPlayerCard
 				(group
-				(echo "user manually selected card")
-				(this.player[0].selectCard)
-				(= this.waitingPlayerCard 0)
-				(= this.stateValue (+ this.stateValue 1))
-				(= this.stateAnimation 50)
-				(= this.player[0].userLookingAtCard -1)
+
+				(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
+					(>= this.player[0].highlightCard 0))
+					(group
+					(echo "user manually selected card")
+					(this.player[0].selectCard)
+					(= this.waitingPlayerCard 0)
+					(= this.stateValue (+ this.stateValue 1))
+					(= this.stateAnimation 50)
+					(= this.player[0].userLookingAtCard -1)
+					)
+				# else
+					(this.player[0].highlightLookingCard)
+				)
+
 				)
 			)
 			)
@@ -692,7 +704,7 @@
 		(= this.discard[this.discardTotal] card)
 		(= this.discardTotal (+ this.discardTotal 1))
 		(dd_matrix_copy card.target this.discardMatrix)
-		(dd_matrix_translate card.target 0 0 (* 0.003 (+ this.discardTotal 1)))
+		(dd_matrix_translate card.target 0 0 (+ (* 0.003 (+ this.discardTotal 1)) 0.01))
 		)
 	)
 	)
@@ -706,7 +718,7 @@
 		(= this.deck[this.deckTotal] card)
 		(= this.deckTotal (+ this.deckTotal 1))
 		(dd_matrix_copy card.target this.deckMatrix)
-		(dd_matrix_translate card.target 0 0 (* -0.003 (+ this.deckTotal 1)))
+		(dd_matrix_translate card.target 0 0 (+ (* -0.003 (+ this.deckTotal 1)) -0.01))
 		)
 	)
 	)

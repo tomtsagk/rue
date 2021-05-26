@@ -18,6 +18,7 @@
 	(this.font.setColorBack 0.8 0.8 0.8)
 
 	# selection
+	(= this.highlightCard -1)
 	(= this.selectedCard -1)
 	(= this.selectedCard2 0)
 	(dd_matrix_identity this.selectedMatrix)
@@ -41,7 +42,18 @@
 	# draw cards
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(if (== i this.userLookingAtCard)
+
+		# highlighted card
+		(if (== i this.highlightCard)
+			(group
+			(dd_matrix_push)
+			(this.cards[i].applyMatrix)
+			(dd_scalef 1.15 1.15 1.15)
+			(this.cards[i].drawRaw)
+			(dd_matrix_pop)
+			)
+		# looking at card
+		(&& (== i this.userLookingAtCard) (== this.highlightCard -1))
 			(group
 			(dd_matrix_push)
 			(this.cards[i].applyMatrix)
@@ -120,7 +132,7 @@
 		(dd_matrix_identity this.cards[i].target)
 		(dd_matrix_mult this.cards[i].target this)
 		(dd_matrix_translate this.cards[i].target 0 2.5 0.3)
-		(dd_matrix_translate this.cards[i].target (- (* i 0.4) (/ (* (- this.cardsTotal 1) 0.4) 2)) 0 0)
+		(dd_matrix_translate this.cards[i].target (- (* i 0.42) (/ (* (- this.cardsTotal 1) 0.42) 2)) 0 0)
 		(dd_matrix_rotate this.cards[i].target 180 0 1 0)
 		)
 	)
@@ -143,6 +155,57 @@
 	)
 )
 
+(class_function Player void highlightLookingCard (group)
+	(group
+
+	# player has cards
+	(if (<= this.cardsTotal 0)
+		(group
+		(echo "cannot select card, no cards left")
+		)
+	# card is highlighted, either select it or remove highlight
+	(>= this.highlightCard 0)
+		(group
+
+		# looking at highlighted card - select it
+		(if (== this.highlightCard this.userLookingAtCard)
+			(group
+
+			(= this.selectedCard2 this.cards[this.highlightCard])
+			(dd_matrix_identity this.selectedCard2.target)
+			(dd_matrix_mult this.selectedCard2.target this.actual)
+			(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
+
+			# remove card from array
+			(for (def int i (+ index 1)) (< i this.cardsTotal) (= i (+ i 1))
+				(group
+				(def int prevIndex (- i 1))
+				(= this.cards[prevIndex] this.cards[i])
+				)
+			)
+
+			(= this.cardsTotal (- this.cardsTotal 1))
+			(if this.isUser
+				(this.calculateCardPositionsUser)
+				(this.calculateCardPositions)
+			)
+
+			)
+		# looking elsewhere - de-highlight card
+			(group
+			(= this.highlightCard -1)
+			)
+		)
+		)
+	(&& (>= this.userLookingAtCard 0) (< this.userLookingAtCard this.cardsTotal))
+		(group
+		(= this.highlightCard this.userLookingAtCard)
+		)
+	)
+
+	)
+)
+
 (class_function Player void selectCard (group)
 	(group
 
@@ -161,7 +224,8 @@
 		(def int index)
 		(if this.isUser
 			(group
-			(= index this.userLookingAtCard)
+			#(= index this.userLookingAtCard)
+			(= index this.highlightCard)
 			)
 			(group
 			(= index (dd_math_rand this.cardsTotal))
@@ -187,7 +251,7 @@
 			(this.calculateCardPositions)
 		)
 
-		)
+		) # selected card
 	)
 
 	)
