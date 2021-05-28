@@ -9,6 +9,15 @@
 (def int STATE_ENDPHASE 5)
 (def int STATE_DISCARDTODECK 6)
 
+# cards
+(def int CARD_SINGLE_STEP 0)
+(def int CARD_THREE_STEPS 1)
+(def int CARD_TRADE 2)
+(def int CARD_CONDITIONAL 3)
+(def int CARD_CHOOSE 4)
+(def int CARD_PEEK 5)
+(def int CARD_REPLACE 6)
+
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
 (class_function world_game void create (group)
@@ -53,32 +62,91 @@
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
 	#(this.cardFront[0].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
-	(this.cardFront[0].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
+	(this.cardFront[0].loadTexture (asset "assets/card_action_1.asset" DD_PLY))
 
 	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
-	#(this.cardFront[1].loadTexture (asset "assets/card_action_3.asset" DD_PLY))
-	(this.cardFront[1].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
+	(this.cardFront[1].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
 
 	(this.cardFront[2].load (asset "assets/card.asset" DD_PLY))
-	#(this.cardFront[2].loadTexture (asset "assets/card_action_4.asset" DD_PLY))
-	(this.cardFront[2].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
+	(this.cardFront[2].loadTexture (asset "assets/card_action_3.asset" DD_PLY))
 
 	(this.cardFront[3].load (asset "assets/card.asset" DD_PLY))
-	#(this.cardFront[3].loadTexture (asset "assets/card_action_5.asset" DD_PLY))
-	(this.cardFront[3].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
+	(this.cardFront[3].loadTexture (asset "assets/card_action_4.asset" DD_PLY))
 
 	(this.cardFront[4].load (asset "assets/card.asset" DD_PLY))
-	#(this.cardFront[4].loadTexture (asset "assets/card_action_6.asset" DD_PLY))
-	(this.cardFront[4].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
+	(this.cardFront[4].loadTexture (asset "assets/card_action_5.asset" DD_PLY))
+
+	(this.cardFront[5].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[5].loadTexture (asset "assets/card_action_6.asset" DD_PLY))
+
+	(this.cardFront[6].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[6].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 
 	# cards
-	(= this.cardsTotal 48)
+	#(= this.cardsTotal 48)
+	(= this.cardsTotal 36)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(def int index (dd_math_rand 5))
-		(= this.cards[i].mesh this.cardFront[index])
+		#(def int index (dd_math_rand 5))
+		#(= this.cards[i].mesh this.cardFront[index])
 		(= this.cards[i].meshBack this.cardBack)
 		(dd_matrix_identity this.cards[i])
+		)
+	)
+
+	# single steps
+	(for (def int i 0) (< i 12) (= i (+ i 1))
+		(group
+		(= this.cards[i].id CARD_SINGLE_STEP)
+		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		)
+	)
+
+	# triple steps
+	(for (def int i 12) (< i (+ 12 6)) (= i (+ i 1))
+		(group
+		(= this.cards[i].id CARD_THREE_STEPS)
+		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+		)
+	)
+
+	# trade
+	(for (def int i 18) (< i (+ 18 3)) (= i (+ i 1))
+		(group
+		(= this.cards[i].id CARD_TRADE)
+		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
+		)
+	)
+
+	# conditional
+	(for (def int i 21) (< i (+ 21 5)) (= i (+ i 1))
+		(group
+		(= this.cards[i].id CARD_CONDITIONAL)
+		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
+		)
+	)
+
+	# choose
+	(for (def int i 26) (< i (+ 26 4)) (= i (+ i 1))
+		(group
+		(= this.cards[i].id CARD_CHOOSE)
+		(= this.cards[i].mesh this.cardFront[CARD_CHOOSE])
+		)
+	)
+
+	# peek
+	(for (def int i 30) (< i (+ 30 3)) (= i (+ i 1))
+		(group
+		(= this.cards[i].id CARD_PEEK)
+		(= this.cards[i].mesh this.cardFront[CARD_PEEK])
+		)
+	)
+
+	# replace
+	(for (def int i 33) (< i (+ 33 3)) (= i (+ i 1))
+		(group
+		(= this.cards[i].id CARD_REPLACE)
+		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
 		)
 	)
 
@@ -93,6 +161,7 @@
 		(dd_matrix_copy this.cards[i] this.cards[i].target)
 		)
 	)
+	(this.shuffleDeck)
 
 	# discard
 	(dd_matrix_identity this.discardMatrix)
@@ -101,7 +170,7 @@
 	(= this.discardTotal 0)
 
 	# players 3-8
-	(= this.playersTotal 8)
+	(= this.playersTotal 7)
 	(= this.player[0].isUser 1)
 	(= this.startingPlayer (dd_math_rand this.playersTotal))
 
@@ -176,7 +245,7 @@
 	(group
 
 	# idle state - do nothing
-	(if (== this.stateCurrent STATE_IDLE)
+	(if (|| (== this.stateCurrent STATE_IDLE) this.waitingPlayerCard)
 		(group)
 	# delay for next state
 	(== this.stateCurrent STATE_DELAY)
@@ -251,10 +320,20 @@
 			# user has to select a card manually
 			(if (== playerIndex 0)
 				(group
-				(echo "waiting user input")
-				(= this.waitingPlayerCard 1)
-				(= this.arrowRotationTarget 0)
-				(= this.arrowRotation (- this.arrowRotation 360))
+				# make user pick a card
+				(if (== this.player[0].selectedCard2 0)
+					(group
+					(echo "waiting user input")
+					(= this.waitingPlayerCard 1)
+					(= this.arrowRotationTarget 0)
+					(= this.arrowRotation (- this.arrowRotation 360))
+					)
+				# user picked a card - proceed
+					(group
+					(= this.stateValue (+ this.stateValue 1))
+					(= this.stateAnimation 50)
+					)
+				)
 				)
 			# AI will randomly select a card
 				(group
@@ -291,13 +370,55 @@
 		(== this.stateValue2 1)
 			(group
 			(def int playerIndex (% this.stateValue this.playersTotal))
-			(echo "executing: " playerIndex)
+			#(echo "executing: " playerIndex)
 			(= this.stateValue2 2)
 			(= this.stateAnimation 50)
 
-			# example execution
-			(if (dd_math_rand 2)
+			(def int cardId)
+			(= cardId this.player[playerIndex].selectedCard2.id)
+
+			# advance rose one step
+			(if (== cardId CARD_SINGLE_STEP)
 				(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
+			# advance rose three steps
+			(== cardId CARD_THREE_STEPS)
+				(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
+			# trade
+			(== cardId CARD_TRADE)
+				(echo "cannot trade yet")
+			# conditional - if rose one step behind, move one step, otherwise move three steps
+			(== cardId CARD_CONDITIONAL)
+				(if (== this.rosePlayer (% (- (+ playerIndex this.playersTotal) 1) this.playersTotal))
+					(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
+					(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
+				)
+			(== cardId CARD_CHOOSE)
+				(echo "cannot choose yet")
+			(== cardId CARD_PEEK)
+				(echo "cannot peek yet")
+			(== cardId CARD_REPLACE)
+				(group
+
+				# discard selected card
+				(this.addToDiscard this.player[playerIndex].selectedCard2)
+				(this.player[playerIndex].deselectCard)
+
+				# draw new card
+				(this.drawCard playerIndex)
+
+				# if AI - play a card, if player - pick one
+				(if (== playerIndex 0)
+					(= this.waitingPlayerCard 1)
+					(this.player[playerIndex].selectCard)
+				)
+
+				# reset state to re-reveal this player's card
+				(= this.stateValue2 0)
+				(= this.stateAnimation 50)
+
+				)
+			# else
+				(echo "execute id other")
 			)
 
 			)
@@ -305,6 +426,7 @@
 		(== this.stateValue2 2)
 			(group
 			(def int playerIndex (% this.stateValue this.playersTotal))
+			#(echo "hide card: " playerIndex)
 
 			# put last card in deck
 			(this.addToDiscard this.player[playerIndex].selectedCard2)
@@ -329,6 +451,7 @@
 			(group
 
 			(def int playerIndex (% this.stateValue this.playersTotal))
+			#(echo "reveal card: " playerIndex)
 			(= this.player[playerIndex].selectedCard2.hidden 0)
 			(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
 			(= this.stateAnimation 50)
@@ -397,6 +520,7 @@
 		(<= this.discardTotal 0)
 			(group
 			(= this.stateCurrent this.stateNext)
+			(this.shuffleDeck)
 			)
 		# pass next card
 			(group
@@ -501,7 +625,7 @@
 
 	# draw deck number
 	(dd_rotatef 180 1 0 0)
-	(dd_translatef 0 0 (+ (* 0.003 this.deckTotal) 0.1))
+	(dd_translatef 0 0 (+ (* 0.003 this.deckTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
 	(dd_scalef 0.15 0.15 0.15)
 	(this.font.drawInt this.deckTotal)
@@ -519,7 +643,7 @@
 	(dd_multMatrixf this.discardMatrix)
 
 	# draw discard number
-	(dd_translatef 0 0 (+ (* 0.003 this.discardTotal) 0.1))
+	(dd_translatef 0 0 (+ (* 0.003 this.discardTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
 	(dd_scalef 0.15 0.15 0.15)
 	(this.font.drawInt this.discardTotal)
@@ -606,14 +730,15 @@
 			(if this.waitingPlayerCard
 				(group
 
+				# just selected a card
 				(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
 					(>= this.player[0].highlightCard 0))
 					(group
 					(echo "user manually selected card")
 					(this.player[0].selectCard)
 					(= this.waitingPlayerCard 0)
-					(= this.stateValue (+ this.stateValue 1))
-					(= this.stateAnimation 50)
+					#(= this.stateValue (+ this.stateValue 1))
+					#(= this.stateAnimation 50)
 					(= this.player[0].userLookingAtCard -1)
 					)
 				# else
@@ -749,5 +874,26 @@
 		)
 	)
 
+	)
+)
+
+# shuffle all cards in the deck
+(class_function world_game void shuffleDeck (group)
+	(group
+	(for (def int i 0) (< i this.deckTotal) (= i (+ i 1))
+		(group
+		(def int target (dd_math_rand this.deckTotal))
+		(def ref Card temp)
+		(= temp this.deck[i])
+		(= this.deck[i] this.deck[target])
+		(= this.deck[target] temp)
+
+		(dd_matrix_copy this.deck[i].target this.deckMatrix)
+		(dd_matrix_translate this.deck[i].target 0 0 (+ (* -0.003 (+ i 1)) -0.01))
+
+		(dd_matrix_copy this.deck[target].target this.deckMatrix)
+		(dd_matrix_translate this.deck[target].target 0 0 (+ (* -0.003 (+ target 1)) -0.01))
+		)
+	)
 	)
 )

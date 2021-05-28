@@ -83,5 +83,7 @@
 	(function void addToDeck (group Card card))
 	(function void setRosePlayer (group int playerId))
 
+	(function void shuffleDeck (group))
+
 	)
 ) # game world

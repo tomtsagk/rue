@@ -224,8 +224,8 @@
 		(def int index)
 		(if this.isUser
 			(group
-			#(= index this.userLookingAtCard)
 			(= index this.highlightCard)
+			(= this.highlightCard -1)
 			)
 			(group
 			(= index (dd_math_rand this.cardsTotal))
@@ -260,6 +260,7 @@
 (class_function Player void deselectCard (group)
 	(group
 	(= this.selectedCard -1)
+	(= this.selectedCard2 0)
 	)
 )
 
