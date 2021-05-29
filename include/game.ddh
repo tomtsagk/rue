@@ -85,5 +85,7 @@
 
 	(function void shuffleDeck (group))
 
+	(function void applyArrowRotation (group int playerIndex))
+
 	)
 ) # game world

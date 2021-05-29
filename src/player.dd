@@ -88,7 +88,7 @@
 	(dd_matrix_push)
 	(dd_multMatrixf this)
 	(this.mesh.draw)
-	(dd_translatef 0 2.2 0.4)
+	(dd_translatef 0 2.2 0.3)
 	(dd_scalef 0.5 0.5 0.5)
 	(this.font.drawInt this.cardsTotal)
 	(dd_matrix_pop)
@@ -131,7 +131,7 @@
 		(group
 		(dd_matrix_identity this.cards[i].target)
 		(dd_matrix_mult this.cards[i].target this)
-		(dd_matrix_translate this.cards[i].target 0 2.5 0.3)
+		(dd_matrix_translate this.cards[i].target 0 2.5 0.2)
 		(dd_matrix_translate this.cards[i].target (- (* i 0.42) (/ (* (- this.cardsTotal 1) 0.42) 2)) 0 0)
 		(dd_matrix_rotate this.cards[i].target 180 0 1 0)
 		)

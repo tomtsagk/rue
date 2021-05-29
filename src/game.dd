@@ -170,28 +170,32 @@
 	(= this.discardTotal 0)
 
 	# players 3-8
-	(= this.playersTotal 7)
+	(= this.playersTotal 8)
 	(= this.player[0].isUser 1)
 	(= this.startingPlayer (dd_math_rand this.playersTotal))
 
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
 		(group
+
+		# rotate players kinda towards user
+		(def float angle)
+		(= angle (+ 0 (* (/ 360.0 this.playersTotal) i)))
+		(= angle (/ (- angle 180) 180.0))
+		(= angle (* angle 0.9))
+		(= angle (+ (* angle 180) 180))
 		(dd_matrix_identity this.player[i])
-		(dd_matrix_rotate this.player[i] (+ 15 (* (/ 330.0 this.playersTotal) i)) 0 1 0)
+		(dd_matrix_rotate this.player[i] angle 0 -1 0)
 		(dd_matrix_translate this.player[i] 0 0 4)
 
-		(if (< i (/ this.playersTotal 2))
-			(dd_matrix_rotate this.player[i] 10 0 1 0)
-		(> i (/ this.playersTotal 2))
-			(dd_matrix_rotate this.player[i] -10 0 1 0)
-		)
+		(def float offset (* -20 (/ (- 180 angle) 180.0)))
+		(dd_matrix_rotate this.player[i] offset 0 1 0)
 
 		(dd_matrix_rotate this.player[i] 180 0 1 0)
 
 		# players actual location
 		(dd_matrix_identity this.player[i].actual)
-		(dd_matrix_rotate this.player[i].actual (+ 0 (* (/ 360.0 this.playersTotal) i)) 0 1 0)
+		(dd_matrix_rotate this.player[i].actual (- 0 (* (/ 360.0 this.playersTotal) i)) 0 1 0)
 		(dd_matrix_translate this.player[i].actual 0 0 4)
 		(dd_matrix_rotate this.player[i].actual 180 0 1 0)
 
@@ -225,7 +229,7 @@
 	(dd_matrix_copy this.roseCard this.roseCard.target)
 
 	(= this.stateValue this.startingPlayer)
-	(= this.arrowRotationTarget (+ 0 (* (/ 360.0 this.playersTotal) this.startingPlayer)))
+	(this.applyArrowRotation this.startingPlayer)
 	(= this.arrowRotation this.arrowRotationTarget)
 
 	)
@@ -309,7 +313,7 @@
 		(> this.stateAnimation 0)
 			(group
 			(def int playerIndex (% this.stateValue this.playersTotal))
-			(= this.arrowRotationTarget (+ 0 (* (/ 360.0 this.playersTotal) playerIndex)))
+			(this.applyArrowRotation playerIndex)
 			(= this.stateAnimation (- this.stateAnimation 1))
 			)
 		# next player should select a card
@@ -325,8 +329,7 @@
 					(group
 					(echo "waiting user input")
 					(= this.waitingPlayerCard 1)
-					(= this.arrowRotationTarget 0)
-					(= this.arrowRotation (- this.arrowRotation 360))
+					(this.applyArrowRotation 0)
 					)
 				# user picked a card - proceed
 					(group
@@ -458,11 +461,8 @@
 			(= this.stateValue2 1)
 
 			(if (== playerIndex 0)
-				(group
-				(= this.arrowRotation (- this.arrowRotation 360))
-				(= this.arrowRotationTarget 0)
-				)
-				(= this.arrowRotationTarget (+ 0 (* (/ 360.0 this.playersTotal) playerIndex)))
+				(this.applyArrowRotation 0)
+				(this.applyArrowRotation playerIndex)
 			)
 
 			)
@@ -893,6 +893,17 @@
 
 		(dd_matrix_copy this.deck[target].target this.deckMatrix)
 		(dd_matrix_translate this.deck[target].target 0 0 (+ (* -0.003 (+ target 1)) -0.01))
+		)
+	)
+	)
+)
+
+(class_function world_game void applyArrowRotation (group int playerIndex)
+	(group
+	(= this.arrowRotationTarget (- 0 (* (/ 360.0 this.playersTotal) playerIndex)))
+	(if (< this.arrowRotation this.arrowRotationTarget)
+		(group
+		(= this.arrowRotation (+ this.arrowRotation 360))
 		)
 	)
 	)
