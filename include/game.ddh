@@ -11,6 +11,7 @@
 	(def float stateAnimation)
 	(def int stateValue)
 	(def int stateValue2)
+	(def int stateValue3)
 	(def int waitingPlayerCard)
 	(def ref char stateText)
 

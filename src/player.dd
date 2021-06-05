@@ -111,15 +111,51 @@
 	# apply limit
 	(if (>= this.cardsTotal 10)
 		(echo "CANNOT GIVE MORE CARDS")
-	(group
-	(= this.cards[this.cardsTotal] card)
-	(= this.cardsTotal (+ this.cardsTotal 1))
+		(group
+			(= this.cards[this.cardsTotal] card)
+			(= this.cardsTotal (+ this.cardsTotal 1))
 
-	(if this.isUser
-		(this.calculateCardPositionsUser)
-		(this.calculateCardPositions)
+			(if this.isUser
+				(this.calculateCardPositionsUser)
+				(this.calculateCardPositions)
+			)
+		)
 	)
+
 	)
+)
+
+(class_function Player void removeCard (group int index)
+	(group
+
+	# no cards to remove
+	(if (<= this.cardsTotal 0)
+		(echo "NO CARDS TO REMOVE")
+	# index out of bounds
+	(|| (< index 0) (>= index this.cardsTotal))
+		(echo "INDEX OUT OF BOUNDS TO REMOVE")
+	# remove given card
+		(group
+			(def int temp)
+			# shuffle all cards in the array down one step
+			(for (def int i index) (< i (- this.cardsTotal 1)) (= i (+ i 1))
+				(group
+				(= temp (+ i 1))
+				(= this.cards[i] this.cards[temp])
+				)
+			)
+			(= temp (- this.cardsTotal 1))
+			(= this.cards[temp] 0)
+
+			# update new number of cards
+			(= this.cardsTotal (- this.cardsTotal 1))
+
+			# re-position cards
+			(if this.isUser
+				(this.calculateCardPositionsUser)
+				(this.calculateCardPositions)
+			)
+		)
 	)
 
 	)

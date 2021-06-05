@@ -8,6 +8,7 @@
 (def int STATE_REVEALCARDS 4)
 (def int STATE_ENDPHASE 5)
 (def int STATE_DISCARDTODECK 6)
+(def int STATE_TRADE 7)
 
 # cards
 (def int CARD_SINGLE_STEP 0)
@@ -170,7 +171,7 @@
 	(= this.discardTotal 0)
 
 	# players 3-8
-	(= this.playersTotal 8)
+	(= this.playersTotal 3)
 	(= this.player[0].isUser 1)
 	(= this.startingPlayer (dd_math_rand this.playersTotal))
 
@@ -388,7 +389,48 @@
 				(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
 			# trade
 			(== cardId CARD_TRADE)
-				(echo "cannot trade yet")
+				(group
+
+				# if active player is rose player - nothing
+				# else
+				# pick a card, give it to rose player
+				# shuffle rose to player's hands, then receive a random one
+
+				# active player is rose player - can't trade with self!
+				(if (== playerIndex this.rosePlayer)
+					(group)
+				# else
+					(group
+
+					# user, wait for them to select a card
+					(if (== playerIndex 0)
+						(= this.waitingPlayerCard 1)
+					# AI, select a card randomly
+						(group
+
+						# select card randomly
+						(def int randomCard (dd_math_rand this.player[playerIndex].cardsTotal))
+
+						# if receiver is player, show card
+						(if (== this.rosePlayer 0)
+							(= this.player[playerIndex].cards[randomCard].hidden 0)
+						)
+
+						# actually give card to rose player and remove it from current player
+						(this.player[this.rosePlayer].addCard this.player[playerIndex].cards[randomCard])
+						(this.player[playerIndex].removeCard randomCard)
+
+						)
+					)
+
+					# move to trading
+					(= this.stateCurrent STATE_TRADE)
+					(= this.stateValue2 0)
+
+					)
+				)
+
+				)
 			# conditional - if rose one step behind, move one step, otherwise move three steps
 			(== cardId CARD_CONDITIONAL)
 				(if (== this.rosePlayer (% (- (+ playerIndex this.playersTotal) 1) this.playersTotal))
@@ -533,6 +575,71 @@
 		)
 
 		)
+
+	(== this.stateCurrent STATE_TRADE)
+		(group
+
+		(def int playerIndex (% this.stateValue this.playersTotal))
+
+		# delay
+		(if (> this.stateAnimation 0)
+			(= this.stateAnimation (- this.stateAnimation 1.0))
+		# still waiting for player card - do nothing
+		this.waitingPlayerCard
+			(group)
+		# active player gave a card to rose player
+		(== this.stateValue2 0)
+			(group
+
+			# card given to rose player - delay for animations
+			(= this.stateValue2 1)
+			(= this.stateAnimation 50)
+
+			)
+		# get random card back
+		(== this.stateValue2 1)
+			(group
+
+			# user just gave a card to rose player, make sure they are all hidden
+			(if (== playerIndex 0)
+				(for (def int i 0) (< i this.player[this.rosePlayer].cardsTotal) (= i (+ i 1))
+					(= this.player[this.rosePlayer].cards[i].hidden 0)
+				)
+			)
+
+			# get random card from rose player to active player
+			(def int temp (dd_math_rand this.player[this.rosePlayer].cardsTotal))
+
+			# user is about to receive a card, show it
+			(if (== playerIndex 0)
+				(= this.player[this.rosePlayer].cards[temp].hidden 0)
+			)
+
+			# rose player gives active player the card
+			(this.player[playerIndex].addCard this.player[this.rosePlayer].cards[temp])
+			(this.player[this.rosePlayer].removeCard temp)
+
+			# delay to let animations play out
+			(= this.stateValue2 2)
+			(= this.stateAnimation 50)
+
+			)
+		# everything is done, resume previous state
+		(== this.stateValue2 2)
+			(group
+			(= this.stateCurrent STATE_REVEALCARDS)
+
+			# user just gave a card to active player, make sure they are all hidden
+			(if (== this.rosePlayer 0)
+				(for (def int i 0) (< i this.player[this.rosePlayer].cardsTotal) (= i (+ i 1))
+					(= this.player[this.rosePlayer].cards[i].hidden 1)
+				)
+			)
+
+			)
+		)
+
+		) # trade state
 
 	) # states handling
 
@@ -735,13 +842,23 @@
 					(>= this.player[0].highlightCard 0))
 					(group
 					(echo "user manually selected card")
-					(this.player[0].selectCard)
-					(= this.waitingPlayerCard 0)
-					#(= this.stateValue (+ this.stateValue 1))
-					#(= this.stateAnimation 50)
-					(= this.player[0].userLookingAtCard -1)
+
+					# picked a card to trade
+					(if (== this.stateCurrent STATE_TRADE)
+						(group
+						(this.player[this.rosePlayer].addCard this.player[0].cards[this.player[0].highlightCard])
+						(this.player[0].removeCard this.player[0].highlightCard)
+						)
+					# picked a card to plan
+						(group
+						(this.player[0].selectCard)
+						)
 					)
-				# else
+					(= this.waitingPlayerCard 0)
+					(= this.player[0].userLookingAtCard -1)
+					(= this.player[0].highlightCard -1)
+					)
+				# just highlighted card
 					(this.player[0].highlightLookingCard)
 				)
 

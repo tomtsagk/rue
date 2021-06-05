@@ -34,6 +34,7 @@
 	(function void clean (group))
 
 	(function void addCard (group Card card))
+	(function void removeCard (group int index))
 	(function void calculateCardPositions (group))
 	(function void calculateCardPositionsUser (group))
 
