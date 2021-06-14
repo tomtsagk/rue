@@ -9,6 +9,7 @@
 (def int STATE_ENDPHASE 5)
 (def int STATE_DISCARDTODECK 6)
 (def int STATE_TRADE 7)
+(def int STATE_CHOOSE 8)
 
 # cards
 (def int CARD_SINGLE_STEP 0)
@@ -30,6 +31,8 @@
 	(= this.stateAnimation 100)
 	(= this.waitingPlayerCard 0)
 	(= this.stateText "setting up the table")
+	(= this.lookingAtChoosenAction -1)
+	(= this.confirmChoosenAction -1)
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -437,8 +440,24 @@
 					(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
 					(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
 				)
+			# choose - user has to choose one of two options
 			(== cardId CARD_CHOOSE)
-				(echo "cannot choose yet")
+				(group
+
+				# player has to choose which effect to apply
+				(if (== playerIndex 0)
+					(group
+					(= this.stateCurrent STATE_CHOOSE)
+					(= this.stateNext STATE_REVEALCARDS)
+					)
+				# AI chooses option randomly - for now
+					(group
+					(= this.stateAnimation 50)
+					(this.applyChooseCard (dd_math_rand 2))
+					)
+				)
+
+				)
 			(== cardId CARD_PEEK)
 				(echo "cannot peek yet")
 			(== cardId CARD_REPLACE)
@@ -641,6 +660,19 @@
 
 		) # trade state
 
+	(== this.stateCurrent STATE_CHOOSE)
+		(group
+		(if (&& (>= this.rotX   3) (< this.rotX 30)
+		        (>= this.rotY -36) (< this.rotY -5))
+			(= this.lookingAtChoosenAction 1)
+		(&& (<= this.rotX  -3) (> this.rotX -30)
+		    (>= this.rotY -36) (< this.rotY  -5))
+			(= this.lookingAtChoosenAction 0)
+		# else
+			(= this.lookingAtChoosenAction -1)
+		)
+		)
+
 	) # states handling
 
 	(= this.rotating (+ this.rotating 0.5))
@@ -706,6 +738,40 @@
 	# camera
 	(dd_rotatef this.rotY -1 0 0)
 	(dd_rotatef this.rotX 0 1 0)
+
+	# user is currently choosing one of multiple effects, draw their options
+	(if (== this.stateCurrent STATE_CHOOSE)
+		(group
+
+		(dd_matrix_push)
+		(dd_rotatef 15 0 1 0)
+		(dd_rotatef -20 1 0 0)
+		(dd_translatef 0 0 -1.5)
+		(dd_scalef 1.5 1.5 1.5)
+		(if (== this.confirmChoosenAction 0)
+			(dd_scalef 1.2 1.2 1.2)
+		(&& (== this.lookingAtChoosenAction 0) (== this.confirmChoosenAction -1))
+			(dd_scalef 1.1 1.1 1.1)
+		)
+		(def int playerIndex (% this.stateValue this.playersTotal))
+		(this.player[playerIndex].selectedCard2.drawRaw)
+		(dd_matrix_pop)
+
+		(dd_matrix_push)
+		(dd_rotatef -15 0 1 0)
+		(dd_rotatef -20 1 0 0)
+		(dd_translatef 0 0 -1.5)
+		(dd_scalef 1.5 1.5 1.5)
+		(if (== this.confirmChoosenAction 1)
+			(dd_scalef 1.2 1.2 1.2)
+		(&& (== this.lookingAtChoosenAction 1) (== this.confirmChoosenAction -1))
+			(dd_scalef 1.1 1.1 1.1)
+		)
+		(this.player[playerIndex].selectedCard2.drawRaw)
+		(dd_matrix_pop)
+
+		)
+	)
 
 	# center of world
 	(dd_multMatrixf this.matCenter)
@@ -863,7 +929,31 @@
 				)
 
 				)
-			)
+			# was choosing between two options
+			(== this.stateCurrent STATE_CHOOSE)
+				(group
+
+				# looking at confirmed card, activate it
+				(if (== this.lookingAtChoosenAction this.confirmChoosenAction)
+					(group
+					(= this.stateAnimation 50)
+					(this.applyChooseCard this.lookingAtChoosenAction)
+					(= this.stateCurrent this.stateNext)
+					)
+				# looking somewhere else, with a confirmed card - deconfirm it
+				(>= this.confirmChoosenAction 0)
+					(group
+					(= this.confirmChoosenAction -1)
+					)
+				# looking at another card - confirm it
+				(>= this.lookingAtChoosenAction 0)
+					(group
+					(= this.confirmChoosenAction this.lookingAtChoosenAction)
+					)
+				)
+
+				)
+			) # was waiting for user input
 			)
 		)
 
@@ -1022,6 +1112,15 @@
 		(group
 		(= this.arrowRotation (+ this.arrowRotation 360))
 		)
+	)
+	)
+)
+
+(class_function world_game void applyChooseCard (group int optionIndex)
+	(group
+	(if (== optionIndex 0)
+		(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
+		(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
 	)
 	)
 )

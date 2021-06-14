@@ -14,6 +14,8 @@
 	(def int stateValue3)
 	(def int waitingPlayerCard)
 	(def ref char stateText)
+	(def int lookingAtChoosenAction)
+	(def int confirmChoosenAction)
 
 	# font
 	(def dd_string3d font)
@@ -87,6 +89,8 @@
 	(function void shuffleDeck (group))
 
 	(function void applyArrowRotation (group int playerIndex))
+
+	(function void applyChooseCard (group int optionIndedx))
 
 	)
 ) # game world
