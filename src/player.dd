@@ -242,6 +242,44 @@
 	)
 )
 
+(class_function Player void planCard (group int index)
+	(group
+
+	(if (<= this.cardsTotal 0)
+		(group
+		(echo "cannot select card, no cards left")
+		)
+	(&& (< index 0) (>= index this.cardsTotal))
+		(group
+		(echo "cannot select card, out of bounds")
+		)
+	# else
+		(group
+		(= this.selectedCard2 this.cards[index])
+		(dd_matrix_identity this.selectedCard2.target)
+		(dd_matrix_mult this.selectedCard2.target this.actual)
+		(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
+
+		# remove card from array
+		(for (def int i (+ index 1)) (< i this.cardsTotal) (= i (+ i 1))
+			(group
+			(def int prevIndex (- i 1))
+			(= this.cards[prevIndex] this.cards[i])
+			)
+		)
+
+		(= this.cardsTotal (- this.cardsTotal 1))
+		(if this.isUser
+			(this.calculateCardPositionsUser)
+			(this.calculateCardPositions)
+		)
+
+		) # selected card
+	)
+
+	)
+)
+
 (class_function Player void selectCard (group)
 	(group
 

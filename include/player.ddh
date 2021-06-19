@@ -39,6 +39,7 @@
 	(function void calculateCardPositionsUser (group))
 
 	(function void highlightLookingCard (group))
+	(function void planCard (group int index))
 	(function void selectCard (group))
 	(function void deselectCard (group))
 

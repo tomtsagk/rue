@@ -1,21 +1,50 @@
 #(include "intro.ddh")
 (include "player.ddh")
 
+#
+# defines actions supported by the game
+#
+#
+# move rose to player X (DONE)
+#
+# player X draw 1 card (DONE)
+#
+# player X has to select a card (DONE)
+#
+# reveal player X's selected card (DONE)
+#
+# discard player X's selected card (DONE)
+#
+# look at player X's card
+#
+# be given choices (?)
+#
+(class GameAction dd_matrix
+	(group
+	(def int actionType)
+	(def int playerIndex)
+	(def int value)
+	(def int delay)
+
+	(function void set (group int actionType int playerIndex int valueAmount int delay))
+	)
+)
+
 # game world
 (class world_game dd_world
 	(group
 
-	# game states
-	(def int stateCurrent)
-	(def int stateNext)
-	(def float stateAnimation)
-	(def int stateValue)
-	(def int stateValue2)
-	(def int stateValue3)
-	(def int waitingPlayerCard)
-	(def ref char stateText)
+	# game phases
+	(def ref char phaseText)
 	(def int lookingAtChoosenAction)
 	(def int confirmChoosenAction)
+	(def int phase)
+
+	# game actions
+	(def int lastSelectedCardPlayerIndex)
+	(def int lastSelectedCardIndex)
+	(def GameAction actions[100])
+	(def int actionsTotal)
 
 	# font
 	(def dd_string3d font)
@@ -91,6 +120,9 @@
 	(function void applyArrowRotation (group int playerIndex))
 
 	(function void applyChooseCard (group int optionIndedx))
+
+	(function void addAction (group int actionType int playerIndex int valueAmount int delay))
+	(function void removeAction (group))
 
 	)
 ) # game world

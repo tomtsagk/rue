@@ -1,15 +1,10 @@
 (include "game.ddh")
 
-# game static states
-(def int STATE_IDLE 0)
-(def int STATE_DELAY 1)
-(def int STATE_INIT 2)
-(def int STATE_PLAYCARDS 3)
-(def int STATE_REVEALCARDS 4)
-(def int STATE_ENDPHASE 5)
-(def int STATE_DISCARDTODECK 6)
-(def int STATE_TRADE 7)
-(def int STATE_CHOOSE 8)
+# game phases
+(def int PHASE_INIT 0)
+(def int PHASE_PLAN 1)
+(def int PHASE_EXECUTION 2)
+(def int PHASE_END 3)
 
 # cards
 (def int CARD_SINGLE_STEP 0)
@@ -20,19 +15,29 @@
 (def int CARD_PEEK 5)
 (def int CARD_REPLACE 6)
 
+# actions
+(def int ACTION_DELAY 0)
+(def int ACTION_MOVE_ROSE 1)
+(def int ACTION_ADVANCE_ROSE 2)
+(def int ACTION_DRAW_CARD 3)
+(def int ACTION_SELECT_CARD 4)
+(def int ACTION_PLAN_CARD 5)
+(def int ACTION_SET_ACTIVE_PLAYER 6)
+(def int ACTION_REVEAL_PLANNED_CARD 7)
+(def int ACTION_EXECUTE_PLANNED_CARD 8)
+(def int ACTION_DISCARD_PLANNED_CARD 9)
+(def int ACTION_CHANGE_PHASE 10)
+
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
 (class_function world_game void create (group)
 	(group
 
-	# game states
-	(= this.stateCurrent STATE_DELAY)
-	(= this.stateNext STATE_INIT)
-	(= this.stateAnimation 100)
-	(= this.waitingPlayerCard 0)
-	(= this.stateText "setting up the table")
-	(= this.lookingAtChoosenAction -1)
-	(= this.confirmChoosenAction -1)
+	# game phases text
+	(= this.phaseText "setting up the table")
+
+	# game actions init
+	(= this.actionsTotal 0)
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -176,7 +181,6 @@
 	# players 3-8
 	(= this.playersTotal 3)
 	(= this.player[0].isUser 1)
-	(= this.startingPlayer (dd_math_rand this.playersTotal))
 
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
@@ -228,13 +232,10 @@
 	(this.roseCardMesh.loadTexture (asset "assets/card_action_7.asset" DD_PLY))
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
-
-	(this.setRosePlayer this.rosePlayer)
 	(dd_matrix_copy this.roseCard this.roseCard.target)
 
-	(= this.stateValue this.startingPlayer)
-	(this.applyArrowRotation this.startingPlayer)
-	(= this.arrowRotation this.arrowRotationTarget)
+	# begin the game
+	(this.addAction ACTION_CHANGE_PHASE 0 PHASE_INIT 50)
 
 	)
 )
@@ -252,428 +253,198 @@
 (class_function world_game void update (group)
 	(group
 
-	# idle state - do nothing
-	(if (|| (== this.stateCurrent STATE_IDLE) this.waitingPlayerCard)
-		(group)
-	# delay for next state
-	(== this.stateCurrent STATE_DELAY)
-		(group
-		(= this.stateAnimation (- this.stateAnimation 1))
-		(if (<= this.stateAnimation 0)
-			(group
-			(= this.stateCurrent this.stateNext)
-			(= this.stateAnimation 50)
-			)
-		)
-		)
-	# initialise game state - deal cards to players
-	(== this.stateCurrent STATE_INIT)
+	# execute remaining actions
+	(if (> this.actionsTotal 0)
 		(group
 
-		# delay before dealing another card
-		(if (> this.stateAnimation 0)
+		# delay after executing an action
+		(if (== this.actions[0].actionType ACTION_DELAY)
 			(group
-			(= this.stateAnimation (- this.stateAnimation 1))
+			(if (> this.actions[0].delay 0)
+				(= this.actions[0].delay (- this.actions[0].delay 1))
+				(this.removeAction)
 			)
-		# deal one card to the next player
+			)
+		# change phases
+		(== this.actions[0].actionType ACTION_CHANGE_PHASE)
 			(group
-			(this.drawCard (% this.stateValue this.playersTotal))
-			(= this.stateValue (+ this.stateValue 1))
-			(= this.stateAnimation 5)
 
-			# dealt all cards
-			(if (>= this.stateValue (+ this.startingPlayer (* this.playersTotal 5)))
+			# initialise phase
+			(if (== this.actions[0].value PHASE_INIT)
 				(group
-				(= this.stateText "playing cards")
-				(= this.stateCurrent STATE_DELAY)
-				(= this.stateNext STATE_PLAYCARDS)
-				(= this.stateAnimation 50)
-				#(= this.startingPlayer (dd_math_rand this.playersTotal))
-				(= this.stateValue this.startingPlayer)
+				(= this.phaseText "initialising game")
+
+				# decide starting player
+				(= this.startingPlayer (dd_math_rand this.playersTotal))
+				(= this.rosePlayer this.startingPlayer)
+				(this.addAction ACTION_MOVE_ROSE this.rosePlayer 0 50)
+
+				# all players draw starting cards
+				(for (def int j 0) (< j 5) (= j (+ j 1))
+				(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
+					(this.addAction ACTION_DRAW_CARD i 0 5)
 				)
-			)
+				)
 
-			)
-		) # deal cards
+				# start with planning phase
+				(this.addAction ACTION_CHANGE_PHASE 0 PHASE_PLAN 50)
 
-		)
-	# each player selects one card to play
-	(== this.stateCurrent STATE_PLAYCARDS)
-		(group
-
-		(if this.waitingPlayerCard
-			(group)
-		# all players picked cards
-		(== this.stateValue (+ this.startingPlayer this.playersTotal))
-			(group
-			(= this.stateText "revealing cards")
-			(= this.stateCurrent STATE_DELAY)
-			(= this.stateNext STATE_REVEALCARDS)
-			(= this.stateAnimation 50)
-			(= this.stateValue this.startingPlayer)
-			(= this.stateValue2 0)
-			)
-		# delay before selecting a card
-		(> this.stateAnimation 0)
-			(group
-			(def int playerIndex (% this.stateValue this.playersTotal))
-			(this.applyArrowRotation playerIndex)
-			(= this.stateAnimation (- this.stateAnimation 1))
-			)
-		# next player should select a card
-			(group
-
-			(def int playerIndex (% this.stateValue this.playersTotal))
-
-			# user has to select a card manually
-			(if (== playerIndex 0)
+				)
+			# planning phase
+			(== this.actions[0].value PHASE_PLAN)
 				(group
-				# make user pick a card
-				(if (== this.player[0].selectedCard2 0)
+				(= this.phaseText "planning phase")
+
+				# ask all players to plan a card
+				(for (def int i this.rosePlayer) (< i (+ this.playersTotal this.rosePlayer)) (= i (+ i 1))
 					(group
-					(echo "waiting user input")
-					(= this.waitingPlayerCard 1)
-					(this.applyArrowRotation 0)
-					)
-				# user picked a card - proceed
-					(group
-					(= this.stateValue (+ this.stateValue 1))
-					(= this.stateAnimation 50)
+					(def int index (% i this.playersTotal))
+					(this.addAction ACTION_SET_ACTIVE_PLAYER index 0 20)
+					(this.addAction ACTION_SELECT_CARD index 0 0)
+					(this.addAction ACTION_PLAN_CARD -1 0 50)
 					)
 				)
+
+				# when done, move to execution phase
+				(this.addAction ACTION_CHANGE_PHASE 0 PHASE_EXECUTION 50)
+
 				)
-			# AI will randomly select a card
+			# execution phase
+			(== this.actions[0].value PHASE_EXECUTION)
 				(group
-				(this.player[playerIndex].selectCard)
-				(= this.stateAnimation 50)
+				(= this.phaseText "execution phase")
 
-				(def int cardIndex this.player[playerIndex].selectedCard)
-				(echo "player: " playerIndex " picked card " cardIndex)
+				# reveal all planned cards, and execute their actions
+				(for (def int i this.rosePlayer) (< i (+ this.playersTotal this.rosePlayer)) (= i (+ i 1))
+					(group
+					(def int index (% i this.playersTotal))
+					(this.addAction ACTION_SET_ACTIVE_PLAYER index 0 20)
+					(this.addAction ACTION_REVEAL_PLANNED_CARD index 0 50)
+					(this.addAction ACTION_EXECUTE_PLANNED_CARD index 0 50)
+					(this.addAction ACTION_DISCARD_PLANNED_CARD index 0 50)
+					)
+				)
 
-				(= this.stateValue (+ this.stateValue 1))
-
-				(def int newIndex (% this.stateValue this.playersTotal))
-				(if (== newIndex 0) (= this.stateAnimation 0))
+				# when done, move to end phase
+				(this.addAction ACTION_CHANGE_PHASE 0 PHASE_END 50)
 
 				)
-			) # user or AI select a card
+			# end phase
+			(== this.actions[0].value PHASE_END)
+				(group
+				(= this.phaseText "end phase")
+
+				# check for victory condition here, if not triggered, everyone draws cards
+				# and restart the process
+
+				# all players, apart from the rose player, draw a card
+				(for (def int i (+ this.rosePlayer 1)) (< i (+ this.playersTotal this.rosePlayer)) (= i (+ i 1))
+					(group
+					(def int index (% i this.playersTotal))
+					(this.addAction ACTION_DRAW_CARD index 0 5)
+					)
+				)
+
+				# when done, restart planning phase
+				(this.addAction ACTION_CHANGE_PHASE 0 PHASE_PLAN 50)
+				)
+			# error phase (should never trigger)
+				(group
+				(= this.phaseText "error phase")
+				)
+			)
+
+			(= this.actions[0].actionType ACTION_DELAY)
 
 			)
-		) # check who has to play cards
-
-		)
-
-	# reveal and execute cards
-	(== this.stateCurrent STATE_REVEALCARDS)
-		(group
-
-		(if
-		# waiting to next part
-		(> this.stateAnimation 0)
+		# change rose player
+		(== this.actions[0].actionType ACTION_MOVE_ROSE)
 			(group
-			(= this.stateAnimation (- this.stateAnimation 1.0))
+			(this.setRosePlayer this.actions[0].playerIndex)
+			(= this.actions[0].actionType ACTION_DELAY)
 			)
-		# executing card
-		(== this.stateValue2 1)
+		# advance rose to next player
+		(== this.actions[0].actionType ACTION_ADVANCE_ROSE)
 			(group
-			(def int playerIndex (% this.stateValue this.playersTotal))
-			#(echo "executing: " playerIndex)
-			(= this.stateValue2 2)
-			(= this.stateAnimation 50)
-
-			(def int cardId)
-			(= cardId this.player[playerIndex].selectedCard2.id)
-
-			# advance rose one step
-			(if (== cardId CARD_SINGLE_STEP)
-				(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
-			# advance rose three steps
-			(== cardId CARD_THREE_STEPS)
-				(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
-			# trade
-			(== cardId CARD_TRADE)
-				(group
-
-				# if active player is rose player - nothing
-				# else
-				# pick a card, give it to rose player
-				# shuffle rose to player's hands, then receive a random one
-
-				# active player is rose player - can't trade with self!
-				(if (== playerIndex this.rosePlayer)
-					(group)
-				# else
-					(group
-
-					# user, wait for them to select a card
-					(if (== playerIndex 0)
-						(= this.waitingPlayerCard 1)
-					# AI, select a card randomly
-						(group
-
-						# select card randomly
-						(def int randomCard (dd_math_rand this.player[playerIndex].cardsTotal))
-
-						# if receiver is player, show card
-						(if (== this.rosePlayer 0)
-							(= this.player[playerIndex].cards[randomCard].hidden 0)
-						)
-
-						# actually give card to rose player and remove it from current player
-						(this.player[this.rosePlayer].addCard this.player[playerIndex].cards[randomCard])
-						(this.player[playerIndex].removeCard randomCard)
-
-						)
-					)
-
-					# move to trading
-					(= this.stateCurrent STATE_TRADE)
-					(= this.stateValue2 0)
-
-					)
-				)
-
-				)
-			# conditional - if rose one step behind, move one step, otherwise move three steps
-			(== cardId CARD_CONDITIONAL)
-				(if (== this.rosePlayer (% (- (+ playerIndex this.playersTotal) 1) this.playersTotal))
-					(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
-					(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
-				)
-			# choose - user has to choose one of two options
-			(== cardId CARD_CHOOSE)
-				(group
-
-				# player has to choose which effect to apply
-				(if (== playerIndex 0)
-					(group
-					(= this.stateCurrent STATE_CHOOSE)
-					(= this.stateNext STATE_REVEALCARDS)
-					)
-				# AI chooses option randomly - for now
-					(group
-					(= this.stateAnimation 50)
-					(this.applyChooseCard (dd_math_rand 2))
-					)
-				)
-
-				)
-			(== cardId CARD_PEEK)
-				(echo "cannot peek yet")
-			(== cardId CARD_REPLACE)
-				(group
-
-				# discard selected card
-				(this.addToDiscard this.player[playerIndex].selectedCard2)
-				(this.player[playerIndex].deselectCard)
-
-				# draw new card
-				(this.drawCard playerIndex)
-
-				# if AI - play a card, if player - pick one
-				(if (== playerIndex 0)
-					(= this.waitingPlayerCard 1)
-					(this.player[playerIndex].selectCard)
-				)
-
-				# reset state to re-reveal this player's card
-				(= this.stateValue2 0)
-				(= this.stateAnimation 50)
-
-				)
-			# else
-				(echo "execute id other")
+			(this.setRosePlayer (% (+ this.rosePlayer this.actions[0].value) this.playersTotal))
+			(= this.actions[0].actionType ACTION_DELAY)
 			)
-
-			)
-		# hiding card
-		(== this.stateValue2 2)
+		# draw card
+		(== this.actions[0].actionType ACTION_DRAW_CARD)
 			(group
-			(def int playerIndex (% this.stateValue this.playersTotal))
-			#(echo "hide card: " playerIndex)
+			(this.drawCard this.actions[0].playerIndex)
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+		# select a card
+		(== this.actions[0].actionType ACTION_SELECT_CARD)
+			(group
 
-			# put last card in deck
+			# user has to select a card
+			(if (== this.actions[0].playerIndex 0)
+				(group
+				)
+			# AI has to select a card
+				(group
+				(= this.lastSelectedCardPlayerIndex this.actions[0].playerIndex)
+				(= this.lastSelectedCardIndex 0)
+				(= this.actions[0].actionType ACTION_DELAY)
+				#(this.player[this.actions[0].playerIndex].selectCard)
+				)
+			)
+
+			)
+		# plan card
+		(== this.actions[0].actionType ACTION_PLAN_CARD)
+			(group
+
+			# player index is given as -1, use last selected card/player combo
+			(if (== this.actions[0].playerIndex -1)
+				(group
+				(this.player[this.lastSelectedCardPlayerIndex].planCard this.lastSelectedCardIndex)
+				)
+			# player and card index are given, use those instead
+				(group
+				(this.player[this.actions[0].playerIndex].planCard this.actions[0].value)
+				)
+			)
+
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+		# set active player
+		(== this.actions[0].actionType ACTION_SET_ACTIVE_PLAYER)
+			(group
+			(this.applyArrowRotation this.actions[0].playerIndex)
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+		# reveal planned card
+		(== this.actions[0].actionType ACTION_REVEAL_PLANNED_CARD)
+			(group
+			(def int playerIndex this.actions[0].playerIndex)
+			(= this.player[playerIndex].selectedCard2.hidden 0)
+			(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+		# execute planned card
+		(== this.actions[0].actionType ACTION_EXECUTE_PLANNED_CARD)
+			(group
+			(echo "executing card")
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+		# discard planned card
+		(== this.actions[0].actionType ACTION_DISCARD_PLANNED_CARD)
+			(group
+			(def int playerIndex this.actions[0].playerIndex)
+
 			(this.addToDiscard this.player[playerIndex].selectedCard2)
 			(this.player[playerIndex].deselectCard)
 
-			(= this.stateValue2 0)
-			(= this.stateValue (+ this.stateValue 1))
-			(= this.stateAnimation 50)
-			)
-		# done executing
-		(== this.stateValue (+ this.startingPlayer this.playersTotal))
-			(group
-
-			(= this.stateText "end phase")
-			(= this.stateCurrent STATE_DELAY)
-			(= this.stateNext STATE_ENDPHASE)
-			(= this.stateAnimation 50)
-			(= this.stateValue this.startingPlayer)
-
-			)
-		# reveal next card
-			(group
-
-			(def int playerIndex (% this.stateValue this.playersTotal))
-			#(echo "reveal card: " playerIndex)
-			(= this.player[playerIndex].selectedCard2.hidden 0)
-			(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
-			(= this.stateAnimation 50)
-			(= this.stateValue2 1)
-
-			(if (== playerIndex 0)
-				(this.applyArrowRotation 0)
-				(this.applyArrowRotation playerIndex)
-			)
+			(= this.actions[0].actionType ACTION_DELAY)
 
 			)
 		)
 
 		)
-
-	(== this.stateCurrent STATE_ENDPHASE)
-		(group
-
-		# waiting to next part
-		(if (> this.stateAnimation 0)
-			(group
-			(= this.stateAnimation (- this.stateAnimation 1.0))
-			)
-		# done drawing
-		(== this.stateValue (+ this.startingPlayer this.playersTotal))
-			(group
-			(echo "done drawing")
-			(= this.stateText "playing cards")
-			(= this.stateCurrent STATE_DELAY)
-			(= this.stateNext STATE_PLAYCARDS)
-			(= this.startingPlayer this.rosePlayer)
-			(= this.stateValue this.startingPlayer)
-			)
-		# next player draw card
-			(group
-			(def int playerIndex (% this.stateValue this.playersTotal))
-
-			(if (== playerIndex this.rosePlayer)
-				(group)
-				(this.drawCard playerIndex)
-			)
-
-			# draw card succesfull
-			(if (== this.stateCurrent STATE_ENDPHASE)
-				(group
-				(= this.stateAnimation 5)
-				(= this.stateValue (+ this.stateValue 1))
-				)
-			)
-			)
-		)
-		)
-
-	(== this.stateCurrent STATE_DISCARDTODECK)
-		(group
-
-		# delay
-		(if (> this.stateAnimation 0)
-			(group
-			(= this.stateAnimation (- this.stateAnimation 1.0))
-			)
-		# no more discard pile
-		(<= this.discardTotal 0)
-			(group
-			(= this.stateCurrent this.stateNext)
-			(this.shuffleDeck)
-			)
-		# pass next card
-			(group
-			(def int discardIndex (- this.discardTotal 1))
-			(this.addToDeck this.discard[discardIndex])
-			(= this.discard[discardIndex] 0)
-			(= this.discardTotal (- this.discardTotal 1))
-			(= this.stateAnimation 5)
-			)
-		)
-
-		)
-
-	(== this.stateCurrent STATE_TRADE)
-		(group
-
-		(def int playerIndex (% this.stateValue this.playersTotal))
-
-		# delay
-		(if (> this.stateAnimation 0)
-			(= this.stateAnimation (- this.stateAnimation 1.0))
-		# still waiting for player card - do nothing
-		this.waitingPlayerCard
-			(group)
-		# active player gave a card to rose player
-		(== this.stateValue2 0)
-			(group
-
-			# card given to rose player - delay for animations
-			(= this.stateValue2 1)
-			(= this.stateAnimation 50)
-
-			)
-		# get random card back
-		(== this.stateValue2 1)
-			(group
-
-			# user just gave a card to rose player, make sure they are all hidden
-			(if (== playerIndex 0)
-				(for (def int i 0) (< i this.player[this.rosePlayer].cardsTotal) (= i (+ i 1))
-					(= this.player[this.rosePlayer].cards[i].hidden 0)
-				)
-			)
-
-			# get random card from rose player to active player
-			(def int temp (dd_math_rand this.player[this.rosePlayer].cardsTotal))
-
-			# user is about to receive a card, show it
-			(if (== playerIndex 0)
-				(= this.player[this.rosePlayer].cards[temp].hidden 0)
-			)
-
-			# rose player gives active player the card
-			(this.player[playerIndex].addCard this.player[this.rosePlayer].cards[temp])
-			(this.player[this.rosePlayer].removeCard temp)
-
-			# delay to let animations play out
-			(= this.stateValue2 2)
-			(= this.stateAnimation 50)
-
-			)
-		# everything is done, resume previous state
-		(== this.stateValue2 2)
-			(group
-			(= this.stateCurrent STATE_REVEALCARDS)
-
-			# user just gave a card to active player, make sure they are all hidden
-			(if (== this.rosePlayer 0)
-				(for (def int i 0) (< i this.player[this.rosePlayer].cardsTotal) (= i (+ i 1))
-					(= this.player[this.rosePlayer].cards[i].hidden 1)
-				)
-			)
-
-			)
-		)
-
-		) # trade state
-
-	(== this.stateCurrent STATE_CHOOSE)
-		(group
-		(if (&& (>= this.rotX   3) (< this.rotX 30)
-		        (>= this.rotY -36) (< this.rotY -5))
-			(= this.lookingAtChoosenAction 1)
-		(&& (<= this.rotX  -3) (> this.rotX -30)
-		    (>= this.rotY -36) (< this.rotY  -5))
-			(= this.lookingAtChoosenAction 0)
-		# else
-			(= this.lookingAtChoosenAction -1)
-		)
-		)
-
-	) # states handling
+	)
 
 	(= this.rotating (+ this.rotating 0.5))
 
@@ -708,9 +479,9 @@
 	(= this.rotX (dd_math_ease_linear 0.1 this.rotX this.targetRotX))
 	(= this.rotY (dd_math_ease_linear 0.1 this.rotY this.targetRotY))
 
-	(if this.waitingPlayerCard
+	#(if this.waitingPlayerCard
 		(this.player[0].lookAtCard this.rotX this.rotY)
-	)
+	#)
 
 	#(def float tempRotX this.rotX)
 	#(def float tempRotY this.rotY)
@@ -738,40 +509,6 @@
 	# camera
 	(dd_rotatef this.rotY -1 0 0)
 	(dd_rotatef this.rotX 0 1 0)
-
-	# user is currently choosing one of multiple effects, draw their options
-	(if (== this.stateCurrent STATE_CHOOSE)
-		(group
-
-		(dd_matrix_push)
-		(dd_rotatef 15 0 1 0)
-		(dd_rotatef -20 1 0 0)
-		(dd_translatef 0 0 -1.5)
-		(dd_scalef 1.5 1.5 1.5)
-		(if (== this.confirmChoosenAction 0)
-			(dd_scalef 1.2 1.2 1.2)
-		(&& (== this.lookingAtChoosenAction 0) (== this.confirmChoosenAction -1))
-			(dd_scalef 1.1 1.1 1.1)
-		)
-		(def int playerIndex (% this.stateValue this.playersTotal))
-		(this.player[playerIndex].selectedCard2.drawRaw)
-		(dd_matrix_pop)
-
-		(dd_matrix_push)
-		(dd_rotatef -15 0 1 0)
-		(dd_rotatef -20 1 0 0)
-		(dd_translatef 0 0 -1.5)
-		(dd_scalef 1.5 1.5 1.5)
-		(if (== this.confirmChoosenAction 1)
-			(dd_scalef 1.2 1.2 1.2)
-		(&& (== this.lookingAtChoosenAction 1) (== this.confirmChoosenAction -1))
-			(dd_scalef 1.1 1.1 1.1)
-		)
-		(this.player[playerIndex].selectedCard2.drawRaw)
-		(dd_matrix_pop)
-
-		)
-	)
 
 	# center of world
 	(dd_multMatrixf this.matCenter)
@@ -850,7 +587,7 @@
 	# states
 	(dd_matrix_push)
 	(dd_translatef 0 5 -15)
-	(this.font.draw this.stateText)
+	(this.font.draw this.phaseText)
 	(dd_matrix_pop)
 
 	# clear depth
@@ -900,7 +637,9 @@
 		# was not rotating - click
 		(if (== this.isRotating 0)
 			(group
-			(if this.waitingPlayerCard
+
+			# waiting user to select a card
+			(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
 				(group
 
 				# just selected a card
@@ -909,47 +648,15 @@
 					(group
 					(echo "user manually selected card")
 
-					# picked a card to trade
-					(if (== this.stateCurrent STATE_TRADE)
-						(group
-						(this.player[this.rosePlayer].addCard this.player[0].cards[this.player[0].highlightCard])
-						(this.player[0].removeCard this.player[0].highlightCard)
-						)
-					# picked a card to plan
-						(group
-						(this.player[0].selectCard)
-						)
-					)
-					(= this.waitingPlayerCard 0)
+					(= this.lastSelectedCardPlayerIndex 0)
+					(= this.lastSelectedCardIndex this.player[0].highlightCard)
+					(= this.actions[0].actionType ACTION_DELAY)
+
 					(= this.player[0].userLookingAtCard -1)
 					(= this.player[0].highlightCard -1)
 					)
 				# just highlighted card
 					(this.player[0].highlightLookingCard)
-				)
-
-				)
-			# was choosing between two options
-			(== this.stateCurrent STATE_CHOOSE)
-				(group
-
-				# looking at confirmed card, activate it
-				(if (== this.lookingAtChoosenAction this.confirmChoosenAction)
-					(group
-					(= this.stateAnimation 50)
-					(this.applyChooseCard this.lookingAtChoosenAction)
-					(= this.stateCurrent this.stateNext)
-					)
-				# looking somewhere else, with a confirmed card - deconfirm it
-				(>= this.confirmChoosenAction 0)
-					(group
-					(= this.confirmChoosenAction -1)
-					)
-				# looking at another card - confirm it
-				(>= this.lookingAtChoosenAction 0)
-					(group
-					(= this.confirmChoosenAction this.lookingAtChoosenAction)
-					)
 				)
 
 				)
@@ -975,16 +682,16 @@
 	# never run out
 	(if (&& (<= this.deckTotal 0) (> this.discardTotal 0))
 		(group
-		(= this.stateNext this.stateCurrent)
-		(= this.stateCurrent STATE_DISCARDTODECK)
-		(= this.stateAnimation 0)
-#		(for (def int i 0) (< i this.discardTotal) (= i (+ i 1))
-#			(group
-#			(this.addToDeck this.discard[i])
-#			(= this.discard[i] 0)
-#			)
-#		)
-#		(= this.discardTotal 0)
+#		(= this.stateNext this.stateCurrent)
+#		(= this.stateCurrent STATE_DISCARDTODECK)
+#		(= this.stateAnimation 0)
+##		(for (def int i 0) (< i this.discardTotal) (= i (+ i 1))
+##			(group
+##			(this.addToDeck this.discard[i])
+##			(= this.discard[i] 0)
+##			)
+##		)
+##		(= this.discardTotal 0)
 		)
 	# check player index validity (shouldn't happen)
 	(|| (< playerIndex 0) (>= playerIndex this.playersTotal))
@@ -1122,5 +829,63 @@
 		(this.setRosePlayer (% (+ this.rosePlayer 1) this.playersTotal))
 		(this.setRosePlayer (% (+ this.rosePlayer 3) this.playersTotal))
 	)
+	)
+)
+
+(class_function world_game void addAction (group int actionType int playerIndex int valueAmount int delay)
+	(group
+	(if (>= this.actionsTotal 100)
+		(group
+		(echo "Max actions reached, cannot add more")
+		)
+	# else
+		(group
+		(this.actions[this.actionsTotal].set actionType playerIndex valueAmount delay)
+		(= this.actionsTotal (+ this.actionsTotal 1))
+		)
+	)
+	)
+)
+
+(class_function world_game void removeAction (group)
+	(group
+	(if (<= this.actionsTotal 0)
+		(group
+		(echo "No actions to remove")
+		)
+		(group
+		(for (def int i 1) (< i this.actionsTotal) (= i (+ i 1))
+			(group
+			(def int prevIndex (- i 1))
+			(this.actions[prevIndex].set this.actions[i].actionType this.actions[i].playerIndex this.actions[i].value this.actions[i].delay)
+			)
+		)
+		)
+	)
+
+	(= this.actionsTotal (- this.actionsTotal 1))
+	)
+)
+
+# game actions
+(class_function GameAction void create (group)
+	(group
+	(= this.actionType -1)
+	(= this.playerIndex -1)
+	(= this.value 0)
+	)
+)
+
+(class_function GameAction void clean (group)
+	(group
+	)
+)
+
+(class_function GameAction void set (group int actionType int playerIndex int valueAmount int delay)
+	(group
+	(= this.actionType actionType)
+	(= this.playerIndex playerIndex)
+	(= this.value valueAmount)
+	(= this.delay delay)
 	)
 )
