@@ -38,6 +38,7 @@
 
 	# game actions init
 	(= this.actionsTotal 0)
+	(= this.injectActionsTotal 0)
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -179,7 +180,7 @@
 	(= this.discardTotal 0)
 
 	# players 3-8
-	(= this.playersTotal 3)
+	(= this.playersTotal 4)
 	(= this.player[0].isUser 1)
 
 	# init player positions
@@ -428,6 +429,58 @@
 		(== this.actions[0].actionType ACTION_EXECUTE_PLANNED_CARD)
 			(group
 			(echo "executing card")
+
+			(def int cardId this.player[this.actions[0].playerIndex].selectedCard2.id)
+
+			# based on the card being executed, inject it's actions in the stack
+
+			# move rose one step
+			(if (== cardId CARD_SINGLE_STEP)
+				(group
+				(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+				(this.injectActionsToActions)
+				)
+			# move rose three steps
+			(== cardId CARD_THREE_STEPS)
+				(group
+				(this.addInjectAction ACTION_ADVANCE_ROSE 0 3 50)
+				(this.injectActionsToActions)
+				)
+			# trade 1 card with rose player
+			(== cardId CARD_TRADE)
+				(group
+				)
+			# If rose is one step before active user, move it one step, otherwise move it three steps
+			(== cardId CARD_CONDITIONAL)
+				(group
+				(echo "conditional")
+				(def int onePreviousIndex (% (- (+ this.actions[0].playerIndex this.playersTotal) 1) 5))
+				(if (== onePreviousIndex this.rosePlayer)
+					(group
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.injectActionsToActions)
+					)
+				# else
+					(group
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 3 50)
+					(this.injectActionsToActions)
+					)
+				)
+				)
+			# choose between two outcomes
+			(== cardId CARD_CHOOSE)
+				(group
+				)
+			# peek next card, discard or keep it
+			(== cardId CARD_PEEK)
+				(group
+				)
+			# discard your planned card, draw one card, plan another card and execute it
+			(== cardId CARD_REPLACE)
+				(group
+				)
+			)
+
 			(= this.actions[0].actionType ACTION_DELAY)
 			)
 		# discard planned card
@@ -864,6 +917,66 @@
 	)
 
 	(= this.actionsTotal (- this.actionsTotal 1))
+	)
+)
+
+(class_function world_game void addInjectAction (group int actionType int playerIndex int valueAmount int delay)
+	(group
+	(if (>= this.injectActionsTotal 100)
+		(group
+		(echo "Max inject actions reached, cannot add more")
+		)
+	# else
+		(group
+		(this.injectActions[this.injectActionsTotal].set actionType playerIndex valueAmount delay)
+		(= this.injectActionsTotal (+ this.injectActionsTotal 1))
+		)
+	)
+	)
+)
+
+(class_function world_game void injectActionsToActions (group)
+	(group
+	(if (>= (+ this.injectActionsTotal this.actionsTotal) 100)
+		(group
+		(echo "Can't inject actions, too many")
+		)
+	# else
+		(group
+
+		# move all current actions towards the end of the array, to make room for injected ones
+		# current action remains intact
+		(for (def int i (- this.actionsTotal 1)) (> i 0) (= i (- i 1))
+			(group
+			(def int destIndex (+ i this.injectActionsTotal))
+			(this.actions[destIndex].set
+				this.actions[i].actionType
+				this.actions[i].playerIndex
+				this.actions[i].value
+				this.actions[i].delay
+			)
+			)
+		)
+
+		# add injected actions in that space
+		(for (def int i 0) (< i this.injectActionsTotal) (= i (+ i 1))
+			(group
+			(def int actIndex (+ i 1))
+			(this.actions[actIndex].set
+				this.injectActions[i].actionType
+				this.injectActions[i].playerIndex
+				this.injectActions[i].value
+				this.injectActions[i].delay
+			)
+			)
+		)
+
+		# reset injected actions array
+		(= this.actionsTotal (+ this.actionsTotal this.injectActionsTotal))
+		(= this.injectActionsTotal 0)
+
+		)
+	)
 	)
 )
 
