@@ -27,6 +27,8 @@
 (def int ACTION_EXECUTE_PLANNED_CARD 8)
 (def int ACTION_DISCARD_PLANNED_CARD 9)
 (def int ACTION_CHANGE_PHASE 10)
+(def int ACTION_GIVE_CARD 11)
+(def int ACTION_HIDE_CARD 12)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -446,14 +448,32 @@
 				(this.addInjectAction ACTION_ADVANCE_ROSE 0 3 50)
 				(this.injectActionsToActions)
 				)
-			# trade 1 card with rose player
+			# trade - give 1 card to rose player, take 1 card back
 			(== cardId CARD_TRADE)
 				(group
+
+				(if (== this.rosePlayer this.actions[0].playerIndex)
+					(group
+					)
+					(group
+
+					# active player selects and gives a card to rose player
+					(this.addInjectAction ACTION_SELECT_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_GIVE_CARD this.rosePlayer 0 50)
+
+					# rose player picks up rose?
+
+					# rose player selects and gives a card to active player
+					(this.addInjectAction ACTION_SELECT_CARD this.rosePlayer 0 0)
+					(this.addInjectAction ACTION_GIVE_CARD this.actions[0].playerIndex 0 50)
+					(this.injectActionsToActions)
+					)
+				)
+
 				)
 			# If rose is one step before active user, move it one step, otherwise move it three steps
 			(== cardId CARD_CONDITIONAL)
 				(group
-				(echo "conditional")
 				(def int onePreviousIndex (% (- (+ this.actions[0].playerIndex this.playersTotal) 1) 5))
 				(if (== onePreviousIndex this.rosePlayer)
 					(group
@@ -470,14 +490,26 @@
 			# choose between two outcomes
 			(== cardId CARD_CHOOSE)
 				(group
+				# action choose effect of card X
 				)
 			# peek next card, discard or keep it
 			(== cardId CARD_PEEK)
 				(group
+				# action peek card
+				# action choose keep it or discard it
+				# if keep it, nothing happens
+				# if discard it, discard it
 				)
 			# discard your planned card, draw one card, plan another card and execute it
 			(== cardId CARD_REPLACE)
 				(group
+				(this.addInjectAction ACTION_DISCARD_PLANNED_CARD this.actions[0].playerIndex 0 50)
+				(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
+				(this.addInjectAction ACTION_SELECT_CARD this.actions[0].playerIndex 0 0)
+				(this.addInjectAction ACTION_PLAN_CARD -1 0 50)
+				(this.addInjectAction ACTION_REVEAL_PLANNED_CARD this.actions[0].playerIndex 0 50)
+				(this.addInjectAction ACTION_EXECUTE_PLANNED_CARD this.actions[0].playerIndex 0 50)
+				(this.injectActionsToActions)
 				)
 			)
 
@@ -494,7 +526,39 @@
 			(= this.actions[0].actionType ACTION_DELAY)
 
 			)
-		)
+		# give card to another player
+		(== this.actions[0].actionType ACTION_GIVE_CARD)
+			(group
+
+			(def int receiverIndex this.actions[0].playerIndex)
+
+			# user is receiving a card, reveal it straight away
+			(if (== receiverIndex 0)
+				(= this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].hidden 0)
+			)
+
+			(this.player[receiverIndex].addCard this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex])
+			(this.player[this.lastSelectedCardPlayerIndex].removeCard this.lastSelectedCardIndex)
+			(= this.actions[0].actionType ACTION_DELAY)
+
+			# user is giving a card, mark it to become hidden when arriving at opponent
+			(if (== this.lastSelectedCardPlayerIndex 0)
+				(group
+				(this.addInjectAction ACTION_HIDE_CARD receiverIndex (- this.player[receiverIndex].cardsTotal 1) 0)
+				(this.injectActionsToActions)
+				)
+			)
+
+			)
+
+		# hide given card
+		(== this.actions[0].actionType ACTION_HIDE_CARD)
+			(group
+			(= this.player[this.actions[0].playerIndex].cards[this.actions[0].value].hidden 1)
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+
+		) # different behavior for each action
 
 		)
 	)
