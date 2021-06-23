@@ -11,9 +11,11 @@
 (def int CARD_THREE_STEPS 1)
 (def int CARD_TRADE 2)
 (def int CARD_CONDITIONAL 3)
-(def int CARD_CHOOSE 4)
-(def int CARD_PEEK 5)
-(def int CARD_REPLACE 6)
+(def int CARD_REPLACE 4)
+(def int CARD_GRAB 5)
+(def int CARD_GRAB_GENERIC 6)
+(def int CARD_APPROACH 7)
+(def int CARD_WIN 8)
 
 # actions
 (def int ACTION_DELAY 0)
@@ -29,6 +31,7 @@
 (def int ACTION_CHANGE_PHASE 10)
 (def int ACTION_GIVE_CARD 11)
 (def int ACTION_HIDE_CARD 12)
+(def int ACTION_GRAB_ROSE 13)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -107,60 +110,67 @@
 	)
 
 	# single steps
-	(for (def int i 0) (< i 12) (= i (+ i 1))
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_SINGLE_STEP)
+		(= this.cards[i].id CARD_GRAB)
 		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
 		)
 	)
-
-	# triple steps
-	(for (def int i 12) (< i (+ 12 6)) (= i (+ i 1))
-		(group
-		(= this.cards[i].id CARD_THREE_STEPS)
-		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
-		)
-	)
-
-	# trade
-	(for (def int i 18) (< i (+ 18 3)) (= i (+ i 1))
-		(group
-		(= this.cards[i].id CARD_TRADE)
-		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
-		)
-	)
-
-	# conditional
-	(for (def int i 21) (< i (+ 21 5)) (= i (+ i 1))
-		(group
-		(= this.cards[i].id CARD_CONDITIONAL)
-		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
-		)
-	)
-
-	# choose
-	(for (def int i 26) (< i (+ 26 4)) (= i (+ i 1))
-		(group
-		(= this.cards[i].id CARD_CHOOSE)
-		(= this.cards[i].mesh this.cardFront[CARD_CHOOSE])
-		)
-	)
-
-	# peek
-	(for (def int i 30) (< i (+ 30 3)) (= i (+ i 1))
-		(group
-		(= this.cards[i].id CARD_PEEK)
-		(= this.cards[i].mesh this.cardFront[CARD_PEEK])
-		)
-	)
-
-	# replace
-	(for (def int i 33) (< i (+ 33 3)) (= i (+ i 1))
-		(group
-		(= this.cards[i].id CARD_REPLACE)
-		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
-		)
-	)
+#	# single steps
+#	(for (def int i 0) (< i 12) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_SINGLE_STEP)
+#		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+#		)
+#	)
+#
+#	# triple steps
+#	(for (def int i 12) (< i (+ 12 6)) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_THREE_STEPS)
+#		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+#		)
+#	)
+#
+#	# trade
+#	(for (def int i 18) (< i (+ 18 3)) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_TRADE)
+#		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
+#		)
+#	)
+#
+#	# conditional
+#	(for (def int i 21) (< i (+ 21 5)) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_CONDITIONAL)
+#		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
+#		)
+#	)
+#
+#	# choose
+#	(for (def int i 26) (< i (+ 26 4)) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_CHOOSE)
+#		(= this.cards[i].mesh this.cardFront[CARD_CHOOSE])
+#		)
+#	)
+#
+#	# peek
+#	(for (def int i 30) (< i (+ 30 3)) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_PEEK)
+#		(= this.cards[i].mesh this.cardFront[CARD_PEEK])
+#		)
+#	)
+#
+#	# replace
+#	(for (def int i 33) (< i (+ 33 3)) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_REPLACE)
+#		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
+#		)
+#	)
 
 	# deck
 	(dd_matrix_identity this.deckMatrix)
@@ -230,6 +240,7 @@
 
 	# rose player
 	(= this.rosePlayer this.startingPlayer)
+	(= this.isRoseFlat 1)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
 	#(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
 	(this.roseCardMesh.loadTexture (asset "assets/card_action_7.asset" DD_PLY))
@@ -369,8 +380,24 @@
 		# advance rose to next player
 		(== this.actions[0].actionType ACTION_ADVANCE_ROSE)
 			(group
-			(this.setRosePlayer (% (+ this.rosePlayer this.actions[0].value) this.playersTotal))
+
+			# rose is help by someone, flat it and lose one movement
+			(if (== this.isRoseFlat 0)
+				(group
+				(= this.isRoseFlat 1)
+				(= this.actions[0].value (- this.actions[0].value 1))
+				)
+			)
+
+			# there is movement left, move the rose
+			(if (> this.actions[0].value 0)
+				(group
+				(this.setRosePlayer (% (+ this.rosePlayer this.actions[0].value) this.playersTotal))
+				)
+			)
+
 			(= this.actions[0].actionType ACTION_DELAY)
+
 			)
 		# draw card
 		(== this.actions[0].actionType ACTION_DRAW_CARD)
@@ -487,19 +514,6 @@
 					)
 				)
 				)
-			# choose between two outcomes
-			(== cardId CARD_CHOOSE)
-				(group
-				# action choose effect of card X
-				)
-			# peek next card, discard or keep it
-			(== cardId CARD_PEEK)
-				(group
-				# action peek card
-				# action choose keep it or discard it
-				# if keep it, nothing happens
-				# if discard it, discard it
-				)
 			# discard your planned card, draw one card, plan another card and execute it
 			(== cardId CARD_REPLACE)
 				(group
@@ -510,6 +524,61 @@
 				(this.addInjectAction ACTION_REVEAL_PLANNED_CARD this.actions[0].playerIndex 0 50)
 				(this.addInjectAction ACTION_EXECUTE_PLANNED_CARD this.actions[0].playerIndex 0 50)
 				(this.injectActionsToActions)
+				)
+			# grab
+			# If rose is in front of you, grab it, otherwise move rose 1 step.
+			#	The new rose player grabs the rose.
+			(== cardId CARD_GRAB)
+				(group
+
+				# rose is in front of user, grab it
+				(if (== this.actions[0].playerIndex this.rosePlayer)
+					(group
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.injectActionsToActions)
+					)
+				# otherwise, move one step, rose player grabs rose
+					(group
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.injectActionsToActions)
+					)
+				)
+
+				)
+			# grab generic
+			# If rose is flat, the player in front of it grabs it.
+			(== cardId CARD_GRAB_GENERIC)
+				(group
+
+				(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+				(this.injectActionsToActions)
+
+				)
+			# aproach
+			# If you are not the rose player, move rose 1 step, otherwise move it 3 steps.
+			(== cardId CARD_APPROACH)
+				(group
+
+				# active user is rose player, move rose 3 steps
+				(if (== this.actions[0].playerIndex this.rosePlayer)
+					(group
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 3 50)
+					(this.injectActionsToActions)
+					)
+				# active user is not rose player, move rose 1 step
+					(group
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.injectActionsToActions)
+					)
+				)
+
+				)
+			# win
+			# If you are holding the rose, discard 1 card. Flat the rose. Move rose 1 step.
+			(== cardId CARD_WIN)
+				(group
+				(echo "win effect")
 				)
 			)
 
@@ -556,6 +625,18 @@
 			(group
 			(= this.player[this.actions[0].playerIndex].cards[this.actions[0].value].hidden 1)
 			(= this.actions[0].actionType ACTION_DELAY)
+			)
+
+		# the rose player, grabs the rose
+		(== this.actions[0].actionType ACTION_GRAB_ROSE)
+			(group
+
+			(if this.isRoseFlat
+				(this.grabRose)
+			)
+
+			(= this.actions[0].actionType ACTION_DELAY)
+
 			)
 
 		) # different behavior for each action
@@ -1041,6 +1122,13 @@
 
 		)
 	)
+	)
+)
+
+(class_function world_game void grabRose (group)
+	(group
+	(echo "grabbing rose")
+	(= this.isRoseFlat 0)
 	)
 )
 
