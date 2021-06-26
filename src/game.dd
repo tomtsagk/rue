@@ -80,32 +80,31 @@
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
-	#(this.cardFront[0].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
-	(this.cardFront[0].loadTexture (asset "assets/card_action_1.asset" DD_PLY))
+	(this.cardFront[0].loadTexture (asset "assets/card-single_step.asset" DD_PLY))
 
 	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[1].loadTexture (asset "assets/card_action_2.asset" DD_PLY))
+	(this.cardFront[1].loadTexture (asset "assets/card-triple_step.asset" DD_PLY))
 
 	(this.cardFront[2].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[2].loadTexture (asset "assets/card_action_3.asset" DD_PLY))
+	(this.cardFront[2].loadTexture (asset "assets/card-trade.asset" DD_PLY))
 
 	(this.cardFront[3].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[3].loadTexture (asset "assets/card_action_4.asset" DD_PLY))
+	(this.cardFront[3].loadTexture (asset "assets/card-one_step_cond.asset" DD_PLY))
 
 	(this.cardFront[4].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[4].loadTexture (asset "assets/card_action_5.asset" DD_PLY))
+	(this.cardFront[4].loadTexture (asset "assets/card-replace.asset" DD_PLY))
 
 	(this.cardFront[5].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[5].loadTexture (asset "assets/card_action_6.asset" DD_PLY))
+	(this.cardFront[5].loadTexture (asset "assets/card-grab.asset" DD_PLY))
 
 	(this.cardFront[6].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[6].loadTexture (asset "assets/card_action_7.asset" DD_PLY))
+	(this.cardFront[6].loadTexture (asset "assets/card-grab_gen.asset" DD_PLY))
 
 	(this.cardFront[7].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[7].loadTexture (asset "assets/card_action_8.asset" DD_PLY))
+	(this.cardFront[7].loadTexture (asset "assets/card-approach.asset" DD_PLY))
 
 	(this.cardFront[8].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[8].loadTexture (asset "assets/card_action_9.asset" DD_PLY))
+	(this.cardFront[8].loadTexture (asset "assets/card-win.asset" DD_PLY))
 
 	# cards
 	#(= this.cardsTotal 48)
@@ -270,8 +269,7 @@
 	(= this.rosePlayer this.startingPlayer)
 	(= this.isRoseFlat 1)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
-	#(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
-	(this.roseCardMesh.loadTexture (asset "assets/card_action_7.asset" DD_PLY))
+	(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
 	(dd_matrix_copy this.roseCard this.roseCard.target)
