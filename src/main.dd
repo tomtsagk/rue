@@ -2,7 +2,8 @@
 # include the default world
 #
 #(include "intro.ddh")
-(include "game.ddh")
+#(include "game.ddh")
+(include "menu.ddh")
 
 #
 # Initialise the game and its stats
@@ -14,7 +15,8 @@
 
 	(dd_setGameTitle "Project Rose")
 	#(dd_world_set_default world_intro)
-	(dd_world_set_default world_game)
+	#(dd_world_set_default world_game)
+	(dd_world_set_default world_menu)
 
 	)
 )

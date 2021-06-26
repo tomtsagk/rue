@@ -1,0 +1,19 @@
+
+# menu world
+(class world_menu dd_world
+	(group
+
+	# font
+	(def dd_string3d font)
+
+	(function void create (group))
+	(function void onload (group))
+	#(function void resize (group))
+	(function void update (group))
+	(function void draw (group))
+	(function void key_input (group char key))
+	(function void mouse_input (group int button int type))
+	(function void clean (group))
+
+	)
+) # menu world

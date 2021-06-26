@@ -1,4 +1,5 @@
 (include "game.ddh")
+(include "menu.ddh")
 
 # game phases
 (def int PHASE_INIT 0)
@@ -34,6 +35,7 @@
 (def int ACTION_GRAB_ROSE 13)
 (def int ACTION_DISCARD_CARD 14)
 (def int ACTION_DISCARD_TO_DECK 15)
+(def int ACTION_WIN_CONDITION 16)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -374,9 +376,6 @@
 				(group
 				(= this.phaseText "end phase")
 
-				# check for victory condition here, if not triggered, everyone draws cards
-				# and restart the process
-
 				# all players, apart from the rose player, draw a card
 				(for (def int i (+ this.rosePlayer 1)) (< i (+ this.playersTotal this.rosePlayer)) (= i (+ i 1))
 					(group
@@ -384,6 +383,9 @@
 					(this.addAction ACTION_DRAW_CARD index 0 5)
 					)
 				)
+
+				# check for victory condition
+				(this.addAction ACTION_WIN_CONDITION 0 0 0)
 
 				# when done, restart planning phase
 				(this.addAction ACTION_CHANGE_PHASE 0 PHASE_PLAN 50)
@@ -733,6 +735,43 @@
 			)
 
 			) # discard pile to deck
+
+		# win condition
+		(== this.actions[0].actionType ACTION_WIN_CONDITION)
+			(group
+
+			(def int winningPlayer -1)
+
+			(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
+				(group
+
+				# player won
+				(if (<= this.player[i].cardsTotal 2)
+					(group
+					(echo "someone has won")
+					(= winningPlayer i)
+					(= i 100)
+					)
+				)
+
+				)
+			)
+
+			# someone won
+			(if (>= winningPlayer 0)
+				(group
+				(echo "player " winningPlayer " has won")
+				(dd_world_prepare world_menu 1.0)
+				(dd_world_ready)
+				)
+			# nobody won
+				(group
+				(echo "nobody won")
+				(= this.actions[0].actionType ACTION_DELAY)
+				)
+			)
+
+			)
 
 		) # different behavior for each action
 

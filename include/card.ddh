@@ -2,7 +2,10 @@
 (class Card dd_matrix
 	(group
 
-	# id of card - determines it's effect
+	# font to render card text
+	(def ref dd_string3d font)
+
+	# id of card - determines its effect
 	(def int id)
 
 	# front and back of the card

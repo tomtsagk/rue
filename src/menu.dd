@@ -1,0 +1,73 @@
+(include "menu.ddh")
+(include "game.ddh")
+
+(class_function world_menu void create (group)
+	(group
+
+	# font
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setColorFront 1.0 1.0 1.0)
+	(this.font.setColorBack 0.8 0.8 0.8)
+
+	)
+)
+
+(class_function world_menu void onload (group)
+	(group
+	)
+)
+
+#(class_function world_menu void resize (group)
+#	(group
+#	)
+#)
+
+(class_function world_menu void update (group)
+	(group
+	)
+) # update
+
+(class_function world_menu void draw (group)
+	(group
+
+	(dd_translatef 0 0 -5)
+	(this.font.draw "main menu")
+
+	)
+)
+
+(class_function world_menu void key_input (group char key)
+	(group
+	(if (== key 27)
+		(= dd_flag_exit 1) # exit game
+	(== key 97)
+		(group
+		(echo "start game")
+		(dd_world_prepare world_game 1.0)
+		(dd_world_ready)
+		)
+	) # key input
+	)
+)
+
+(class_function world_menu void clean (group)
+	(group
+	)
+)
+
+(class_function world_menu void mouse_input (group int button int type)
+	(group
+
+	# control the camera look at point when click and dragging
+	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+		(group
+		#(= this.holdRotX (dd_mouse_x))
+		#(= this.holdRotY (dd_mouse_y))
+		)
+	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+		(group
+		)
+	) # mouse button released
+
+	)
+) # mouse input
