@@ -8,6 +8,8 @@
 
 	(= this.hidden 0)
 
+	(= this.font 0)
+
 	)
 )
 
@@ -40,5 +42,15 @@
 		(this.mesh.draw)
 	)
 	(this.meshBack.draw)
+
+	# draw card's text
+	(if (&& this.font (== this.hidden 0))
+		(group
+		(dd_translatef 0 -0.12 0.01)
+		(dd_scalef 0.05 0.05 0.01)
+		(this.font.draw "card text")
+		)
+	)
+
 	)
 )
