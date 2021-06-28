@@ -498,7 +498,9 @@
 			# move rose three steps
 			(== cardId CARD_THREE_STEPS)
 				(group
-				(this.addInjectAction ACTION_ADVANCE_ROSE 0 3 50)
+				(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
+				(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
+				(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 				(this.injectActionsToActions)
 				)
 			# trade - give 1 card to rose player, take 1 card back
@@ -535,7 +537,9 @@
 					)
 				# else
 					(group
-					(this.addInjectAction ACTION_ADVANCE_ROSE 0 3 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 					(this.injectActionsToActions)
 					)
 				)
@@ -589,7 +593,9 @@
 				# active user is rose player, move rose 3 steps
 				(if (== this.actions[0].playerIndex this.rosePlayer)
 					(group
-					(this.addInjectAction ACTION_ADVANCE_ROSE 0 3 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 					(this.injectActionsToActions)
 					)
 				# active user is not rose player, move rose 1 step
