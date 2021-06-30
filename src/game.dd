@@ -458,14 +458,17 @@
 		(== this.actions[0].actionType ACTION_SELECT_CARD)
 			(group
 
+			# invalid player has to select a card? (shouldn't happen)
+			(if (|| (< this.actions[0].playerIndex 0) (>= this.actions[0].playerIndex this.playersTotal))
+				(echo "invalid player cannot select a card")
 			# user has to select a card
-			(if (== this.actions[0].playerIndex 0)
+			(== this.actions[0].playerIndex 0)
 				(group
 				)
 			# AI has to select a card
 				(group
 				(= this.lastSelectedCardPlayerIndex this.actions[0].playerIndex)
-				(= this.lastSelectedCardIndex 0)
+				(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
 				(= this.actions[0].actionType ACTION_DELAY)
 				#(this.player[this.actions[0].playerIndex].selectCard)
 				)
@@ -479,7 +482,28 @@
 			# player index is given as -1, use last selected card/player combo
 			(if (== this.actions[0].playerIndex -1)
 				(group
-				(this.player[this.lastSelectedCardPlayerIndex].planCard this.lastSelectedCardIndex)
+
+				# player tried to plan the rose! blasphemy! select another card
+				(if (== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].id CARD_ROSE)
+					(group
+					(this.addInjectAction ACTION_SELECT_CARD this.lastSelectedCardPlayerIndex 0 0)
+					(this.addInjectAction ACTION_PLAN_CARD -1 0 50)
+					(this.injectActionsToActions)
+					)
+				# player tried to plan the "replace" card, while being last, select another card
+				(&&
+					(== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].id CARD_REPLACE)
+					(== (% (+ this.rosePlayer this.playersTotal -1) this.playersTotal) this.lastSelectedCardPlayerIndex)
+				)
+					(group
+					(this.addInjectAction ACTION_SELECT_CARD this.lastSelectedCardPlayerIndex 0 0)
+					(this.addInjectAction ACTION_PLAN_CARD -1 0 50)
+					(this.injectActionsToActions)
+					)
+				# selected card can be planned, so plan it
+					(this.player[this.lastSelectedCardPlayerIndex].planCard this.lastSelectedCardIndex)
+				)
+
 				)
 			# player and card index are given, use those instead
 				(group
@@ -907,7 +931,13 @@
 		)
 		)
 	)
-	(this.roseCard.draw)
+
+	# rose is flat, draw it
+	# if rose is held, player will draw it
+	(if this.isRoseFlat
+		(this.roseCard.draw)
+	)
+
 	(dd_multMatrixf this.deckMatrix)
 
 	# draw deck number
