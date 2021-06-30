@@ -867,8 +867,24 @@
 			)
 		# is rotating, keep rotating
 			(group
-			(= this.targetRotX (+ this.targetRotX (* (- (dd_mouse_x) this.holdRotX) 0.25)))
-			(= this.targetRotY (- this.targetRotY (* (- (dd_mouse_y) this.holdRotY) 0.25)))
+			(= this.targetRotX
+				(dd_math_max
+					(dd_math_min
+						(+ this.targetRotX (* (- (dd_mouse_x) this.holdRotX) 0.25))
+						100
+					)
+					-100
+				)
+			)
+			(= this.targetRotY
+				(dd_math_max
+					(dd_math_min
+						(- this.targetRotY (* (- (dd_mouse_y) this.holdRotY) 0.25))
+						70
+					)
+					-65
+				)
+			)
 			(= this.holdRotX (dd_mouse_x))
 			(= this.holdRotY (dd_mouse_y))
 			)
