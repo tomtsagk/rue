@@ -1,5 +1,7 @@
 (include "player.ddh")
 
+(def extern int CARD_ROSE)
+
 (class_function Player void create (group)
 	(group
 
@@ -112,13 +114,15 @@
 	(if (>= this.cardsTotal 10)
 		(echo "CANNOT GIVE MORE CARDS")
 		(group
-			(= this.cards[this.cardsTotal] card)
-			(= this.cardsTotal (+ this.cardsTotal 1))
 
-			(if this.isUser
-				(this.calculateCardPositionsUser)
-				(this.calculateCardPositions)
-			)
+		(= this.cards[this.cardsTotal] card)
+		(= this.cardsTotal (+ this.cardsTotal 1))
+
+		(if this.isUser
+			(this.calculateCardPositionsUser)
+			(this.calculateCardPositions)
+		)
+
 		)
 	)
 
@@ -170,6 +174,10 @@
 		(dd_matrix_translate this.cards[i].target 0 2.5 0.2)
 		(dd_matrix_translate this.cards[i].target (- (* i 0.42) (/ (* (- this.cardsTotal 1) 0.42) 2)) 0 0)
 		(dd_matrix_rotate this.cards[i].target 180 0 1 0)
+
+		(if (== this.cards[i].id CARD_ROSE)
+			(dd_matrix_rotate this.cards[i].target 180 0 1 0)
+		)
 		)
 	)
 	)

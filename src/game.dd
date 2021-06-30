@@ -17,10 +17,10 @@
 (def int CARD_GRAB_GENERIC 6)
 (def int CARD_APPROACH 7)
 (def int CARD_WIN 8)
+(def int CARD_ROSE 9)
 
 # actions
 (def int ACTION_DELAY 0)
-(def int ACTION_MOVE_ROSE 1)
 (def int ACTION_ADVANCE_ROSE 2)
 (def int ACTION_DRAW_CARD 3)
 (def int ACTION_SELECT_CARD 4)
@@ -266,13 +266,12 @@
 	(= this.rotating 0)
 
 	# rose player
-	(= this.rosePlayer this.startingPlayer)
 	(= this.isRoseFlat 1)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
 	(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
+	(= this.roseCard.id CARD_ROSE)
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
-	(dd_matrix_copy this.roseCard this.roseCard.target)
 
 	# begin the game
 	(this.addAction ACTION_CHANGE_PHASE 0 PHASE_INIT 50)
@@ -316,8 +315,8 @@
 
 				# decide starting player
 				(= this.startingPlayer (dd_math_rand this.playersTotal))
-				(= this.rosePlayer this.startingPlayer)
-				(this.addAction ACTION_MOVE_ROSE this.rosePlayer 0 50)
+				(this.setRosePlayer this.startingPlayer)
+				(dd_matrix_copy this.roseCard this.roseCard.target)
 
 				# all players draw starting cards
 				(for (def int j 0) (< j 5) (= j (+ j 1))
@@ -382,6 +381,11 @@
 					)
 				)
 
+				# if held, flat rose
+				(if (== this.isRoseFlat 0)
+					(this.addAction ACTION_ADVANCE_ROSE 0 1 5)
+				)
+
 				# check for victory condition
 				(this.addAction ACTION_WIN_CONDITION 0 0 0)
 
@@ -397,21 +401,40 @@
 			(= this.actions[0].actionType ACTION_DELAY)
 
 			)
-		# change rose player
-		(== this.actions[0].actionType ACTION_MOVE_ROSE)
-			(group
-			(this.setRosePlayer this.actions[0].playerIndex)
-			(= this.actions[0].actionType ACTION_DELAY)
-			)
 		# advance rose to next player
 		(== this.actions[0].actionType ACTION_ADVANCE_ROSE)
 			(group
 
-			# rose is help by someone, flat it and lose one movement
+			# rose is held by someone, flat it and lose one movement
 			(if (== this.isRoseFlat 0)
 				(group
+
 				(= this.isRoseFlat 1)
 				(= this.actions[0].value (- this.actions[0].value 1))
+
+				# find the rose
+				(def int roseIndex -1)
+				(for (def int i 0) (< i this.player[this.rosePlayer].cardsTotal) (= i (+ i 1))
+					(group
+					(if (== this.player[this.rosePlayer].cards[i].id CARD_ROSE)
+						(group
+						(= roseIndex i)
+						(= i 100)
+						)
+					)
+					)
+				)
+
+				# should never happen
+				(if (== roseIndex -1)
+					(echo "rose is not held by rose player ?")
+				# flat the rose
+					(group
+					(this.player[this.rosePlayer].removeCard roseIndex)
+					(this.setRosePlayer this.rosePlayer)
+					)
+				)
+
 				)
 			)
 
@@ -512,13 +535,17 @@
 					)
 					(group
 
+					# rose player picks up rose
+					(if this.isRoseFlat
+						(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					)
+
 					# active player selects and gives a card to rose player
 					(this.addInjectAction ACTION_SELECT_CARD this.actions[0].playerIndex 0 0)
 					(this.addInjectAction ACTION_GIVE_CARD this.rosePlayer 0 50)
 
-					# rose player picks up rose?
-
 					# rose player selects and gives a card to active player
+					# TODO: should be given a card at random, rose player doesn't select
 					(this.addInjectAction ACTION_SELECT_CARD this.rosePlayer 0 0)
 					(this.addInjectAction ACTION_GIVE_CARD this.actions[0].playerIndex 0 50)
 					(this.injectActionsToActions)
@@ -652,6 +679,11 @@
 			(this.player[this.lastSelectedCardPlayerIndex].removeCard this.lastSelectedCardIndex)
 			(= this.actions[0].actionType ACTION_DELAY)
 
+			# rose is being given
+			(if (== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].id CARD_ROSE)
+				(= this.rosePlayer receiverIndex)
+			)
+
 			# user is giving a card, mark it to become hidden when arriving at opponent
 			(if (== this.lastSelectedCardPlayerIndex 0)
 				(group
@@ -685,8 +717,6 @@
 		(== this.actions[0].actionType ACTION_DISCARD_CARD)
 			(group
 
-			(echo "discard card")
-
 			(def int playerIndex)
 			(def int cardIndex)
 			# discard previously selected card
@@ -702,9 +732,20 @@
 				)
 			)
 
-			(= this.player[playerIndex].cards[cardIndex].hidden 0)
-			(this.addToDiscard this.player[playerIndex].cards[cardIndex])
-			(this.player[playerIndex].removeCard cardIndex)
+			# attempting to discard rose, flat it instead
+			(if (== this.player[playerIndex].cards[cardIndex].id CARD_ROSE)
+				(group
+				(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+				(this.injectActionsToActions)
+				)
+			# discard selected card
+				(group
+				(= this.player[playerIndex].cards[cardIndex].hidden 0)
+				(this.addToDiscard this.player[playerIndex].cards[cardIndex])
+				(this.player[playerIndex].removeCard cardIndex)
+				)
+			)
+
 			(= this.actions[0].actionType ACTION_DELAY)
 
 			)
@@ -1267,8 +1308,18 @@
 
 (class_function world_game void grabRose (group)
 	(group
+
 	(echo "grabbing rose")
-	(= this.isRoseFlat 0)
+
+	# rose is flat, grab it!
+	(if this.isRoseFlat
+		(group
+		(= this.isRoseFlat 0)
+		(this.player[this.rosePlayer].addCard this.roseCard)
+		(dd_matrix_rotate this.roseCard.target 180 0 1 0)
+		)
+	)
+
 	)
 )
 

@@ -48,7 +48,29 @@
 		(group
 		(dd_translatef 0 -0.12 0.01)
 		(dd_scalef 0.05 0.05 0.01)
-		(this.font.draw "card text")
+
+		# draw different text depending on card
+
+		(if (== this.id 0)
+			(this.font.draw "1 step")
+		(== this.id 1)
+			(this.font.draw "3 steps")
+		(== this.id 2)
+			(this.font.draw "trade")
+		(== this.id 3)
+			(this.font.draw "1 b or 3")
+		(== this.id 4)
+			(this.font.draw "replace")
+		(== this.id 5)
+			(this.font.draw "grab or 1")
+		(== this.id 6)
+			(this.font.draw "grab all")
+		(== this.id 7)
+			(this.font.draw "rose 3 or 1")
+		(== this.id 8)
+			(this.font.draw "rose dis or 1")
+		)
+
 		)
 	)
 
