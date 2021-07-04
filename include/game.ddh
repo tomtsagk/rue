@@ -51,6 +51,9 @@
 	# font
 	(def dd_string3d font)
 
+	# card font
+	(def dd_string3d cardFont)
+
 	# camera control
 	(def float rotX)
 	(def float rotY)

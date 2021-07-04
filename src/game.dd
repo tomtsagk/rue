@@ -54,6 +54,11 @@
 	(this.font.setColorFront 1.0 1.0 1.0)
 	(this.font.setColorBack 0.8 0.8 0.8)
 
+	# card font
+	(this.cardFont.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.cardFont.setColorFront 0.0 0.0 0.0)
+	(this.cardFont.setColorBack 0.0 0.0 0.0)
+
 	# camera control
 	(= this.rotX 0)
 	(= this.rotY -15)
@@ -113,7 +118,9 @@
 		(group
 		#(def int index (dd_math_rand 5))
 		#(= this.cards[i].mesh this.cardFront[index])
-		(= this.cards[i].font this.font)
+		#(= this.cards[i].font this.font)
+		(= this.cards[i].hidden 1)
+		(= this.cards[i].font this.cardFont)
 		(= this.cards[i].meshBack this.cardBack)
 		(dd_matrix_identity this.cards[i])
 		)
@@ -1134,11 +1141,13 @@
 			(echo "CANNOT GIVE MORE CARDS, SKIP")
 		# player can handle one more card
 			(group
+
 			(this.player[playerIndex].addCard this.deck[cardIndex])
 
 			# if card goes to an opponent, hide it
 			(if (> playerIndex 0)
 				(= this.deck[cardIndex].hidden 1)
+				(= this.deck[cardIndex].hidden 0)
 			)
 
 			# remove card from deck
