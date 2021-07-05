@@ -78,6 +78,7 @@
 	(this.stage.load (asset "assets/stage_2.asset" DD_PLY))
 	(this.table.load (asset "assets/table_1.asset" DD_PLY))
 	(this.tableArrow.load (asset "assets/table_arrow.asset" DD_PLY))
+	(this.tableArrowDecoration.load (asset "assets/table_arrow_decoration.asset" DD_PLY))
 
 	# card back
 	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
@@ -282,6 +283,20 @@
 
 	# begin the game
 	(this.addAction ACTION_CHANGE_PHASE 0 PHASE_INIT 50)
+
+	(= this.arrowProgram 0)
+	(= this.arrowProgramOpenglContext (avdl_opengl_getContextId))
+	(= this.arrowActiveCol[0] 0.403)
+	(= this.arrowActiveCol[1] 0.698)
+	(= this.arrowActiveCol[2] 0.349)
+
+	(= this.arrowInactiveCol[0] 0.694)
+	(= this.arrowInactiveCol[1] 0.137)
+	(= this.arrowInactiveCol[2] 0.137)
+
+	(= this.arrowCurrentCol[0] 0.0)
+	(= this.arrowCurrentCol[1] 0.0)
+	(= this.arrowCurrentCol[2] 0.0)
 
 	)
 )
@@ -922,11 +937,60 @@
 	# update table arrow
 	(= this.arrowRotation (dd_math_ease_linear 0.1 this.arrowRotation this.arrowRotationTarget))
 
+	# user is about to play a card
+	(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
+		(group
+		(= this.arrowCurrentCol[0] (dd_math_ease_linear 0.1 this.arrowCurrentCol[0] this.arrowActiveCol[0] ))
+		(= this.arrowCurrentCol[1] (dd_math_ease_linear 0.1 this.arrowCurrentCol[1] this.arrowActiveCol[1] ))
+		(= this.arrowCurrentCol[2] (dd_math_ease_linear 0.1 this.arrowCurrentCol[2] this.arrowActiveCol[2] ))
+		)
+		(group
+		(= this.arrowCurrentCol[0] (dd_math_ease_linear 0.1 this.arrowCurrentCol[0] this.arrowInactiveCol[0] ))
+		(= this.arrowCurrentCol[1] (dd_math_ease_linear 0.1 this.arrowCurrentCol[1] this.arrowInactiveCol[1] ))
+		(= this.arrowCurrentCol[2] (dd_math_ease_linear 0.1 this.arrowCurrentCol[2] this.arrowInactiveCol[2] ))
+		)
+	)
+
 	)
 ) # update
 
 (class_function world_game void draw (group)
 	(group
+
+	# shader shenanigans
+	(if (|| (== this.arrowProgram 0)
+		(< this.arrowProgramOpenglContext (avdl_opengl_getContextId))
+		(> this.arrowProgramOpenglContext (avdl_opengl_getContextId))
+		)
+		(group
+		(= this.arrowProgramOpenglContext (avdl_opengl_getContextId))
+		# example adding a custom shader
+		(def char shaderVertex[] (multistring
+			"AVDL_IN vec4 position;\n"
+			"AVDL_IN vec3 colour;\n"
+
+			"uniform mat4 matrix;\n"
+			"uniform vec3 arrowCol;\n"
+
+			"AVDL_OUT vec4 outColour;\n"
+
+			"void main() {\n"
+			"	vec4 pos = matrix *position;\n"
+			"       gl_Position = pos;\n"
+			"       outColour = vec4(colour.rgb *arrowCol.rgb, 1.0);\n"
+			"}\n"
+		))
+		(def char shaderFragment[] (multistring
+			"AVDL_IN vec4 outColour;\n"
+
+			"void main() {\n"
+			"       avdl_frag_color = outColour;\n"
+			"}\n"
+		))
+
+		(= this.arrowProgram (avdl_loadProgram shaderVertex shaderFragment))
+		)
+	)
 
 	(dd_matrix_push)
 
@@ -942,7 +1006,13 @@
 	(this.table.draw)
 	(dd_matrix_push)
 	(dd_rotatef this.arrowRotation 0 1 0)
+	(avdl_useProgram this.arrowProgram)
+	(def int colLoc)
+	(= colLoc (avdl_getUniformLocation this.arrowProgram "arrowCol"))
+	(avdl_setUniform3f colLoc this.arrowCurrentCol[0] this.arrowCurrentCol[1] this.arrowCurrentCol[2])
 	(this.tableArrow.draw)
+	(avdl_useProgram 0)
+	(this.tableArrowDecoration.draw)
 	(dd_matrix_pop)
 
 	# draw deck

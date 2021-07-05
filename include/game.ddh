@@ -34,6 +34,13 @@
 (class world_game dd_world
 	(group
 
+	# arrow shader
+	(def int arrowProgram)
+	(def int arrowProgramOpenglContext)
+	(def float arrowActiveCol[3])
+	(def float arrowInactiveCol[3])
+	(def float arrowCurrentCol[3])
+
 	# game phases
 	(def ref char phaseText)
 	(def int lookingAtChoosenAction)
@@ -79,6 +86,7 @@
 	(def dd_meshColour stage)
 	(def dd_meshColour table)
 	(def dd_meshColour tableArrow)
+	(def dd_meshColour tableArrowDecoration)
 	(def float arrowRotation)
 	(def float arrowRotationTarget)
 
