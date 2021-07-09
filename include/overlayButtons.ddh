@@ -1,0 +1,24 @@
+(include "card.ddh")
+
+# overlay buttons class
+(class OverlayButtons dd_matrix
+	(group
+
+	# id of card - determines its effect
+	(def dd_matrix previousLoc)
+
+	(def ref Card cardToShow)
+	(def int isLookingAtCard)
+	(def int hasConfirmed)
+
+	(function void lookAt (group int x int y))
+	(function void click (group))
+
+	(function void setCard (group Card c))
+	(function void create (group))
+	(function void clean (group))
+
+	(function void draw (group))
+
+	)
+) # overlay buttons

@@ -1,0 +1,80 @@
+(include "overlayButtons.ddh")
+
+(class_function OverlayButtons void create (group)
+	(group
+
+	(dd_matrix_identity this.previousLoc)
+	(= this.cardToShow 0)
+	(= this.isLookingAtCard 0)
+	(= this.hasConfirmed 0)
+
+	)
+)
+
+# draw the card with its transformation matrix
+(class_function OverlayButtons void draw (group)
+	(group
+#	(dd_matrix_push)
+#	(this.applyMatrix)
+#	(this.drawRaw)
+#	(dd_matrix_pop)
+
+	(if (&& this.cardToShow this.isLookingAtCard)
+		(group
+		(dd_matrix_push)
+		(dd_translatef 0 0 -5)
+		(this.cardToShow.drawText)
+		(dd_matrix_pop)
+		)
+	)
+
+	)
+)
+
+(class_function OverlayButtons void clean (group)
+	(group
+	)
+)
+
+(class_function OverlayButtons void lookAt (group int x int y)
+	(group
+
+	(if (&& (> x -6) (< x 6)
+	        (> y -3) (< y 14)
+		)
+		(group
+		(= this.isLookingAtCard 1)
+		(dd_matrix_identity this.cardToShow.target)
+		(dd_matrix_translate this.cardToShow.target 0 4.2 3)
+		(dd_matrix_scale this.cardToShow.target 1.1 1.1 1.1)
+		)
+		(group
+		(= this.isLookingAtCard 0)
+		(dd_matrix_identity this.cardToShow.target)
+		(dd_matrix_translate this.cardToShow.target 0 4.2 3)
+		)
+	)
+
+	)
+)
+
+(class_function OverlayButtons void click (group)
+	(group
+	(if this.isLookingAtCard
+		(group
+		(dd_matrix_copy this.cardToShow.target this.previousLoc)
+		(= this.cardToShow 0)
+		)
+	)
+	)
+)
+
+(class_function OverlayButtons void setCard (group Card c)
+	(group
+	(= this.isLookingAtCard 0)
+	(dd_matrix_copy this.previousLoc c.target)
+	(dd_matrix_identity c.target)
+	(dd_matrix_translate c.target 0 4.2 3)
+	(= this.cardToShow c)
+	)
+)

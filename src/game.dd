@@ -130,7 +130,7 @@
 #	# all set debug
 #	(for (def int i 0) (< i 36) (= i (+ i 1))
 #		(group
-#		(= this.cards[i].id CARD_SINGLE_STEP)
+#		(= this.cards[i].id CARD_WIN)
 #		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
 #		)
 #	)
@@ -314,8 +314,13 @@
 (class_function world_game void update (group)
 	(group
 
+	# currently displaying a card, handle that instead of game state
+	(if this.ovButtons.cardToShow
+		(this.ovButtons.lookAt this.rotX this.rotY)
+	)
+
 	# execute remaining actions
-	(if (> this.actionsTotal 0)
+	(if (&& (> this.actionsTotal 0) (== this.ovButtons.cardToShow 0))
 		(group
 
 		# delay after executing an action
@@ -349,6 +354,8 @@
 
 				# start with planning phase
 				(this.addAction ACTION_CHANGE_PHASE 0 PHASE_PLAN 50)
+
+				#(this.ovButtons.setCard this.roseCard)
 
 				)
 			# planning phase
@@ -548,6 +555,8 @@
 			(= this.player[playerIndex].selectedCard2.hidden 0)
 			(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
 			(= this.actions[0].actionType ACTION_DELAY)
+
+			(this.ovButtons.setCard this.player[playerIndex].selectedCard2)
 			)
 		# execute planned card
 		(== this.actions[0].actionType ACTION_EXECUTE_PLANNED_CARD)
@@ -869,7 +878,7 @@
 		)
 	)
 
-	(= this.rotating (+ this.rotating 0.5))
+	(= this.rotating (+ this.rotating 0.0005))
 
 	# calculate new camera look at point
 	(if (>= this.holdRotX 0)
@@ -1074,11 +1083,12 @@
 	(dd_matrix_pop)
 
 	# rotating card
-#	(dd_translatef 0 3.5 0)
-#	(dd_rotatef this.rotating 0 1 0)
-#	(dd_scalef 5.0 5.0 5.0)
-#	(this.cardBack.draw)
-#	(this.cardFront[1].draw)
+	#(dd_translatef 0 3.5 0)
+	#(dd_rotatef this.rotating 0 1 0)
+	#(dd_scalef 5.0 5.0 5.0)
+	#(this.deck[32].drawRaw)
+	#(this.cardBack.draw)
+	#(this.cardFront[1].draw)
 
 	(dd_matrix_pop)
 
@@ -1098,6 +1108,12 @@
 	(dd_translatef 0 0 -25)
 	(this.lookat.draw)
 	(dd_matrix_pop)
+
+	(this.player[0].drawLookingAtText)
+
+	(if this.ovButtons.cardToShow
+		(this.ovButtons.draw)
+	)
 
 	)
 )
@@ -1138,8 +1154,13 @@
 		(if (== this.isRotating 0)
 			(group
 
+			# showing overlay card
+			(if this.ovButtons.cardToShow
+				(group
+				(this.ovButtons.click)
+				)
 			# waiting user to select a card
-			(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
+			(&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
 				(group
 
 				# just selected a card

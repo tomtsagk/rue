@@ -26,5 +26,7 @@
 	(function void applyMatrix (group))
 	(function void drawRaw (group))
 
+	(function void drawText (group))
+
 	)
 ) # card

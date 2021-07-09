@@ -30,6 +30,7 @@
 	(function void create (group))
 	(function void draw (group))
 	(function void drawUser (group))
+	(function void drawLookingAtText (group))
 	(function void drawAI (group))
 	(function void clean (group))
 

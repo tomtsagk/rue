@@ -1,5 +1,6 @@
 #(include "intro.ddh")
 (include "player.ddh")
+(include "overlayButtons.ddh")
 
 #
 # defines actions supported by the game
@@ -33,6 +34,9 @@
 # game world
 (class world_game dd_world
 	(group
+
+	# overlay buttons
+	(def OverlayButtons ovButtons)
 
 	# arrow shader
 	(def int arrowProgram)
