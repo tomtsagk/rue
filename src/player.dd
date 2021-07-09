@@ -52,6 +52,9 @@
 			(this.cards[i].applyMatrix)
 			(dd_scalef 1.15 1.15 1.15)
 			(this.cards[i].drawRaw)
+			(dd_translatef 0 0 0.01)
+			(dd_scalef 0.1 0.1 0.1)
+			(this.font.draw "confirm")
 			(dd_matrix_pop)
 			)
 		# looking at card
@@ -79,6 +82,21 @@
 
 (class_function Player void drawUser (group)
 	(group
+
+	)
+)
+
+(class_function Player void drawLookingAtText (group)
+	(group
+
+	(if (>= this.userLookingAtCard 0)
+		(group
+		(dd_matrix_push)
+		(dd_translatef 0 0 -5)
+		(this.cards[this.userLookingAtCard].drawText)
+		(dd_matrix_pop)
+		)
+	)
 
 	)
 )

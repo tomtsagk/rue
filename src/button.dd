@@ -1,0 +1,90 @@
+(include "button.ddh")
+
+# create tile facing front
+(class_function Button void create (group)
+	(group
+
+	(dd_matrix_identity this)
+	(= this.width 0)
+	(= this.height 0)
+	(= this.x 0)
+	(= this.y 0)
+	(= this.z 0)
+
+	# idle animation
+	(= this.idleRot 0)
+	(= this.idleRotTarget 7)
+
+	)
+)
+
+(class_function Button void setSize (group float sizeX float sizeY)
+	(group
+	(= this.width sizeX)
+	(= this.height sizeY)
+	)
+)
+
+(class_function Button void setPosition (group float posX float posY float posZ)
+	(group
+	(= this.x posX)
+	(= this.y posY)
+	(= this.z posZ)
+	)
+)
+
+# animate the tiles to the current side
+(class_function Button void update (group int isSelected)
+	(group
+
+	# animate to target if selected, to idle otherwise
+	(if isSelected
+		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot this.idleRotTarget))
+		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot 0))
+	)
+
+	# flip animation when reached the target
+	(if (< (dd_math_abs (- this.idleRot this.idleRotTarget)) 0.15)
+		(= this.idleRotTarget (* this.idleRotTarget -1))
+	)
+
+	)
+) # update
+
+# draw tile based on its side
+(class_function Button void applyTransform (group)
+	(group
+	(dd_translatef this.x this.y this.z)
+	)
+)
+
+# draw tile based on its side
+(class_function Button void applyMatrixTransform (group)
+	(group
+	(dd_multMatrixf this)
+	(dd_rotatef this.idleRot 0 0 1)
+	)
+)
+
+# draw tile based on its side
+(class_function Button void drawRaw (group)
+	(group
+	(this.mesh.draw)
+	)
+)
+
+# draw tile based on its side
+(class_function Button void draw (group)
+	(group
+	(dd_pushMatrix)
+	(this.applyTransform)
+	(this.applyMatrixTransform)
+	(this.drawRaw)
+	(dd_popMatrix)
+	)
+)
+
+(class_function Button void clean (group)
+	(group
+	)
+)

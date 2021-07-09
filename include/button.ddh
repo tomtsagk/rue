@@ -1,0 +1,28 @@
+(class Button dd_matrix
+	(group
+
+	(def dd_meshColour mesh)
+
+	(def float width)
+	(def float height)
+	(def float x)
+	(def float y)
+	(def float z)
+
+	# idle animation
+	(def float idleRot)
+	(def float idleRotTarget)
+
+	(function void setSize (group float sizeX float sizeY))
+	(function void setPosition (group float posX float posY float posZ))
+
+	(function void create (group))
+	(function void update (group int isSelected))
+	(function void applyTransform (group))
+	(function void applyMatrixTransform (group))
+	(function void drawRaw (group))
+	(function void draw (group))
+	(function void clean (group))
+
+	)
+)

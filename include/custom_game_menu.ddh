@@ -1,7 +1,7 @@
 (include "button.ddh")
 
 # menu world
-(class world_menu dd_world
+(class world_custom_game_menu dd_world
 	(group
 
 	# menu buttons

@@ -1,5 +1,6 @@
 (include "menu.ddh")
 (include "game.ddh")
+(include "custom_game_menu.ddh")
 
 (class_function world_menu void create (group)
 	(group
@@ -7,7 +8,31 @@
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.font.setColorFront 1.0 1.0 1.0)
-	(this.font.setColorBack 0.8 0.8 0.8)
+	#(this.font.setColorBack 1.0 0.0 0.0)
+	(this.font.setColorBack 1.0 1.0 1.0)
+
+	# buttons
+	(= this.buttonTotal 3)
+	(Button_create this.button[0])
+	#(this.button[0].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[0].mesh.set_primitive DD_PRIMITIVE_BOX)
+	(this.button[0].mesh.set_colour 1 0 0)
+	(this.button[0].setPosition -1 1 -5)
+	(this.button[0].setSize 1 1)
+
+	(Button_create this.button[1])
+	#(this.button[1].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[1].mesh.set_primitive DD_PRIMITIVE_BOX)
+	(this.button[1].mesh.set_colour 0 1 0)
+	(this.button[1].setPosition -1 0 -5)
+	(this.button[1].setSize 1 1)
+
+	(Button_create this.button[2])
+	#(this.button[2].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[2].mesh.set_primitive DD_PRIMITIVE_BOX)
+	(this.button[2].mesh.set_colour 0 0 1)
+	(this.button[2].setPosition -1 -1 -5)
+	(this.button[2].setSize 1 1)
 
 	)
 )
@@ -30,8 +55,42 @@
 (class_function world_menu void draw (group)
 	(group
 
-	(dd_translatef 0 0 -5)
-	(this.font.draw "main menu")
+#	(dd_matrix_push)
+#	(dd_translatef 0 0 -5)
+#
+#	(dd_matrix_push)
+#	(dd_translatef 0 1 0)
+#	(dd_scalef 0.3 0.3 0.3)
+#	(this.font.draw "The Quick Brown Fox Jumps Over The Lazy Dog")
+#	(dd_matrix_pop)
+#
+#	(dd_scalef 0.1 0.1 0.1)
+#	(this.font.draw "The Quick Brown Fox Jumps Over The Lazy Dog")
+#	#(this.font.draw "this and that all sentences with t inside them trouble")
+#	(dd_matrix_pop)
+
+	(for (def int i 0) (< i 3) (= i (+ i 1))
+		(group
+		(dd_matrix_push)
+		(this.button[i].applyTransform)
+		(this.button[i].applyMatrixTransform)
+		(this.button[i].drawRaw)
+
+		(this.font.setAlign DD_STRING3D_ALIGN_LEFT)
+		(dd_translatef 1 0 0)
+		(dd_scalef 0.2 0.2 0.2)
+
+		(if (== i 0)
+			(this.font.draw "levels")
+		(== i 1)
+			(this.font.draw "custom game")
+			(this.font.draw "exit")
+		)
+		(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+
+		(dd_matrix_pop)
+		)
+	)
 
 	)
 )
@@ -43,7 +102,8 @@
 	(== key 97)
 		(group
 		(echo "start game")
-		(dd_world_prepare world_game 1.0)
+		#(dd_world_prepare world_game 1.0)
+		(dd_world_prepare world_custom_game_menu 1.0)
 		(dd_world_ready)
 		)
 	) # key input
