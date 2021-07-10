@@ -24,5 +24,7 @@
 	(function void draw (group))
 	(function void clean (group))
 
+	(function int hasMouseCollided (group))
+
 	)
 )

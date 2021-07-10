@@ -1,0 +1,267 @@
+(include "custom_game_menu.ddh")
+(include "game.ddh")
+(include "menu.ddh")
+
+(def int numberOfPlayers)
+(def int startingPlayer)
+
+(class_function world_custom_game_menu void create (group)
+	(group
+
+	# font
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setColorFront 1.0 1.0 1.0)
+	#(this.font.setColorBack 1.0 0.0 0.0)
+	(this.font.setColorBack 1.0 1.0 1.0)
+
+	# buttons
+	(= this.buttonTotal 7)
+	(Button_create this.button[0])
+	#(this.button[0].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[0].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.button[0].mesh.set_colour 1 0 0)
+	(this.button[0].setPosition -1 1 -5)
+	(this.button[0].setSize 1 1)
+
+	(Button_create this.button[1])
+	#(this.button[1].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[1].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.button[1].mesh.set_colour 0 1 0)
+	(this.button[1].setPosition 1 1 -5)
+	(this.button[1].setSize 1 1)
+
+	(Button_create this.button[2])
+	#(this.button[2].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[2].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.button[2].mesh.set_colour 0 0 1)
+	(this.button[2].setPosition -1 0 -5)
+	(this.button[2].setSize 1 1)
+
+	(Button_create this.button[3])
+	#(this.button[3].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[3].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.button[3].mesh.set_colour 0 0 1)
+	(this.button[3].setPosition 1 0 -5)
+	(this.button[3].setSize 1 1)
+
+	(Button_create this.button[4])
+	#(this.button[4].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[4].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.button[4].mesh.set_colour 0 0 1)
+	(this.button[4].setPosition 0 -1.0 -5)
+	(this.button[4].setSize 1 1)
+
+	(Button_create this.button[5])
+	#(this.button[5].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[5].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.button[5].mesh.set_colour 0 1 1)
+	(this.button[5].setPosition -2.0 -1.5 -5)
+	(this.button[5].setSize 1 1)
+
+	(Button_create this.button[6])
+	#(this.button[6].mesh.load (asset "assets/card.asset" DD_PLY))
+	(this.button[6].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.button[6].mesh.set_colour 0 1 1)
+	(this.button[6].setPosition 2.0 -1.5 -5)
+	(this.button[6].setSize 1 1)
+
+	(= this.selection -1)
+	(= this.selectionClick -1)
+	(= this.isMovingToNewWorld 0)
+
+	(= numberOfPlayers 3)
+	(= startingPlayer -1)
+	(= this.hasGuide 1)
+
+	)
+)
+
+(class_function world_custom_game_menu void onload (group)
+	(group
+	)
+)
+
+#(class_function world_custom_game_menu void resize (group)
+#	(group
+#	)
+#)
+
+(class_function world_custom_game_menu void update (group)
+	(group
+
+	# check if mouse is hovering over a button
+	(= this.selection -1)
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			(= i 100)
+			)
+		)
+
+		)
+	)
+
+	)
+) # update
+
+(class_function world_custom_game_menu void draw (group)
+	(group
+
+	# draw number of players
+	(dd_matrix_push)
+	(dd_translatef 0 1 -5)
+	(dd_scalef 0.2 0.2 0.2)
+	(this.font.drawInt numberOfPlayers)
+	(dd_matrix_pop)
+
+	# draw starting player
+	(dd_matrix_push)
+	(dd_translatef 0 0 -5)
+	(dd_scalef 0.2 0.2 0.2)
+	(if (== startingPlayer -1)
+		(this.font.draw "random")
+	(== startingPlayer 0)
+		(this.font.draw "you")
+		(group
+		(dd_translatef -0.7 0 0)
+		(this.font.draw "AI")
+		(dd_translatef 1.4 0 0)
+		(this.font.drawInt startingPlayer)
+		)
+	)
+	(dd_matrix_pop)
+
+	# draw buttons
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_push)
+
+		(this.button[i].applyTransform)
+		(this.button[i].applyMatrixTransform)
+		(if (== this.selectionClick i)
+			(group
+			(dd_scalef 1.4 1.4 1.4)
+			)
+		(&& (== this.selection i) (== this.selectionClick -1))
+			(group
+			(dd_scalef 1.2 1.2 1.2)
+			)
+		)
+		(this.button[i].drawRaw)
+
+		(dd_translatef 0 0 0.01)
+		(dd_scalef 0.2 0.2 0.2)
+
+		(if (== i 0)
+			(this.font.draw "minus")
+		(== i 1)
+			(this.font.draw "plus")
+		(== i 2)
+			(this.font.draw "minus")
+		(== i 3)
+			(this.font.draw "plus")
+		(== i 4)
+			(this.font.draw "guide")
+		(== i 5)
+			(this.font.draw "back")
+		(== i 6)
+			(this.font.draw "start")
+		)
+
+		(dd_matrix_pop)
+		)
+	)
+
+	)
+)
+
+(class_function world_custom_game_menu void key_input (group char key)
+	(group
+	(if (== key 27)
+		(= dd_flag_exit 1) # exit game
+	(== key 97)
+		(group
+		(echo "start game")
+		(dd_world_prepare world_game 1.0)
+		(dd_world_ready)
+		)
+	) # key input
+	)
+)
+
+(class_function world_custom_game_menu void clean (group)
+	(group
+	)
+)
+
+(class_function world_custom_game_menu void mouse_input (group int button int type)
+	(group
+
+	# control the camera look at point when click and dragging
+	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+		(group
+		(if (>= this.selection 0)
+			(= this.selectionClick this.selection)
+		)
+		)
+	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+		(group
+
+		# clicked on a button
+		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0))
+			(group
+
+			# minus num of players
+			(if (== this.selectionClick 0)
+				(group
+				(= numberOfPlayers (dd_math_max (- numberOfPlayers 1) 3))
+				(= startingPlayer (dd_math_min startingPlayer (- numberOfPlayers 1)))
+				)
+			# plus num of players
+			(== this.selectionClick 1)
+				(group
+				(= numberOfPlayers (dd_math_min (+ numberOfPlayers 1) 5))
+				)
+			# minus starting player
+			(== this.selectionClick 2)
+				(group
+				(= startingPlayer (dd_math_max (- startingPlayer 1) -1))
+				)
+			# plus starting player
+			(== this.selectionClick 3)
+				(group
+				(= startingPlayer (dd_math_min (+ startingPlayer 1) (- numberOfPlayers 1)))
+				)
+			# toggle guide
+			(== this.selectionClick 4)
+				(group
+				)
+			# back to main menu
+			(== this.selectionClick 5)
+				(group
+				(dd_world_prepare world_menu 1.0)
+				(dd_world_ready)
+				(= this.isMovingToNewWorld 1)
+				)
+			# start game !
+			(== this.selectionClick 6)
+				(group
+				(dd_world_prepare world_game 1.0)
+				(dd_world_ready)
+				(= this.isMovingToNewWorld 1)
+				)
+			)
+
+			)
+		)
+
+		(= this.selectionClick -1)
+
+		)
+	) # mouse button released
+
+	)
+) # mouse input

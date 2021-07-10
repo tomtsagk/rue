@@ -11,6 +11,11 @@
 	# font
 	(def dd_string3d font)
 
+	(def int selection)
+	(def int selectionClick)
+
+	(def int isMovingToNewWorld)
+
 	(function void create (group))
 	(function void onload (group))
 	#(function void resize (group))

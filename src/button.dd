@@ -88,3 +88,32 @@
 	(group
 	)
 )
+
+(class_function Button int hasMouseCollided (group)
+	(group
+
+	# get mouse's proportioned position
+	(def float screenProportionX)
+	(= screenProportionX (- (dd_mouse_xProportion) 0.5))
+	(def float screenProportionY)
+	(= screenProportionY (- (dd_mouse_yProportion) 0.5))
+
+	# get x and y of the plane where the button is
+	(def float planeX)
+	(= planeX (* screenProportionX (dd_screen_width_get (* this.z -1))))
+	(def float planeY)
+	(= planeY (* screenProportionY (dd_screen_height_get this.z)))
+
+	# check collision
+	(if (&&
+		(>= planeX (- this.x (/ this.width  2)))
+		(<= planeX (+ this.x (/ this.width  2)))
+		(>= planeY (- this.y (/ this.height 2)))
+		(<= planeY (+ this.y (/ this.height 2)))
+		)
+		(return 1)
+		(return 0)
+	)
+
+	)
+)

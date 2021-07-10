@@ -1,6 +1,9 @@
 (include "game.ddh")
 (include "menu.ddh")
 
+(def extern int numberOfPlayers)
+(def extern int startingPlayer)
+
 # game phases
 (def int PHASE_INIT 0)
 (def int PHASE_PLAN 1)
@@ -227,7 +230,8 @@
 	(= this.discardTotal 0)
 
 	# players 3-8
-	(= this.playersTotal 4)
+	#(= this.playersTotal 4)
+	(= this.playersTotal numberOfPlayers)
 	(= this.player[0].isUser 1)
 
 	# init player positions
@@ -341,8 +345,10 @@
 				(= this.phaseText "initialising game")
 
 				# decide starting player
-				(= this.startingPlayer (dd_math_rand this.playersTotal))
-				(this.setRosePlayer this.startingPlayer)
+				(if (== startingPlayer -1)
+					(= startingPlayer (dd_math_rand this.playersTotal))
+				)
+				(this.setRosePlayer startingPlayer)
 				(dd_matrix_copy this.roseCard this.roseCard.target)
 
 				# all players draw starting cards

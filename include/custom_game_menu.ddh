@@ -5,11 +5,21 @@
 	(group
 
 	# menu buttons
-	(def Button button[3])
+	(def Button button[7])
 	(def int buttonTotal)
 
 	# font
 	(def dd_string3d font)
+
+	(def int selection)
+	(def int selectionClick)
+
+	(def int isMovingToNewWorld)
+
+	# custom game tweak values
+	(def int numberOfPlayers)
+	(def int startingPlayer)
+	(def int hasGuide)
 
 	(function void create (group))
 	(function void onload (group))
