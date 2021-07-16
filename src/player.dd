@@ -89,14 +89,14 @@
 (class_function Player void drawLookingAtText (group)
 	(group
 
-	(if (>= this.userLookingAtCard 0)
-		(group
-		(dd_matrix_push)
-		(dd_translatef 0 0 -5)
-		(this.cards[this.userLookingAtCard].drawText)
-		(dd_matrix_pop)
-		)
-	)
+#	(if (>= this.userLookingAtCard 0)
+#		(group
+#		(dd_matrix_push)
+#		(dd_translatef 0 0 -5)
+#		(this.cards[this.userLookingAtCard].drawText)
+#		(dd_matrix_pop)
+#		)
+#	)
 
 	)
 )

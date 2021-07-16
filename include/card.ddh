@@ -18,6 +18,8 @@
 	# if true, do not render its actual front side (hidden from user)
 	(def int hidden)
 
+	(def ref char cardDescription)
+
 	(function void create (group))
 	(function void clean (group))
 
@@ -27,6 +29,8 @@
 	(function void drawRaw (group))
 
 	(function void drawText (group))
+
+	(function void setId (group int id))
 
 	)
 ) # card

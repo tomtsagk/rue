@@ -266,3 +266,75 @@
 
 	)
 )
+
+(class_function Card void setId (group int givenId)
+	(group
+
+	(= this.id givenId)
+
+	(if (== this.id 0)
+		(= this.cardDescription "move rose 1 step")
+	(== this.id 1)
+		(= this.cardDescription "move rose 3 steps")
+	(== this.id 2)
+		(= this.cardDescription (multistring
+			"rose player grabs rose "
+			"give a card to the rose player "
+			"receive a random card "
+			"from the rose player "
+			"move rose 1 step "
+			)
+		)
+	(== this.id 3)
+		(= this.cardDescription (multistring
+			"if rose is 1 step "
+			"before you "
+			"move it 1 step "
+			"otherwise "
+			"move it 3 steps"
+			)
+		)
+	(== this.id 4)
+		(= this.cardDescription (multistring
+			"draw 1 card "
+			"discard this card "
+			"plan and execute "
+			"another card"
+			)
+		)
+	(== this.id 5)
+		(= this.cardDescription (multistring
+			"if rose is in front of "
+			"you grab it otherwise "
+			"move rose 1 step "
+			"the rose player "
+			"grabs the rose"
+			)
+		)
+	(== this.id 6)
+		(= this.cardDescription (multistring
+			"the rose player "
+			"grabs the rose"
+			)
+		)
+	(== this.id 7)
+		(= this.cardDescription (multistring
+			"if you are not "
+			"the rose player "
+			"move rose 1 step "
+			"otherwise "
+			"move rose 3 steps"
+			)
+		)
+	(== this.id 8)
+		(= this.cardDescription (multistring
+			"if you are holding "
+			"the rose "
+			"discard 1 card "
+			"move rose 1 step"
+			)
+		)
+	)
+
+	)
+)

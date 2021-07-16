@@ -85,7 +85,7 @@
 
 	# card back
 	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
-	#(this.cardBack.loadTexture (asset "assets/card_border_texture.asset" DD_PLY))
+	(this.cardBack.loadTexture (asset "assets/card_border_texture.asset" DD_PLY))
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
@@ -141,7 +141,7 @@
 	# single steps
 	(for (def int i 0) (< i 5) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_SINGLE_STEP)
+		(this.cards[i].setId CARD_SINGLE_STEP)
 		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
 		)
 	)
@@ -149,7 +149,7 @@
 	# triple steps
 	(for (def int i 5) (< i (+ 5 4)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_THREE_STEPS)
+		(this.cards[i].setId CARD_THREE_STEPS)
 		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
 		)
 	)
@@ -157,7 +157,7 @@
 	# trade
 	(for (def int i 9) (< i (+ 9 3)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_TRADE)
+		(this.cards[i].setId CARD_TRADE)
 		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
 		)
 	)
@@ -165,7 +165,7 @@
 	# conditional
 	(for (def int i 12) (< i (+ 12 5)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_CONDITIONAL)
+		(this.cards[i].setId CARD_CONDITIONAL)
 		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
 		)
 	)
@@ -173,7 +173,7 @@
 	# replace
 	(for (def int i 17) (< i (+ 17 3)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_REPLACE)
+		(this.cards[i].setId CARD_REPLACE)
 		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
 		)
 	)
@@ -181,7 +181,7 @@
 	# grab
 	(for (def int i 20) (< i (+ 20 4)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_GRAB)
+		(this.cards[i].setId CARD_GRAB)
 		(= this.cards[i].mesh this.cardFront[CARD_GRAB])
 		)
 	)
@@ -189,7 +189,7 @@
 	# grab gen
 	(for (def int i 24) (< i (+ 24 5)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_GRAB_GENERIC)
+		(this.cards[i].setId CARD_GRAB_GENERIC)
 		(= this.cards[i].mesh this.cardFront[CARD_GRAB_GENERIC])
 		)
 	)
@@ -197,7 +197,7 @@
 	# approach
 	(for (def int i 29) (< i (+ 29 3)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_APPROACH)
+		(this.cards[i].setId CARD_APPROACH)
 		(= this.cards[i].mesh this.cardFront[CARD_APPROACH])
 		)
 	)
@@ -205,7 +205,7 @@
 	# win
 	(for (def int i 32) (< i (+ 32 4)) (= i (+ i 1))
 		(group
-		(= this.cards[i].id CARD_WIN)
+		(this.cards[i].setId CARD_WIN)
 		(= this.cards[i].mesh this.cardFront[CARD_WIN])
 		)
 	)
@@ -1103,7 +1103,21 @@
 	# states
 	(dd_matrix_push)
 	(dd_translatef 0 5 -15)
-	(this.font.draw this.phaseText)
+	# draw text of overlay card
+	(if this.ovButtons.isLookingAtCard
+		(this.font.drawLimit this.ovButtons.cardToShow.cardDescription
+			(* (dd_screen_width_get 15) 1.8)
+		)
+	# player looking card
+	(>= this.player[0].userLookingAtCard 0)
+		(this.font.drawLimit this.player[0].cards[this.player[0].userLookingAtCard].cardDescription
+			(* (dd_screen_width_get 15) 1.8)
+		)
+	# draw phase
+		(this.font.drawLimit this.phaseText
+			(* (dd_screen_width_get 15) 1.8)
+		)
+	)
 	(dd_matrix_pop)
 
 	# clear depth

@@ -19,14 +19,14 @@
 #	(this.drawRaw)
 #	(dd_matrix_pop)
 
-	(if (&& this.cardToShow this.isLookingAtCard)
-		(group
-		(dd_matrix_push)
-		(dd_translatef 0 0 -5)
-		(this.cardToShow.drawText)
-		(dd_matrix_pop)
-		)
-	)
+#	(if (&& this.cardToShow this.isLookingAtCard)
+#		(group
+#		(dd_matrix_push)
+#		(dd_translatef 0 0 -5)
+#		(this.cardToShow.drawText)
+#		(dd_matrix_pop)
+#		)
+#	)
 
 	)
 )
@@ -62,6 +62,7 @@
 	(group
 	(if this.isLookingAtCard
 		(group
+		(= this.isLookingAtCard 0)
 		(dd_matrix_copy this.cardToShow.target this.previousLoc)
 		(= this.cardToShow 0)
 		)
