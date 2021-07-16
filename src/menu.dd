@@ -5,6 +5,13 @@
 (class_function world_menu void create (group)
 	(group
 
+	# background
+	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
+
+	# logo
+	(this.logo.load (asset "assets/logo_rue.asset" DD_PLY))
+	(this.logo.loadTexture (asset "assets/logo_rue_texture.asset" DD_PLY))
+
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.font.setColorFront 1.0 1.0 1.0)
@@ -14,29 +21,62 @@
 	# buttons
 	(= this.buttonTotal 3)
 	(Button_create this.button[0])
-	#(this.button[0].mesh.load (asset "assets/card.asset" DD_PLY))
-	(this.button[0].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.button[0].mesh.set_colour 1 0 0)
-	(this.button[0].setPosition -1 1 -5)
+	(this.button[0].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[0].setPosition -2 -0.5 -5)
 	(this.button[0].setSize 1 1)
 
 	(Button_create this.button[1])
-	#(this.button[1].mesh.load (asset "assets/card.asset" DD_PLY))
-	(this.button[1].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.button[1].mesh.set_colour 0 1 0)
-	(this.button[1].setPosition -1 0 -5)
+	(this.button[1].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[1].setPosition 0 -0.5 -5)
 	(this.button[1].setSize 1 1)
 
 	(Button_create this.button[2])
-	#(this.button[2].mesh.load (asset "assets/card.asset" DD_PLY))
-	(this.button[2].mesh.set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.button[2].mesh.set_colour 0 0 1)
-	(this.button[2].setPosition -1 -1 -5)
+	(this.button[2].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[2].setPosition 2 -0.5 -5)
 	(this.button[2].setSize 1 1)
 
 	(= this.selection -1)
 	(= this.selectionClick -1)
 	(= this.isMovingToNewWorld 0)
+
+	(this.buttonProgram.setVertexShader
+		(multistring
+			"AVDL_IN vec4 position;\n"
+			"AVDL_IN vec3 colour;\n"
+
+			"uniform mat4 matrix;\n"
+			"uniform vec3 tint;\n"
+
+			"AVDL_OUT vec4 outColour;\n"
+
+			"void main() {\n"
+			"	vec4 pos = matrix *position;\n"
+			"       gl_Position = pos;\n"
+			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
+			"}\n"
+		)
+	)
+	(this.buttonProgram.setFragmentShader
+		(multistring
+			"AVDL_IN vec4 outColour;\n"
+
+			"void main() {\n"
+			"       avdl_frag_color = outColour;\n"
+			"}\n"
+		)
+	)
+
+	(= this.buttonActiveCol[0] 0.403)
+	(= this.buttonActiveCol[1] 0.698)
+	(= this.buttonActiveCol[2] 0.349)
+
+	(= this.buttonInactiveCol[0] 0.694)
+	(= this.buttonInactiveCol[1] 0.137)
+	(= this.buttonInactiveCol[2] 0.137)
+
+	(= this.buttonCurrentCol[0] 1.0)
+	(= this.buttonCurrentCol[1] 0.0)
+	(= this.buttonCurrentCol[2] 0.0)
 
 	)
 )
@@ -62,9 +102,10 @@
 		(if (this.button[i].hasMouseCollided)
 			(group
 			(= this.selection i)
-			(= i 100)
 			)
 		)
+
+		(this.button[i].update (== this.selection i))
 
 		)
 	)
@@ -75,10 +116,34 @@
 (class_function world_menu void draw (group)
 	(group
 
+	# draw background
+	(dd_matrix_push)
+	(dd_translatef 0 -2 -3)
+	(dd_rotatef 40 0 1 0)
+	(this.bg.draw)
+	(dd_matrix_pop)
+
+	# draw logo
+	(dd_matrix_push)
+	(dd_translatef 0 1.7 -8)
+	(dd_rotatef 10 1 0 0)
+	(this.logo.draw)
+	(dd_matrix_pop)
+
 	# draw buttons
+	(this.buttonProgram.useProgram)
+	(def int colLoc)
+	(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group
 		(dd_matrix_push)
+
+		# change the shader colour based on each buttons state
+		(avdl_setUniform3f colLoc
+			(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+			(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+			(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
+		)
 
 		(this.button[i].applyTransform)
 		(this.button[i].applyMatrixTransform)
@@ -93,11 +158,11 @@
 		)
 		(this.button[i].drawRaw)
 
-		(dd_translatef 0 0 0.01)
+		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 
 		(if (== i 0)
-			(this.font.draw "levels")
+			(this.font.draw "challenges")
 		(== i 1)
 			(this.font.draw "custom game")
 			(this.font.draw "exit")
@@ -106,6 +171,20 @@
 		(dd_matrix_pop)
 		)
 	)
+	(avdl_useProgram 0)
+
+	# draw version number
+	(dd_matrix_push)
+	(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
+	(dd_translatef
+		(/ (dd_screen_width_get 5) 2)
+		(+ (/ (dd_screen_height_get 5) -2) 0.2)
+		-5
+	)
+	(dd_scalef 0.2 0.2 0.2)
+	(this.font.draw "alpha version")
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(dd_matrix_pop)
 
 	)
 )

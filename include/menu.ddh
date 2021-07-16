@@ -4,9 +4,19 @@
 (class world_menu dd_world
 	(group
 
+	# background
+	(def dd_meshColour bg)
+
+	# logo
+	(def dd_meshTexture logo)
+
 	# menu buttons
 	(def Button button[3])
 	(def int buttonTotal)
+	(def avdl_program buttonProgram)
+	(def float buttonActiveCol[3])
+	(def float buttonInactiveCol[3])
+	(def float buttonCurrentCol[3])
 
 	# font
 	(def dd_string3d font)

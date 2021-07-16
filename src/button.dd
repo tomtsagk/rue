@@ -14,6 +14,7 @@
 	# idle animation
 	(= this.idleRot 0)
 	(= this.idleRotTarget 7)
+	(= this.idleCol 0)
 
 	)
 )
@@ -37,10 +38,17 @@
 (class_function Button void update (group int isSelected)
 	(group
 
-	# animate to target if selected, to idle otherwise
+	# animate to target if selected
 	(if isSelected
+		(group
 		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot this.idleRotTarget))
+		(= this.idleCol (dd_math_ease_linear 0.2 this.idleCol 1))
+		)
+	# animate to idle
+		(group
 		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot 0))
+		(= this.idleCol (dd_math_ease_linear 0.2 this.idleCol 0))
+		)
 	)
 
 	# flip animation when reached the target

@@ -39,8 +39,7 @@
 	(def OverlayButtons ovButtons)
 
 	# arrow shader
-	(def int arrowProgram)
-	(def int arrowProgramOpenglContext)
+	(def avdl_program arrowProgramAvdl)
 	(def float arrowActiveCol[3])
 	(def float arrowInactiveCol[3])
 	(def float arrowCurrentCol[3])

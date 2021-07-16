@@ -12,6 +12,7 @@
 	# idle animation
 	(def float idleRot)
 	(def float idleRotTarget)
+	(def float idleCol)
 
 	(function void setSize (group float sizeX float sizeY))
 	(function void setPosition (group float posX float posY float posZ))
