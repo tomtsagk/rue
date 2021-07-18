@@ -931,8 +931,12 @@
 				(group
 				(def int winningPlayer -1)
 
-				(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
+				# a player with 2 cards or less is the winner
+				# tie-breaker is whoever is closest to the rose player
+				(for (def int i this.rosePlayer) (< i (+ this.rosePlayer this.playersTotal)) (= i (+ i 1))
 					(group
+
+					(def int index (% i this.playersTotal))
 
 					# player won
 					(if (<= this.player[i].cardsTotal 2)
