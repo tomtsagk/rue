@@ -19,6 +19,9 @@
 	(def float buttonActiveCol[3])
 	(def float buttonInactiveCol[3])
 
+	# text display
+	(def Button textButton)
+
 	# font
 	(def dd_string3d font)
 

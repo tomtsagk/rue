@@ -15,60 +15,79 @@
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 1.0 1.0 1.0)
-	#(this.font.setColorBack 1.0 0.0 0.0)
-	(this.font.setColorBack 1.0 1.0 1.0)
+	(this.font.setColorFront 0.8 0.8 0.8)
+	(this.font.setColorBack 0.3 0.3 0.3)
 
 	# buttons
 	(= this.buttonTotal 7)
-	(Button_create this.button[0])
 	(this.button[0].mesh.load (asset "assets/button_minus.asset" DD_PLY))
 	(this.button[0].setSize 1 1)
-	(this.button[0].setProportionalPosition 0.35 0.75)
+	(this.button[0].setProportionalPosition 0.50 0.8)
 	(this.button[0].setProportionalWidth 0.2)
 	(this.button[0].setProportionalSize 0.7)
 
-	(Button_create this.button[1])
 	(this.button[1].mesh.load (asset "assets/button_plus.asset" DD_PLY))
 	(this.button[1].setSize 1 1)
-	(this.button[1].setProportionalPosition 0.65 0.75)
+	(this.button[1].setProportionalPosition 0.8 0.8)
 	(this.button[1].setProportionalWidth 0.2)
 	(this.button[1].setProportionalSize 0.7)
 
-	(Button_create this.button[2])
 	(this.button[2].mesh.load (asset "assets/button_minus.asset" DD_PLY))
 	(this.button[2].setSize 1 1)
-	(this.button[2].setProportionalPosition 0.35 0.5)
+	(this.button[2].setProportionalPosition 0.5 0.575)
 	(this.button[2].setProportionalWidth 0.2)
 	(this.button[2].setProportionalSize 0.7)
 
-	(Button_create this.button[3])
 	(this.button[3].mesh.load (asset "assets/button_plus.asset" DD_PLY))
 	(this.button[3].setSize 1 1)
-	(this.button[3].setProportionalPosition 0.65 0.5)
+	(this.button[3].setProportionalPosition 0.8 0.575)
 	(this.button[3].setProportionalWidth 0.2)
 	(this.button[3].setProportionalSize 0.7)
 
-	(Button_create this.button[4])
-	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[4].mesh.load (asset "assets/button_toggle.asset" DD_PLY))
 	(this.button[4].setSize 1 1)
-	(this.button[4].setProportionalPosition 0.5 0.2)
+	(this.button[4].setProportionalPosition 0.5 0.35)
 	(this.button[4].setProportionalWidth 0.2)
 	(this.button[4].setProportionalSize 0.7)
 
-	(Button_create this.button[5])
 	(this.button[5].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[5].setSize 1 1)
 	(this.button[5].setProportionalPosition 0.12 0.15)
 	(this.button[5].setProportionalWidth 0.2)
 
-	(Button_create this.button[6])
 	(this.button[6].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[6].setSize 1 1)
 	(this.button[6].setProportionalPosition 0.88 0.15)
 	(this.button[6].setProportionalWidth 0.2)
 
-	(= this.selection -1)
+	# number of players
+	(this.buttonPlayerNumber.setSize 1 1)
+	(this.buttonPlayerNumber.setProportionalPosition 0.25 0.8)
+	(this.buttonPlayerNumber.setProportionalWidth 0.2)
+	(this.buttonPlayerNumber.setProportionalSize 1.0)
+
+	(this.buttonPlayerNumberValue.setSize 1 1)
+	(this.buttonPlayerNumberValue.setProportionalPosition 0.65 0.8)
+	(this.buttonPlayerNumberValue.setProportionalWidth 0.2)
+	(this.buttonPlayerNumberValue.setProportionalSize 1.0)
+
+	# starting player
+	(this.buttonStartingPlayer.setSize 1 1)
+	(this.buttonStartingPlayer.setProportionalPosition 0.25 0.575)
+	(this.buttonStartingPlayer.setProportionalWidth 0.2)
+	(this.buttonStartingPlayer.setProportionalSize 1.0)
+
+	(this.buttonStartingPlayerValue.setSize 1 1)
+	(this.buttonStartingPlayerValue.setProportionalPosition 0.65 0.575)
+	(this.buttonStartingPlayerValue.setProportionalWidth 0.2)
+	(this.buttonStartingPlayerValue.setProportionalSize 1.0)
+
+	# text display
+	(this.textButton.setSize 1 1)
+	(this.textButton.setProportionalPosition 0.5 0.15)
+	(this.textButton.setProportionalWidth 0.15)
+
+	(= this.selection 0)
 	(= this.selectionClick -1)
 	(= this.isMovingToNewWorld 0)
 
@@ -105,13 +124,13 @@
 	)
 
 	# button colours
-	(= this.buttonClickCol[0] 1.0)
-	(= this.buttonClickCol[1] 0.0)
-	(= this.buttonClickCol[2] 1.0)
+	(= this.buttonClickCol[0] 0.389)
+	(= this.buttonClickCol[1] 0.055)
+	(= this.buttonClickCol[2] 0.682)
 
-	(= this.buttonActiveCol[0] 0.403)
-	(= this.buttonActiveCol[1] 0.698)
-	(= this.buttonActiveCol[2] 0.349)
+	(= this.buttonActiveCol[0] 0.916)
+	(= this.buttonActiveCol[1] 0.516)
+	(= this.buttonActiveCol[2] 0.074)
 
 	(= this.buttonInactiveCol[0] 0.694)
 	(= this.buttonInactiveCol[1] 0.137)
@@ -130,6 +149,11 @@
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
 	)
+	(this.buttonPlayerNumber.resize)
+	(this.buttonPlayerNumberValue.resize)
+	(this.buttonStartingPlayer.resize)
+	(this.buttonStartingPlayerValue.resize)
+	(this.textButton.resize)
 	)
 )
 
@@ -143,7 +167,6 @@
 	)
 
 	# check if mouse is hovering over a button
-	(= this.selection -1)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group
 
@@ -167,7 +190,8 @@
 	# draw background
 	(dd_matrix_push)
 	(dd_translatef 0 -2 -3)
-	(dd_rotatef (+ 40 this.bg_rotation) 0 1 0)
+	(dd_rotatef (+ -80 this.bg_rotation) 0 1 0)
+	(dd_rotatef 25 -1 0 0)
 	(this.bg.draw)
 	(dd_matrix_pop)
 
@@ -176,14 +200,34 @@
 
 	# draw number of players
 	(dd_matrix_push)
-	(dd_translatef 0 1 -5)
+	(this.buttonPlayerNumber.applyTransform)
+	(this.buttonPlayerNumber.applyMatrixTransform)
+	(dd_translatef 0 0 0.1)
+	(dd_scalef 0.2 0.2 0.2)
+	(this.font.draw "number of players")
+	(dd_matrix_pop)
+
+	(dd_matrix_push)
+	(this.buttonPlayerNumberValue.applyTransform)
+	(this.buttonPlayerNumberValue.applyMatrixTransform)
+	(dd_translatef 0 0 0.1)
 	(dd_scalef 0.2 0.2 0.2)
 	(this.font.drawInt numberOfPlayers)
 	(dd_matrix_pop)
 
 	# draw starting player
 	(dd_matrix_push)
-	(dd_translatef 0 0 -5)
+	(this.buttonStartingPlayer.applyTransform)
+	(this.buttonStartingPlayer.applyMatrixTransform)
+	(dd_translatef 0 0 0.1)
+	(dd_scalef 0.2 0.2 0.2)
+	(this.font.draw "starting player")
+	(dd_matrix_pop)
+
+	(dd_matrix_push)
+	(this.buttonStartingPlayerValue.applyTransform)
+	(this.buttonStartingPlayerValue.applyMatrixTransform)
+	(dd_translatef 0 0 0.1)
 	(dd_scalef 0.2 0.2 0.2)
 	(if (== startingPlayer -1)
 		(this.font.draw "random")
@@ -261,6 +305,33 @@
 	)
 	(avdl_useProgram 0)
 
+	# draw button description
+	(if (>= this.selection 0)
+		(group
+		(dd_matrix_push)
+		(this.textButton.applyTransform)
+		(this.textButton.applyMatrixTransform)
+		(dd_translatef 0 0 0.1)
+		(dd_scalef 0.2 0.2 0.2)
+		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
+		(if (== this.selection 0)
+			(this.font.drawLimit "decrease number of players" limit)
+		(== this.selection 1)
+			(this.font.drawLimit "increase number of players" limit)
+		(|| (== this.selection 2) (== this.selection 3))
+			(this.font.drawLimit "change starting player" limit)
+		(== this.selection 4)
+			(this.font.drawLimit "toggle guide" limit)
+		(== this.selection 5)
+			(this.font.drawLimit "back to main menu" limit)
+		(== this.selection 6)
+			(this.font.drawLimit "start the game" limit)
+		)
+
+		(dd_matrix_pop)
+		)
+	)
+
 	)
 )
 
@@ -289,7 +360,7 @@
 	# control the camera look at point when click and dragging
 	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
 		(group
-		(if (>= this.selection 0)
+		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(= this.selectionClick this.selection)
 		)
 		)
@@ -297,7 +368,8 @@
 		(group
 
 		# clicked on a button
-		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0))
+		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0)
+			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
 			# minus num of players

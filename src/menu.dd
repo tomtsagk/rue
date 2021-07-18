@@ -15,31 +15,32 @@
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 1.0 1.0 1.0)
-	#(this.font.setColorBack 1.0 0.0 0.0)
-	(this.font.setColorBack 1.0 1.0 1.0)
+	(this.font.setColorFront 0.8 0.8 0.8)
+	(this.font.setColorBack 0.3 0.3 0.3)
 
 	# buttons
 	(= this.buttonTotal 3)
-	(Button_create this.button[0])
-	(this.button[0].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[0].mesh.load (asset "assets/button_disabled.asset" DD_PLY))
 	(this.button[0].setSize 1 1)
 	(this.button[0].setProportionalPosition 0.25 0.4)
 	(this.button[0].setProportionalWidth 0.2)
 
-	(Button_create this.button[1])
 	(this.button[1].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[1].setSize 1 1)
 	(this.button[1].setProportionalPosition 0.5 0.4)
 	(this.button[1].setProportionalWidth 0.2)
 
-	(Button_create this.button[2])
 	(this.button[2].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[2].setSize 1 1)
 	(this.button[2].setProportionalPosition 0.75 0.4)
 	(this.button[2].setProportionalWidth 0.2)
 
-	(= this.selection -1)
+	# text display
+	(this.textButton.setSize 1 1)
+	(this.textButton.setProportionalPosition 0.5 0.15)
+	(this.textButton.setProportionalWidth 0.2)
+
+	(= this.selection 0)
 	(= this.selectionClick -1)
 	(= this.isMovingToNewWorld 0)
 
@@ -70,13 +71,13 @@
 		)
 	)
 
-	(= this.buttonClickCol[0] 1.0)
-	(= this.buttonClickCol[1] 0.0)
-	(= this.buttonClickCol[2] 1.0)
+	(= this.buttonClickCol[0] 0.389)
+	(= this.buttonClickCol[1] 0.055)
+	(= this.buttonClickCol[2] 0.682)
 
-	(= this.buttonActiveCol[0] 0.403)
-	(= this.buttonActiveCol[1] 0.698)
-	(= this.buttonActiveCol[2] 0.349)
+	(= this.buttonActiveCol[0] 0.916)
+	(= this.buttonActiveCol[1] 0.516)
+	(= this.buttonActiveCol[2] 0.074)
 
 	(= this.buttonInactiveCol[0] 0.694)
 	(= this.buttonInactiveCol[1] 0.137)
@@ -95,6 +96,7 @@
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
 	)
+	(this.textButton.resize)
 	)
 )
 
@@ -108,7 +110,7 @@
 	)
 
 	# check if mouse is hovering over a button
-	(= this.selection -1)
+	#(= this.selection -1)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group
 
@@ -131,10 +133,14 @@
 
 	# draw background
 	(dd_matrix_push)
-	(dd_translatef 0 -2 -3)
+	(dd_translatef 0 -3 -3)
 	(dd_rotatef (+ 40 this.bg_rotation) 0 1 0)
+	(dd_rotatef 25 -1 0 0)
 	(this.bg.draw)
 	(dd_matrix_pop)
+
+	# clear depth
+	(glClear GL_DEPTH_BUFFER_BIT)
 
 	# draw logo
 	(dd_matrix_push)
@@ -142,9 +148,6 @@
 	(dd_rotatef 10 1 0 0)
 	(this.logo.draw)
 	(dd_matrix_pop)
-
-	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
 
 	# draw buttons
 	(this.buttonProgram.useProgram)
@@ -201,13 +204,11 @@
 	(if (>= this.selection 0)
 		(group
 		(dd_matrix_push)
-		(dd_translatef
-			0
-			-6
-			-20
-		)
-		(def float limit (* (dd_screen_width_get 20) 1.8))
-		#(dd_scalef 0.2 0.2 0.2)
+		(this.textButton.applyTransform)
+		(this.textButton.applyMatrixTransform)
+		(dd_translatef 0 0 0.1)
+		(dd_scalef 0.2 0.2 0.2)
+		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
 		(if (== this.selection 0)
 			(this.font.drawLimit "not available in alpha version" limit)
 		(== this.selection 1)
@@ -239,12 +240,6 @@
 	(group
 	(if (== key 27)
 		(= dd_flag_exit 1) # exit game
-	(== key 97)
-		(group
-		#(dd_world_prepare world_game 1.0)
-		(dd_world_prepare world_custom_game_menu 1.0)
-		(dd_world_ready)
-		)
 	) # key input
 	)
 )
@@ -260,7 +255,7 @@
 	# control the camera look at point when click and dragging
 	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
 		(group
-		(if (>= this.selection 0)
+		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(= this.selectionClick this.selection)
 		)
 		)
@@ -268,7 +263,8 @@
 		(group
 
 		# clicked on a button
-		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0))
+		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0)
+			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
 			(if (== this.selectionClick 0)

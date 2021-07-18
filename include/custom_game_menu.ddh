@@ -16,6 +16,17 @@
 	(def float buttonActiveCol[3])
 	(def float buttonInactiveCol[3])
 
+	# number of players
+	(def Button buttonPlayerNumber)
+	(def Button buttonPlayerNumberValue)
+
+	# starting player
+	(def Button buttonStartingPlayer)
+	(def Button buttonStartingPlayerValue)
+
+	# text display
+	(def Button textButton)
+
 	# font
 	(def dd_string3d font)
 
