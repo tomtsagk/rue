@@ -5,6 +5,7 @@
 	(group
 
 	# background
+	(def float bg_rotation)
 	(def dd_meshColour bg)
 
 	# logo
@@ -14,9 +15,9 @@
 	(def Button button[3])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
+	(def float buttonClickCol[3])
 	(def float buttonActiveCol[3])
 	(def float buttonInactiveCol[3])
-	(def float buttonCurrentCol[3])
 
 	# font
 	(def dd_string3d font)
@@ -28,7 +29,7 @@
 
 	(function void create (group))
 	(function void onload (group))
-	#(function void resize (group))
+	(function void resize (group))
 	(function void update (group))
 	(function void draw (group))
 	(function void key_input (group char key))

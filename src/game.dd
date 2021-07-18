@@ -281,7 +281,7 @@
 	(= this.isRoseFlat 1)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
 	(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
-	(= this.roseCard.id CARD_ROSE)
+	(this.roseCard.setId CARD_ROSE)
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
 
@@ -635,6 +635,7 @@
 					(this.addInjectAction ACTION_SELECT_CARD this.rosePlayer 0 0)
 					(this.addInjectAction ACTION_GIVE_CARD this.actions[0].playerIndex 0 50)
 					(this.injectActionsToActions)
+
 					)
 				)
 
@@ -761,22 +762,20 @@
 				(= this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].hidden 0)
 			)
 
-			(this.player[receiverIndex].addCard this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex])
-			(this.player[this.lastSelectedCardPlayerIndex].removeCard this.lastSelectedCardIndex)
-			(= this.actions[0].actionType ACTION_DELAY)
-
 			# rose is being given
 			(if (== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].id CARD_ROSE)
 				(= this.rosePlayer receiverIndex)
-			)
-
-			# user is giving a card, mark it to become hidden when arriving at opponent
-			(if (== this.lastSelectedCardPlayerIndex 0)
+			# user is giving a non-rose card, mark it to become hidden when arriving at opponent
+			(== this.lastSelectedCardPlayerIndex 0)
 				(group
-				(this.addInjectAction ACTION_HIDE_CARD receiverIndex (- this.player[receiverIndex].cardsTotal 1) 0)
+				(this.addInjectAction ACTION_HIDE_CARD receiverIndex this.player[receiverIndex].cardsTotal 0)
 				(this.injectActionsToActions)
 				)
 			)
+
+			(this.player[receiverIndex].addCard this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex])
+			(this.player[this.lastSelectedCardPlayerIndex].removeCard this.lastSelectedCardIndex)
+			(= this.actions[0].actionType ACTION_DELAY)
 
 			)
 
@@ -1472,7 +1471,6 @@
 		(group
 		(= this.isRoseFlat 0)
 		(this.player[this.rosePlayer].addCard this.roseCard)
-		(dd_matrix_rotate this.roseCard.target 180 0 1 0)
 		)
 	)
 

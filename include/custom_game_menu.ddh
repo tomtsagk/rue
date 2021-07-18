@@ -4,9 +4,17 @@
 (class world_custom_game_menu dd_world
 	(group
 
+	# background
+	(def float bg_rotation)
+	(def dd_meshColour bg)
+
 	# menu buttons
 	(def Button button[7])
 	(def int buttonTotal)
+	(def avdl_program buttonProgram)
+	(def float buttonClickCol[3])
+	(def float buttonActiveCol[3])
+	(def float buttonInactiveCol[3])
 
 	# font
 	(def dd_string3d font)
@@ -23,7 +31,7 @@
 
 	(function void create (group))
 	(function void onload (group))
-	#(function void resize (group))
+	(function void resize (group))
 	(function void update (group))
 	(function void draw (group))
 	(function void key_input (group char key))

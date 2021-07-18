@@ -16,6 +16,12 @@
 	(= this.idleRotTarget 7)
 	(= this.idleCol 0)
 
+	(= this.pX 0)
+	(= this.pY 0)
+	(= this.pW 0.1)
+
+	(= this.pSize -5)
+
 	)
 )
 
@@ -34,12 +40,40 @@
 	)
 )
 
+(class_function Button void setProportionalPosition (group float propX float propY)
+	(group
+	(= this.pX propX)
+	(= this.pY propY)
+	(this.resize)
+	)
+)
+
+(class_function Button void setProportionalWidth (group float propW)
+	(group
+	(= this.pW propW)
+	(this.resize)
+	)
+)
+
+(class_function Button void setProportionalSize (group float propSize)
+	(group
+	(= this.pSize (/ -5 propSize))
+	(this.resize)
+	)
+)
+
 # animate the tiles to the current side
-(class_function Button void update (group int isSelected)
+(class_function Button void update (group int isSelected int isClicked)
 	(group
 
+	# animate to target if clicked
+	(if isClicked
+		(group
+		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot this.idleRotTarget))
+		(= this.idleCol (dd_math_ease_linear 0.2 this.idleCol 2))
+		)
 	# animate to target if selected
-	(if isSelected
+	isSelected
 		(group
 		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot this.idleRotTarget))
 		(= this.idleCol (dd_math_ease_linear 0.2 this.idleCol 1))
@@ -71,6 +105,11 @@
 	(group
 	(dd_multMatrixf this)
 	(dd_rotatef this.idleRot 0 0 1)
+	(dd_scalef
+		(+ 1.0 (* this.idleCol 0.2))
+		(+ 1.0 (* this.idleCol 0.2))
+		(+ 1.0 (* this.idleCol 0.2))
+	)
 	)
 )
 
@@ -122,6 +161,20 @@
 		(return 1)
 		(return 0)
 	)
+
+	)
+)
+
+(class_function Button void resize (group)
+	(group
+
+	# figure out if button should be smaller
+	(def float objScale (dd_math_minf (* (dd_screen_width_get 5) this.pW) 1.0))
+	(= this.z (/ this.pSize objScale))
+
+	# place the button on the screen based on the proportions
+	(= this.x (* (dd_screen_width_get (* this.z -1)) (- this.pX 0.5)))
+	(= this.y (* (dd_screen_height_get (* this.z -1)) (- this.pY 0.5)))
 
 	)
 )

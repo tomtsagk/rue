@@ -9,6 +9,13 @@
 	(def float y)
 	(def float z)
 
+	# proportional values
+	(def float pX)
+	(def float pY)
+	(def float pW)
+
+	(def float pSize)
+
 	# idle animation
 	(def float idleRot)
 	(def float idleRotTarget)
@@ -16,14 +23,18 @@
 
 	(function void setSize (group float sizeX float sizeY))
 	(function void setPosition (group float posX float posY float posZ))
+	(function void setProportionalPosition (group float propX float propY))
+	(function void setProportionalWidth (group float propW))
+	(function void setProportionalSize (group float propSize))
 
 	(function void create (group))
-	(function void update (group int isSelected))
+	(function void update (group int isSelected int isClicked))
 	(function void applyTransform (group))
 	(function void applyMatrixTransform (group))
 	(function void drawRaw (group))
 	(function void draw (group))
 	(function void clean (group))
+	(function void resize (group))
 
 	(function int hasMouseCollided (group))
 
