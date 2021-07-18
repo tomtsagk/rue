@@ -226,6 +226,45 @@
 			"the rose"
 			)
 		)
+	# tutorial - initialisation
+	(== this.id 10)
+		(= this.cardDescription (multistring
+			"During initialisation every player draws 5 cards "
+			"and one player gets the rose card in front of them."
+			)
+		)
+	# tutorial - planning
+	(== this.id 11)
+		(= this.cardDescription (multistring
+			"During planning starting with the player with the rose "
+			"every player picks a card and plans it face down on the table"
+			)
+		)
+	# tutorial - user's turn
+	(== this.id 12)
+		(= this.cardDescription (multistring
+			"The rose always moves clockwise."
+			"If a player holds the rose moving it one step will "
+			"make it move in front of that player"
+			)
+		)
+	# tutorial - execution
+	(== this.id 13)
+		(= this.cardDescription (multistring
+			"In the execution phase starting with the player with the rose,"
+			"reveal each card and execute its effect"
+			)
+		)
+	# tutorial - end
+	(== this.id 14)
+		(= this.cardDescription (multistring
+			"In the end phase every player draws one card except the "
+			"player with the rose If a player has 2 or less cards in their hand "
+			"they win"
+			)
+		)
+	# else
+		(= this.cardDescription "no description")
 	)
 
 	)

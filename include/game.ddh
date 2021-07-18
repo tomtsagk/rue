@@ -101,6 +101,11 @@
 	(def int cardsTotal)
 	(def Card cards[48])
 
+	# tutorial cards
+	(def int guide)
+	(def int tutCardsTotal)
+	(def Card tutCards[20])
+
 	# deck
 	(def dd_matrix deckMatrix)
 	(def ref Card deck[48])

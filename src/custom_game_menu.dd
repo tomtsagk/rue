@@ -4,6 +4,7 @@
 
 (def int numberOfPlayers)
 (def int startingPlayer)
+(def int guide)
 
 (class_function world_custom_game_menu void create (group)
 	(group
@@ -73,7 +74,7 @@
 
 	(= numberOfPlayers 3)
 	(= startingPlayer -1)
-	(= this.hasGuide 1)
+	(= guide 0)
 
 	# shader for buttons
 	(this.buttonProgram.setVertexShader
@@ -245,7 +246,10 @@
 		(== i 3)
 			(group)
 		(== i 4)
-			(this.font.draw "guide")
+			(if (== guide 0)
+				(this.font.draw "include guide")
+				(this.font.draw "no guide")
+			)
 		(== i 5)
 			(this.font.draw "back")
 		(== i 6)
@@ -320,6 +324,10 @@
 			# toggle guide
 			(== this.selectionClick 4)
 				(group
+				(if (== guide 0)
+					(= guide -1)
+					(= guide 0)
+				)
 				)
 			# back to main menu
 			(== this.selectionClick 5)
