@@ -35,6 +35,9 @@
 (class world_game dd_world
 	(group
 
+	# gameover animation
+	(def int victoriousPlayer)
+
 	# overlay buttons
 	(def OverlayButtons ovButtons)
 
