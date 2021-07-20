@@ -8,26 +8,31 @@
 	(= this.isLookingAtCard 0)
 	(= this.hasConfirmed 0)
 
+	(this.bgMesh.load (asset "assets/overlay_background.asset" DD_PLY))
+	(= this.bg_rotation 0)
+
+	)
+)
+
+(class_function OverlayButtons void update (group)
+	(group
+	(= this.bg_rotation (+ this.bg_rotation 0.3))
 	)
 )
 
 # draw the card with its transformation matrix
 (class_function OverlayButtons void draw (group)
 	(group
-#	(dd_matrix_push)
-#	(this.applyMatrix)
-#	(this.drawRaw)
-#	(dd_matrix_pop)
-
-#	(if (&& this.cardToShow this.isLookingAtCard)
-#		(group
-#		(dd_matrix_push)
-#		(dd_translatef 0 0 -5)
-#		(this.cardToShow.drawText)
-#		(dd_matrix_pop)
-#		)
-#	)
-
+	(if this.cardToShow
+		(group
+		(dd_matrix_push)
+		(this.cardToShow.applyMatrix)
+		(dd_translatef 0 0 -0.1)
+		(dd_rotatef this.bg_rotation 0 0 1)
+		(this.bgMesh.draw)
+		(dd_matrix_pop)
+		)
+	)
 	)
 )
 

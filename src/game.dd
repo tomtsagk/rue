@@ -939,9 +939,9 @@
 					(def int index (% i this.playersTotal))
 
 					# player won
-					(if (<= this.player[i].cardsTotal 2)
+					(if (<= this.player[index].cardsTotal 2)
 						(group
-						(= winningPlayer i)
+						(= winningPlayer index)
 						(= i 100)
 						)
 					)
@@ -1058,6 +1058,8 @@
 		)
 	)
 
+	(this.ovButtons.update)
+
 	)
 ) # update
 
@@ -1152,6 +1154,10 @@
 	(this.player[0].draw)
 	(dd_matrix_pop)
 
+	(if this.ovButtons.cardToShow
+		(this.ovButtons.draw)
+	)
+
 	# rotating card
 	#(dd_translatef 0 3.5 0)
 	#(dd_rotatef this.rotating 0 1 0)
@@ -1205,10 +1211,6 @@
 	(dd_matrix_pop)
 
 	(this.player[0].drawLookingAtText)
-
-	(if this.ovButtons.cardToShow
-		(this.ovButtons.draw)
-	)
 
 	)
 )

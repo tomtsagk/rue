@@ -4,6 +4,10 @@
 (class OverlayButtons dd_matrix
 	(group
 
+	# bg mesh
+	(def dd_meshColour bgMesh)
+	(def float bg_rotation)
+
 	# id of card - determines its effect
 	(def dd_matrix previousLoc)
 
@@ -16,6 +20,7 @@
 
 	(function void setCard (group Card c))
 	(function void create (group))
+	(function void update (group))
 	(function void clean (group))
 
 	(function void draw (group))

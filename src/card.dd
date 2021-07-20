@@ -159,22 +159,20 @@
 	(= this.id givenId)
 
 	(if (== this.id 0)
-		(= this.cardDescription "move rose 1 step")
+		(= this.cardDescription "move the rose 1 step")
 	(== this.id 1)
-		(= this.cardDescription "move rose 3 steps")
+		(= this.cardDescription "move the rose 3 steps")
 	(== this.id 2)
 		(= this.cardDescription (multistring
-			"rose player grabs rose "
-			"give a card to the rose player "
-			"receive a random card "
-			"from the rose player "
-			"move rose 1 step "
+			"The rose player grabs the rose then"
+			"give a card to the rose player and "
+			"receive a random card back then "
+			"move the rose 1 step "
 			)
 		)
 	(== this.id 3)
 		(= this.cardDescription (multistring
-			"if rose is 1 step "
-			"before you "
+			"if the rose is 1 step before you "
 			"move it 1 step "
 			"otherwise "
 			"move it 3 steps"
@@ -182,17 +180,17 @@
 		)
 	(== this.id 4)
 		(= this.cardDescription (multistring
-			"draw 1 card "
-			"discard this card "
+			"draw 1 card then "
+			"discard this card to "
 			"plan and execute "
 			"another card"
 			)
 		)
 	(== this.id 5)
 		(= this.cardDescription (multistring
-			"if rose is in front of "
+			"if the rose is in front of "
 			"you grab it otherwise "
-			"move rose 1 step "
+			"move the rose 1 step then "
 			"the rose player "
 			"grabs the rose"
 			)
@@ -206,24 +204,24 @@
 	(== this.id 7)
 		(= this.cardDescription (multistring
 			"if you are not "
-			"the rose player "
-			"move rose 1 step "
+			"the rose player then "
+			"move the rose 1 step "
 			"otherwise "
-			"move rose 3 steps"
+			"move the rose 3 steps"
 			)
 		)
 	(== this.id 8)
 		(= this.cardDescription (multistring
 			"if you are holding "
-			"the rose "
-			"discard 1 card "
-			"move rose 1 step"
+			"the rose then "
+			"discard 1 card -"
+			"move the rose 1 step"
 			)
 		)
 	# rose
 	(== this.id 9)
 		(= this.cardDescription (multistring
-			"the rose"
+			"a beautiful red rose that smells amazing"
 			)
 		)
 	# tutorial - initialisation
@@ -236,7 +234,7 @@
 	# tutorial - planning
 	(== this.id 11)
 		(= this.cardDescription (multistring
-			"During planning starting with the player with the rose "
+			"In the planning phase starting with the player with the rose "
 			"every player picks a card and plans it face down on the table"
 			)
 		)
