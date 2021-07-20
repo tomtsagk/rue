@@ -319,14 +319,14 @@
 			"AVDL_IN vec3 colour;\n"
 
 			"uniform mat4 matrix;\n"
-			"uniform vec3 arrowCol;\n"
+			"uniform vec3 tint;\n"
 
 			"AVDL_OUT vec4 outColour;\n"
 
 			"void main() {\n"
 			"	vec4 pos = matrix *position;\n"
 			"       gl_Position = pos;\n"
-			"       outColour = vec4(colour.rgb *arrowCol.rgb, 1.0);\n"
+			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
 			"}\n"
 		)
 	)
@@ -1086,7 +1086,7 @@
 	(dd_rotatef this.arrowRotation 0 1 0)
 	(this.arrowProgramAvdl.useProgram)
 	(def int colLoc)
-	(= colLoc (avdl_getUniformLocation this.arrowProgramAvdl "arrowCol"))
+	(= colLoc (avdl_getUniformLocation this.arrowProgramAvdl "tint"))
 	(avdl_setUniform3f colLoc this.arrowCurrentCol[0] this.arrowCurrentCol[1] this.arrowCurrentCol[2])
 	(this.tableArrow.draw)
 	(avdl_useProgram 0)
