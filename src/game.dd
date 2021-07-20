@@ -225,7 +225,7 @@
 		(= this.tutCards[i].font this.cardFont)
 		(= this.tutCards[i].meshBack this.cardBack)
 		(dd_matrix_identity this.tutCards[i].target)
-		(dd_matrix_translate this.tutCards[i].target -1.5 2 2.5)
+		(dd_matrix_translate this.tutCards[i].target -1.75 2.01 2.7)
 		(dd_matrix_rotate this.tutCards[i].target -90 1 0 0)
 		(dd_matrix_rotate this.tutCards[i].target 55 0 0 1)
 		(dd_matrix_copy this.tutCards[i] this.tutCards[i].target)
