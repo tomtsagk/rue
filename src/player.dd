@@ -239,7 +239,7 @@
 			(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
 
 			# remove card from array
-			(for (def int i (+ index 1)) (< i this.cardsTotal) (= i (+ i 1))
+			(for (def int i (+ this.highlightCard 1)) (< i this.cardsTotal) (= i (+ i 1))
 				(group
 				(def int prevIndex (- i 1))
 				(= this.cards[prevIndex] this.cards[i])
