@@ -58,8 +58,8 @@
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 1.0 1.0 1.0)
-	(this.font.setColorBack 0.8 0.8 0.8)
+	(this.font.setColorFront 0.9 0.9 0.9)
+	(this.font.setColorBack 0.3 0.3 0.3)
 
 	# card font
 	(this.cardFont.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -137,14 +137,6 @@
 		)
 	)
 
-#	# all set debug
-#	(for (def int i 0) (< i 36) (= i (+ i 1))
-#		(group
-#		(= this.cards[i].id CARD_WIN)
-#		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
-#		)
-#	)
-
 	# single steps
 	(for (def int i 0) (< i 5) (= i (+ i 1))
 		(group
@@ -216,6 +208,14 @@
 		(= this.cards[i].mesh this.cardFront[CARD_WIN])
 		)
 	)
+
+#	# all set debug
+#	(for (def int i 0) (< i 36) (= i (+ i 1))
+#		(group
+#		(= this.cards[i].id CARD_TRADE)
+#		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
+#		)
+#	)
 
 	# tut cards
 	(= this.guide guide)
@@ -576,7 +576,7 @@
 			(if (|| (< this.actions[0].playerIndex 0) (>= this.actions[0].playerIndex this.playersTotal))
 				(echo "invalid player cannot select a card")
 			# user has to select a card
-			(== this.actions[0].playerIndex 0)
+			(&& (== this.actions[0].playerIndex 0) (== this.actions[0].value 0))
 				(group
 				(if (== this.guide 2)
 					(group
@@ -585,7 +585,7 @@
 					)
 				)
 				)
-			# AI has to select a card
+			# AI has to select a card or user selects randomly
 				(group
 				(= this.lastSelectedCardPlayerIndex this.actions[0].playerIndex)
 				(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
@@ -652,7 +652,6 @@
 		# execute planned card
 		(== this.actions[0].actionType ACTION_EXECUTE_PLANNED_CARD)
 			(group
-			(echo "executing card")
 
 			(def int cardId this.player[this.actions[0].playerIndex].selectedCard2.id)
 
@@ -692,8 +691,12 @@
 
 					# rose player selects and gives a card to active player
 					# TODO: should be given a card at random, rose player doesn't select
-					(this.addInjectAction ACTION_SELECT_CARD this.rosePlayer 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD this.rosePlayer -1 0)
 					(this.addInjectAction ACTION_GIVE_CARD this.actions[0].playerIndex 0 50)
+
+					# move rose one step
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+
 					(this.injectActionsToActions)
 
 					)
@@ -955,14 +958,12 @@
 				# someone won
 				(if (>= winningPlayer 0)
 					(group
-					(echo "player " winningPlayer " has won")
 					(= this.victoriousPlayer winningPlayer)
 					#(dd_world_prepare world_menu 1.0)
 					#(dd_world_ready)
 					)
 				# nobody won
 					(group
-					(echo "nobody won")
 					(= this.actions[0].actionType ACTION_DELAY)
 					)
 				)
@@ -1560,8 +1561,6 @@
 
 (class_function world_game void grabRose (group)
 	(group
-
-	(echo "grabbing rose")
 
 	# rose is flat, grab it!
 	(if this.isRoseFlat
