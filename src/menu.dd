@@ -209,7 +209,9 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if (== this.selection 0)
+		(if this.isMovingToNewWorld
+			(this.font.drawLimit "loading" limit)
+		(== this.selection 0)
 			(this.font.drawLimit "not available in alpha version" limit)
 		(== this.selection 1)
 			(this.font.drawLimit "create and play a custom match" limit)
@@ -251,6 +253,20 @@
 
 (class_function world_menu void mouse_input (group int button int type)
 	(group
+
+	# re-check selection, this allows the user to directly click on a button
+	# in a touch screen device
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			)
+		)
+
+		)
+	)
 
 	# control the camera look at point when click and dragging
 	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)

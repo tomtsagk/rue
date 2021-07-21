@@ -93,34 +93,34 @@
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[0].loadTexture (asset "assets/card-single_step.asset" DD_PLY))
+	(this.cardFront[0].loadTexture (asset "assets/card_single_step.asset" DD_PLY))
 
 	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[1].loadTexture (asset "assets/card-triple_step.asset" DD_PLY))
+	(this.cardFront[1].loadTexture (asset "assets/card_triple_step.asset" DD_PLY))
 
 	(this.cardFront[2].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[2].loadTexture (asset "assets/card-trade.asset" DD_PLY))
+	(this.cardFront[2].loadTexture (asset "assets/card_trade.asset" DD_PLY))
 
 	(this.cardFront[3].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[3].loadTexture (asset "assets/card-one_step_cond.asset" DD_PLY))
+	(this.cardFront[3].loadTexture (asset "assets/card_one_step_cond.asset" DD_PLY))
 
 	(this.cardFront[4].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[4].loadTexture (asset "assets/card-replace.asset" DD_PLY))
+	(this.cardFront[4].loadTexture (asset "assets/card_replace.asset" DD_PLY))
 
 	(this.cardFront[5].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[5].loadTexture (asset "assets/card-grab.asset" DD_PLY))
+	(this.cardFront[5].loadTexture (asset "assets/card_grab.asset" DD_PLY))
 
 	(this.cardFront[6].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[6].loadTexture (asset "assets/card-grab_gen.asset" DD_PLY))
+	(this.cardFront[6].loadTexture (asset "assets/card_grab_gen.asset" DD_PLY))
 
 	(this.cardFront[7].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[7].loadTexture (asset "assets/card-approach.asset" DD_PLY))
+	(this.cardFront[7].loadTexture (asset "assets/card_approach.asset" DD_PLY))
 
 	(this.cardFront[8].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[8].loadTexture (asset "assets/card-win.asset" DD_PLY))
+	(this.cardFront[8].loadTexture (asset "assets/card_win.asset" DD_PLY))
 
 	(this.cardFront[9].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[9].loadTexture (asset "assets/card-tutorial.asset" DD_PLY))
+	(this.cardFront[9].loadTexture (asset "assets/card_tutorial.asset" DD_PLY))
 
 	# cards
 	#(= this.cardsTotal 48)
@@ -1223,9 +1223,6 @@
 	(group
 	(if (== key 27)
 		(= dd_flag_exit 1) # exit game
-	(== key 101)
-		(group
-		)
 	) # key input
 	)
 )

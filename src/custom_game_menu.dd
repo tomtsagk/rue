@@ -9,6 +9,8 @@
 (class_function world_custom_game_menu void create (group)
 	(group
 
+	(= this.isMovingToNewWorld 0)
+
 	# background
 	(= this.bg_rotation 0)
 	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
@@ -314,7 +316,9 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if (== this.selection 0)
+		(if this.isMovingToNewWorld
+			(this.font.drawLimit "loading" limit)
+		(== this.selection 0)
 			(this.font.drawLimit "decrease number of players" limit)
 		(== this.selection 1)
 			(this.font.drawLimit "increase number of players" limit)
@@ -339,12 +343,6 @@
 	(group
 	(if (== key 27)
 		(= dd_flag_exit 1) # exit game
-	(== key 97)
-		(group
-		(echo "start game")
-		(dd_world_prepare world_game 1.0)
-		(dd_world_ready)
-		)
 	) # key input
 	)
 )
@@ -356,6 +354,20 @@
 
 (class_function world_custom_game_menu void mouse_input (group int button int type)
 	(group
+
+	# re-check selection, this allows the user to directly click on a button
+	# in a touch screen device
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			)
+		)
+
+		)
+	)
 
 	# control the camera look at point when click and dragging
 	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
