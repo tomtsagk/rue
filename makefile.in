@@ -100,7 +100,7 @@ ${DIRECTORY_ALL}:
 
 install:
 	mkdir -p ${INSTALL_LOCATION_PREFIX}/usr/bin
-	install ${NATIVE_OUT} ${INSTALL_LOCATION_PREFIX}/usr/bin
+	install ${NATIVE_OUT} ${INSTALL_LOCATION_PREFIX}/usr/bin/rue
 	mkdir -p ${INSTALL_LOCATION_PREFIX}/usr/share/rue/assets
 	install ${NATIVE_ASSETS_OBJ} ${INSTALL_LOCATION_PREFIX}/usr/share/rue/assets
 
