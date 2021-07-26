@@ -48,6 +48,11 @@ ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.c}
 INSTALL_LOC=@INSTALL_LOCATION@
 
 #
+# installation prefix
+#
+INSTALL_LOCATION_PREFIX=
+
+#
 # default build - native only
 #
 all: native
@@ -92,6 +97,12 @@ ${DIRECTORY_ANDROID_OBJ}/%.c: src/%.dd ${HEADERS}
 #
 ${DIRECTORY_ALL}:
 	mkdir -p $@
+
+install:
+	mkdir -p ${INSTALL_LOCATION_PREFIX}/usr/bin
+	install ${NATIVE_OUT} ${INSTALL_LOCATION_PREFIX}/usr/bin
+	mkdir -p ${INSTALL_LOCATION_PREFIX}/usr/share/rue/assets
+	install ${NATIVE_ASSETS_OBJ} ${INSTALL_LOCATION_PREFIX}/usr/share/rue/assets
 
 #
 # clean project
