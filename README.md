@@ -12,10 +12,11 @@ Visit its official page here: [Rue by Dark Dimension](https://darkdimension.org/
 
 Before building this game, you need to have the [avdl](https://notabug.org/tomtsagk/avdl) compiler installed.
 
-Copy the `makefile.in` file and rename it to `makefile` (This step needs to be automated with `configure`).
 Then use the following commands to build it:
 
+    ./configure
     make
+    make install
 
 Once complete, and assuming no errors occur, the final game will be located in `build/native/out`.
 
