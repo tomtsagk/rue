@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# install location
+install_loc="./"
+
+# parse arguments
+while [ $1 ]; do
+
+	# install location
+	if [ $1 == "--install-loc" ]; then
+		if [ $# -gt 1 ]; then
+			install_loc=$2
+			shift
+		else
+			echo "--install-loc command expects an argument"
+		fi
+	# help text
+	elif [ $1 == "--help" ]; then
+		echo "arguments:"
+		echo "--install-loc <loc>"
+		echo "	where to install the project"
+	fi
+
+	# parse next argument
+	shift
+done
+
+# copy makefile
+# replace install location - make sure to escape slashes
+cp makefile.in makefile
+sed -i "s/@INSTALL_LOCATION@/${install_loc//\//\\\/}/g" makefile

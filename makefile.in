@@ -23,7 +23,7 @@ DIRECTORY_ALL=${DIRECTORY_NATIVE_ALL} ${DIRECTORY_ANDROID_ALL}
 # source files
 #
 SRC=$(wildcard src/*.dd)
-HEADERS=$(wildcard *.ddh)
+HEADERS=$(wildcard include/*.ddh)
 PLY=$(wildcard assets/*.ply)
 BMP=$(wildcard assets/*.bmp)
 WAV=$(wildcard assets/*.wav)
@@ -43,6 +43,11 @@ NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:a
 ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.c}
 
 #
+# custom install location - set by the `configure` file
+#
+INSTALL_LOC=@INSTALL_LOCATION@
+
+#
 # default build - native only
 #
 all: native
@@ -52,13 +57,12 @@ all: native
 #
 native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ}
 android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
-	cp *.h ${DIRECTORY_ANDROID_OBJ}/
 
 #
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ -I include
+	avdl -c $< -o $@ -I include/ --install-loc "${INSTALL_LOC}"
 
 
 ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ply
