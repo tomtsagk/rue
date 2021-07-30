@@ -14,11 +14,21 @@ Before building this game, you need to have the [avdl](https://notabug.org/tomts
 
 Then use the following commands to build it:
 
-    ./configure
     make
     make install
 
-Once complete, and assuming no errors occur, the final game will be located in `build/native/out`.
+By default, this will install the project at `/usr/local`. To change that, you
+have to supply a custom `prefix` value like below:
+
+    make prefix=/usr
+    make prefix=/usr install
+
+To build the project as a standalone in a folder, without installing it,
+use the following commands instead:
+
+    make assetdir=
+
+This last one will put a self-contained build at `build/native/out`.
 
 ## Build for Windows
 
@@ -33,8 +43,7 @@ This is planned to be improved.
 Before building this game, you need to have the [avdl](https://notabug.org/tomtsagk/avdl) compiler installed.
 This works best ona Linux machine.
 
-Copy the `makefile.in` file and rename it to `makefile` (This step needs to be automated with `configure`).
-Then use the following commands to build it:
+Use the following commands to build it:
 
     make android
 
