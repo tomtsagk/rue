@@ -2,7 +2,7 @@
 # project data
 #
 NAME=rue
-VERSION=v0.0.1
+VERSION=v0.0.2
 
 #
 # directories - separate for native and android
@@ -43,14 +43,10 @@ NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:a
 ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.c}
 
 #
-# custom install location - set by the `configure` file
+# system data
 #
-INSTALL_LOC=@INSTALL_LOCATION@
-
-#
-# installation prefix
-#
-INSTALL_LOCATION_PREFIX=
+prefix=/usr/local
+assetdir=${prefix}/share/rue/
 
 #
 # default build - native only
@@ -67,7 +63,7 @@ android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ -I include/ --install-loc "${INSTALL_LOC}"
+	avdl -c $< -o $@ -I include/ --install-loc "${assetdir}"
 
 
 ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ply
@@ -99,10 +95,10 @@ ${DIRECTORY_ALL}:
 	mkdir -p $@
 
 install:
-	mkdir -p ${INSTALL_LOCATION_PREFIX}/usr/bin
-	install ${NATIVE_OUT} ${INSTALL_LOCATION_PREFIX}/usr/bin/rue
-	mkdir -p ${INSTALL_LOCATION_PREFIX}/usr/share/rue/assets
-	install ${NATIVE_ASSETS_OBJ} ${INSTALL_LOCATION_PREFIX}/usr/share/rue/assets
+	mkdir -p ${DESTDIR}${prefix}/bin
+	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/rue
+	mkdir -p ${DESTDIR}${prefix}/share/rue/assets
+	install ${NATIVE_ASSETS_OBJ} ${DESTDIR}${prefix}/share/rue/assets
 
 #
 # clean project
