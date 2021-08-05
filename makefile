@@ -2,7 +2,7 @@
 # project data
 #
 NAME=rue
-VERSION=v0.0.3
+VERSION=v0.0.4
 
 #
 # directories - separate for native and android
@@ -33,6 +33,7 @@ OGG=$(wildcard assets/*.ogg)
 # native output files
 #
 NATIVE_OBJ=${SRC:src/%.dd=${DIRECTORY_NATIVE_OBJ}/%.o}
+NATIVE_OBJ_C=${NATIVE_OBJ:%.o=%.c}
 NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}-${VERSION}.x86_64
 NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:assets/%.bmp=build/native/output/assets/%.asset} \
 	${WAV:assets/%.wav=build/native/output/assets/%.asset} ${OGG:assets/%.ogg=build/native/output/assets/%.asset}
@@ -86,7 +87,7 @@ ${NATIVE_OUT}: ${NATIVE_OBJ}
 # android - compile files
 #
 ${DIRECTORY_ANDROID_OBJ}/%.c: src/%.dd ${HEADERS}
-	avdl --android -t $< -o $@ -I include
+	avdl --android -t $< -o $@ -I include/
 
 #
 # make any directory needed
@@ -104,7 +105,7 @@ install:
 # clean project
 #
 clean:
-	rm -r build
+	rm -f ${NATIVE_OBJ} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ} ${NATIVE_OBJ_C}
 
 #
 # phony targets
