@@ -8,6 +8,40 @@ This game is currently in Alpha and still under active development.
 
 Visit its official page here: [Rue by Dark Dimension](https://darkdimension.org/games/rue)
 
+## Available on these Linux Distros
+
+You can find this project packaged for the following Linux distributions:
+
+### Ubuntu 20.04.2 LTS
+
+Make sure to install the [avdl](https://notabug.org/tomtsagk/avdl) project first.
+
+Add the Personal Package Archives (PPA) to your system,
+then update repositories and install:
+
+    add-apt-repository ppa:darkdimension/rue
+    apt-get update
+    apt-get install rue
+
+Note: These commands require `root` permissions, usually aquired with
+the `sudo` command.
+
+### Arch Linux
+
+You can find this project in the Arch User Repository (AUR). Make sure
+to install the dependencies listed here:
+
+[https://aur.archlinux.org/packages/rue/](https://aur.archlinux.org/packages/rue/)
+
+Using the command line, move to an empty directory and run:
+
+    git clone https://aur.archlinux.org/rue.git
+    makepkg
+    pacman -U rue-<version>-<arch>.pkg.tar.zst
+
+Note: The command `pacman -U` needs `root` permissions, as it is
+used to install packaged from a local file.
+
 ## Build for Linux
 
 Before building this game, you need to have the [avdl](https://notabug.org/tomtsagk/avdl) compiler installed.
@@ -18,7 +52,7 @@ Then use the following commands to build it:
     make install
 
 By default, this will install the project at `/usr/local`. To change that, you
-have to supply a custom `prefix` value like below:
+can supply a custom `prefix` value like below:
 
     make prefix=/usr
     make prefix=/usr install
@@ -28,7 +62,7 @@ use the following commands instead:
 
     make assetdir=
 
-This last one will put a self-contained build at `build/native/out`.
+This will put a self-contained build at `build/native/out`.
 
 ## Build for Windows
 
@@ -41,7 +75,7 @@ This is planned to be improved.
 ## Build for Android
 
 Before building this game, you need to have the [avdl](https://notabug.org/tomtsagk/avdl) compiler installed.
-This works best ona Linux machine.
+This works best on a Linux machine.
 
 Use the following commands to build it:
 
