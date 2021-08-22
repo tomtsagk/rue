@@ -1,0 +1,35 @@
+#
+# Action that automaticall merges `development` to the `stable`
+# branch.
+#
+# The idea is updates will be pushed from `development` to the
+# default `github` branch, and `stable` will automatically be
+# updated.
+#
+name: Auto-merge `stable`
+
+#
+# only execute for updates on the default `github` branch
+#
+on:
+  push:
+    branches:
+      github
+
+#
+# Clone project, grab both desired branched, and merge them
+#
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      run: |
+        git clone "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/tomtsagk/rue.git"
+        cd rue
+        git checkout development
+        git pull
+        git checkout stable
+        git pull
+        git merge development
+        git push
