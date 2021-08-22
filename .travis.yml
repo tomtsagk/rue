@@ -1,0 +1,46 @@
+# uses C behind the scenes
+language: c
+
+# only build the default `github` branch
+branches:
+  only:
+  - github
+
+# make builds on `bionic` and `xenial` ubuntu images
+# on both `amd64` and `arm64` architectures
+jobs:
+  include:
+    - name: Bionic Build amd64
+      os: linux
+      dist: bionic
+      arch: amd64
+    - name: Bionic Build arm64
+      os: linux
+      dist: bionic
+      arch: arm64
+    - name: Xenial Build amd64
+      os: linux
+      dist: xenial
+      arch: amd64
+    - name: Xenial Build arm64
+      os: linux
+      dist: xenial
+      arch: arm64
+
+# install dependencies
+addons:
+  apt:
+    packages:
+      - git
+      - make
+      - freeglut3-dev
+      - libglew-dev
+      - libsdl2-dev
+      - libsdl2-mixer-dev
+
+# compile project - add `avdl` package first
+script:
+  - sudo add-apt-repository -y ppa:darkdimension/avdl
+  - sudo apt-get -y update
+  - sudo apt-get -y install avdl
+  - make
