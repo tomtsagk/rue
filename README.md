@@ -47,6 +47,17 @@ Using the command line, move to an empty directory and run:
 Note: The command `pacman -U` needs `root` permissions, as it is
 used to install packaged from a local file.
 
+### Fedora 34, Fedora 35, Fedora rawhide
+
+[![Copr build status](https://copr.fedorainfracloud.org/coprs/darkdimension/rue/package/rue/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/darkdimension/rue/package/rue/)
+
+Enable the repository using the package manager, and install:
+
+    dnf copr enable darkdimension/rue
+    dnf install rue
+
+Note: These commands may require `root` permissions.
+
 ## Build for Linux
 
 Before building this game, you need to have the [avdl](https://notabug.org/tomtsagk/avdl) compiler installed.
