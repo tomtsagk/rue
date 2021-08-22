@@ -17,7 +17,7 @@ You can find this project packaged for the following Linux distributions:
 
 ### Ubuntu 20.04.2 LTS
 
-Make sure to install the [avdl](https://notabug.org/tomtsagk/avdl) project first.
+Make sure to install the [avdl](https://github.com/tomtsagk/avdl) project first.
 
 Add the Personal Package Archives (PPA) to your system,
 then update repositories and install:
@@ -60,7 +60,7 @@ Note: These commands may require `root` permissions.
 
 ## Build for Linux
 
-Before building this game, you need to have the [avdl](https://notabug.org/tomtsagk/avdl) compiler installed.
+Before building this game, you need to have the [avdl](https://github.com/tomtsagk/avdl) compiler installed.
 
 Then use the following commands to build it:
 
@@ -90,7 +90,7 @@ This is planned to be improved.
 
 ## Build for Android
 
-Before building this game, you need to have the [avdl](https://notabug.org/tomtsagk/avdl) compiler installed.
+Before building this game, you need to have the [avdl](https://github.com/tomtsagk/avdl) compiler installed.
 This works best on a Linux machine.
 
 Use the following commands to build it:
@@ -98,7 +98,7 @@ Use the following commands to build it:
     make android
 
 Once complete, and assuming no errors occur, there will be a few `.c` files located in `build/android/objects`.
-These files can then be put in the Android project inside [avdl](https://notabug.org/tomtsagk/avdl) (located in
+These files can then be put in the Android project inside [avdl](https://github.com/tomtsagk/avdl) (located in
 `engines/android`), together with the assets, and be build.
 
 The last step is not very automated, and is planned to be improved.
