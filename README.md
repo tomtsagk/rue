@@ -1,5 +1,8 @@
 # Rue
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/tomtsagk/rue)
+![Travis (.com)](https://img.shields.io/travis/com/tomtsagk/rue)
+
 A card game where all the players are sitting around a table. A rose appears on the table that moves around.
 
 The aim of the game is for each player to have the rose in front of them at the end of the round. Each player can use cards that influence the rose’s movement.
@@ -27,6 +30,8 @@ Note: These commands require `root` permissions, usually aquired with
 the `sudo` command.
 
 ### Arch Linux
+
+![AUR version](https://img.shields.io/aur/version/rue)
 
 You can find this project in the Arch User Repository (AUR). Make sure
 to install the dependencies listed here:
