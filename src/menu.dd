@@ -1,6 +1,28 @@
 (include "menu.ddh")
 (include "game.ddh")
 (include "custom_game_menu.ddh")
+(include "challenge_select_menu.ddh")
+
+(function float particleMovementY (group float t)
+	(group
+	(return (* (dd_math_sin (dd_math_dec2rad (* t 360.0 2))) 1.0))
+	)
+)
+
+(function float particleMovementZ (group float t)
+	(group
+	(return (* t 5))
+	)
+)
+
+(function float particleScale (group float t)
+	(group
+	(if (< t 0.5)
+		(return (* (dd_math_sin (dd_math_dec2rad (* t 90.0))) 2.0))
+		(return (* (dd_math_sin (dd_math_dec2rad (* (- 1.0 t) 90.0))) 2.0))
+	)
+	)
+)
 
 (class_function world_menu void create (group)
 	(group
@@ -8,6 +30,22 @@
 	# background
 	(= this.bg_rotation 0)
 	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
+
+	# background particles
+	(this.bgParticleMesh.load (asset "assets/particle.asset" DD_PLY))
+	(this.bgParticleSystem.assignAsset this.bgParticleMesh)
+	(this.bgParticleSystem.setParticleLife 500)
+	(this.bgParticleSystem.setDelay 20)
+	(this.bgParticleSystem.setParticlePosition 0 4 -5)
+	(this.bgParticleSystem.setParticlePositionFuzz 16 4 11)
+	(this.bgParticleSystem.setParticlePositionYFunc particleMovementY)
+	(this.bgParticleSystem.setParticlePositionZFunc particleMovementZ)
+	(this.bgParticleSystem.setParticleScaleFunc particleScale)
+	(this.bgParticleSystem.setParticlesTotal 20)
+
+	(for (def int i 0) (< i 100) (= i (+ i 1))
+		(this.bgParticleSystem.update)
+	)
 
 	# logo
 	(this.logo.load (asset "assets/logo_rue.asset" DD_PLY))
@@ -125,6 +163,8 @@
 		)
 	)
 
+	(this.bgParticleSystem.update)
+
 	)
 ) # update
 
@@ -133,10 +173,11 @@
 
 	# draw background
 	(dd_matrix_push)
-	(dd_translatef 0 -3 -3)
-	(dd_rotatef (+ 40 this.bg_rotation) 0 1 0)
-	(dd_rotatef 25 -1 0 0)
+	(dd_translatef 0 -3 -8)
+	(dd_rotatef (+ 45 this.bg_rotation) 0 1 0)
+	(dd_rotatef 15 -1 0 0)
 	(this.bg.draw)
+	(this.bgParticleSystem.draw)
 	(dd_matrix_pop)
 
 	# clear depth

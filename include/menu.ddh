@@ -8,6 +8,10 @@
 	(def float bg_rotation)
 	(def dd_meshColour bg)
 
+	# background particles
+	(def avdl_particle_system bgParticleSystem)
+	(def dd_meshColour bgParticleMesh)
+
 	# logo
 	(def dd_meshTexture logo)
 
