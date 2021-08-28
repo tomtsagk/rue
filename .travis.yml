@@ -33,7 +33,6 @@ addons:
     packages:
       - git
       - make
-      - freeglut3-dev
       - libglew-dev
       - libsdl2-dev
       - libsdl2-mixer-dev
