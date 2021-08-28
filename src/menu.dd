@@ -1,7 +1,7 @@
 (include "menu.ddh")
 (include "game.ddh")
 (include "custom_game_menu.ddh")
-(include "challenge_select_menu.ddh")
+#(include "challenge_select_menu.ddh")
 
 (function float particleMovementY (group float t)
 	(group
