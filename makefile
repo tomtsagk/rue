@@ -81,7 +81,7 @@ ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ogg
 
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o $@
+	avdl $^ -o $@ ${avdlargs}
 
 #
 # android - compile files
