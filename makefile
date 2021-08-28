@@ -2,7 +2,7 @@
 # project data
 #
 NAME=rue
-VERSION=v0.0.5
+VERSION=v0.0.6
 
 #
 # directories - separate for native and android
