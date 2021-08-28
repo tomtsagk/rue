@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021 Tom Tsagk -->
+<component type="desktop-application">
+
+<metadata_license>MIT</metadata_license>
+
+<!-- main project details -->
+<id>org.darkdimension.rue</id>
+<name>Rue</name>
+<summary>A card game about deduction, love and regret.</summary>
+<icon>org.darkdimension.rue</icon>
+<!--<screenshots></screenshots>-->
+<description>
+<p>A card game where all the players are sitting around a table. A rose appears on the table that moves around.</p>
+
+<p>The aim of the game is for each player to have the rose in front of them at the end of the round. Each player can use cards that influence the rose’s movement.</p>
+</description>
+<project_license>GPL-3.0</project_license>
+
+<developer_name>Dark Dimension</developer_name>
+
+<categories>
+	<category>Game</category>
+	<category>CardGame</category>
+</categories>
+
+<content_rating type="oars-1.1" />
+
+<!--<translation>-->
+
+<url type="homepage">https://darkdimension.org/games/rue.html</url>
+<url type="donation">https://www.patreon.com/darkdimension</url>
+
+<launchable>org.darkdimension.rue</launchable>
+
+<releases>
+	<release version="0.0.5" date="2021-08-28" type="stable">
+
+		<description>
+			<p>Initial release</p>
+		</description>
+
+		<location>https://github.com/tomtsagk/rue/archive/refs/tags/v0.0.5.tar.gz</location>
+		<checksum type="md5">35da271f78301fe6793c3a040b899fff</checksum>
+
+		<url type="details">
+			https://github.com/tomtsagk/rue/releases/tag/v0.0.5
+		</url>
+		<!--<size>-->
+		<!--<artifacts>-->
+	</release>
+</releases>
+
+</component>

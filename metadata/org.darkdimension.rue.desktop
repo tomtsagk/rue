@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Rue
+GenericName=Card Game
+Comment=A card game about deduction, love and regret.
+Type=Application
+Version=1.1
+Terminal=false
+Categories=Game
+Keywords=rose;card game;3d;
+
+# provide local file?
+Icon=org.darkdimension.rue
+
+# provide local executable?
+Exec=rue
+
+# does flatpak care for this? 
+#TryExec=rue
