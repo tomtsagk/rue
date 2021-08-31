@@ -9,13 +9,24 @@
 <name>Rue</name>
 <summary>A card game about deduction, love and regret.</summary>
 <!--<icon>org.darkdimension.rue</icon>-->
-<!--<screenshots></screenshots>-->
 <description>
 <p>A card game where all the players are sitting around a table. A rose appears on the table that moves around.</p>
 
 <p>The aim of the game is for each player to have the rose in front of them at the end of the round. Each player can use cards that influence the rose’s movement.</p>
 </description>
 <project_license>GPL-3.0</project_license>
+
+<screenshots>
+	<screenshot type="default" width="800" height="450">
+		<image>https://darkdimension.org/images/games/rue/screenshot_1-800x.png</image>
+	</screenshot>
+	<screenshot width="800" height="450">
+		<image>https://darkdimension.org/images/games/rue/screenshot_2-800x.png</image>
+	</screenshot>
+	<screenshot width="800" height="450">
+		<image>https://darkdimension.org/images/games/rue/screenshot_3-800x.png</image>
+	</screenshot>
+</screenshots>
 
 <developer_name>Dark Dimension</developer_name>
 
