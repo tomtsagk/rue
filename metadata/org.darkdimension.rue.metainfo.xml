@@ -8,7 +8,7 @@
 <id>org.darkdimension.rue</id>
 <name>Rue</name>
 <summary>A card game about deduction, love and regret.</summary>
-<icon>org.darkdimension.rue</icon>
+<!--<icon>org.darkdimension.rue</icon>-->
 <!--<screenshots></screenshots>-->
 <description>
 <p>A card game where all the players are sitting around a table. A rose appears on the table that moves around.</p>
@@ -31,7 +31,7 @@
 <url type="homepage">https://darkdimension.org/games/rue.html</url>
 <url type="donation">https://www.patreon.com/darkdimension</url>
 
-<launchable>org.darkdimension.rue</launchable>
+<!--<launchable>org.darkdimension.rue</launchable>-->
 
 <releases>
 	<release version="0.0.5" date="2021-08-28" type="stable">
