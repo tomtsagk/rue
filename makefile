@@ -15,7 +15,8 @@ DIRECTORY_NATIVE_ALL=${DIRECTORY_NATIVE} ${DIRECTORY_NATIVE_OBJ} ${DIRECTORY_NAT
 
 DIRECTORY_ANDROID=build/android
 DIRECTORY_ANDROID_OBJ=${DIRECTORY_ANDROID}/objects
-DIRECTORY_ANDROID_ALL=${DIRECTORY_ANDROID} ${DIRECTORY_ANDROID_OBJ}
+DIRECTORY_ANDROID_OUT=${DIRECTORY_ANDROID}/output
+DIRECTORY_ANDROID_ALL=${DIRECTORY_ANDROID} ${DIRECTORY_ANDROID_OBJ} ${DIRECTORY_ANDROID}
 
 DIRECTORY_ALL=${DIRECTORY_NATIVE_ALL} ${DIRECTORY_ANDROID_ALL}
 
@@ -41,7 +42,7 @@ NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:a
 #
 # android output files
 #
-ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.c}
+ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.o}
 
 #
 # system data
@@ -67,6 +68,8 @@ all: native
 #
 native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ}
 android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
+	avdl --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ}
+	$(foreach i,${PLY} ${BMP} ${WAV} ${OGG},avdl --android -c -o ${DIRECTORY_ANDROID_OUT} ${i};)
 
 #
 # native - compile files - assets - final executable
@@ -94,8 +97,8 @@ ${NATIVE_OUT}: ${NATIVE_OBJ}
 #
 # android - compile files
 #
-${DIRECTORY_ANDROID_OBJ}/%.c: src/%.dd ${HEADERS}
-	avdl --android -t $< -o $@ -I include/
+${DIRECTORY_ANDROID_OBJ}/%.o: src/%.dd ${HEADERS}
+	avdl --android -c $< -o $@ -I include/
 
 #
 # make any directory needed
