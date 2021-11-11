@@ -1,22 +1,12 @@
 (include "button.ddh")
-(include "options.ddh")
 
-# menu world
-(class world_menu dd_world
+# options menu
+# has to open on any menu and draw everything
+# but the background
+(class options dd_matrix
 	(group
 
-	# background
-	(def float bg_rotation)
-	(def dd_meshColour bg)
-
-	# background particles
-	(def avdl_particle_system bgParticleSystem)
-	(def dd_meshColour bgParticleMesh)
-
-	# logo
-	(def dd_meshTexture logo)
-
-	# menu buttons
+	# options buttons
 	(def Button button[4])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
@@ -33,13 +23,9 @@
 	(def int selection)
 	(def int selectionClick)
 
-	(def int isMovingToNewWorld)
-
-	# options menu
-	(def options opt)
+	(def int enabled)
 
 	(function void create (group))
-	(function void onload (group))
 	(function void resize (group))
 	(function void update (group))
 	(function void draw (group))
@@ -47,5 +33,7 @@
 	(function void mouse_input (group int button int type))
 	(function void clean (group))
 
+	(function int isEnabled (group))
+
 	)
-) # menu world
+) # options menu

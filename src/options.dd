@@ -1,55 +1,7 @@
-(include "menu.ddh")
-(include "game.ddh")
-(include "custom_game_menu.ddh")
-#(include "challenge_select_menu.ddh")
+(include "options.ddh")
 
-(function float particleMovementY (group float t)
+(class_function options void create (group)
 	(group
-	(return (* (dd_math_sin (dd_math_dec2rad (* t 360.0 2))) 1.0))
-	)
-)
-
-(function float particleMovementZ (group float t)
-	(group
-	(return (* t 5))
-	)
-)
-
-(function float particleScale (group float t)
-	(group
-	(if (< t 0.5)
-		(return (* (dd_math_sin (dd_math_dec2rad (* t 90.0))) 2.0))
-		(return (* (dd_math_sin (dd_math_dec2rad (* (- 1.0 t) 90.0))) 2.0))
-	)
-	)
-)
-
-(class_function world_menu void create (group)
-	(group
-
-	# background
-	(= this.bg_rotation 0)
-	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
-
-	# background particles
-	(this.bgParticleMesh.load (asset "assets/particle.asset" DD_PLY))
-	(this.bgParticleSystem.assignAsset this.bgParticleMesh)
-	(this.bgParticleSystem.setParticleLife 500)
-	(this.bgParticleSystem.setDelay 20)
-	(this.bgParticleSystem.setParticlePosition 0 4 -5)
-	(this.bgParticleSystem.setParticlePositionFuzz 16 4 11)
-	(this.bgParticleSystem.setParticlePositionYFunc particleMovementY)
-	(this.bgParticleSystem.setParticlePositionZFunc particleMovementZ)
-	(this.bgParticleSystem.setParticleScaleFunc particleScale)
-	(this.bgParticleSystem.setParticlesTotal 20)
-
-	(for (def int i 0) (< i 100) (= i (+ i 1))
-		(this.bgParticleSystem.update)
-	)
-
-	# logo
-	(this.logo.load (asset "assets/logo_rue.asset" DD_PLY))
-	(this.logo.loadTexture (asset "assets/logo_rue_texture.asset" DD_PLY))
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -60,7 +12,7 @@
 	(= this.buttonTotal 4)
 	(this.button[0].mesh.load (asset "assets/button_disabled.asset" DD_PLY))
 	(this.button[0].setSize 1 1)
-	(this.button[0].setProportionalPosition 0.25 0.4)
+	(this.button[0].setProportionalPosition 0.1 0.1)
 	(this.button[0].setProportionalWidth 0.2)
 
 	(this.button[1].mesh.load (asset "assets/button.asset" DD_PLY))
@@ -85,7 +37,7 @@
 
 	(= this.selection 0)
 	(= this.selectionClick -1)
-	(= this.isMovingToNewWorld 0)
+	#(= this.isMovingToNewWorld 0)
 
 	(this.buttonProgram.setVertexShader
 		(multistring
@@ -126,19 +78,12 @@
 	(= this.buttonInactiveCol[1] 0.137)
 	(= this.buttonInactiveCol[2] 0.137)
 
-	(if (== this.opt.isEnabled 0)
-		(echo "not enabled")
-	)
+	(= this.enabled 0)
 
 	)
 )
 
-(class_function world_menu void onload (group)
-	(group
-	)
-)
-
-(class_function world_menu void resize (group)
+(class_function options void resize (group)
 	(group
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
@@ -147,17 +92,10 @@
 	)
 )
 
-(class_function world_menu void update (group)
+(class_function options void update (group)
 	(group
 
-	# constant background rotation
-	(= this.bg_rotation (+ this.bg_rotation 0.01))
-	(if (>= this.bg_rotation 360)
-		(= this.bg_rotation (- this.bg_rotation 360))
-	)
-
 	# check if mouse is hovering over a button
-	#(= this.selection -1)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group
 
@@ -172,32 +110,11 @@
 		)
 	)
 
-	(this.bgParticleSystem.update)
-
 	)
 ) # update
 
-(class_function world_menu void draw (group)
+(class_function options void draw (group)
 	(group
-
-	# draw background
-	(dd_matrix_push)
-	(dd_translatef 0 -3 -8)
-	(dd_rotatef (+ 45 this.bg_rotation) 0 1 0)
-	(dd_rotatef 15 -1 0 0)
-	(this.bg.draw)
-	(this.bgParticleSystem.draw)
-	(dd_matrix_pop)
-
-	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
-
-	# draw logo
-	(dd_matrix_push)
-	(dd_translatef 0 1.7 -8)
-	(dd_rotatef 10 1 0 0)
-	(this.logo.draw)
-	(dd_matrix_pop)
 
 	# draw buttons
 	(this.buttonProgram.useProgram)
@@ -264,9 +181,7 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if this.isMovingToNewWorld
-			(this.font.drawLimit "loading" limit)
-		(== this.selection 0)
+		(if (== this.selection 0)
 			(this.font.drawLimit "not available in alpha version" limit)
 		(== this.selection 1)
 			(this.font.drawLimit "create and play a custom match" limit)
@@ -279,38 +194,20 @@
 		)
 	)
 
-	# draw version number
-	(dd_matrix_push)
-	(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
-	(dd_translatef
-		(/ (dd_screen_width_get 5) 2)
-		(+ (/ (dd_screen_height_get 5) -2) 0.15)
-		-5
-	)
-	(dd_scalef 0.15 0.15 0.15)
-	(this.font.draw "alpha version")
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(dd_matrix_pop)
-
-	(this.opt.draw)
-
 	)
 )
 
-(class_function world_menu void key_input (group char key)
-	(group
-	(if (== key 27)
-		(= dd_flag_exit 1) # exit game
-	) # key input
-	)
-)
-
-(class_function world_menu void clean (group)
+(class_function options void key_input (group char key)
 	(group
 	)
 )
 
-(class_function world_menu void mouse_input (group int button int type)
+(class_function options void clean (group)
+	(group
+	)
+)
+
+(class_function options void mouse_input (group int button int type)
 	(group
 
 	# re-check selection, this allows the user to directly click on a button
@@ -338,7 +235,7 @@
 		(group
 
 		# clicked on a button
-		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0)
+		(if (&& (== this.selection this.selectionClick)
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
@@ -347,14 +244,14 @@
 				)
 			(== this.selectionClick 1)
 				(group
-				(dd_world_prepare world_custom_game_menu 1.0)
-				(dd_world_ready)
-				(= this.isMovingToNewWorld 1)
+				#(dd_world_prepare world_custom_game_menu 1.0)
+				#(dd_world_ready)
+				#(= this.isMovingToNewWorld 1)
 				)
 			(== this.selectionClick 2)
 				(group
-				(= dd_flag_exit 1) # exit game
-				(= this.isMovingToNewWorld 1)
+				#(= dd_flag_exit 1) # exit game
+				#(= this.isMovingToNewWorld 1)
 				)
 			)
 
@@ -368,3 +265,9 @@
 
 	)
 ) # mouse input
+
+(class_function options int isEnabled (group)
+	(group
+	(return this.enabled)
+	)
+)
