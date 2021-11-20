@@ -40,6 +40,13 @@
 	# options menu
 	(def options opt)
 
+	# eyes
+	(def dd_meshColour lookatMesh)
+	(def dd_matrix matrixEyeL)
+	(def dd_matrix matrixEyeR)
+	(def float eyeTargetX)
+	(def float eyeTargetY)
+
 	(function void create (group))
 	(function void onload (group))
 	(function void resize (group))

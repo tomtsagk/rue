@@ -126,9 +126,10 @@
 	(= this.buttonInactiveCol[1] 0.137)
 	(= this.buttonInactiveCol[2] 0.137)
 
-	(if (== this.opt.isEnabled 0)
-		(echo "not enabled")
-	)
+	# eyes
+	(this.lookatMesh.load (asset "assets/eye.asset" DD_PLY))
+	(= this.eyeTargetX 0)
+	(= this.eyeTargetY 0)
 
 	(= this.enabled 1)
 
@@ -178,6 +179,26 @@
 	(this.bgParticleSystem.update)
 
 	(this.opt.update)
+
+	# lookat animation
+	(if (this.opt.isEnabled)
+		(group
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.opt.button[this.opt.selection].x this.eyeTargetX) 0.1)))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.opt.button[this.opt.selection].y this.eyeTargetY) 0.1)))
+		)
+		(group
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.button[this.selection].x this.eyeTargetX) 0.1)))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.button[this.selection].y this.eyeTargetY) 0.1)))
+		)
+	)
+	(def float tempZ 3)
+
+	# lookat
+	(dd_matrix_identity this.matrixEyeL)
+	(dd_matrix_lookat this.matrixEyeL (+ this.eyeTargetX 1) this.eyeTargetY tempZ)
+
+	(dd_matrix_identity this.matrixEyeR)
+	(dd_matrix_lookat this.matrixEyeR (+ this.eyeTargetX -1) this.eyeTargetY tempZ)
 
 	)
 ) # update
@@ -301,6 +322,19 @@
 	)
 
 	(this.opt.draw)
+
+	# draw lookat
+	(dd_matrix_push)
+	(dd_translatef -1 0.5 -8)
+	(dd_multMatrixf this.matrixEyeL)
+	(this.lookatMesh.draw)
+	(dd_matrix_pop)
+
+	(dd_matrix_push)
+	(dd_translatef 1 0.5 -8)
+	(dd_multMatrixf this.matrixEyeR)
+	(this.lookatMesh.draw)
+	(dd_matrix_pop)
 
 	)
 )
