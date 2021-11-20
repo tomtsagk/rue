@@ -24,7 +24,7 @@
 	)
 )
 
-(class_function world_menu void create (group)
+(class_function world_menu void create ()
 	(group
 
 	# background
@@ -49,7 +49,6 @@
 
 	# logo
 	(this.logo.load (asset "assets/logo_rue.asset" DD_PLY))
-	(this.logo.loadTexture (asset "assets/logo_rue_texture.asset" DD_PLY))
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -77,6 +76,7 @@
 	(this.button[3].setSize 1 1)
 	(this.button[3].setProportionalPosition 0.85 0.85)
 	(this.button[3].setProportionalWidth 0.2)
+	(this.button[3].setProportionalSize 0.7)
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -130,24 +130,27 @@
 		(echo "not enabled")
 	)
 
+	(= this.enabled 1)
+
 	)
 )
 
-(class_function world_menu void onload (group)
+(class_function world_menu void onload ()
 	(group
 	)
 )
 
-(class_function world_menu void resize (group)
+(class_function world_menu void resize ()
 	(group
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
 	)
 	(this.textButton.resize)
+	(this.opt.resize)
 	)
 )
 
-(class_function world_menu void update (group)
+(class_function world_menu void update ()
 	(group
 
 	# constant background rotation
@@ -174,10 +177,12 @@
 
 	(this.bgParticleSystem.update)
 
+	(this.opt.update)
+
 	)
 ) # update
 
-(class_function world_menu void draw (group)
+(class_function world_menu void draw ()
 	(group
 
 	# draw background
@@ -192,105 +197,108 @@
 	# clear depth
 	(glClear GL_DEPTH_BUFFER_BIT)
 
-	# draw logo
-	(dd_matrix_push)
-	(dd_translatef 0 1.7 -8)
-	(dd_rotatef 10 1 0 0)
-	(this.logo.draw)
-	(dd_matrix_pop)
-
-	# draw buttons
-	(this.buttonProgram.useProgram)
-	(def int colLoc)
-	(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+	(if this.enabled
 		(group
-		(dd_matrix_push)
 
-		# change the shader colour when clicked
-		(if (> this.button[i].idleCol 1.0)
-			(avdl_setUniform3f colLoc
-				(dd_math_ease_linear
-					(- this.button[i].idleCol 1.0)
-					this.buttonActiveCol[0] this.buttonClickCol[0]
+		# draw logo
+		(dd_matrix_push)
+		(dd_translatef 0 1.7 -8)
+		(dd_rotatef 10 1 0 0)
+		(this.logo.draw)
+		(dd_matrix_pop)
+
+		# draw buttons
+		(this.buttonProgram.useProgram)
+		(def int colLoc)
+		(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
+		(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+			(group
+			(dd_matrix_push)
+
+			# change the shader colour when clicked
+			(if (> this.button[i].idleCol 1.0)
+				(avdl_setUniform3f colLoc
+					(dd_math_ease_linear
+						(- this.button[i].idleCol 1.0)
+						this.buttonActiveCol[0] this.buttonClickCol[0]
+					)
+					(dd_math_ease_linear
+						(- this.button[i].idleCol 1.0)
+						this.buttonActiveCol[1] this.buttonClickCol[1]
+					)
+					(dd_math_ease_linear
+						(- this.button[i].idleCol 1.0)
+						this.buttonActiveCol[2] this.buttonClickCol[2]
+					)
 				)
-				(dd_math_ease_linear
-					(- this.button[i].idleCol 1.0)
-					this.buttonActiveCol[1] this.buttonClickCol[1]
-				)
-				(dd_math_ease_linear
-					(- this.button[i].idleCol 1.0)
-					this.buttonActiveCol[2] this.buttonClickCol[2]
+			# change colour when selected
+				(avdl_setUniform3f colLoc
+					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
 				)
 			)
-		# change colour when selected
-			(avdl_setUniform3f colLoc
-				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
-				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
-				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
+
+			(this.button[i].applyTransform)
+			(this.button[i].applyMatrixTransform)
+			(this.button[i].drawRaw)
+
+			(dd_translatef 0 0 0.1)
+			(dd_scalef 0.2 0.2 0.2)
+
+			(if (== i 0)
+				(this.font.draw "challenges")
+			(== i 1)
+				(this.font.draw "custom game")
+			(== i 2)
+				(this.font.draw "exit")
+				(this.font.draw "options")
+			)
+
+			(dd_matrix_pop)
+			)
+		)
+		(avdl_useProgram 0)
+
+		# draw button description
+		(if (>= this.selection 0)
+			(group
+			(dd_matrix_push)
+			(this.textButton.applyTransform)
+			(this.textButton.applyMatrixTransform)
+			(dd_translatef 0 0 0.1)
+			(dd_scalef 0.2 0.2 0.2)
+			(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
+			(if this.isMovingToNewWorld
+				(this.font.drawLimit "loading" limit)
+			(== this.selection 0)
+				(this.font.drawLimit "not available in alpha version" limit)
+			(== this.selection 1)
+				(this.font.drawLimit "create and play a custom match" limit)
+			(== this.selection 2)
+				(this.font.drawLimit "exit game" limit)
+				(this.font.drawLimit "open and modify game settings" limit)
+			)
+
+			(dd_matrix_pop)
 			)
 		)
 
-		(this.button[i].applyTransform)
-		(this.button[i].applyMatrixTransform)
-		(if (== i 3)
-			(dd_scalef 0.8 0.8 0.8)
-		)
-		(this.button[i].drawRaw)
-
-		(dd_translatef 0 0 0.1)
-		(dd_scalef 0.2 0.2 0.2)
-
-		(if (== i 0)
-			(this.font.draw "challenges")
-		(== i 1)
-			(this.font.draw "custom game")
-		(== i 2)
-			(this.font.draw "exit")
-			(this.font.draw "options")
-		)
-
-		(dd_matrix_pop)
-		)
-	)
-	(avdl_useProgram 0)
-
-	# draw button description
-	(if (>= this.selection 0)
-		(group
+		# draw version number
 		(dd_matrix_push)
-		(this.textButton.applyTransform)
-		(this.textButton.applyMatrixTransform)
-		(dd_translatef 0 0 0.1)
-		(dd_scalef 0.2 0.2 0.2)
-		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if this.isMovingToNewWorld
-			(this.font.drawLimit "loading" limit)
-		(== this.selection 0)
-			(this.font.drawLimit "not available in alpha version" limit)
-		(== this.selection 1)
-			(this.font.drawLimit "create and play a custom match" limit)
-		(== this.selection 2)
-			(this.font.drawLimit "exit game" limit)
-			(this.font.drawLimit "open and modify game settings" limit)
+		(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
+		(dd_translatef
+			(/ (dd_screen_width_get 5) 2)
+			(+ (/ (dd_screen_height_get 5) -2) 0.15)
+			-5
 		)
-
+		(dd_scalef 0.15 0.15 0.15)
+		(this.font.draw "alpha version")
+		(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 		(dd_matrix_pop)
+
 		)
 	)
-
-	# draw version number
-	(dd_matrix_push)
-	(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
-	(dd_translatef
-		(/ (dd_screen_width_get 5) 2)
-		(+ (/ (dd_screen_height_get 5) -2) 0.15)
-		-5
-	)
-	(dd_scalef 0.15 0.15 0.15)
-	(this.font.draw "alpha version")
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(dd_matrix_pop)
 
 	(this.opt.draw)
 
@@ -305,13 +313,24 @@
 	)
 )
 
-(class_function world_menu void clean (group)
+(class_function world_menu void clean ()
 	(group
 	)
 )
 
 (class_function world_menu void mouse_input (group int button int type)
 	(group
+
+	(if (this.opt.isEnabled)
+		(group
+		(if (this.opt.mouse_input button type)
+			(group
+			(= this.enabled 1)
+			)
+		)
+		(return)
+		)
+	)
 
 	# re-check selection, this allows the user to directly click on a button
 	# in a touch screen device
@@ -342,19 +361,28 @@
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
+			# challenges
 			(if (== this.selectionClick 0)
 				(group
 				)
+			# custom game
 			(== this.selectionClick 1)
 				(group
 				(dd_world_prepare world_custom_game_menu 1.0)
 				(dd_world_ready)
 				(= this.isMovingToNewWorld 1)
 				)
+			# exit game
 			(== this.selectionClick 2)
 				(group
 				(= dd_flag_exit 1) # exit game
 				(= this.isMovingToNewWorld 1)
+				)
+			# options
+			(== this.selectionClick 3)
+				(group
+				(this.opt.enable)
+				(= this.enabled 0)
 				)
 			)
 

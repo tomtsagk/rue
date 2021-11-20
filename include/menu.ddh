@@ -35,6 +35,8 @@
 
 	(def int isMovingToNewWorld)
 
+	(def int enabled)
+
 	# options menu
 	(def options opt)
 

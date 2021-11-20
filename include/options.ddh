@@ -7,12 +7,16 @@
 	(group
 
 	# options buttons
-	(def Button button[4])
+	(def Button button[6])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
 	(def float buttonClickCol[3])
 	(def float buttonActiveCol[3])
 	(def float buttonInactiveCol[3])
+
+	# labels
+	(def Button labelMusic)
+	(def Button labelAudio)
 
 	# text display
 	(def Button textButton)
@@ -23,17 +27,21 @@
 	(def int selection)
 	(def int selectionClick)
 
+	# open/close data
 	(def int enabled)
+	(def float animationOpen)
 
 	(function void create (group))
 	(function void resize (group))
 	(function void update (group))
 	(function void draw (group))
 	(function void key_input (group char key))
-	(function void mouse_input (group int button int type))
+	(function int mouse_input (group int button int type))
 	(function void clean (group))
 
 	(function int isEnabled (group))
+	(function void enable (group))
+	(function void disable (group))
 
 	)
 ) # options menu
