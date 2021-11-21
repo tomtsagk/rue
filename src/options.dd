@@ -199,9 +199,6 @@
 
 		(this.button[i].applyTransform)
 		(this.button[i].applyMatrixTransform)
-		(if (== i 3)
-			(dd_scalef 0.8 0.8 0.8)
-		)
 		(def float anim)
 		# big numbers make animation faster, but blends less together (max 4 - number of buttons)
 		# small numbers make animation slower. At 1.0, all buttons animate together

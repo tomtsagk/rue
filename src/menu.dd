@@ -57,7 +57,7 @@
 
 	# buttons
 	(= this.buttonTotal 4)
-	(this.button[0].mesh.load (asset "assets/button_disabled.asset" DD_PLY))
+	(this.button[0].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[0].setSize 1 1)
 	(this.button[0].setProportionalPosition 0.25 0.4)
 	(this.button[0].setProportionalWidth 0.2)
@@ -67,12 +67,12 @@
 	(this.button[1].setProportionalPosition 0.5 0.4)
 	(this.button[1].setProportionalWidth 0.2)
 
-	(this.button[2].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[2].mesh.load (asset "assets/button_exit.asset" DD_PLY))
 	(this.button[2].setSize 1 1)
 	(this.button[2].setProportionalPosition 0.75 0.4)
 	(this.button[2].setProportionalWidth 0.2)
 
-	(this.button[3].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[3].mesh.load (asset "assets/button_options.asset" DD_PLY))
 	(this.button[3].setSize 1 1)
 	(this.button[3].setProportionalPosition 0.85 0.85)
 	(this.button[3].setProportionalWidth 0.2)
