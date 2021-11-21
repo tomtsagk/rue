@@ -191,6 +191,7 @@
 		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.button[this.selection].y this.eyeTargetY) 0.1)))
 		)
 	)
+	(= this.eyeTargetX (+ this.eyeTargetX (* this.button[this.selection].idleRot -0.003)))
 	(def float tempZ 3)
 
 	# lookat
@@ -213,6 +214,22 @@
 	(dd_rotatef 15 -1 0 0)
 	(this.bg.draw)
 	(this.bgParticleSystem.draw)
+	(dd_matrix_pop)
+
+	# clear depth
+	(glClear GL_DEPTH_BUFFER_BIT)
+
+	# draw eyes
+	(dd_matrix_push)
+	(dd_translatef -1 0.5 -8)
+	(dd_multMatrixf this.matrixEyeL)
+	(this.lookatMesh.draw)
+	(dd_matrix_pop)
+
+	(dd_matrix_push)
+	(dd_translatef 1 0.5 -8)
+	(dd_multMatrixf this.matrixEyeR)
+	(this.lookatMesh.draw)
 	(dd_matrix_pop)
 
 	# clear depth
@@ -322,19 +339,6 @@
 	)
 
 	(this.opt.draw)
-
-	# draw lookat
-	(dd_matrix_push)
-	(dd_translatef -1 0.5 -8)
-	(dd_multMatrixf this.matrixEyeL)
-	(this.lookatMesh.draw)
-	(dd_matrix_pop)
-
-	(dd_matrix_push)
-	(dd_translatef 1 0.5 -8)
-	(dd_multMatrixf this.matrixEyeR)
-	(this.lookatMesh.draw)
-	(dd_matrix_pop)
 
 	)
 )
