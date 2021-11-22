@@ -46,7 +46,7 @@
 	(this.button[3].setProportionalWidth 0.2)
 	(this.button[3].setProportionalSize 0.7)
 
-	(this.button[4].mesh.load (asset "assets/button_toggle.asset" DD_PLY))
+	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[4].setSize 1 1)
 	(this.button[4].setProportionalPosition 0.5 0.35)
 	(this.button[4].setProportionalWidth 0.2)
