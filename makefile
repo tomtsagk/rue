@@ -29,15 +29,17 @@ PLY=$(wildcard assets/*.ply)
 BMP=$(wildcard assets/*.bmp)
 WAV=$(wildcard assets/*.wav)
 OGG=$(wildcard assets/*.ogg)
+JSON=$(wildcard assets/*.json)
 
 #
 # native output files
 #
 NATIVE_OBJ=${SRC:src/%.dd=${DIRECTORY_NATIVE_OBJ}/%.o}
 NATIVE_OBJ_C=${NATIVE_OBJ:%.o=%.c}
-NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}-${VERSION}.x86_64
+NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}-${VERSION}
 NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:assets/%.bmp=build/native/output/assets/%.asset} \
-	${WAV:assets/%.wav=build/native/output/assets/%.asset} ${OGG:assets/%.ogg=build/native/output/assets/%.asset}
+	${WAV:assets/%.wav=build/native/output/assets/%.asset} ${OGG:assets/%.ogg=build/native/output/assets/%.asset} \
+	${JSON:assets/%.json=build/native/output/assets/%.asset}
 
 #
 # android output files
@@ -70,7 +72,7 @@ native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ}
 
 android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
 	avdl --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ}
-	$(foreach i,${PLY} ${BMP} ${WAV} ${OGG},avdl --android -c -o ${DIRECTORY_ANDROID_OUT} ${i};)
+	$(foreach i,${PLY} ${BMP} ${WAV} ${OGG} ${JSON},avdl --android -c -o ${DIRECTORY_ANDROID_OUT} ${i};)
 
 #
 # native - compile files - assets - final executable
@@ -89,6 +91,9 @@ ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.wav
 	avdl -c $< -o $@
 
 ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ogg
+	avdl -c $< -o $@
+
+${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.json
 	avdl -c $< -o $@
 
 

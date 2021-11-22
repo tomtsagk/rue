@@ -1,0 +1,10 @@
+{
+	"menu_challenges": "Challenges",
+	"menu_challenges_desc": "Not available in alpha version",
+	"menu_custom_game": "Custom Game",
+	"menu_custom_game_desc": "Create and play a custom match",
+	"menu_exit": "Exit",
+	"menu_exit_desc": "Exit game",
+	"menu_options": "Options",
+	"menu_options_desc": "Open and modify game settings"
+}

@@ -27,6 +27,8 @@
 (class_function world_menu void create ()
 	(group
 
+	(this.localisation.set "menu_copy")
+
 	# background
 	(= this.bg_rotation 0)
 	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
@@ -285,12 +287,12 @@
 			(dd_scalef 0.2 0.2 0.2)
 
 			(if (== i 0)
-				(this.font.draw "challenges")
+				(this.font.draw (this.localisation.getValue "menu_challenges"))
 			(== i 1)
-				(this.font.draw "custom game")
+				(this.font.draw (this.localisation.getValue "menu_custom_game"))
 			(== i 2)
-				(this.font.draw "exit")
-				(this.font.draw "options")
+				(this.font.draw (this.localisation.getValue "menu_exit"))
+				(this.font.draw (this.localisation.getValue "menu_options"))
 			)
 
 			(dd_matrix_pop)
@@ -310,12 +312,12 @@
 			(if this.isMovingToNewWorld
 				(this.font.drawLimit "loading" limit)
 			(== this.selection 0)
-				(this.font.drawLimit "not available in alpha version" limit)
+				(this.font.drawLimit (this.localisation.getValue "menu_challenges_desc") limit)
 			(== this.selection 1)
-				(this.font.drawLimit "create and play a custom match" limit)
+				(this.font.drawLimit (this.localisation.getValue "menu_custom_game_desc") limit)
 			(== this.selection 2)
-				(this.font.drawLimit "exit game" limit)
-				(this.font.drawLimit "open and modify game settings" limit)
+				(this.font.drawLimit (this.localisation.getValue "menu_exit_desc") limit)
+				(this.font.drawLimit (this.localisation.getValue "menu_options_desc") limit)
 			)
 
 			(dd_matrix_pop)

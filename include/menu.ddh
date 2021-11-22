@@ -5,6 +5,8 @@
 (class world_menu dd_world
 	(group
 
+	(def avdl_localisation localisation)
+
 	# background
 	(def float bg_rotation)
 	(def dd_meshColour bg)
