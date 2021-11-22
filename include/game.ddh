@@ -119,6 +119,9 @@
 	(def ref Card discard[48])
 	(def int discardTotal)
 
+	# player meshes
+	(def dd_meshTexture playerMesh[2])
+
 	# players
 	(def int startingPlayer)
 	(def Player player[10])

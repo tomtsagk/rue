@@ -20,6 +20,10 @@
 
 	(def ref char cardDescription)
 
+	# stats if card is fake
+	(def int idFake)
+	(def ref dd_meshTexture meshFake)
+
 	(function void create (group))
 	(function void clean (group))
 
@@ -28,9 +32,9 @@
 	(function void applyMatrix (group))
 	(function void drawRaw (group))
 
-	(function void drawText (group))
-
 	(function void setId (group int id))
+	(function void setFakeId (group int id dd_meshTexture mesh))
+	(function void clearFakeId (group))
 
 	)
 ) # card

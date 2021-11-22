@@ -5,13 +5,15 @@
 	(group
 
 	# user works a bit different than AI
+	# if AI, define its type
 	(def int isUser)
+	(def int type)
 
 	# actual location (different than the displayed)
 	(def dd_matrix actual)
 
 	# player itself
-	(def dd_meshTexture mesh)
+	(def ref dd_meshTexture mesh)
 
 	# cards
 	(def int cardsTotal)
@@ -25,6 +27,8 @@
 	(def int selectedCard)
 	(def dd_matrix selectedMatrix)
 	(def ref Card selectedCard2)
+
+	(def ref dd_meshTexture cardFronts)
 
 	# functions
 	(function void create (group))

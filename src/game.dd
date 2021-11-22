@@ -254,10 +254,19 @@
 	(dd_matrix_rotate this.discardMatrix -90 1 0 0)
 	(= this.discardTotal 0)
 
+	# player meshes
+	(this.playerMesh[0].load (asset "assets/character.asset" DD_PLY))
+	(this.playerMesh[0].loadTexture (asset "assets/character_1.asset" DD_PLY))
+
+	(this.playerMesh[1].load (asset "assets/character.asset" DD_PLY))
+	(this.playerMesh[1].loadTexture (asset "assets/character_1.asset" DD_PLY))
+
 	# players 3-8
 	#(= this.playersTotal 4)
 	(= this.playersTotal numberOfPlayers)
 	(= this.player[0].isUser 1)
+	(= this.player[0].mesh this.playerMesh[0])
+	(= this.player[0].cardFronts this.cardFront)
 
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
@@ -283,6 +292,11 @@
 		(dd_matrix_rotate this.player[i].actual (- 0 (* (/ 360.0 this.playersTotal) i)) 0 1 0)
 		(dd_matrix_translate this.player[i].actual 0 0 4)
 		(dd_matrix_rotate this.player[i].actual 180 0 1 0)
+
+		(def int index (% i 2))
+		(= this.player[i].cardFronts this.cardFront)
+		(= this.player[i].mesh this.playerMesh[index])
+		(= this.player[i].type index)
 
 		)
 	)
@@ -1337,6 +1351,7 @@
 		# player can handle one more card
 			(group
 
+			(this.deck[cardIndex].clearFakeId)
 			(this.player[playerIndex].addCard this.deck[cardIndex])
 
 			# if card goes to an opponent, hide it
