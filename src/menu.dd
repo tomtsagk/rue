@@ -37,7 +37,7 @@
 	(this.bgParticleMesh.load (asset "assets/particle.asset" DD_PLY))
 	(this.bgParticleSystem.assignAsset this.bgParticleMesh)
 	(this.bgParticleSystem.setParticleLife 500)
-	(this.bgParticleSystem.setDelay 20)
+	(this.bgParticleSystem.setDelay 30)
 	(this.bgParticleSystem.setParticlePosition 0 4 -5)
 	(this.bgParticleSystem.setParticlePositionFuzz 16 4 11)
 	(this.bgParticleSystem.setParticlePositionYFunc particleMovementY)
@@ -64,7 +64,7 @@
 	(this.button[0].setProportionalPosition 0.25 0.4)
 	(this.button[0].setProportionalWidth 0.2)
 
-	(this.button[1].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[1].mesh.load (asset "assets/button_play.asset" DD_PLY))
 	(this.button[1].setSize 1 1)
 	(this.button[1].setProportionalPosition 0.5 0.4)
 	(this.button[1].setProportionalWidth 0.2)
@@ -198,10 +198,10 @@
 
 	# lookat
 	(dd_matrix_identity this.matrixEyeL)
-	(dd_matrix_lookat this.matrixEyeL (+ this.eyeTargetX 1) this.eyeTargetY tempZ)
+	(dd_matrix_lookat this.matrixEyeL (+ this.eyeTargetX 1.3) this.eyeTargetY tempZ)
 
 	(dd_matrix_identity this.matrixEyeR)
-	(dd_matrix_lookat this.matrixEyeR (+ this.eyeTargetX -1) this.eyeTargetY tempZ)
+	(dd_matrix_lookat this.matrixEyeR (+ this.eyeTargetX -1.3) this.eyeTargetY tempZ)
 
 	)
 ) # update
@@ -223,13 +223,13 @@
 
 	# draw eyes
 	(dd_matrix_push)
-	(dd_translatef -1 0.5 -8)
+	(dd_translatef -1.3 0.5 -8)
 	(dd_multMatrixf this.matrixEyeL)
 	(this.lookatMesh.draw)
 	(dd_matrix_pop)
 
 	(dd_matrix_push)
-	(dd_translatef 1 0.5 -8)
+	(dd_translatef 1.3 0.5 -8)
 	(dd_multMatrixf this.matrixEyeR)
 	(this.lookatMesh.draw)
 	(dd_matrix_pop)
@@ -287,9 +287,9 @@
 			(dd_scalef 0.2 0.2 0.2)
 
 			(if (== i 0)
-				(this.font.draw (this.localisation.getValue "menu_challenges"))
-			(== i 1)
 				(this.font.draw (this.localisation.getValue "menu_custom_game"))
+			(== i 1)
+				(this.font.draw (this.localisation.getValue "menu_play"))
 			(== i 2)
 				(this.font.draw (this.localisation.getValue "menu_exit"))
 				(this.font.draw (this.localisation.getValue "menu_options"))
@@ -312,9 +312,9 @@
 			(if this.isMovingToNewWorld
 				(this.font.drawLimit "loading" limit)
 			(== this.selection 0)
-				(this.font.drawLimit (this.localisation.getValue "menu_challenges_desc") limit)
-			(== this.selection 1)
 				(this.font.drawLimit (this.localisation.getValue "menu_custom_game_desc") limit)
+			(== this.selection 1)
+				(this.font.drawLimit (this.localisation.getValue "menu_play_desc") limit)
 			(== this.selection 2)
 				(this.font.drawLimit (this.localisation.getValue "menu_exit_desc") limit)
 				(this.font.drawLimit (this.localisation.getValue "menu_options_desc") limit)
@@ -401,16 +401,16 @@
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
-			# challenges
-			(if (== this.selectionClick 0)
-				(group
-				)
 			# custom game
-			(== this.selectionClick 1)
+			(if (== this.selectionClick 0)
 				(group
 				(dd_world_prepare world_custom_game_menu 1.0)
 				(dd_world_ready)
 				(= this.isMovingToNewWorld 1)
+				)
+			# play
+			(== this.selectionClick 1)
+				(group
 				)
 			# exit game
 			(== this.selectionClick 2)
