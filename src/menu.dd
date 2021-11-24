@@ -36,7 +36,7 @@
 	# background particles
 	(this.bgParticleMesh.load (asset "assets/particle.asset" DD_PLY))
 	(this.bgParticleSystem.assignAsset this.bgParticleMesh)
-	(this.bgParticleSystem.setParticleLife 500)
+	(this.bgParticleSystem.setParticleLife 1000)
 	(this.bgParticleSystem.setDelay 30)
 	(this.bgParticleSystem.setParticlePosition 0 4 -5)
 	(this.bgParticleSystem.setParticlePositionFuzz 16 4 11)
@@ -63,6 +63,7 @@
 	(this.button[0].setSize 1 1)
 	(this.button[0].setProportionalPosition 0.25 0.4)
 	(this.button[0].setProportionalWidth 0.2)
+	(this.button[0].setProportionalSize 0.7)
 
 	(this.button[1].mesh.load (asset "assets/button_play.asset" DD_PLY))
 	(this.button[1].setSize 1 1)
@@ -73,6 +74,7 @@
 	(this.button[2].setSize 1 1)
 	(this.button[2].setProportionalPosition 0.75 0.4)
 	(this.button[2].setProportionalWidth 0.2)
+	(this.button[2].setProportionalSize 0.7)
 
 	(this.button[3].mesh.load (asset "assets/button_options.asset" DD_PLY))
 	(this.button[3].setSize 1 1)
