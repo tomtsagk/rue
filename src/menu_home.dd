@@ -302,8 +302,8 @@
 			# custom game
 			(if (== this.selectionClick 0)
 				(group
+				(this.disable)
 				(return 1)
-#				(= this.isMovingToNewWorld 1)
 				)
 			# play
 			(== this.selectionClick 1)

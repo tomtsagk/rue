@@ -63,6 +63,7 @@
 
 (class_function world_menu void resize ()
 	(group
+	(this.menuCustomGame.resize)
 	(this.menuHome.resize)
 	(this.opt.resize)
 	)
@@ -79,6 +80,7 @@
 
 	(this.bgParticleSystem.update)
 
+	(this.menuCustomGame.update)
 	(this.menuHome.update)
 	(this.opt.update)
 
@@ -90,12 +92,21 @@
 
 		(= this.eyeTargetX (+ this.eyeTargetX (* this.opt.button[this.opt.selection].idleRot -0.003)))
 		)
+	# lookat home menu buttons
 	(this.menuHome.isEnabled)
 		(group
 		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuHome.button[this.menuHome.selection].x this.eyeTargetX) 0.1)))
 		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuHome.button[this.menuHome.selection].y this.eyeTargetY) 0.1)))
 
 		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuHome.button[this.menuHome.selection].idleRot -0.003)))
+		)
+	# lookat custom game menu buttons
+	(this.menuCustomGame.isEnabled)
+		(group
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuCustomGame.button[this.menuCustomGame.selection].x this.eyeTargetX) 0.1)))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuCustomGame.button[this.menuCustomGame.selection].y this.eyeTargetY) 0.1)))
+
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuCustomGame.button[this.menuCustomGame.selection].idleRot -0.003)))
 		)
 	)
 	(def float tempZ 3)
@@ -141,6 +152,7 @@
 	# clear depth
 	(glClear GL_DEPTH_BUFFER_BIT)
 
+	(this.menuCustomGame.draw)
 	(this.menuHome.draw)
 	(this.opt.draw)
 
@@ -180,12 +192,15 @@
 		# custom game
 		(if (== returnMenu 1)
 			(group
-			(dd_world_prepare world_custom_game_menu 1.0)
-			(dd_world_ready)
+			#(dd_world_prepare world_custom_game_menu 1.0)
+			#(dd_world_ready)
+			(this.menuCustomGame.enable)
 			)
 		# play
 		(== returnMenu 2)
 			(group
+			(dd_world_prepare world_custom_game_menu 1.0)
+			(dd_world_ready)
 			)
 		# options
 		(== returnMenu 3)
@@ -193,6 +208,24 @@
 			(this.opt.enable)
 			)
 		)
+		)
+	# custom game menu is open
+	(this.menuCustomGame.isEnabled)
+		(group
+		(def int returnMenu (this.menuCustomGame.mouse_input button type))
+		# back to home
+		(if (== returnMenu 1)
+			(group
+			(this.menuHome.enable)
+			)
+		# start game
+		(== returnMenu 2)
+			(group
+			(dd_world_prepare world_game 1.0)
+			(dd_world_ready)
+			)
+		)
+
 		)
 	)
 

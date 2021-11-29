@@ -1,6 +1,7 @@
 (include "button.ddh")
 (include "options.ddh")
 (include "menu_home.ddh")
+(include "menu_custom_game.ddh")
 
 # menu world
 (class world_menu dd_world
@@ -24,6 +25,7 @@
 	# menus
 	(def menu_home menuHome)
 	(def options opt)
+	(def menu_custom_game menuCustomGame)
 
 	(function void create (group))
 	(function void onload (group))
