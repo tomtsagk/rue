@@ -309,23 +309,17 @@
 			(== this.selectionClick 1)
 				(group
 				(return 2)
-				#(dd_world_prepare world_custom_game_menu 1.0)
-				#(dd_world_ready)
-				#(= this.isMovingToNewWorld 1)
 				)
 			# exit game
 			(== this.selectionClick 2)
 				(group
 				(= dd_flag_exit 1) # exit game
-				#(= this.isMovingToNewWorld 1)
 				)
 			# options
 			(== this.selectionClick 3)
 				(group
 				(this.disable)
 				(return 3)
-#				(this.opt.enable)
-#				(= this.enabled 0)
 				)
 			)
 

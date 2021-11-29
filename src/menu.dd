@@ -1,6 +1,5 @@
 (include "menu.ddh")
 (include "game.ddh")
-(include "custom_game_menu.ddh")
 
 (function float particleMovementY (group float t)
 	(group
@@ -192,15 +191,11 @@
 		# custom game
 		(if (== returnMenu 1)
 			(group
-			#(dd_world_prepare world_custom_game_menu 1.0)
-			#(dd_world_ready)
 			(this.menuCustomGame.enable)
 			)
 		# play
 		(== returnMenu 2)
 			(group
-			(dd_world_prepare world_custom_game_menu 1.0)
-			(dd_world_ready)
 			)
 		# options
 		(== returnMenu 3)
