@@ -64,6 +64,7 @@
 	(group
 	(this.menuCustomGame.resize)
 	(this.menuHome.resize)
+	(this.menuStages.resize)
 	(this.opt.resize)
 	)
 )
@@ -81,6 +82,7 @@
 
 	(this.menuCustomGame.update)
 	(this.menuHome.update)
+	(this.menuStages.update)
 	(this.opt.update)
 
 	# lookat animation
@@ -106,6 +108,14 @@
 		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuCustomGame.button[this.menuCustomGame.selection].y this.eyeTargetY) 0.1)))
 
 		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuCustomGame.button[this.menuCustomGame.selection].idleRot -0.003)))
+		)
+	# lookat stages menu buttons
+	(this.menuStages.isEnabled)
+		(group
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuStages.button[this.menuStages.selection].x this.eyeTargetX) 0.1)))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuStages.button[this.menuStages.selection].y this.eyeTargetY) 0.1)))
+
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuStages.button[this.menuStages.selection].idleRot -0.003)))
 		)
 	)
 	(def float tempZ 3)
@@ -153,6 +163,7 @@
 
 	(this.menuCustomGame.draw)
 	(this.menuHome.draw)
+	(this.menuStages.draw)
 	(this.opt.draw)
 
 	)
@@ -196,6 +207,7 @@
 		# play
 		(== returnMenu 2)
 			(group
+			(this.menuStages.enable)
 			)
 		# options
 		(== returnMenu 3)
@@ -218,6 +230,18 @@
 			(group
 			(dd_world_prepare world_game 1.0)
 			(dd_world_ready)
+			)
+		)
+
+		)
+	# stages menu is open
+	(this.menuStages.isEnabled)
+		(group
+		(def int returnMenu (this.menuStages.mouse_input button type))
+		# back to home
+		(if (== returnMenu -1)
+			(group
+			(this.menuHome.enable)
 			)
 		)
 

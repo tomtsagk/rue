@@ -2,6 +2,7 @@
 (include "options.ddh")
 (include "menu_home.ddh")
 (include "menu_custom_game.ddh")
+(include "menu_stages.ddh")
 
 # menu world
 (class world_menu dd_world
@@ -26,6 +27,7 @@
 	(def menu_home menuHome)
 	(def options opt)
 	(def menu_custom_game menuCustomGame)
+	(def menu_stages menuStages)
 
 	(function void create (group))
 	(function void onload (group))
