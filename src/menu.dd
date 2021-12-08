@@ -243,6 +243,11 @@
 			(group
 			(this.menuHome.enable)
 			)
+		(== returnMenu 1)
+			(group
+			(dd_world_prepare world_game 1.0)
+			(dd_world_ready)
+			)
 		)
 
 		)

@@ -1,9 +1,10 @@
 (include "game.ddh")
 (include "menu.ddh")
 
-(def extern int numberOfPlayers)
-(def extern int startingPlayer)
-(def extern int guide)
+(def int numberOfPlayers)
+(def int startingPlayer)
+(def int guide)
+(def int playerAi[5])
 
 # game phases
 (def int PHASE_INIT 0)
@@ -295,7 +296,7 @@
 
 		(= this.player[i].cardFronts this.cardFront)
 		(= this.player[i].mesh this.playerMesh[0])
-		(= this.player[i].type -1)
+		(= this.player[i].type playerAi[i])
 
 		)
 	)

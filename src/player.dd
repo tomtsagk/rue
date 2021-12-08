@@ -6,7 +6,7 @@
 	(group
 
 	(= this.isUser 0)
-	(= this.type 0)
+	(= this.type -1)
 
 	# individual cards
 	(= this.cardsTotal 0)
@@ -133,9 +133,9 @@
 		(group
 
 		# test first AI
-		#(if (== this.isUser 0)
-		#	(card.setFakeId card 0 this.cardFronts)
-		#)
+		(if (== this.type 0)
+			(card.setFakeId card 0 this.cardFronts)
+		)
 
 		(= this.cards[this.cardsTotal] card)
 		(= this.cardsTotal (+ this.cardsTotal 1))

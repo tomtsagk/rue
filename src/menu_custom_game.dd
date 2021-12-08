@@ -1,8 +1,9 @@
 (include "menu_custom_game.ddh")
 
-(def int numberOfPlayers)
-(def int startingPlayer)
-(def int guide)
+(def extern int numberOfPlayers)
+(def extern int startingPlayer)
+(def extern int guide)
+(def extern int playerAi[5])
 
 (class_function menu_custom_game void create ()
 	(group
@@ -11,6 +12,9 @@
 	(= numberOfPlayers 3)
 	(= startingPlayer -1)
 	(= guide 0)
+	(for (def int i 0) (< i 5) (= i (+ i 1))
+		(= playerAi[i] -1)
+	)
 
 	# localisation
 	(this.localisation.set "menu_copy")
