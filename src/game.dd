@@ -295,8 +295,8 @@
 
 		(def int index (% i 2))
 		(= this.player[i].cardFronts this.cardFront)
-		(= this.player[i].mesh this.playerMesh[index])
-		(= this.player[i].type index)
+		(= this.player[i].mesh this.playerMesh[0])
+		(= this.player[i].type 0)
 
 		)
 	)

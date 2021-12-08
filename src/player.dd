@@ -132,9 +132,10 @@
 		(echo "CANNOT GIVE MORE CARDS")
 		(group
 
-		(if (== this.isUser 0)
-			(card.setFakeId card 0 this.cardFronts)
-		)
+		# test first AI
+		#(if (== this.isUser 0)
+		#	(card.setFakeId card 0 this.cardFronts)
+		#)
 
 		(= this.cards[this.cardsTotal] card)
 		(= this.cardsTotal (+ this.cardsTotal 1))
