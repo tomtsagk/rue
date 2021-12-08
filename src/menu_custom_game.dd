@@ -1,19 +1,19 @@
-(include "custom_game_menu.ddh")
-(include "game.ddh")
-(include "menu.ddh")
+(include "menu_custom_game.ddh")
 
 (def int numberOfPlayers)
 (def int startingPlayer)
 (def int guide)
 
-(class_function world_custom_game_menu void create (group)
+(class_function menu_custom_game void create ()
 	(group
 
-	(= this.isMovingToNewWorld 0)
+	# init default game values
+	(= numberOfPlayers 3)
+	(= startingPlayer -1)
+	(= guide 0)
 
-	# background
-	(= this.bg_rotation 0)
-	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
+	# localisation
+	(this.localisation.set "menu_copy")
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -46,7 +46,7 @@
 	(this.button[3].setProportionalWidth 0.2)
 	(this.button[3].setProportionalSize 0.7)
 
-	(this.button[4].mesh.load (asset "assets/button_toggle.asset" DD_PLY))
+	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[4].setSize 1 1)
 	(this.button[4].setProportionalPosition 0.5 0.35)
 	(this.button[4].setProportionalWidth 0.2)
@@ -87,17 +87,12 @@
 	# text display
 	(this.textButton.setSize 1 1)
 	(this.textButton.setProportionalPosition 0.5 0.15)
-	(this.textButton.setProportionalWidth 0.15)
+	(this.textButton.setProportionalWidth 0.2)
 
 	(= this.selection 0)
 	(= this.selectionClick -1)
-	(= this.isMovingToNewWorld 0)
+	#(= this.isMovingToNewWorld 0)
 
-	(= numberOfPlayers 3)
-	(= startingPlayer -1)
-	(= guide 0)
-
-	# shader for buttons
 	(this.buttonProgram.setVertexShader
 		(multistring
 			"AVDL_IN vec4 position;\n"
@@ -125,7 +120,6 @@
 		)
 	)
 
-	# button colours
 	(= this.buttonClickCol[0] 0.389)
 	(= this.buttonClickCol[1] 0.055)
 	(= this.buttonClickCol[2] 0.682)
@@ -138,35 +132,41 @@
 	(= this.buttonInactiveCol[1] 0.137)
 	(= this.buttonInactiveCol[2] 0.137)
 
+	(= this.enabled 0)
+	(= this.animationOpen 0)
+
 	)
 )
 
-(class_function world_custom_game_menu void onload (group)
-	(group
-	)
-)
-
-(class_function world_custom_game_menu void resize (group)
+(class_function menu_custom_game void resize ()
 	(group
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
 	)
+	(this.textButton.resize)
 	(this.buttonPlayerNumber.resize)
 	(this.buttonPlayerNumberValue.resize)
 	(this.buttonStartingPlayer.resize)
 	(this.buttonStartingPlayerValue.resize)
-	(this.textButton.resize)
 	)
 )
 
-(class_function world_custom_game_menu void update (group)
+(class_function menu_custom_game void update ()
 	(group
 
-	# constant background rotation
-	(= this.bg_rotation (+ this.bg_rotation 0.01))
-	(if (>= this.bg_rotation 360)
-		(= this.bg_rotation (- this.bg_rotation 360))
+	# disabled and animated out, do not update
+	(if (&& (== (this.isEnabled) 0) (< this.animationOpen 0.01)) (return))
+
+	# animate opening/closing
+	(if (this.isEnabled)
+		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 1))
+		(= this.animationOpen (dd_math_min (+ this.animationOpen 0.08) 1))
+		(= this.animationOpen (dd_math_max (- this.animationOpen 0.08) 0))
+		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 0))
 	)
+
+	# disabled do not calculate hovering buttons
+	(if (== (this.isEnabled) 0) (return))
 
 	# check if mouse is hovering over a button
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
@@ -186,19 +186,11 @@
 	)
 ) # update
 
-(class_function world_custom_game_menu void draw (group)
+(class_function menu_custom_game void draw ()
 	(group
 
-	# draw background
-	(dd_matrix_push)
-	(dd_translatef 0 -2 -3)
-	(dd_rotatef (+ -80 this.bg_rotation) 0 1 0)
-	(dd_rotatef 25 -1 0 0)
-	(this.bg.draw)
-	(dd_matrix_pop)
-
-	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
+	# do not draw if animated out
+	(if (< this.animationOpen 0.01) (return))
 
 	# draw number of players
 	(dd_matrix_push)
@@ -243,7 +235,6 @@
 		)
 	)
 	(dd_matrix_pop)
-
 	# draw buttons
 	(this.buttonProgram.useProgram)
 	(def int colLoc)
@@ -278,9 +269,23 @@
 
 		(this.button[i].applyTransform)
 		(this.button[i].applyMatrixTransform)
+		(def float anim)
+		# big numbers make animation faster, but blends less together (max 4 - number of buttons)
+		# small numbers make animation slower. At 1.0, all buttons animate together
+		(def float animationSpeed 2.0)
+		(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
+		(= anim (dd_math_min
+				(dd_math_max
+					(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
+					0
+				)
+				1
+			)
+		)
+		(dd_scalef anim anim anim)
 		(this.button[i].drawRaw)
 
-		(dd_translatef 0 0 0.15)
+		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 
 		(if (== i 0)
@@ -316,43 +321,48 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if this.isMovingToNewWorld
+		(if 0#this.isMovingToNewWorld
 			(this.font.drawLimit "loading" limit)
 		(== this.selection 0)
-			(this.font.drawLimit "decrease number of players" limit)
+			(this.font.drawLimit (this.localisation.getValue "menu_custom_game_desc") limit)
 		(== this.selection 1)
-			(this.font.drawLimit "increase number of players" limit)
-		(|| (== this.selection 2) (== this.selection 3))
-			(this.font.drawLimit "change starting player" limit)
-		(== this.selection 4)
-			(this.font.drawLimit "toggle guide" limit)
-		(== this.selection 5)
-			(this.font.drawLimit "back to main menu" limit)
-		(== this.selection 6)
-			(this.font.drawLimit "start the game" limit)
+			(this.font.drawLimit (this.localisation.getValue "menu_play_desc") limit)
+		(== this.selection 2)
+			(this.font.drawLimit (this.localisation.getValue "menu_exit_desc") limit)
+			(this.font.drawLimit (this.localisation.getValue "menu_options_desc") limit)
 		)
 
 		(dd_matrix_pop)
 		)
 	)
 
+	# draw version number
+	(dd_matrix_push)
+	(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
+	(dd_translatef
+		(/ (dd_screen_width_get 5) 2)
+		(+ (/ (dd_screen_height_get 5) -2) 0.15)
+		-5
+	)
+	(dd_scalef 0.15 0.15 0.15)
+	(this.font.draw "alpha version")
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(dd_matrix_pop)
+
 	)
 )
 
-(class_function world_custom_game_menu void key_input (group char key)
+(class_function menu_custom_game void key_input (group char key)
 	(group
-	(if (== key 27)
-		(= dd_flag_exit 1) # exit game
-	) # key input
 	)
 )
 
-(class_function world_custom_game_menu void clean (group)
+(class_function menu_custom_game void clean ()
 	(group
 	)
 )
 
-(class_function world_custom_game_menu void mouse_input (group int button int type)
+(class_function menu_custom_game int mouse_input (group int button int type)
 	(group
 
 	# re-check selection, this allows the user to directly click on a button
@@ -380,7 +390,7 @@
 		(group
 
 		# clicked on a button
-		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0)
+		(if (&& (== this.selection this.selectionClick)
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
@@ -416,16 +426,19 @@
 			# back to main menu
 			(== this.selectionClick 5)
 				(group
-				(dd_world_prepare world_menu 1.0)
-				(dd_world_ready)
-				(= this.isMovingToNewWorld 1)
+				#(dd_world_prepare world_menu 1.0)
+				#(dd_world_ready)
+				#(= this.isMovingToNewWorld 1)
+				(this.disable)
+				(return 1)
 				)
 			# start game !
 			(== this.selectionClick 6)
 				(group
-				(dd_world_prepare world_game 1.0)
-				(dd_world_ready)
-				(= this.isMovingToNewWorld 1)
+				#(dd_world_prepare world_game 1.0)
+				#(dd_world_ready)
+				#(= this.isMovingToNewWorld 1)
+				(return 2)
 				)
 			)
 
@@ -437,5 +450,26 @@
 		)
 	) # mouse button released
 
+	(return 0)
+
 	)
 ) # mouse input
+
+(class_function menu_custom_game int isEnabled ()
+	(group
+	(return this.enabled)
+	)
+)
+
+(class_function menu_custom_game void enable ()
+	(group
+	(= this.enabled 1)
+	(= this.selectionClick -1)
+	)
+)
+
+(class_function menu_custom_game void disable ()
+	(group
+	(= this.enabled 0)
+	)
+)

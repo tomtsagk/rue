@@ -1,7 +1,5 @@
 (include "menu.ddh")
 (include "game.ddh")
-(include "custom_game_menu.ddh")
-#(include "challenge_select_menu.ddh")
 
 (function float particleMovementY (group float t)
 	(group
@@ -34,8 +32,8 @@
 	# background particles
 	(this.bgParticleMesh.load (asset "assets/particle.asset" DD_PLY))
 	(this.bgParticleSystem.assignAsset this.bgParticleMesh)
-	(this.bgParticleSystem.setParticleLife 500)
-	(this.bgParticleSystem.setDelay 20)
+	(this.bgParticleSystem.setParticleLife 1000)
+	(this.bgParticleSystem.setDelay 30)
 	(this.bgParticleSystem.setParticlePosition 0 4 -5)
 	(this.bgParticleSystem.setParticlePositionFuzz 16 4 11)
 	(this.bgParticleSystem.setParticlePositionYFunc particleMovementY)
@@ -47,91 +45,12 @@
 		(this.bgParticleSystem.update)
 	)
 
-	# logo
-	(this.logo.load (asset "assets/logo_rue.asset" DD_PLY))
-
-	# font
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.8 0.8 0.8)
-	(this.font.setColorBack 0.3 0.3 0.3)
-
-	# buttons
-	(= this.buttonTotal 4)
-	(this.button[0].mesh.load (asset "assets/button.asset" DD_PLY))
-	(this.button[0].setSize 1 1)
-	(this.button[0].setProportionalPosition 0.25 0.4)
-	(this.button[0].setProportionalWidth 0.2)
-
-	(this.button[1].mesh.load (asset "assets/button.asset" DD_PLY))
-	(this.button[1].setSize 1 1)
-	(this.button[1].setProportionalPosition 0.5 0.4)
-	(this.button[1].setProportionalWidth 0.2)
-
-	(this.button[2].mesh.load (asset "assets/button_exit.asset" DD_PLY))
-	(this.button[2].setSize 1 1)
-	(this.button[2].setProportionalPosition 0.75 0.4)
-	(this.button[2].setProportionalWidth 0.2)
-
-	(this.button[3].mesh.load (asset "assets/button_options.asset" DD_PLY))
-	(this.button[3].setSize 1 1)
-	(this.button[3].setProportionalPosition 0.85 0.85)
-	(this.button[3].setProportionalWidth 0.2)
-	(this.button[3].setProportionalSize 0.7)
-
-	# text display
-	(this.textButton.setSize 1 1)
-	(this.textButton.setProportionalPosition 0.5 0.15)
-	(this.textButton.setProportionalWidth 0.2)
-
-	(= this.selection 0)
-	(= this.selectionClick -1)
-	(= this.isMovingToNewWorld 0)
-
-	(this.buttonProgram.setVertexShader
-		(multistring
-			"AVDL_IN vec4 position;\n"
-			"AVDL_IN vec3 colour;\n"
-
-			"uniform mat4 matrix;\n"
-			"uniform vec3 tint;\n"
-
-			"AVDL_OUT vec4 outColour;\n"
-
-			"void main() {\n"
-			"	vec4 pos = matrix *position;\n"
-			"       gl_Position = pos;\n"
-			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
-			"}\n"
-		)
-	)
-	(this.buttonProgram.setFragmentShader
-		(multistring
-			"AVDL_IN vec4 outColour;\n"
-
-			"void main() {\n"
-			"       avdl_frag_color = outColour;\n"
-			"}\n"
-		)
-	)
-
-	(= this.buttonClickCol[0] 0.389)
-	(= this.buttonClickCol[1] 0.055)
-	(= this.buttonClickCol[2] 0.682)
-
-	(= this.buttonActiveCol[0] 0.916)
-	(= this.buttonActiveCol[1] 0.516)
-	(= this.buttonActiveCol[2] 0.074)
-
-	(= this.buttonInactiveCol[0] 0.694)
-	(= this.buttonInactiveCol[1] 0.137)
-	(= this.buttonInactiveCol[2] 0.137)
-
 	# eyes
 	(this.lookatMesh.load (asset "assets/eye.asset" DD_PLY))
 	(= this.eyeTargetX 0)
 	(= this.eyeTargetY 0)
 
-	(= this.enabled 1)
+	(this.menuHome.enable)
 
 	)
 )
@@ -143,10 +62,9 @@
 
 (class_function world_menu void resize ()
 	(group
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
-		(this.button[i].resize)
-	)
-	(this.textButton.resize)
+	(this.menuCustomGame.resize)
+	(this.menuHome.resize)
+	(this.menuStages.resize)
 	(this.opt.resize)
 	)
 )
@@ -160,24 +78,11 @@
 		(= this.bg_rotation (- this.bg_rotation 360))
 	)
 
-	# check if mouse is hovering over a button
-	#(= this.selection -1)
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
-		(group
-
-		(if (this.button[i].hasMouseCollided)
-			(group
-			(= this.selection i)
-			)
-		)
-
-		(this.button[i].update (== this.selection i) (== this.selectionClick i))
-
-		)
-	)
-
 	(this.bgParticleSystem.update)
 
+	(this.menuCustomGame.update)
+	(this.menuHome.update)
+	(this.menuStages.update)
 	(this.opt.update)
 
 	# lookat animation
@@ -185,21 +90,42 @@
 		(group
 		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.opt.button[this.opt.selection].x this.eyeTargetX) 0.1)))
 		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.opt.button[this.opt.selection].y this.eyeTargetY) 0.1)))
+
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.opt.button[this.opt.selection].idleRot -0.003)))
 		)
+	# lookat home menu buttons
+	(this.menuHome.isEnabled)
 		(group
-		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.button[this.selection].x this.eyeTargetX) 0.1)))
-		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.button[this.selection].y this.eyeTargetY) 0.1)))
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuHome.button[this.menuHome.selection].x this.eyeTargetX) 0.1)))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuHome.button[this.menuHome.selection].y this.eyeTargetY) 0.1)))
+
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuHome.button[this.menuHome.selection].idleRot -0.003)))
+		)
+	# lookat custom game menu buttons
+	(this.menuCustomGame.isEnabled)
+		(group
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuCustomGame.button[this.menuCustomGame.selection].x this.eyeTargetX) 0.1)))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuCustomGame.button[this.menuCustomGame.selection].y this.eyeTargetY) 0.1)))
+
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuCustomGame.button[this.menuCustomGame.selection].idleRot -0.003)))
+		)
+	# lookat stages menu buttons
+	(this.menuStages.isEnabled)
+		(group
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuStages.button[this.menuStages.selection].x this.eyeTargetX) 0.1)))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuStages.button[this.menuStages.selection].y this.eyeTargetY) 0.1)))
+
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuStages.button[this.menuStages.selection].idleRot -0.003)))
 		)
 	)
-	(= this.eyeTargetX (+ this.eyeTargetX (* this.button[this.selection].idleRot -0.003)))
 	(def float tempZ 3)
 
 	# lookat
 	(dd_matrix_identity this.matrixEyeL)
-	(dd_matrix_lookat this.matrixEyeL (+ this.eyeTargetX 1) this.eyeTargetY tempZ)
+	(dd_matrix_lookat this.matrixEyeL (+ this.eyeTargetX 1.3) this.eyeTargetY tempZ)
 
 	(dd_matrix_identity this.matrixEyeR)
-	(dd_matrix_lookat this.matrixEyeR (+ this.eyeTargetX -1) this.eyeTargetY tempZ)
+	(dd_matrix_lookat this.matrixEyeR (+ this.eyeTargetX -1.3) this.eyeTargetY tempZ)
 
 	)
 ) # update
@@ -221,13 +147,13 @@
 
 	# draw eyes
 	(dd_matrix_push)
-	(dd_translatef -1 0.5 -8)
+	(dd_translatef -1.3 0.5 -8)
 	(dd_multMatrixf this.matrixEyeL)
 	(this.lookatMesh.draw)
 	(dd_matrix_pop)
 
 	(dd_matrix_push)
-	(dd_translatef 1 0.5 -8)
+	(dd_translatef 1.3 0.5 -8)
 	(dd_multMatrixf this.matrixEyeR)
 	(this.lookatMesh.draw)
 	(dd_matrix_pop)
@@ -235,109 +161,9 @@
 	# clear depth
 	(glClear GL_DEPTH_BUFFER_BIT)
 
-	(if this.enabled
-		(group
-
-		# draw logo
-		(dd_matrix_push)
-		(dd_translatef 0 1.7 -8)
-		(dd_rotatef 10 1 0 0)
-		(this.logo.draw)
-		(dd_matrix_pop)
-
-		# draw buttons
-		(this.buttonProgram.useProgram)
-		(def int colLoc)
-		(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
-		(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
-			(group
-			(dd_matrix_push)
-
-			# change the shader colour when clicked
-			(if (> this.button[i].idleCol 1.0)
-				(avdl_setUniform3f colLoc
-					(dd_math_ease_linear
-						(- this.button[i].idleCol 1.0)
-						this.buttonActiveCol[0] this.buttonClickCol[0]
-					)
-					(dd_math_ease_linear
-						(- this.button[i].idleCol 1.0)
-						this.buttonActiveCol[1] this.buttonClickCol[1]
-					)
-					(dd_math_ease_linear
-						(- this.button[i].idleCol 1.0)
-						this.buttonActiveCol[2] this.buttonClickCol[2]
-					)
-				)
-			# change colour when selected
-				(avdl_setUniform3f colLoc
-					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
-					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
-					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
-				)
-			)
-
-			(this.button[i].applyTransform)
-			(this.button[i].applyMatrixTransform)
-			(this.button[i].drawRaw)
-
-			(dd_translatef 0 0 0.1)
-			(dd_scalef 0.2 0.2 0.2)
-
-			(if (== i 0)
-				(this.font.draw "challenges")
-			(== i 1)
-				(this.font.draw "custom game")
-			(== i 2)
-				(this.font.draw "exit")
-				(this.font.draw "options")
-			)
-
-			(dd_matrix_pop)
-			)
-		)
-		(avdl_useProgram 0)
-
-		# draw button description
-		(if (>= this.selection 0)
-			(group
-			(dd_matrix_push)
-			(this.textButton.applyTransform)
-			(this.textButton.applyMatrixTransform)
-			(dd_translatef 0 0 0.1)
-			(dd_scalef 0.2 0.2 0.2)
-			(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-			(if this.isMovingToNewWorld
-				(this.font.drawLimit "loading" limit)
-			(== this.selection 0)
-				(this.font.drawLimit "not available in alpha version" limit)
-			(== this.selection 1)
-				(this.font.drawLimit "create and play a custom match" limit)
-			(== this.selection 2)
-				(this.font.drawLimit "exit game" limit)
-				(this.font.drawLimit "open and modify game settings" limit)
-			)
-
-			(dd_matrix_pop)
-			)
-		)
-
-		# draw version number
-		(dd_matrix_push)
-		(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
-		(dd_translatef
-			(/ (dd_screen_width_get 5) 2)
-			(+ (/ (dd_screen_height_get 5) -2) 0.15)
-			-5
-		)
-		(dd_scalef 0.15 0.15 0.15)
-		(this.font.draw "alpha version")
-		(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-		(dd_matrix_pop)
-
-		)
-	)
-
+	(this.menuCustomGame.draw)
+	(this.menuHome.draw)
+	(this.menuStages.draw)
 	(this.opt.draw)
 
 	)
@@ -359,78 +185,68 @@
 (class_function world_menu void mouse_input (group int button int type)
 	(group
 
+	# options menu is open
 	(if (this.opt.isEnabled)
 		(group
 		(if (this.opt.mouse_input button type)
 			(group
-			(= this.enabled 1)
+			(this.menuHome.enable)
 			)
 		)
 		(return)
 		)
-	)
-
-	# re-check selection, this allows the user to directly click on a button
-	# in a touch screen device
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+	# home menu is open
+	(this.menuHome.isEnabled)
 		(group
-
-		(if (this.button[i].hasMouseCollided)
+		(def int returnMenu (this.menuHome.mouse_input button type))
+		# custom game
+		(if (== returnMenu 1)
 			(group
-			(= this.selection i)
+			(this.menuCustomGame.enable)
+			)
+		# play
+		(== returnMenu 2)
+			(group
+			(this.menuStages.enable)
+			)
+		# options
+		(== returnMenu 3)
+			(group
+			(this.opt.enable)
+			)
+		)
+		)
+	# custom game menu is open
+	(this.menuCustomGame.isEnabled)
+		(group
+		(def int returnMenu (this.menuCustomGame.mouse_input button type))
+		# back to home
+		(if (== returnMenu 1)
+			(group
+			(this.menuHome.enable)
+			)
+		# start game
+		(== returnMenu 2)
+			(group
+			(dd_world_prepare world_game 1.0)
+			(dd_world_ready)
+			)
+		)
+
+		)
+	# stages menu is open
+	(this.menuStages.isEnabled)
+		(group
+		(def int returnMenu (this.menuStages.mouse_input button type))
+		# back to home
+		(if (== returnMenu -1)
+			(group
+			(this.menuHome.enable)
 			)
 		)
 
 		)
 	)
-
-	# control the camera look at point when click and dragging
-	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
-		(group
-		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
-			(= this.selectionClick this.selection)
-		)
-		)
-	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
-		(group
-
-		# clicked on a button
-		(if (&& (== this.selection this.selectionClick) (== this.isMovingToNewWorld 0)
-			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
-			(group
-
-			# challenges
-			(if (== this.selectionClick 0)
-				(group
-				)
-			# custom game
-			(== this.selectionClick 1)
-				(group
-				(dd_world_prepare world_custom_game_menu 1.0)
-				(dd_world_ready)
-				(= this.isMovingToNewWorld 1)
-				)
-			# exit game
-			(== this.selectionClick 2)
-				(group
-				(= dd_flag_exit 1) # exit game
-				(= this.isMovingToNewWorld 1)
-				)
-			# options
-			(== this.selectionClick 3)
-				(group
-				(this.opt.enable)
-				(= this.enabled 0)
-				)
-			)
-
-			)
-		)
-
-		(= this.selectionClick -1)
-
-		)
-	) # mouse button released
 
 	)
 ) # mouse input

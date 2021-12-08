@@ -1,14 +1,15 @@
 (include "button.ddh")
 
-# menu world
-(class world_custom_game_menu dd_world
+# options menu
+# has to open on any menu and draw everything
+# but the background
+(class menu_custom_game dd_matrix
 	(group
 
-	# background
-	(def float bg_rotation)
-	(def dd_meshColour bg)
+	# localisation
+	(def avdl_localisation localisation)
 
-	# menu buttons
+	# home buttons
 	(def Button button[7])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
@@ -16,11 +17,11 @@
 	(def float buttonActiveCol[3])
 	(def float buttonInactiveCol[3])
 
-	# number of players
+	# label - number of players
 	(def Button buttonPlayerNumber)
 	(def Button buttonPlayerNumberValue)
 
-	# starting player
+	# label - starting player
 	(def Button buttonStartingPlayer)
 	(def Button buttonStartingPlayerValue)
 
@@ -33,21 +34,21 @@
 	(def int selection)
 	(def int selectionClick)
 
-	(def int isMovingToNewWorld)
-
-	# custom game tweak values
-	(def int numberOfPlayers)
-	(def int startingPlayer)
-	(def int hasGuide)
+	# open/close data
+	(def int enabled)
+	(def float animationOpen)
 
 	(function void create (group))
-	(function void onload (group))
 	(function void resize (group))
 	(function void update (group))
 	(function void draw (group))
 	(function void key_input (group char key))
-	(function void mouse_input (group int button int type))
+	(function int mouse_input (group int button int type))
 	(function void clean (group))
 
+	(function int isEnabled (group))
+	(function void enable (group))
+	(function void disable (group))
+
 	)
-) # menu world
+) # options menu

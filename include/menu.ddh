@@ -1,5 +1,8 @@
 (include "button.ddh")
 (include "options.ddh")
+(include "menu_home.ddh")
+(include "menu_custom_game.ddh")
+(include "menu_stages.ddh")
 
 # menu world
 (class world_menu dd_world
@@ -13,39 +16,18 @@
 	(def avdl_particle_system bgParticleSystem)
 	(def dd_meshColour bgParticleMesh)
 
-	# logo
-	(def dd_meshTexture logo)
-
-	# menu buttons
-	(def Button button[4])
-	(def int buttonTotal)
-	(def avdl_program buttonProgram)
-	(def float buttonClickCol[3])
-	(def float buttonActiveCol[3])
-	(def float buttonInactiveCol[3])
-
-	# text display
-	(def Button textButton)
-
-	# font
-	(def dd_string3d font)
-
-	(def int selection)
-	(def int selectionClick)
-
-	(def int isMovingToNewWorld)
-
-	(def int enabled)
-
-	# options menu
-	(def options opt)
-
 	# eyes
 	(def dd_meshColour lookatMesh)
 	(def dd_matrix matrixEyeL)
 	(def dd_matrix matrixEyeR)
 	(def float eyeTargetX)
 	(def float eyeTargetY)
+
+	# menus
+	(def menu_home menuHome)
+	(def options opt)
+	(def menu_custom_game menuCustomGame)
+	(def menu_stages menuStages)
 
 	(function void create (group))
 	(function void onload (group))
