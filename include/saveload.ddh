@@ -1,0 +1,13 @@
+(class SaveLoad 0
+	(group
+
+	(def int stageComplete[6])
+
+	(function void create ())
+	(function void clean ())
+
+	(function int IsStageComplete (group int index))
+	(function void CompleteStage (group int index))
+
+	)
+)

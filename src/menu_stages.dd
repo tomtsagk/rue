@@ -4,12 +4,13 @@
 (def extern int startingPlayer)
 (def extern int guide)
 (def extern int playerAi[5])
+(def extern int stageId)
 
 (class_function menu_stages void create ()
 	(group
 
 	# localisation
-	(this.localisation.set "menu_copy")
+	#(this.localisation.set "menu_copy")
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -29,30 +30,45 @@
 	(this.button[1].setProportionalPosition 0.5 0.75)
 	(this.button[1].setProportionalWidth 0.25)
 	(this.button[1].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 0) 0)
+		(this.button[1].disable)
+	)
 
 	(this.button[2].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[2].setSize 1 1)
 	(this.button[2].setProportionalPosition 0.75 0.75)
 	(this.button[2].setProportionalWidth 0.25)
 	(this.button[2].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 1) 0)
+		(this.button[2].disable)
+	)
 
 	(this.button[3].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[3].setSize 1 1)
 	(this.button[3].setProportionalPosition 0.25 0.45)
 	(this.button[3].setProportionalWidth 0.25)
 	(this.button[3].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 2) 0)
+		(this.button[3].disable)
+	)
 
 	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[4].setSize 1 1)
 	(this.button[4].setProportionalPosition 0.5 0.45)
 	(this.button[4].setProportionalWidth 0.25)
 	(this.button[4].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(this.button[4].disable)
+	)
 
 	(this.button[5].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[5].setSize 1 1)
 	(this.button[5].setProportionalPosition 0.75 0.45)
 	(this.button[5].setProportionalWidth 0.25)
 	(this.button[5].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 4) 0)
+		(this.button[5].disable)
+	)
 
 	(this.button[6].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[6].setSize 1 1)
@@ -216,19 +232,11 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 
-		(if (== i 0)
-			(this.font.draw "1")
-		(== i 1)
-			(this.font.draw "2")
-		(== i 2)
-			(this.font.draw "3")
-		(== i 3)
-			(this.font.draw "4")
-		(== i 4)
-			(this.font.draw "5")
-		(== i 5)
-			(this.font.draw "6")
-		(== i 6)
+		(if (&& (>= i 0) (< i 6))
+			(if this.button[i].isDisabled
+				(this.font.draw "disabled")
+				(this.font.drawInt i)
+			)
 			(this.font.draw "back")
 		)
 
@@ -333,6 +341,7 @@
 				(= guide -1)
 				(= playerAi[1] 0)
 				(= playerAi[2] 0)
+				(= stageId 0)
 
 				(this.disable)
 				(return 1)

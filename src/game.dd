@@ -1,10 +1,12 @@
 (include "game.ddh")
 (include "menu.ddh")
 
+# public data
 (def int numberOfPlayers)
 (def int startingPlayer)
 (def int guide)
 (def int playerAi[5])
+(def int stageId)
 
 # game phases
 (def int PHASE_INIT 0)
@@ -1269,6 +1271,7 @@
 			# someone has won, move to next menu
 			(if (>= this.victoriousPlayer 0)
 				(group
+				(this.saveLoad.CompleteStage stageId)
 				(dd_world_prepare world_menu 1.0)
 				(dd_world_ready)
 				)

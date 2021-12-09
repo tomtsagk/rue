@@ -1,8 +1,12 @@
 (include "button.ddh")
+(include "saveload.ddh")
 
 # stages menu
 (class menu_stages dd_matrix
 	(group
+
+	# save-load data
+	(def SaveLoad saveLoad)
 
 	# localisation
 	(def avdl_localisation localisation)

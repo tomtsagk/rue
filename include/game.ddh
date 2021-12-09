@@ -1,6 +1,7 @@
 #(include "intro.ddh")
 (include "player.ddh")
 (include "overlayButtons.ddh")
+(include "saveload.ddh")
 
 #
 # defines actions supported by the game
@@ -34,6 +35,9 @@
 # game world
 (class world_game dd_world
 	(group
+
+	# save-load data
+	(def SaveLoad saveLoad)
 
 	# gameover animation
 	(def int victoriousPlayer)

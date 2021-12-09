@@ -4,6 +4,7 @@
 (def extern int startingPlayer)
 (def extern int guide)
 (def extern int playerAi[5])
+(def extern int stageId)
 
 (class_function menu_custom_game void create ()
 	(group
@@ -15,6 +16,7 @@
 	(for (def int i 0) (< i 5) (= i (+ i 1))
 		(= playerAi[i] -1)
 	)
+	(= stageId -1)
 
 	# localisation
 	(this.localisation.set "menu_copy")

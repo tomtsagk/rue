@@ -1,0 +1,69 @@
+(include "saveload.ddh")
+
+# the form of our save data
+# if this changes, it will break old saves
+(class SaveLoadData 0
+	(group
+	(def int stageComplete[6])
+	)
+)
+
+(class_function SaveLoad void create ()
+	(group
+
+	(def SaveLoadData mySaveData)
+
+	# success to load - copy loaded data
+	(if (== (avdl_data_load mySaveData SaveLoadData "default") 0)
+		(group
+		(for (def int i 0) (< i 6) (= i (+ i 1))
+			(= this.stageComplete[i] mySaveData.stageComplete[i])
+		)
+		)
+	# fail to load - supply defaults
+		(group
+		(for (def int i 0) (< i 6) (= i (+ i 1))
+			(= this.stageComplete[i] 0)
+		)
+		)
+	)
+
+	)
+)
+
+(class_function SaveLoad void clean ()
+	(group
+	)
+)
+
+# return `0` if stage is not complete,
+# or any other value if stage is complete
+(class_function SaveLoad int IsStageComplete (group int index)
+	(group
+	(if (&& (>= index 0) (< index 6))
+		(return this.stageComplete[index])
+	)
+	(return 0)
+	)
+)
+
+(class_function SaveLoad void CompleteStage (group int index)
+	(group
+
+	# invalid stage id
+	(if (|| (< index 0) (>= index 6))
+		(return)
+	)
+
+	# mark stage as complete
+	(= this.stageComplete[index] 1)
+
+	# save data
+	(def SaveLoadData mySaveData)
+	(for (def int i 0) (< i 6) (= i (+ i 1))
+		(= mySaveData.stageComplete[i] this.stageComplete[i])
+	)
+	(avdl_data_save mySaveData SaveLoadData "default") 
+
+	)
+)
