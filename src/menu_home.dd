@@ -44,7 +44,7 @@
 	(this.textButton.setProportionalPosition 0.5 0.15)
 	(this.textButton.setProportionalWidth 0.2)
 
-	(= this.selection 0)
+	(= this.selection 1)
 	(= this.selectionClick -1)
 	#(= this.isMovingToNewWorld 0)
 

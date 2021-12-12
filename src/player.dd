@@ -135,6 +135,8 @@
 		# test first AI
 		(if (== this.type 0)
 			(card.setFakeId card 0 this.cardFronts)
+		(== this.type 1)
+			(card.setFakeId card 1 (+ this.cardFronts 1))
 		)
 
 		(= this.cards[this.cardsTotal] card)
