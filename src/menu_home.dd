@@ -250,7 +250,7 @@
 		-5
 	)
 	(dd_scalef 0.15 0.15 0.15)
-	(this.font.draw "alpha version")
+	(this.font.draw AVDL_GAME_VERSION)
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	(dd_matrix_pop)
 

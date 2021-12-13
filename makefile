@@ -2,7 +2,8 @@
 # project data
 #
 NAME=rue
-VERSION=v0.0.8
+VERSION=0.0.8
+REVISION=0
 
 #
 # directories - separate for native and android
@@ -36,7 +37,7 @@ JSON=$(wildcard assets/*.json)
 #
 NATIVE_OBJ=${SRC:src/%.dd=${DIRECTORY_NATIVE_OBJ}/%.o}
 NATIVE_OBJ_C=${NATIVE_OBJ:%.o=%.c}
-NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}-${VERSION}
+NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}
 NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:assets/%.bmp=build/native/output/assets/%.asset} \
 	${WAV:assets/%.wav=build/native/output/assets/%.asset} ${OGG:assets/%.ogg=build/native/output/assets/%.asset} \
 	${JSON:assets/%.json=build/native/output/assets/%.asset}
@@ -78,7 +79,7 @@ android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ -I include/ --install-loc "${assetdir}"
+	avdl -c $< -o $@ -I include/ --install-loc "${assetdir}" --game-version "${VERSION}" --game-revision "${REVISION}"
 
 
 ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ply
@@ -98,7 +99,7 @@ ${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.json
 
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o $@ ${avdlargs}
+	avdl $^ -o $@ --game-version "${VERSION}" --game-revision "${REVISION}"
 
 #
 # android - compile files
