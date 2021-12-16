@@ -10,9 +10,8 @@ REVISION=0
 #
 DIRECTORY_NATIVE=build/native
 DIRECTORY_NATIVE_OBJ=${DIRECTORY_NATIVE}/objects
-DIRECTORY_NATIVE_ASSETS=${DIRECTORY_NATIVE}/output/assets
 DIRECTORY_NATIVE_OUT=${DIRECTORY_NATIVE}/output
-DIRECTORY_NATIVE_ALL=${DIRECTORY_NATIVE} ${DIRECTORY_NATIVE_OBJ} ${DIRECTORY_NATIVE_ASSETS} ${DIRECTORY_NATIVE_OUT}
+DIRECTORY_NATIVE_ALL=${DIRECTORY_NATIVE} ${DIRECTORY_NATIVE_OBJ} ${DIRECTORY_NATIVE_OUT}
 
 DIRECTORY_ANDROID=build/android
 DIRECTORY_ANDROID_OBJ=${DIRECTORY_ANDROID}/objects
@@ -22,30 +21,34 @@ DIRECTORY_ANDROID_ALL=${DIRECTORY_ANDROID} ${DIRECTORY_ANDROID_OBJ}
 DIRECTORY_ALL=${DIRECTORY_NATIVE_ALL} ${DIRECTORY_ANDROID_ALL}
 
 #
-# source files
+# source code files
 #
 SRC=$(wildcard src/*.dd)
 HEADERS=$(wildcard include/*.ddh)
+
+#
+# asset files
+#
 PLY=$(wildcard assets/*.ply)
 BMP=$(wildcard assets/*.bmp)
 WAV=$(wildcard assets/*.wav)
 OGG=$(wildcard assets/*.ogg)
 JSON=$(wildcard assets/*.json)
+ASSETS=${PLY} ${BMP} ${WAV} ${OGG} ${JSON}
 
 #
 # native output files
 #
 NATIVE_OBJ=${SRC:src/%.dd=${DIRECTORY_NATIVE_OBJ}/%.o}
 NATIVE_OBJ_C=${NATIVE_OBJ:%.o=%.c}
-NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}
-NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:assets/%.bmp=build/native/output/assets/%.asset} \
-	${WAV:assets/%.wav=build/native/output/assets/%.asset} ${OGG:assets/%.ogg=build/native/output/assets/%.asset} \
-	${JSON:assets/%.json=build/native/output/assets/%.asset}
+NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/game
+NATIVE_ASSETS=${ASSETS:assets/%=${DIRECTORY_NATIVE_OBJ}/%}
 
 #
 # android output files
 #
 ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.o}
+ANDROID_ASSETS=${ASSETS:assets/%=${DIRECTORY_ANDROID_OBJ}/%}
 
 #
 # system data
@@ -69,11 +72,10 @@ all: native
 #
 # how to make builds for native and android
 #
-native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ}
+native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS}
 
-android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
+android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
 	avdl --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ}
-	$(foreach i,${PLY} ${BMP} ${WAV} ${OGG} ${JSON},avdl --android -c -o ${DIRECTORY_ANDROID_OUT} ${i};)
 
 #
 # native - compile files - assets - final executable
@@ -81,31 +83,20 @@ android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
 	avdl -c $< -o $@ -I include/ --install-loc "${assetdir}" --game-version "${VERSION}" --game-revision "${REVISION}"
 
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ply
-	avdl -c $< -o $@
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.bmp
-	avdl -c $< -o $@
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.wav
-	avdl -c $< -o $@
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ogg
-	avdl -c $< -o $@
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.json
-	avdl -c $< -o $@
-
+${DIRECTORY_NATIVE_OBJ}/%: assets/%
+	avdl -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o $@ --game-version "${VERSION}" --game-revision "${REVISION}"
+	avdl $^ -o ${DIRECTORY_NATIVE_OUT} --game-version "${VERSION}" --game-revision "${REVISION}"
 
 #
 # android - compile files
 #
 ${DIRECTORY_ANDROID_OBJ}/%.o: src/%.dd ${HEADERS}
 	avdl --android -c $< -o $@ -I include/
+
+${DIRECTORY_ANDROID_OBJ}/%: assets/%
+	avdl --android -c $< -o ${DIRECTORY_ANDROID_OUT} && touch $@
 
 #
 # make any directory needed
@@ -123,7 +114,7 @@ ${INSTALL_DIRS}:
 
 install: ${INSTALL_DIRS}
 	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/rue
-	install ${NATIVE_ASSETS_OBJ} ${DESTDIR}${prefix}/share/rue/assets
+	install ${NATIVE_ASSETS} ${DESTDIR}${prefix}/share/rue/assets
 	install ${desktopfile} ${DESTDIR}${prefix}/share/applications
 	install ${metadatafile} ${DESTDIR}${prefix}/share/metainfo/
 	install ${icon128x128} ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
@@ -141,7 +132,7 @@ uninstall:
 # clean project
 #
 clean:
-	rm -f ${NATIVE_OBJ} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ} ${NATIVE_OBJ_C}
+	rm -f ${NATIVE_OBJ} ${NATIVE_OUT} ${NATIVE_ASSETS} ${NATIVE_OBJ_C}
 
 #
 # phony targets
