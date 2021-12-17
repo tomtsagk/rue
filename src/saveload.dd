@@ -14,7 +14,7 @@
 	(def SaveLoadData mySaveData)
 
 	# success to load - copy loaded data
-	(if (== (avdl_data_load mySaveData SaveLoadData "default") 0)
+	(if (== (avdl_data_load mySaveData SaveLoadData (savefile "default")) 0)
 		(group
 		(for (def int i 0) (< i 6) (= i (+ i 1))
 			(= this.stageComplete[i] mySaveData.stageComplete[i])
@@ -63,7 +63,7 @@
 	(for (def int i 0) (< i 6) (= i (+ i 1))
 		(= mySaveData.stageComplete[i] this.stageComplete[i])
 	)
-	(avdl_data_save mySaveData SaveLoadData "default") 
+	(avdl_data_save mySaveData SaveLoadData (savefile "default"))
 
 	)
 )

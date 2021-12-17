@@ -6,6 +6,20 @@ VERSION=0.0.8
 REVISION=0
 
 #
+# system data
+#
+prefix=/usr/local
+assetdir=${prefix}/share/rue/
+savedir=~/.rue/saves/
+
+#
+# compiler flags
+#
+COMPILER_FLAGS= -I include/ --save-loc "${savedir}" --install-loc "${assetdir}" \
+	--game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
+LINKER_FLAGS= --game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
+
+#
 # directories - separate for native and android
 #
 DIRECTORY_NATIVE=build/native
@@ -41,7 +55,7 @@ ASSETS=${PLY} ${BMP} ${WAV} ${OGG} ${JSON}
 #
 NATIVE_OBJ=${SRC:src/%.dd=${DIRECTORY_NATIVE_OBJ}/%.o}
 NATIVE_OBJ_C=${NATIVE_OBJ:%.o=%.c}
-NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/game
+NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}
 NATIVE_ASSETS=${ASSETS:assets/%=${DIRECTORY_NATIVE_OBJ}/%}
 
 #
@@ -49,12 +63,6 @@ NATIVE_ASSETS=${ASSETS:assets/%=${DIRECTORY_NATIVE_OBJ}/%}
 #
 ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.o}
 ANDROID_ASSETS=${ASSETS:assets/%=${DIRECTORY_ANDROID_OBJ}/%}
-
-#
-# system data
-#
-prefix=/usr/local
-assetdir=${prefix}/share/rue/
 
 #
 # desktop application data
@@ -81,13 +89,13 @@ android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ -I include/ --install-loc "${assetdir}" --game-version "${VERSION}" --game-revision "${REVISION}"
+	avdl -c $< -o $@ ${COMPILER_FLAGS}
 
 ${DIRECTORY_NATIVE_OBJ}/%: assets/%
 	avdl -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o ${DIRECTORY_NATIVE_OUT} --game-version "${VERSION}" --game-revision "${REVISION}"
+	avdl $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS}
 
 #
 # android - compile files
