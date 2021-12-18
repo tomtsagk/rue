@@ -28,6 +28,8 @@
 	(def int value)
 	(def int delay)
 
+	(function void create ())
+	(function void clean ())
 	(function void set (group int actionType int playerIndex int valueAmount int delay))
 	)
 )
