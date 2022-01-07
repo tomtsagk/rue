@@ -1,0 +1,388 @@
+(include "options.ddh")
+
+(class_function options void create ()
+	(group
+
+	# font
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setColorFront 0.8 0.8 0.8)
+	(this.font.setColorBack 0.3 0.3 0.3)
+
+	# buttons
+	(= this.buttonTotal 6)
+	(this.button[0].mesh.load (asset "assets/button_minus.asset" DD_PLY))
+	(this.button[0].setSize 1 1)
+	(this.button[0].setProportionalPosition 0.3 0.8)
+	(this.button[0].setProportionalWidth 0.2)
+	(this.button[0].setProportionalSize 0.7)
+
+	(this.button[1].mesh.load (asset "assets/button_plus.asset" DD_PLY))
+	(this.button[1].setSize 1 1)
+	(this.button[1].setProportionalPosition 0.7 0.8)
+	(this.button[1].setProportionalWidth 0.2)
+	(this.button[1].setProportionalSize 0.7)
+
+	(this.button[2].mesh.load (asset "assets/button_minus.asset" DD_PLY))
+	(this.button[2].setSize 1 1)
+	(this.button[2].setProportionalPosition 0.3 0.6)
+	(this.button[2].setProportionalWidth 0.2)
+	(this.button[2].setProportionalSize 0.7)
+
+	(this.button[3].mesh.load (asset "assets/button_plus.asset" DD_PLY))
+	(this.button[3].setSize 1 1)
+	(this.button[3].setProportionalPosition 0.7 0.6)
+	(this.button[3].setProportionalWidth 0.2)
+	(this.button[3].setProportionalSize 0.7)
+
+	# toggle fullscreen button
+	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[4].setSize 1 1)
+	(this.button[4].setProportionalPosition 0.5 0.35)
+	(this.button[4].setProportionalWidth 0.2)
+	(this.button[4].setProportionalSize 0.7)
+
+	# back button
+	(this.button[5].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[5].setSize 1 1)
+	(this.button[5].setProportionalPosition 0.12 0.15)
+	(this.button[5].setProportionalWidth 0.2)
+
+	# music label
+	(this.labelMusic.setSize 1 1)
+	(this.labelMusic.setProportionalPosition 0.5 0.8)
+	(this.labelMusic.setProportionalWidth 0.2)
+	(this.labelMusic.setProportionalSize 1.0)
+
+	# audio label
+	(this.labelAudio.setSize 1 1)
+	(this.labelAudio.setProportionalPosition 0.5 0.6)
+	(this.labelAudio.setProportionalWidth 0.2)
+	(this.labelAudio.setProportionalSize 1.0)
+
+	# text display
+	(this.textButton.setSize 1 1)
+	(this.textButton.setProportionalPosition 0.5 0.15)
+	(this.textButton.setProportionalWidth 0.2)
+
+	(= this.selection 0)
+	(= this.selectionClick -1)
+	#(= this.isMovingToNewWorld 0)
+
+	(this.buttonProgram.setVertexShader
+		(multistring
+			"AVDL_IN vec4 position;\n"
+			"AVDL_IN vec3 colour;\n"
+
+			"uniform mat4 matrix;\n"
+			"uniform vec3 tint;\n"
+
+			"AVDL_OUT vec4 outColour;\n"
+
+			"void main() {\n"
+			"	vec4 pos = matrix *position;\n"
+			"       gl_Position = pos;\n"
+			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
+			"}\n"
+		)
+	)
+	(this.buttonProgram.setFragmentShader
+		(multistring
+			"AVDL_IN vec4 outColour;\n"
+
+			"void main() {\n"
+			"       avdl_frag_color = outColour;\n"
+			"}\n"
+		)
+	)
+
+	(= this.buttonClickCol[0] 0.389)
+	(= this.buttonClickCol[1] 0.055)
+	(= this.buttonClickCol[2] 0.682)
+
+	(= this.buttonActiveCol[0] 0.916)
+	(= this.buttonActiveCol[1] 0.516)
+	(= this.buttonActiveCol[2] 0.074)
+
+	(= this.buttonInactiveCol[0] 0.694)
+	(= this.buttonInactiveCol[1] 0.137)
+	(= this.buttonInactiveCol[2] 0.137)
+
+	(= this.enabled 0)
+	(= this.animationOpen 0)
+
+	)
+)
+
+(class_function options void resize ()
+	(group
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(this.button[i].resize)
+	)
+	(this.textButton.resize)
+	(this.labelMusic.resize)
+	(this.labelAudio.resize)
+	)
+)
+
+(class_function options void update ()
+	(group
+
+	# disabled and animated out, do not update
+	(if (&& (== (this.isEnabled) 0) (< this.animationOpen 0.01)) (return))
+
+	# animate opening/closing
+	(if (this.isEnabled)
+		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 1))
+		(= this.animationOpen (dd_math_min (+ this.animationOpen 0.08) 1))
+		(= this.animationOpen (dd_math_max (- this.animationOpen 0.08) 0))
+		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 0))
+	)
+
+	# disabled do not calculate hovering buttons
+	(if (== (this.isEnabled) 0) (return))
+
+	# check if mouse is hovering over a button
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			)
+		)
+
+		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+
+		)
+	)
+
+	)
+) # update
+
+(class_function options void draw ()
+	(group
+
+	# do not draw if animated out
+	(if (< this.animationOpen 0.01) (return))
+
+	# draw buttons
+	(this.buttonProgram.useProgram)
+	(def int colLoc)
+	(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_push)
+
+		# change the shader colour when clicked
+		(if (> this.button[i].idleCol 1.0)
+			(avdl_setUniform3f colLoc
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[0] this.buttonClickCol[0]
+				)
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[1] this.buttonClickCol[1]
+				)
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[2] this.buttonClickCol[2]
+				)
+			)
+		# change colour when selected
+			(avdl_setUniform3f colLoc
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
+			)
+		)
+
+		(this.button[i].applyTransform)
+		(this.button[i].applyMatrixTransform)
+		(def float anim)
+		# big numbers make animation faster, but blends less together (max 4 - number of buttons)
+		# small numbers make animation slower. At 1.0, all buttons animate together
+		(def float animationSpeed 2.0)
+		(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
+		(= anim (dd_math_min
+				(dd_math_max
+					(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
+					0
+				)
+				1
+			)
+		)
+		(dd_scalef anim anim anim)
+		(this.button[i].drawRaw)
+
+		(dd_translatef 0 0 0.1)
+		(dd_scalef 0.2 0.2 0.2)
+
+		(if (== i 4)
+			(this.font.draw "toggle fullscreen")
+		(== i 5)
+			(this.font.draw "back")
+		)
+
+		(dd_matrix_pop)
+		)
+	)
+	(avdl_useProgram 0)
+
+	# draw button description
+	(if (>= this.selection 0)
+		(group
+		(dd_matrix_push)
+		(this.textButton.applyTransform)
+		(this.textButton.applyMatrixTransform)
+		(dd_translatef 0 0 0.1)
+		(dd_scalef 0.2 0.2 0.2)
+		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
+		(if (== this.selection 0)
+			#(this.font.drawLimit "decrease music" limit)
+			(this.font.drawLimit "disabled for now" limit)
+		(== this.selection 1)
+			#(this.font.drawLimit "increase music" limit)
+			(this.font.drawLimit "disabled for now" limit)
+		(== this.selection 2)
+			#(this.font.drawLimit "decrease audio" limit)
+			(this.font.drawLimit "disabled for now" limit)
+		(== this.selection 3)
+			#(this.font.drawLimit "increase audio" limit)
+			(this.font.drawLimit "disabled for now" limit)
+		(== this.selection 4)
+			(this.font.drawLimit "swap windowed and fullscreen" limit)
+			(this.font.drawLimit "return to main menu" limit)
+		)
+
+		(dd_matrix_pop)
+		)
+	)
+
+	# draw music label
+	(dd_matrix_push)
+	(this.labelMusic.applyTransform)
+	(this.labelMusic.applyMatrixTransform)
+	(dd_translatef 0 0 0.1)
+	(dd_scalef 0.2 0.2 0.2)
+	(dd_translatef 0 0.7 0)
+	(this.font.draw "music")
+	(dd_translatef 0 -1.4 0)
+	(this.font.draw "0")
+	(dd_matrix_pop)
+
+	# draw audio label
+	(dd_matrix_push)
+	(this.labelAudio.applyTransform)
+	(this.labelAudio.applyMatrixTransform)
+	(dd_translatef 0 0 0.1)
+	(dd_scalef 0.2 0.2 0.2)
+	(dd_translatef 0 0.7 0)
+	(this.font.draw "audio")
+	(dd_translatef 0 -1.4 0)
+	(this.font.draw "0")
+	(dd_matrix_pop)
+
+	)
+)
+
+(class_function options void key_input (group char key)
+	(group
+	)
+)
+
+(class_function options void clean ()
+	(group
+	)
+)
+
+(class_function options int mouse_input (group int button int type)
+	(group
+
+	# re-check selection, this allows the user to directly click on a button
+	# in a touch screen device
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			)
+		)
+
+		)
+	)
+
+	# control the camera look at point when click and dragging
+	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+		(group
+		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+			(= this.selectionClick this.selection)
+		)
+		)
+	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+		(group
+
+		# clicked on a button
+		(if (&& (== this.selection this.selectionClick)
+			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+			(group
+
+			(if (== this.selectionClick 0)
+				(group
+				)
+			(== this.selectionClick 1)
+				(group
+				#(dd_world_prepare world_custom_game_menu 1.0)
+				#(dd_world_ready)
+				#(= this.isMovingToNewWorld 1)
+				)
+			(== this.selectionClick 2)
+				(group
+				#(this.disable)
+				#(return 1)
+				#(= dd_flag_exit 1) # exit game
+				#(= this.isMovingToNewWorld 1)
+				)
+			(== this.selectionClick 4)
+				(group
+				(dd_fullscreenToggle)
+				)
+			(== this.selectionClick 5)
+				(group
+				(this.disable)
+				(return 1)
+				)
+			)
+
+			)
+		)
+
+		(= this.selectionClick -1)
+
+		)
+	) # mouse button released
+
+	(return 0)
+
+	)
+) # mouse input
+
+(class_function options int isEnabled ()
+	(group
+	(return this.enabled)
+	)
+)
+
+(class_function options void enable ()
+	(group
+	(= this.enabled 1)
+	(= this.selectionClick -1)
+	)
+)
+
+(class_function options void disable ()
+	(group
+	(= this.enabled 0)
+	)
+)

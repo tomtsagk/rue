@@ -21,22 +21,26 @@
 	(def float idleRotTarget)
 	(def float idleCol)
 
+	(def int isDisabled)
+
 	(function void setSize (group float sizeX float sizeY))
 	(function void setPosition (group float posX float posY float posZ))
 	(function void setProportionalPosition (group float propX float propY))
 	(function void setProportionalWidth (group float propW))
 	(function void setProportionalSize (group float propSize))
 
-	(function void create (group))
+	(function void create ())
 	(function void update (group int isSelected int isClicked))
-	(function void applyTransform (group))
-	(function void applyMatrixTransform (group))
-	(function void drawRaw (group))
-	(function void draw (group))
-	(function void clean (group))
-	(function void resize (group))
+	(function void applyTransform ())
+	(function void applyMatrixTransform ())
+	(function void drawRaw ())
+	(function void draw ())
+	(function void clean ())
+	(function void resize ())
 
-	(function int hasMouseCollided (group))
+	(function int hasMouseCollided ())
+
+	(function void disable ())
 
 	)
 )

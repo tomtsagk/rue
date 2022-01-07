@@ -10,6 +10,13 @@
 
 	(= this.font 0)
 
+	(= this.mesh 0)
+	(= this.meshBack 0)
+
+	# fake stats
+	(= this.idFake -1)
+	(= this.meshFake 0)
+
 	)
 )
 
@@ -42,114 +49,6 @@
 		(this.mesh.draw)
 	)
 	(this.meshBack.draw)
-	)
-)
-
-(class_function Card void drawText (group)
-	(group
-
-	(if (== this.id 0)
-		(group
-		(dd_scalef 0.7 0.7 0.7)
-		(this.font.draw "move rose 1 step")
-		)
-	(== this.id 1)
-		(group
-		(dd_scalef 0.7 0.7 0.7)
-		(this.font.draw "move rose 3 steps")
-		)
-	(== this.id 2)
-		(group
-		(dd_scalef 0.5 0.5 0.5)
-		(dd_translatef 0 1.75 0)
-		(this.font.draw "rose player grabs rose")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "give a card to the")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "rose player")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "receive a random card")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "from the rose player")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "move rose 1 step")
-		)
-	(== this.id 3)
-		(group
-		(dd_scalef 0.6 0.6 0.6)
-		(dd_translatef 0 1.4 0)
-		(this.font.draw "if rose is 1 step")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "before you")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "move it 1 step")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "otherwise")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "move it 3 steps")
-		)
-	(== this.id 4)
-		(group
-		(dd_scalef 0.65 0.65 0.65)
-		(dd_translatef 0 1.0 0)
-		(this.font.draw "draw 1 card")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "discard this card")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "plan and execute")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "another card")
-		)
-	(== this.id 5)
-		(group
-		(dd_scalef 0.55 0.55 0.55)
-		(dd_translatef 0 1.5 0)
-		(this.font.draw "if rose is in front of")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "you grab it otherwise")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "move rose 1 step")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "the rose player")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "grabs the rose")
-		)
-	(== this.id 6)
-		(group
-		(dd_scalef 0.7 0.7 0.7)
-		(this.font.draw "the rose player")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "grabs the rose")
-		)
-	(== this.id 7)
-		(group
-		(dd_scalef 0.6 0.6 0.6)
-		(dd_translatef 0 1.4 0)
-		(this.font.draw "if you are not")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "the rose player")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "move rose 1 step")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "otherwise")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "move rose 3 steps")
-		)
-	(== this.id 8)
-		(group
-		(dd_scalef 0.6 0.6 0.6)
-		(dd_translatef 0 1.3 0)
-		(this.font.draw "if you are holding")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "the rose")
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "discard 1 card")
-		(dd_translatef 0 -1.0 0)
-		(dd_translatef 0 -1.0 0)
-		(this.font.draw "move rose 1 step")
-		)
-	)
-
 	)
 )
 
@@ -263,6 +162,34 @@
 		)
 	# else
 		(= this.cardDescription "no description")
+	)
+
+	)
+)
+
+(class_function Card void setFakeId (group int givenId dd_meshTexture mesh)
+	(group
+	(= this.idFake this.id)
+	(this.setId givenId)
+	(= this.meshFake this.mesh)
+	(= this.mesh mesh)
+	)
+)
+
+(class_function Card void clearFakeId (group)
+	(group
+	(if (>= this.idFake 0)
+		(group
+		(this.setId this.idFake)
+		(= this.idFake -1)
+		)
+	)
+
+	(if this.meshFake
+		(group
+		(= this.mesh this.meshFake)
+		(= this.meshFake 0)
+		)
 	)
 
 	)

@@ -1,6 +1,7 @@
 #(include "intro.ddh")
 (include "player.ddh")
 (include "overlayButtons.ddh")
+(include "saveload.ddh")
 
 #
 # defines actions supported by the game
@@ -27,6 +28,8 @@
 	(def int value)
 	(def int delay)
 
+	(function void create ())
+	(function void clean ())
 	(function void set (group int actionType int playerIndex int valueAmount int delay))
 	)
 )
@@ -34,6 +37,9 @@
 # game world
 (class world_game dd_world
 	(group
+
+	# save-load data
+	(def SaveLoad saveLoad)
 
 	# gameover animation
 	(def int victoriousPlayer)
@@ -118,6 +124,9 @@
 	(def dd_matrix discardMatrix)
 	(def ref Card discard[48])
 	(def int discardTotal)
+
+	# player meshes
+	(def dd_meshTexture playerMesh[2])
 
 	# players
 	(def int startingPlayer)

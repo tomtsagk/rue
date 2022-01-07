@@ -1,7 +1,7 @@
 (include "button.ddh")
 
 # create tile facing front
-(class_function Button void create (group)
+(class_function Button void create ()
 	(group
 
 	(dd_matrix_identity this)
@@ -21,6 +21,8 @@
 	(= this.pW 0.1)
 
 	(= this.pSize -5)
+
+	(= this.isDisabled 0)
 
 	)
 )
@@ -94,15 +96,16 @@
 ) # update
 
 # draw tile based on its side
-(class_function Button void applyTransform (group)
+(class_function Button void applyTransform ()
 	(group
 	(dd_translatef this.x this.y this.z)
 	)
 )
 
 # draw tile based on its side
-(class_function Button void applyMatrixTransform (group)
+(class_function Button void applyMatrixTransform ()
 	(group
+	(if this.isDisabled (return))
 	(dd_multMatrixf this)
 	(dd_rotatef this.idleRot 0 0 1)
 	(dd_scalef
@@ -114,14 +117,14 @@
 )
 
 # draw tile based on its side
-(class_function Button void drawRaw (group)
+(class_function Button void drawRaw ()
 	(group
 	(this.mesh.draw)
 	)
 )
 
 # draw tile based on its side
-(class_function Button void draw (group)
+(class_function Button void draw ()
 	(group
 	(dd_pushMatrix)
 	(this.applyTransform)
@@ -131,12 +134,12 @@
 	)
 )
 
-(class_function Button void clean (group)
+(class_function Button void clean ()
 	(group
 	)
 )
 
-(class_function Button int hasMouseCollided (group)
+(class_function Button int hasMouseCollided ()
 	(group
 
 	# get mouse's proportioned position
@@ -165,7 +168,7 @@
 	)
 )
 
-(class_function Button void resize (group)
+(class_function Button void resize ()
 	(group
 
 	# figure out if button should be smaller
@@ -176,5 +179,11 @@
 	(= this.x (* (dd_screen_width_get (* this.z -1)) (- this.pX 0.5)))
 	(= this.y (* (dd_screen_height_get (* this.z -1)) (- this.pY 0.5)))
 
+	)
+)
+
+(class_function Button void disable ()
+	(group
+	(= this.isDisabled 1)
 	)
 )

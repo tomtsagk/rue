@@ -6,10 +6,7 @@
 	(group
 
 	(= this.isUser 0)
-
-	# player itself
-	(this.mesh.load (asset "assets/character.asset" DD_PLY))
-	(this.mesh.loadTexture (asset "assets/character_1.asset" DD_PLY))
+	(= this.type -1)
 
 	# individual cards
 	(= this.cardsTotal 0)
@@ -29,6 +26,8 @@
 	#(dd_matrix_rotate this.selectedMatrix (- (dd_math_rand 20) 10) 0 0 1)
 
 	(= this.userLookingAtCard -1)
+
+	(= this.cardFronts 0)
 
 	)
 )
@@ -132,6 +131,13 @@
 	(if (>= this.cardsTotal 10)
 		(echo "CANNOT GIVE MORE CARDS")
 		(group
+
+		# test first AI
+		(if (== this.type 0)
+			(card.setFakeId card 0 this.cardFronts)
+		(== this.type 1)
+			(card.setFakeId card 1 (+ this.cardFronts 1))
+		)
 
 		(= this.cards[this.cardsTotal] card)
 		(= this.cardsTotal (+ this.cardsTotal 1))

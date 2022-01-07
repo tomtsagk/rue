@@ -2,52 +2,67 @@
 # project data
 #
 NAME=rue
-VERSION=v0.0.8
+VERSION=0.1.0
+REVISION=0
+
+#
+# system data
+#
+prefix=/usr/local
+assetdir=${prefix}/share/${NAME}/
+savedir=~/.${NAME}/saves/
+
+#
+# compiler flags
+#
+COMPILER_FLAGS= -I include/ --save-loc "${savedir}" --install-loc "${assetdir}" \
+	--game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
+LINKER_FLAGS= --game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
 
 #
 # directories - separate for native and android
 #
 DIRECTORY_NATIVE=build/native
 DIRECTORY_NATIVE_OBJ=${DIRECTORY_NATIVE}/objects
-DIRECTORY_NATIVE_ASSETS=${DIRECTORY_NATIVE}/output/assets
 DIRECTORY_NATIVE_OUT=${DIRECTORY_NATIVE}/output
-DIRECTORY_NATIVE_ALL=${DIRECTORY_NATIVE} ${DIRECTORY_NATIVE_OBJ} ${DIRECTORY_NATIVE_ASSETS} ${DIRECTORY_NATIVE_OUT}
+DIRECTORY_NATIVE_ALL=${DIRECTORY_NATIVE} ${DIRECTORY_NATIVE_OBJ} ${DIRECTORY_NATIVE_OUT}
 
 DIRECTORY_ANDROID=build/android
 DIRECTORY_ANDROID_OBJ=${DIRECTORY_ANDROID}/objects
+DIRECTORY_ANDROID_OUT=${DIRECTORY_ANDROID}/output
 DIRECTORY_ANDROID_ALL=${DIRECTORY_ANDROID} ${DIRECTORY_ANDROID_OBJ}
 
 DIRECTORY_ALL=${DIRECTORY_NATIVE_ALL} ${DIRECTORY_ANDROID_ALL}
 
 #
-# source files
+# source code files
 #
 SRC=$(wildcard src/*.dd)
 HEADERS=$(wildcard include/*.ddh)
+
+#
+# asset files
+#
 PLY=$(wildcard assets/*.ply)
 BMP=$(wildcard assets/*.bmp)
 WAV=$(wildcard assets/*.wav)
 OGG=$(wildcard assets/*.ogg)
+JSON=$(wildcard assets/*.json)
+ASSETS=${PLY} ${BMP} ${WAV} ${OGG} ${JSON}
 
 #
 # native output files
 #
 NATIVE_OBJ=${SRC:src/%.dd=${DIRECTORY_NATIVE_OBJ}/%.o}
 NATIVE_OBJ_C=${NATIVE_OBJ:%.o=%.c}
-NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}-${VERSION}.x86_64
-NATIVE_ASSETS_OBJ=${PLY:assets/%.ply=build/native/output/assets/%.asset} ${BMP:assets/%.bmp=build/native/output/assets/%.asset} \
-	${WAV:assets/%.wav=build/native/output/assets/%.asset} ${OGG:assets/%.ogg=build/native/output/assets/%.asset}
+NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}
+NATIVE_ASSETS=${ASSETS:assets/%=${DIRECTORY_NATIVE_OBJ}/%}
 
 #
 # android output files
 #
-ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.c}
-
-#
-# system data
-#
-prefix=/usr/local
-assetdir=${prefix}/share/rue/
+ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.o}
+ANDROID_ASSETS=${ASSETS:assets/%=${DIRECTORY_ANDROID_OBJ}/%}
 
 #
 # desktop application data
@@ -65,37 +80,31 @@ all: native
 #
 # how to make builds for native and android
 #
-native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ}
-android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ}
+native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS}
+
+android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
+	avdl --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ}
 
 #
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ -I include/ --install-loc "${assetdir}"
+	avdl -c $< -o $@ ${COMPILER_FLAGS}
 
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ply
-	avdl -c $< -o $@
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.bmp
-	avdl -c $< -o $@
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.wav
-	avdl -c $< -o $@
-
-${DIRECTORY_NATIVE_ASSETS}/%.asset: assets/%.ogg
-	avdl -c $< -o $@
-
+${DIRECTORY_NATIVE_OBJ}/%: assets/%
+	avdl -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o $@ ${avdlargs}
+	avdl $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS}
 
 #
 # android - compile files
 #
-${DIRECTORY_ANDROID_OBJ}/%.c: src/%.dd ${HEADERS}
-	avdl --android -t $< -o $@ -I include/
+${DIRECTORY_ANDROID_OBJ}/%.o: src/%.dd ${HEADERS}
+	avdl --android -c $< -o $@ -I include/
+
+${DIRECTORY_ANDROID_OBJ}/%: assets/%
+	avdl --android -c $< -o ${DIRECTORY_ANDROID_OUT} && touch $@
 
 #
 # make any directory needed
@@ -103,7 +112,7 @@ ${DIRECTORY_ANDROID_OBJ}/%.c: src/%.dd ${HEADERS}
 ${DIRECTORY_ALL}:
 	mkdir -p $@
 
-INSTALL_DIRS = ${DESTDIR}${prefix}/bin ${DESTDIR}${prefix}/share/rue/assets \
+INSTALL_DIRS = ${DESTDIR}${prefix}/bin ${DESTDIR}${prefix}/share/${NAME}/assets \
 	${DESTDIR}${prefix}/share/applications ${DESTDIR}${prefix}/share/metainfo \
 	${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/ \
 	${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/
@@ -112,16 +121,16 @@ ${INSTALL_DIRS}:
 	mkdir -p $@
 
 install: ${INSTALL_DIRS}
-	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/rue
-	install ${NATIVE_ASSETS_OBJ} ${DESTDIR}${prefix}/share/rue/assets
+	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/${NAME}
+	install ${NATIVE_ASSETS} ${DESTDIR}${prefix}/share/${NAME}/assets
 	install ${desktopfile} ${DESTDIR}${prefix}/share/applications
 	install ${metadatafile} ${DESTDIR}${prefix}/share/metainfo/
 	install ${icon128x128} ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
 	install ${icon64x64} ${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/org.darkdimension.rue.png
 
 uninstall:
-	rm -f ${DESTDIR}${prefix}/bin/rue
-	rm -rf ${DESTDIR}${prefix}/share/rue
+	rm -f ${DESTDIR}${prefix}/bin/${NAME}
+	rm -rf ${DESTDIR}${prefix}/share/${NAME}
 	rm -f ${DESTDIR}${prefix}/share/applications/org.darkdimension.rue.desktop
 	rm -f ${DESTDIR}${prefix}/share/metainfo/org.darkdimension.rue.metainfo.xml
 	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
@@ -131,7 +140,7 @@ uninstall:
 # clean project
 #
 clean:
-	rm -f ${NATIVE_OBJ} ${NATIVE_OUT} ${NATIVE_ASSETS_OBJ} ${NATIVE_OBJ_C}
+	rm -f ${NATIVE_OBJ} ${NATIVE_OUT} ${NATIVE_ASSETS} ${NATIVE_OBJ_C}
 
 #
 # phony targets
