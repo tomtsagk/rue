@@ -2,15 +2,15 @@
 # project data
 #
 NAME=rue
-VERSION=0.0.8
+VERSION=0.1.0
 REVISION=0
 
 #
 # system data
 #
 prefix=/usr/local
-assetdir=${prefix}/share/rue/
-savedir=~/.rue/saves/
+assetdir=${prefix}/share/${NAME}/
+savedir=~/.${NAME}/saves/
 
 #
 # compiler flags
@@ -112,7 +112,7 @@ ${DIRECTORY_ANDROID_OBJ}/%: assets/%
 ${DIRECTORY_ALL}:
 	mkdir -p $@
 
-INSTALL_DIRS = ${DESTDIR}${prefix}/bin ${DESTDIR}${prefix}/share/rue/assets \
+INSTALL_DIRS = ${DESTDIR}${prefix}/bin ${DESTDIR}${prefix}/share/${NAME}/assets \
 	${DESTDIR}${prefix}/share/applications ${DESTDIR}${prefix}/share/metainfo \
 	${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/ \
 	${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/
@@ -121,16 +121,16 @@ ${INSTALL_DIRS}:
 	mkdir -p $@
 
 install: ${INSTALL_DIRS}
-	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/rue
-	install ${NATIVE_ASSETS} ${DESTDIR}${prefix}/share/rue/assets
+	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/${NAME}
+	install ${NATIVE_ASSETS} ${DESTDIR}${prefix}/share/${NAME}/assets
 	install ${desktopfile} ${DESTDIR}${prefix}/share/applications
 	install ${metadatafile} ${DESTDIR}${prefix}/share/metainfo/
 	install ${icon128x128} ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
 	install ${icon64x64} ${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/org.darkdimension.rue.png
 
 uninstall:
-	rm -f ${DESTDIR}${prefix}/bin/rue
-	rm -rf ${DESTDIR}${prefix}/share/rue
+	rm -f ${DESTDIR}${prefix}/bin/${NAME}
+	rm -rf ${DESTDIR}${prefix}/share/${NAME}
 	rm -f ${DESTDIR}${prefix}/share/applications/org.darkdimension.rue.desktop
 	rm -f ${DESTDIR}${prefix}/share/metainfo/org.darkdimension.rue.metainfo.xml
 	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
