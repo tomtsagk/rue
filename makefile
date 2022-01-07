@@ -17,7 +17,8 @@ savedir=~/.${NAME}/saves/
 #
 COMPILER_FLAGS= -I include/ --save-loc "${savedir}" --install-loc "${assetdir}" \
 	--game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
-LINKER_FLAGS= --game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
+LINKER_FLAGS= --game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}" \
+	--install-loc "${assetdir}"
 
 #
 # directories - separate for native and android
@@ -122,7 +123,7 @@ ${INSTALL_DIRS}:
 
 install: ${INSTALL_DIRS}
 	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/${NAME}
-	install ${NATIVE_ASSETS} ${DESTDIR}${prefix}/share/${NAME}/assets
+	install ${DIRECTORY_NATIVE_OUT}/assets/* ${DESTDIR}${prefix}/share/${NAME}/assets
 	install ${desktopfile} ${DESTDIR}${prefix}/share/applications
 	install ${metadatafile} ${DESTDIR}${prefix}/share/metainfo/
 	install ${icon128x128} ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
