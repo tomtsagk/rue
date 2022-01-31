@@ -10,7 +10,7 @@ add_compile_definitions(
 )
 
 # add the executable
-add_executable(rue
+add_executable(rue WIN32
 	cengine/avdl_assetManager.c
 	cengine/avdl_data.c
 	cengine/avdl_localisation.c
