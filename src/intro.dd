@@ -1,4 +1,5 @@
 (include "intro.ddh")
+(include "menu.ddh")
 
 # Init intro
 (class_function world_intro void create (group)
@@ -90,7 +91,8 @@
 			(if (<= this.counter 0)
 				(group
 				(= this.counter 0)
-				(dd_world_prepareReady world_intro 1)
+				#(dd_world_prepareReady world_intro 1)
+				(dd_world_prepareReady world_menu 1)
 				(dd_clearColour 0 0 0 1)
 				)
 			)
