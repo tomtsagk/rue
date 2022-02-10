@@ -13,7 +13,7 @@
 
 	(dd_string3d_activate (asset "assets/letter_?.asset" PLY))
 
-	(dd_setGameTitle "Rue - v0.2.0 - alpha")
+	(dd_setGameTitle "Rue - v0.2.1 - alpha")
 	(dd_world_set_default world_intro)
 	#(dd_world_set_default world_game)
 	#(dd_world_set_default world_menu)
