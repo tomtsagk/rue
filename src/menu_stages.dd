@@ -234,7 +234,7 @@
 
 		(if (&& (>= i 0) (< i 5))
 			(if this.button[i].isDisabled
-				(this.font.draw "disabled")
+				(this.font.draw "locked")
 				(this.font.drawInt i)
 			)
 		# else
@@ -258,17 +258,35 @@
 		(if 0#this.isMovingToNewWorld
 			(this.font.drawLimit "loading" limit)
 		(== this.selection 0)
-			(this.font.drawLimit "not available yet" limit)
+			(if this.button[this.selection].isDisabled
+				(this.font.drawLimit "play previous stage to unlock" limit)
+				(this.font.drawLimit "stage 1" limit)
+			)
 		(== this.selection 1)
-			(this.font.drawLimit "not available yet" limit)
+			(if this.button[this.selection].isDisabled
+				(this.font.drawLimit "play previous stage to unlock" limit)
+				(this.font.drawLimit "stage 2" limit)
+			)
 		(== this.selection 2)
-			(this.font.drawLimit "not available yet" limit)
+			(if this.button[this.selection].isDisabled
+				(this.font.drawLimit "play previous stage to unlock" limit)
+				(this.font.drawLimit "stage 3" limit)
+			)
 		(== this.selection 3)
-			(this.font.drawLimit "not available yet" limit)
+			(if this.button[this.selection].isDisabled
+				(this.font.drawLimit "play previous stage to unlock" limit)
+				(this.font.drawLimit "stage 4" limit)
+			)
 		(== this.selection 4)
-			(this.font.drawLimit "not available yet" limit)
-		(== this.selection 5)
-			(this.font.drawLimit "not available yet" limit)
+			(if this.button[this.selection].isDisabled
+				(this.font.drawLimit "play previous stage to unlock" limit)
+				(this.font.drawLimit "stage 5" limit)
+			)
+#		(== this.selection 5)
+#			(if this.button[this.selection].isDisabled
+#				(this.font.drawLimit "play previous stage to unlock" limit)
+#				(this.font.drawLimit "stage 6" limit)
+#			)
 			(this.font.drawLimit "back to main menu" limit)
 		)
 
@@ -331,7 +349,8 @@
 
 		# clicked on a button
 		(if (&& (== this.selection this.selectionClick)
-			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+			(>= this.selection 0) (this.button[this.selection].hasMouseCollided)
+			(== this.button[this.selection].isDisabled 0))
 			(group
 
 			# stage 1
@@ -341,7 +360,7 @@
 				# 2 enemies - both move rose one step
 				(= numberOfPlayers 3)
 				(= startingPlayer 0)
-				(= guide -1)
+				(= guide 10)
 				(= playerAi[1] 0)
 				(= playerAi[2] 0)
 				(= stageId 0)
@@ -360,7 +379,7 @@
 				(= playerAi[1] 0)
 				(= playerAi[2] 0)
 				(= playerAi[3] 0)
-				(= stageId 0)
+				(= stageId 1)
 
 				(this.disable)
 				(return 1)
@@ -373,10 +392,10 @@
 				# 2 move rose three steps
 				(= numberOfPlayers 3)
 				(= startingPlayer 0)
-				(= guide -1)
+				(= guide 11)
 				(= playerAi[1] 1)
 				(= playerAi[2] 1)
-				(= stageId 0)
+				(= stageId 2)
 
 				(this.disable)
 				(return 1)
@@ -394,7 +413,7 @@
 				(= playerAi[1] 0)
 				(= playerAi[2] 0)
 				(= playerAi[3] 1)
-				(= stageId 0)
+				(= stageId 3)
 
 				(this.disable)
 				(return 1)
@@ -413,7 +432,7 @@
 				(= playerAi[2] 1)
 				(= playerAi[3] 1)
 				(= playerAi[4] 0)
-				(= stageId 0)
+				(= stageId 4)
 
 				(this.disable)
 				(return 1)

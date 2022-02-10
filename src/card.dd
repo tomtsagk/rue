@@ -160,6 +160,20 @@
 			"they win"
 			)
 		)
+	# tutorial - ai 1
+	(== this.id 15)
+		(= this.cardDescription (multistring
+			"The first enemy is called the childish king "
+			"he will only play a card to move the rose one step"
+			)
+		)
+	# tutorial - ai 2
+	(== this.id 16)
+		(= this.cardDescription (multistring
+			"The second enemy is called the blurry scream "
+			"it will only play a card to move the rose three steps"
+			)
+		)
 	# else
 		(= this.cardDescription "no description")
 	)
