@@ -103,25 +103,37 @@
 		(multistring
 			"AVDL_IN vec4 position;\n"
 			"AVDL_IN vec3 colour;\n"
+			"AVDL_IN vec2 texCoord;\n"
 
 			"uniform mat4 matrix;\n"
 			"uniform vec3 tint;\n"
 
+			"AVDL_OUT vec2 outTexCoord;\n"
 			"AVDL_OUT vec4 outColour;\n"
 
 			"void main() {\n"
 			"	vec4 pos = matrix *position;\n"
 			"       gl_Position = pos;\n"
 			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
+			"	outTexCoord  = texCoord;\n"
 			"}\n"
 		)
 	)
 	(this.buttonProgram.setFragmentShader
 		(multistring
 			"AVDL_IN vec4 outColour;\n"
+			"AVDL_IN vec2 outTexCoord;\n"
+
+			"uniform sampler2D image;\n"
 
 			"void main() {\n"
-			"       avdl_frag_color = outColour;\n"
+			"	avdl_frag_color = outColour +avdl_texture(image, outTexCoord);\n"
+
+			# For some reason the following line makes the shader to not compile on the following system:
+			#  GeForce GTX 960/PCIe/SSE2
+			#  GL version: 4.6.0 NVIDIA 456.71
+			#  glsl version: 4.60 NVIDIA
+			#"	avdl_frag_color = outColour;\n"
 			"}\n"
 		)
 	)
