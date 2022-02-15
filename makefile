@@ -2,7 +2,7 @@
 # project data
 #
 NAME=rue
-VERSION=0.2.1
+VERSION=0.2.2
 REVISION=0
 
 #

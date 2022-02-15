@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(rue VERSION 1.0)
+project(rue VERSION 0.2.2)
 
 # compile for windows, with dynamic location
 add_compile_definitions(
@@ -37,7 +37,6 @@ add_executable(rue WIN32
 	cengine/dd_vec4.c
 	cengine/dd_world.c
 	cengine/main.c
-	cengine/whereami.c
 	src/button.c
 	src/card.c
 	src/game.c
@@ -106,6 +105,7 @@ install(FILES
 	assets/card_win.asset
 	assets/character.asset
 	assets/character_1.asset
+	assets/character_2.asset
 	assets/dd_theme.asset
 	assets/eye.asset
 	assets/letter_0.asset
@@ -165,9 +165,6 @@ install(FILES
 include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_VENDOR "Dark Dimension")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "1")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A card game about deduction, love and regret")
 set(CPACK_PACKAGE_DESCRIPTION "A card game where all the players are sitting around a table. A rose appears on the table that moves around.")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://darkdimension.org/games/rue.html")
