@@ -10,7 +10,7 @@
 	(def avdl_localisation localisation)
 
 	# logo
-	(def dd_meshTexture logo)
+	(def dd_meshColour logo)
 
 	# home buttons
 	(def Button button[4])

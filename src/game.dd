@@ -1265,7 +1265,11 @@
 (class_function world_game void key_input (group char key)
 	(group
 	(if (== key 27)
-		(= dd_flag_exit 1) # exit game
+		(group
+		#(= dd_flag_exit 1) # exit game
+		(dd_world_prepare world_menu 1.0)
+		(dd_world_ready)
+		)
 	) # key input
 	)
 )
