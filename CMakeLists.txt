@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(rue VERSION 0.2.2)
+project(rue VERSION 0.2.3)
 
 # compile for windows, with dynamic location
 add_compile_definitions(
