@@ -86,7 +86,8 @@
 
 	# stage
 	(this.stage.load (asset "assets/stage_2.asset" DD_PLY))
-	(this.table.load (asset "assets/table_1.asset" DD_PLY))
+	(this.table.load (asset "assets/table_2.asset" DD_PLY))
+	(this.table.loadTexture (asset "assets/table-rose.asset" DD_PLY))
 	(this.tableArrow.load (asset "assets/table_arrow.asset" DD_PLY))
 	(this.tableArrowDecoration.load (asset "assets/table_arrow_decoration.asset" DD_PLY))
 
