@@ -96,7 +96,7 @@
 
 	# stage
 	(def dd_meshColour stage)
-	(def dd_meshColour table)
+	(def dd_meshTexture table)
 	(def dd_meshColour tableArrow)
 	(def dd_meshColour tableArrowDecoration)
 	(def float arrowRotation)
