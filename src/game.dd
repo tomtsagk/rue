@@ -389,6 +389,8 @@
 
 (class_function world_game void onload (group)
 	(group
+	(this.theme.load (asset "assets/game_theme.asset" DD_PLY) 0)
+	(this.theme.playLoop -1)
 	)
 )
 
@@ -1277,6 +1279,7 @@
 
 (class_function world_game void clean (group)
 	(group
+	(this.theme.stop)
 	)
 )
 
