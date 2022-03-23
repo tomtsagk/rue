@@ -73,7 +73,7 @@
 
 			(if (&& (> this.counter 0.25) (== this.soundPlayed 0))
 				(group
-				#(this.sound.play)
+				(this.sound.play)
 				(= this.soundPlayed 1)
 				)
 			)

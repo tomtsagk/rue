@@ -29,6 +29,9 @@
 	(def menu_custom_game menuCustomGame)
 	(def menu_stages menuStages)
 
+	# theme
+	(def dd_sound theme)
+
 	(function void create (group))
 	(function void onload (group))
 	(function void resize (group))
