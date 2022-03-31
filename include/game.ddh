@@ -108,7 +108,7 @@
 
 	# cards
 	(def int cardsTotal)
-	(def Card cards[48])
+	(def Card cards[53])
 
 	# tutorial cards
 	(def int guide)
@@ -117,12 +117,12 @@
 
 	# deck
 	(def dd_matrix deckMatrix)
-	(def ref Card deck[48])
+	(def ref Card deck[53])
 	(def int deckTotal)
 
 	# discard
 	(def dd_matrix discardMatrix)
-	(def ref Card discard[48])
+	(def ref Card discard[53])
 	(def int discardTotal)
 
 	# player meshes

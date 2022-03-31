@@ -47,6 +47,7 @@
 	(function void planCard (group int index))
 	(function void selectCard (group))
 	(function void deselectCard (group))
+	(function int hasPlannedCard ())
 
 	(function void lookAtCard (group float rotX float rotY))
 
