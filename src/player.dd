@@ -132,11 +132,15 @@
 		(echo "CANNOT GIVE MORE CARDS")
 		(group
 
-		# test first AI
-		(if (== this.type 0)
-			(card.setFakeId card 0 this.cardFronts)
-		(== this.type 1)
-			(card.setFakeId card 1 (+ this.cardFronts 1))
+		# test first AI - do not attempt to fake the rose
+		(if (== card.id 9)
+			(group
+			)
+			(if (== this.type 0)
+				(card.setFakeId card 0 this.cardFronts)
+			(== this.type 1)
+				(card.setFakeId card 1 (+ this.cardFronts 1))
+			)
 		)
 
 		(= this.cards[this.cardsTotal] card)
@@ -367,6 +371,15 @@
 	(group
 	(= this.selectedCard -1)
 	(= this.selectedCard2 0)
+	)
+)
+
+(class_function Player int hasPlannedCard (group)
+	(group
+	(if (== this.selectedCard2 0)
+		(return 0)
+		(return 1)
+	)
 	)
 )
 

@@ -35,6 +35,7 @@
 	(function void setId (group int id))
 	(function void setFakeId (group int id dd_meshTexture mesh))
 	(function void clearFakeId (group))
+	(function int getId ())
 
 	)
 ) # card
