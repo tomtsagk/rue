@@ -104,7 +104,7 @@
 
 	# card meshes
 	(def dd_meshTexture cardBack)
-	(def dd_meshTexture cardFront[10])
+	(def dd_meshTexture cardFront[15])
 
 	# cards
 	(def int cardsTotal)

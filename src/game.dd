@@ -133,6 +133,21 @@
 	(this.cardFront[9].load (asset "assets/card.asset" DD_PLY))
 	(this.cardFront[9].loadTexture (asset "assets/card_tutorial.asset" DD_PLY))
 
+	(this.cardFront[10].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[10].loadTexture (asset "assets/card_ignore_move.asset" DD_PLY))
+
+	(this.cardFront[11].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[11].loadTexture (asset "assets/card_next_hand.asset" DD_PLY))
+
+	(this.cardFront[12].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[12].loadTexture (asset "assets/card_empty.asset" DD_PLY))
+
+	(this.cardFront[13].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[13].loadTexture (asset "assets/card_hold_one_step.asset" DD_PLY))
+
+	(this.cardFront[14].load (asset "assets/card.asset" DD_PLY))
+	(this.cardFront[14].loadTexture (asset "assets/card_rose_seeker.asset" DD_PLY))
+
 	# cards
 	(= this.cardsTotal 53)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
@@ -223,7 +238,7 @@
 	(for (def int i 35) (< i (+ 35 5)) (= i (+ i 1))
 		(group
 		(this.cards[i].setId CARD_HOLD_ONE_STEP)
-		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].mesh this.cardFront[13])
 		)
 	)
 
@@ -231,7 +246,7 @@
 	(for (def int i 40) (< i (+ 40 3)) (= i (+ i 1))
 		(group
 		(this.cards[i].setId CARD_NEXT_HAND)
-		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].mesh this.cardFront[11])
 		)
 	)
 
@@ -239,7 +254,7 @@
 	(for (def int i 43) (< i (+ 43 3)) (= i (+ i 1))
 		(group
 		(this.cards[i].setId CARD_IGNORE_MOVE)
-		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].mesh this.cardFront[10])
 		)
 	)
 
@@ -247,7 +262,7 @@
 	(for (def int i 46) (< i (+ 46 3)) (= i (+ i 1))
 		(group
 		(this.cards[i].setId CARD_ROSE_HELD_STEAL)
-		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].mesh this.cardFront[14])
 		)
 	)
 
@@ -255,7 +270,7 @@
 	(for (def int i 49) (< i (+ 49 4)) (= i (+ i 1))
 		(group
 		(this.cards[i].setId CARD_EMPTY)
-		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].mesh this.cardFront[12])
 		)
 	)
 
