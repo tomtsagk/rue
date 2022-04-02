@@ -27,6 +27,53 @@
 	(this.font.setColorFront 0.0 0.0 0.0)
 	(this.font.setColorBack 0.0 0.0 0.0)
 
+	(this.logoProgram.setVertexShader
+		(multistring
+			"AVDL_IN vec4 position;\n"
+			"AVDL_IN vec3 colour;\n"
+
+			"uniform mat4 matrix;\n"
+			"uniform float anim;\n"
+
+			"AVDL_OUT vec4 outColour;\n"
+
+			"void main() {\n"
+			"	vec4 pos = matrix *position;\n"
+
+			# waves
+			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
+			"	float anim2 = mod(anim *4.0 +(pos.y *0.5), 1.0);\n"
+			"	pos.x += cos(anim2 *2.0 *3.14) *(1 -anim);\n"
+
+			# twirl
+#			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
+#			"	float anim2 = max(min(((1 -anim) *7.2 -distance), 1.0), 0.0);\n"
+#			"	float degrees = ((anim2 *1.0) *2.0 *3.14);\n"
+#			"	float x1 = pos.x;\n"
+#			"	float y1 = pos.y;\n"
+#			"	pos.x = (cos(degrees) *x1 -sin(degrees) *y1);\n"
+#			"	pos.y = (sin(degrees) *x1 +cos(degrees) *y1);\n"
+#			"	pos.x *= max((distance -(anim2 *8.0)) /distance, 0.0);\n"
+#			"	pos.y *= max((distance -(anim2 *8.0)) /distance, 0.0);\n"
+
+			"       gl_Position = pos;\n"
+			"       outColour = vec4(colour.rgb, 1.0);\n"
+			"}\n"
+		)
+	)
+	(this.logoProgram.setFragmentShader
+		(multistring
+			"AVDL_IN vec4 outColour;\n"
+
+			"void main() {\n"
+			"	avdl_frag_color = outColour;\n"
+			"}\n"
+		)
+	)
+
+	(= this.logoAnim 0)
+	(= this.logoAnimPositive 1)
+
 	)
 ) # create
 
@@ -56,6 +103,11 @@
 # update - update animations
 (class_function world_intro void update (group)
 	(group
+
+	(if this.logoAnimPositive
+		(= this.logoAnim (dd_math_min (+ this.logoAnim 0.01) 1))
+		(= this.logoAnim (dd_math_max (- this.logoAnim 0.02) 0))
+	)
 
 	# on delay do nothing
 	(if (> this.delay 0)
@@ -87,6 +139,7 @@
 			)
 		# negative advance of animation
 			(group
+			(= this.logoAnimPositive 0)
 			(= this.counter (- this.counter 0.02))
 			(if (<= this.counter 0)
 				(group
@@ -113,11 +166,16 @@
 
 	(dd_translatef 0 0 -5)
 	(dd_scalef this.scale this.scale this.scale)
-	(dd_translatef 0 0.5 0)
+	(dd_translatef 0 0 0)
+	(this.logoProgram.useProgram)
+	(def int colLoc)
+	(= colLoc (avdl_getUniformLocation this.logoProgram "anim"))
+	(avdl_setUniform1f colLoc this.logoAnim)
 	(this.logo.draw)
-	(dd_translatef 0 -1.5 0)
-	(dd_scalef 0.8 0.8 0.1)
-	(this.font.draw "dark dimension")
+	(avdl_useProgram 0)
+	#(dd_translatef 0 -1.5 0)
+	#(dd_scalef 0.8 0.8 0.1)
+	#(this.font.draw "dark dimension")
 
 	)
 )
