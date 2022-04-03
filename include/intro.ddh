@@ -17,6 +17,10 @@
 
 	(def dd_string3d font)
 
+	(def avdl_program logoProgram)
+	(def float logoAnim)
+	(def float logoAnimPositive)
+
 	# constractor
 	(function void create (group))
 	(function void onload (group))
