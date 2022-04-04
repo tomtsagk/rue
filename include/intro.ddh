@@ -20,6 +20,7 @@
 	(def avdl_program logoProgram)
 	(def float logoAnim)
 	(def float logoAnimPositive)
+	(def float shaderTime)
 
 	# constractor
 	(function void create (group))
