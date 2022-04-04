@@ -34,6 +34,7 @@
 
 			"uniform mat4 matrix;\n"
 			"uniform float anim;\n"
+			"uniform float time;\n"
 
 			"AVDL_OUT vec4 outColour;\n"
 
@@ -43,7 +44,9 @@
 			# waves
 			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
 			"	float anim2 = mod(anim *4.0 +(pos.y *0.5), 1.0);\n"
-			"	pos.x += cos(anim2 *2.0 *3.14) *(1 -anim);\n"
+			"	float fuzz = mod(int(time *10) *distance /3.14, 0.03);\n"
+			"	pos.x += cos(anim2 *2.0 *3.14) *(1 -anim) +fuzz;\n"
+			"	pos.y += fuzz;\n"
 
 			# twirl
 #			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
@@ -73,6 +76,7 @@
 
 	(= this.logoAnim 0)
 	(= this.logoAnimPositive 1)
+	(= this.shaderTime 0)
 
 	)
 ) # create
@@ -103,6 +107,9 @@
 # update - update animations
 (class_function world_intro void update (group)
 	(group
+
+	# update shader time
+	(= this.shaderTime (+ this.shaderTime 0.01))
 
 	(if this.logoAnimPositive
 		(= this.logoAnim (dd_math_min (+ this.logoAnim 0.01) 1))
@@ -171,6 +178,9 @@
 	(def int colLoc)
 	(= colLoc (avdl_getUniformLocation this.logoProgram "anim"))
 	(avdl_setUniform1f colLoc this.logoAnim)
+	(def int sdrTimeLoc)
+	(= sdrTimeLoc (avdl_getUniformLocation this.logoProgram "time"))
+	(avdl_setUniform1f sdrTimeLoc this.shaderTime)
 	(this.logo.draw)
 	(avdl_useProgram 0)
 	#(dd_translatef 0 -1.5 0)
