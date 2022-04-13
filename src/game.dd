@@ -694,7 +694,7 @@
 				)
 			# AI has to select a card or user selects randomly
 				(group
-				(= this.lastSelectedCardPlayerIndex this.actions[0].playerIndex)
+				(= this.lastSelectedCardPlayerIndex this.actions[0].value)
 				(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
 				(= this.actions[0].actionType ACTION_DELAY)
 				#(this.player[this.actions[0].playerIndex].selectCard)
@@ -796,9 +796,18 @@
 				(== cardId CARD_TRADE)
 					(group
 
+					# the active player is the flirt - make the rose flat,
+					# the rest of the effect is skipped
 					(if (== this.rosePlayer this.actions[0].playerIndex)
 						(group
+						(if (== this.isRoseFlat 0)
+							(group
+							(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+							(this.injectActionsToActions)
+							)
 						)
+						)
+					# the active player is NOT the flirt - continue with effect
 						(group
 
 						# rose player picks up rose
@@ -812,7 +821,14 @@
 
 						# rose player selects and gives a card to active player
 						# TODO: should be given a card at random, rose player doesn't select
-						(this.addInjectAction ACTION_SELECT_CARD this.rosePlayer this.rosePlayer 0)
+						(this.addInjectAction ACTION_SELECT_CARD this.actions[0].playerIndex this.rosePlayer 0)
+
+						# if rose was selected, take an additional card
+						(this.addInjectAction ACTION_IF_SELECTED_CARD_EQUALS 0 CARD_ROSE 0)
+						(this.addInjectAction ACTION_GIVE_CARD this.actions[0].playerIndex 0 50)
+						(this.addInjectAction ACTION_SELECT_CARD this.actions[0].playerIndex this.rosePlayer 0)
+						(this.addInjectAction ACTION_ENDIF 0 0 0)
+
 						(this.addInjectAction ACTION_GIVE_CARD this.actions[0].playerIndex 0 50)
 
 						# move rose one step

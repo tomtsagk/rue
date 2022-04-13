@@ -63,9 +63,11 @@
 		(= this.cardDescription "move the rose 3 steps")
 	(== this.id 2)
 		(= this.cardDescription (multistring
-			"The rose player grabs the rose then"
+			"The rose player grabs the rose then "
 			"give a card to the rose player and "
-			"receive a random card back then "
+			"receive a random card back   "
+			"if the rose was picked receive an "
+			"additional card   "
 			"move the rose 1 step "
 			)
 		)
