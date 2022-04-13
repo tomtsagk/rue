@@ -38,6 +38,9 @@
 	(def int enabled)
 	(def float animationOpen)
 
+	# button sounds
+	(def dd_sound hoverSound)
+
 	(function void create (group))
 	(function void resize (group))
 	(function void update (group))
