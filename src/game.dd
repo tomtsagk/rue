@@ -445,6 +445,9 @@
 	(= this.arrowCurrentCol[1] 0.0)
 	(= this.arrowCurrentCol[2] 0.0)
 
+	(= this.arrowRotation 0)
+	(= this.arrowRotationTarget 0)
+
 	)
 )
 
