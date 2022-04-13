@@ -138,6 +138,8 @@
 	(= this.enabled 0)
 	(= this.animationOpen 0)
 
+	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY) 0)
+
 	)
 )
 
@@ -171,9 +173,14 @@
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group
 
-		(if (this.button[i].hasMouseCollided)
+		(if (== this.selection i)
 			(group
-			(= this.selection i)
+			)
+			(if (this.button[i].hasMouseCollided)
+				(group
+				(this.hoverSound.play)
+				(= this.selection i)
+				)
 			)
 		)
 
