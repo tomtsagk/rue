@@ -71,10 +71,10 @@
 		)
 	(== this.id 3)
 		(= this.cardDescription (multistring
-			"if the rose is 1 step before you "
-			"move it 1 step "
+			"if the previous player is the flirt "
+			"move the Rose 1 step "
 			"otherwise "
-			"move it 3 steps"
+			"move the Rose 3 steps"
 			)
 		)
 	(== this.id 4)

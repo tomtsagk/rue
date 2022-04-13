@@ -824,7 +824,7 @@
 					)
 
 					)
-				# If rose is one step before active user, move it one step, otherwise move it three steps
+				# if previous player is the flirt, move Rose one step, otherwise three steps
 				(== cardId CARD_CONDITIONAL)
 					(group
 					(def int onePreviousIndex (% (- (+ this.actions[0].playerIndex this.playersTotal) 1) this.playersTotal))
