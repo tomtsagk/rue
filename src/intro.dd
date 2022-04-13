@@ -67,9 +67,21 @@
 	(this.logoProgram.setFragmentShader
 		(multistring
 			"AVDL_IN vec4 outColour;\n"
+			"uniform float anim;\n"
 
 			"void main() {\n"
-			"	avdl_frag_color = outColour;\n"
+			"	vec4 col = outColour;\n"
+
+			# squares
+#			"	col.a = (float(mod(gl_FragCoord.x, 100)) "
+#				" +float(mod(gl_FragCoord.y, 100))) /200.0 "
+#				" -(0.1 *(mod(gl_FragCoord.x, 500) /100.0)) "
+#				" -(0.5 *(mod(gl_FragCoord.y, 500) /100.0)) "
+#				" -1.0 +(4.4 *anim);\n"
+#			"	if (col.a < 0.9) {\n"
+#			"		discard;\n"
+#			"	}\n"
+			"	avdl_frag_color = col;\n"
 			"}\n"
 		)
 	)
