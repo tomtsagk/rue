@@ -1,0 +1,37 @@
+(include "button.ddh")
+
+# credits world
+(class world_credits dd_world
+	(group
+
+	# background
+	(def dd_meshColour bg)
+
+	# font
+	(def dd_string3d font)
+
+	# credits anchor
+	(def Button anchorCredits)
+
+	# back button
+	(def avdl_program buttonProgram)
+	(def Button button[1])
+	(def int buttonTotal)
+	(def float buttonClickCol[3])
+	(def float buttonActiveCol[3])
+	(def float buttonInactiveCol[3])
+
+	(def int selection)
+	(def int selectionClick)
+
+	(function void create ())
+	(function void onload ())
+	(function void resize ())
+	(function void update ())
+	(function void draw ())
+	(function void key_input (group char key))
+	(function void mouse_input (group int button int type))
+	(function void clean ())
+
+	)
+) # credits world

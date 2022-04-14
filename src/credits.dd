@@ -1,0 +1,263 @@
+(include "credits.ddh")
+(include "menu.ddh")
+
+(class_function world_credits void create ()
+	(group
+
+	# background
+	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
+
+	# font
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setColorFront 0.8 0.8 0.8)
+	(this.font.setColorBack 0.3 0.3 0.3)
+
+	(this.anchorCredits.setSize 1 1)
+	(this.anchorCredits.setProportionalPosition 0.5 0.5)
+	(this.anchorCredits.setProportionalWidth 0.1)
+	(this.anchorCredits.setProportionalSize 1.0)
+
+	(= this.buttonTotal 1)
+
+	(this.button[0].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[0].setSize 1 1)
+	(this.button[0].setProportionalPosition 0.12 0.15)
+	(this.button[0].setProportionalWidth 0.2)
+
+	(this.buttonProgram.setVertexShader
+		(multistring
+			"AVDL_IN vec4 position;\n"
+			"AVDL_IN vec3 colour;\n"
+
+			"uniform mat4 matrix;\n"
+			"uniform vec3 tint;\n"
+
+			"AVDL_OUT vec4 outColour;\n"
+
+			"void main() {\n"
+			"	vec4 pos = matrix *position;\n"
+			"       gl_Position = pos;\n"
+			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
+			"}\n"
+		)
+	)
+	(this.buttonProgram.setFragmentShader
+		(multistring
+			"AVDL_IN vec4 outColour;\n"
+
+			"void main() {\n"
+			"	avdl_frag_color = outColour;\n"
+			"}\n"
+		)
+	)
+
+	(= this.buttonClickCol[0] 0.389)
+	(= this.buttonClickCol[1] 0.055)
+	(= this.buttonClickCol[2] 0.682)
+
+	(= this.buttonActiveCol[0] 0.916)
+	(= this.buttonActiveCol[1] 0.516)
+	(= this.buttonActiveCol[2] 0.074)
+
+	(= this.buttonInactiveCol[0] 0.694)
+	(= this.buttonInactiveCol[1] 0.137)
+	(= this.buttonInactiveCol[2] 0.137)
+
+	(= this.selection 0)
+	(= this.selectionClick -1)
+
+	)
+)
+
+(class_function world_credits void onload ()
+	(group
+	#(this.theme.load (asset "assets/main_menu_theme.asset" DD_PLY) 0)
+	#(this.theme.playLoop -1)
+	)
+)
+
+(class_function world_credits void resize ()
+	(group
+	(this.anchorCredits.resize)
+	(this.button[0].resize)
+	)
+)
+
+(class_function world_credits void update ()
+	(group
+
+	# check if mouse is hovering over a button
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			)
+		)
+
+		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+
+		)
+	)
+
+	)
+) # update
+
+(class_function world_credits void draw ()
+	(group
+
+	# draw background
+	(dd_matrix_push)
+	(dd_translatef 0 -3 -8)
+	(dd_rotatef 15 -1 0 0)
+	(this.bg.draw)
+	(dd_matrix_pop)
+
+	(glClear GL_DEPTH_BUFFER_BIT)
+
+	(dd_matrix_push)
+	(dd_translatef 0 0 -5)
+	(this.anchorCredits.applyTransform)
+	(this.anchorCredits.applyMatrixTransform)
+	(dd_translatef 0 2.8 1)
+	(this.font.draw "credits")
+	(dd_translatef 0 -1.5 0)
+	(this.font.draw "tom tsagk")
+	(dd_translatef 0 -1 0)
+	(this.font.draw "programmer")
+	(dd_translatef 0 -1.5 0)
+	(this.font.draw "shiitakespacewarrior")
+	(dd_translatef 0 -1 0)
+	(this.font.draw "audio engineer")
+	(dd_matrix_pop)
+
+	# draw buttons
+	(this.buttonProgram.useProgram)
+	(def int colLoc)
+	(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+		(dd_matrix_push)
+
+		# change the shader colour when clicked
+		(if (> this.button[i].idleCol 1.0)
+			(avdl_setUniform3f colLoc
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[0] this.buttonClickCol[0]
+				)
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[1] this.buttonClickCol[1]
+				)
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[2] this.buttonClickCol[2]
+				)
+			)
+		# change colour when selected
+			(avdl_setUniform3f colLoc
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
+			)
+		)
+
+		(this.button[i].applyTransform)
+		(this.button[i].applyMatrixTransform)
+#		(def float anim)
+#		# big numbers make animation faster, but blends less together (max 4 - number of buttons)
+#		# small numbers make animation slower. At 1.0, all buttons animate together
+#		(def float animationSpeed 2.0)
+#		(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
+#		(= anim (dd_math_min
+#				(dd_math_max
+#					(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
+#					0
+#				)
+#				1
+#			)
+#		)
+#		(dd_scalef anim anim anim)
+		(this.button[i].drawRaw)
+
+		(dd_translatef 0 0 0.1)
+		(dd_scalef 0.2 0.2 0.2)
+
+		(if (== i 0)
+			(this.font.draw "back")
+			(this.font.draw "back")
+		)
+
+		(dd_matrix_pop)
+		)
+	)
+	(avdl_useProgram 0)
+
+	)
+)
+
+(class_function world_credits void key_input (group char key)
+	(group
+	(if (== key 27)
+		(= dd_flag_exit 1) # exit game
+	) # key input
+	)
+)
+
+(class_function world_credits void clean ()
+	(group
+	)
+)
+
+(class_function world_credits void mouse_input (group int button int type)
+	(group
+
+	# re-check selection, this allows the user to directly click on a button
+	# in a touch screen device
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			)
+		)
+
+		)
+	)
+
+	# control the camera look at point when click and dragging
+	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+		(group
+		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+			(= this.selectionClick this.selection)
+		)
+		)
+	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+		(group
+
+		# clicked on a button
+		(if (&& (== this.selection this.selectionClick)
+			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+			(group
+
+			(if (== this.selectionClick 0)
+				(group
+				(dd_world_prepare world_menu 1.0)
+				(dd_world_ready)
+				)
+			)
+
+			)
+		)
+
+		(= this.selectionClick -1)
+
+		)
+	) # mouse button released
+
+	(return 0)
+	)
+) # mouse input
