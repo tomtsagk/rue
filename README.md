@@ -9,7 +9,7 @@ The aim of the game is for each player to have the rose in front of them at the 
 
 This game is currently in Alpha and still under active development. 
 
-Visit its official page here: [Rue by Dark Dimension](https://darkdimension.org/games/rue)
+Visit its official page here: [Rue by Dark Dimension](https://darkdimension.org/games/rue.html)
 
 ## Available on these Linux Distros
 
@@ -102,3 +102,9 @@ These files can then be put in the Android project inside [avdl](https://github.
 `engines/android`), together with the assets, and be build.
 
 The last step is not very automated, and is planned to be improved.
+
+## Credits
+
+Thanks to the following people for contributing on this project:
+
+* [shiitakespacewarrior](https://soundcloud.com/shiitakespacewarrior) - For creating awesome music and sound effects for the game

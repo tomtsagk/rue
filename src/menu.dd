@@ -1,5 +1,6 @@
 (include "menu.ddh")
 (include "game.ddh")
+(include "credits.ddh")
 
 (function float particleMovementY (group float t)
 	(group
@@ -216,6 +217,12 @@
 		(== returnMenu 3)
 			(group
 			(this.opt.enable)
+			)
+		# credits
+		(== returnMenu 4)
+			(group
+			(dd_world_prepare world_credits 1.0)
+			(dd_world_ready)
 			)
 		)
 		)

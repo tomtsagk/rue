@@ -13,7 +13,7 @@
 	(def dd_meshColour logo)
 
 	# home buttons
-	(def Button button[4])
+	(def Button button[5])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
 	(def float buttonClickCol[3])

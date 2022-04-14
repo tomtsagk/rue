@@ -6,5 +6,7 @@
 	"menu_exit": "Exit",
 	"menu_exit_desc": "Exit game",
 	"menu_options": "Options",
-	"menu_options_desc": "Open and modify game settings"
+	"menu_options_desc": "Open and modify game settings",
+	"menu_credits": "Credits",
+	"menu_credits_desc": "Meet the creators"
 }
