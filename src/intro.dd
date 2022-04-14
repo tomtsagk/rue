@@ -44,7 +44,7 @@
 			# waves
 			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
 			"	float anim2 = mod(anim *4.0 +(pos.y *0.5), 1.0);\n"
-			"	float fuzz = mod(int(time *10) *distance /3.14, 0.03);\n"
+			"	float fuzz = mod(int(time *10) *distance /3.14 +0.015, 0.03);\n"
 			"	pos.x += cos(anim2 *2.0 *3.14) *(1 -anim) +fuzz;\n"
 			"	pos.y += fuzz;\n"
 
