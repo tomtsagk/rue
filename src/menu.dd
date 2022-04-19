@@ -146,7 +146,7 @@
 	(dd_matrix_pop)
 
 	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
+	(avdl_clear_depth)
 
 	# draw eyes
 	(dd_matrix_push)
@@ -162,7 +162,7 @@
 	(dd_matrix_pop)
 
 	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
+	(avdl_clear_depth)
 
 	(this.menuCustomGame.draw)
 	(this.menuHome.draw)

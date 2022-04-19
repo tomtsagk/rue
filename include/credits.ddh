@@ -13,16 +13,10 @@
 	# credits anchor
 	(def Button anchorCredits)
 
-	# back button
-	(def avdl_program buttonProgram)
-	(def Button button[1])
-	(def int buttonTotal)
-	(def float buttonClickCol[3])
-	(def float buttonActiveCol[3])
-	(def float buttonInactiveCol[3])
+	# main credits animation
+	(def float animation)
 
-	(def int selection)
-	(def int selectionClick)
+	(def int fastForward)
 
 	(function void create ())
 	(function void onload ())
