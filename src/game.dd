@@ -1409,7 +1409,8 @@
 
 	(dd_matrix_pop)
 
-	(avdl_clear_depth)
+	(glClear GL_DEPTH_BUFFER_BIT)
+	#(avdl_clear_depth)
 
 	# states
 	(dd_matrix_push)
@@ -1442,7 +1443,8 @@
 	(dd_matrix_pop)
 
 	# clear depth
-	(avdl_clear_depth)
+	(glClear GL_DEPTH_BUFFER_BIT)
+	#(avdl_clear_depth)
 
 	# lookat mesh
 	(dd_matrix_push)
