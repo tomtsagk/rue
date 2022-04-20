@@ -154,6 +154,8 @@
 	(= this.animationOpen 0)
 
 	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY) 0)
+	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
+	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
 
 	)
 )
@@ -422,27 +424,32 @@
 			# minus num of players
 			(if (== this.selectionClick 0)
 				(group
+				(this.clickSmallSound.play)
 				(= numberOfPlayers (dd_math_max (- numberOfPlayers 1) 3))
 				(= startingPlayer (dd_math_min startingPlayer (- numberOfPlayers 1)))
 				)
 			# plus num of players
 			(== this.selectionClick 1)
 				(group
+				(this.clickSmallSound.play)
 				(= numberOfPlayers (dd_math_min (+ numberOfPlayers 1) 5))
 				)
 			# minus starting player
 			(== this.selectionClick 2)
 				(group
+				(this.clickSmallSound.play)
 				(= startingPlayer (dd_math_max (- startingPlayer 1) -1))
 				)
 			# plus starting player
 			(== this.selectionClick 3)
 				(group
+				(this.clickSmallSound.play)
 				(= startingPlayer (dd_math_min (+ startingPlayer 1) (- numberOfPlayers 1)))
 				)
 			# toggle guide
 			(== this.selectionClick 4)
 				(group
+				(this.clickSmallSound.play)
 				(if (== guide 0)
 					(= guide -1)
 					(= guide 0)
@@ -451,6 +458,7 @@
 			# back to main menu
 			(== this.selectionClick 5)
 				(group
+				(this.clickBigSound.play)
 				#(dd_world_prepare world_menu 1.0)
 				#(dd_world_ready)
 				#(= this.isMovingToNewWorld 1)
@@ -460,6 +468,7 @@
 			# start game !
 			(== this.selectionClick 6)
 				(group
+				(this.clickBigSound.play)
 				#(dd_world_prepare world_game 1.0)
 				#(dd_world_ready)
 				#(= this.isMovingToNewWorld 1)
