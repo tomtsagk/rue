@@ -139,6 +139,8 @@
 	(= this.animationOpen 0)
 
 	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY) 0)
+	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
+	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
 
 	)
 )
@@ -376,6 +378,8 @@
 			(if (== this.selectionClick 0)
 				(group
 
+				(this.clickBigSound.play)
+
 				# 2 enemies - both move rose one step
 				(= numberOfPlayers 3)
 				(= startingPlayer 0)
@@ -390,6 +394,8 @@
 			# stage 2
 			(== this.selectionClick 1)
 				(group
+
+				(this.clickBigSound.play)
 
 				# 3 enemies - all move rose one step
 				(= numberOfPlayers 4)
@@ -407,6 +413,8 @@
 			(== this.selectionClick 2)
 				(group
 
+				(this.clickBigSound.play)
+
 				# 2 enemies -
 				# 2 move rose three steps
 				(= numberOfPlayers 3)
@@ -422,6 +430,8 @@
 			# stage 4
 			(== this.selectionClick 3)
 				(group
+
+				(this.clickBigSound.play)
 
 				# 3 enemies -
 				# 2 move rose one step
@@ -440,6 +450,8 @@
 			# stage 5
 			(== this.selectionClick 4)
 				(group
+
+				(this.clickBigSound.play)
 
 				# 4 enemies -
 				# 2 move rose one step
@@ -465,6 +477,7 @@
 			# back to home menu
 			(== this.selectionClick 5)
 				(group
+				(this.clickBigSound.play)
 				(this.disable)
 				(return -1)
 				)

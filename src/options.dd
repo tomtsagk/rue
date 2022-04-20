@@ -123,6 +123,8 @@
 	(= this.animationOpen 0)
 
 	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY) 0)
+	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
+	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
 
 	)
 )
@@ -349,26 +351,35 @@
 
 			(if (== this.selectionClick 0)
 				(group
+				(this.clickSmallSound.play)
 				)
 			(== this.selectionClick 1)
 				(group
+				(this.clickSmallSound.play)
 				#(dd_world_prepare world_custom_game_menu 1.0)
 				#(dd_world_ready)
 				#(= this.isMovingToNewWorld 1)
 				)
 			(== this.selectionClick 2)
 				(group
+				(this.clickSmallSound.play)
 				#(this.disable)
 				#(return 1)
 				#(= dd_flag_exit 1) # exit game
 				#(= this.isMovingToNewWorld 1)
 				)
+			(== this.selectionClick 3)
+				(group
+				(this.clickSmallSound.play)
+				)
 			(== this.selectionClick 4)
 				(group
+				(this.clickSmallSound.play)
 				(dd_fullscreenToggle)
 				)
 			(== this.selectionClick 5)
 				(group
+				(this.clickBigSound.play)
 				(this.disable)
 				(return 1)
 				)

@@ -40,6 +40,8 @@
 
 	# button sounds
 	(def dd_sound hoverSound)
+	(def dd_sound clickSmallSound)
+	(def dd_sound clickBigSound)
 
 	(function void create (group))
 	(function void resize (group))
