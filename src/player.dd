@@ -266,12 +266,14 @@
 		# looking elsewhere - de-highlight card
 			(group
 			(= this.highlightCard -1)
+			(this.cardDeselectSound.play)
 			)
 		)
 		)
 	(&& (>= this.userLookingAtCard 0) (< this.userLookingAtCard this.cardsTotal))
 		(group
 		(= this.highlightCard this.userLookingAtCard)
+		(this.cardSelectSound.play)
 		)
 	)
 
@@ -309,6 +311,8 @@
 			(this.calculateCardPositionsUser)
 			(this.calculateCardPositions)
 		)
+
+		(this.cardPlaceSound.play)
 
 		) # selected card
 	)
@@ -401,6 +405,16 @@
 
 		)
 	) # looking at hand's layer
+
+	# looking at the same card as previously
+	(if (== this.userLookingAtCard lookingAtCard)
+		(group
+		)
+	# looking at a new card
+		(group
+		(this.cardLookSound.play)
+		)
+	)
 
 	(= this.userLookingAtCard lookingAtCard)
 

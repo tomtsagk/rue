@@ -30,6 +30,12 @@
 
 	(def ref dd_meshTexture cardFronts)
 
+	(def ref dd_sound cardLookSound)
+	(def ref dd_sound cardPlaceSound)
+
+	(def ref dd_sound cardSelectSound)
+	(def ref dd_sound cardDeselectSound)
+
 	# functions
 	(function void create (group))
 	(function void draw (group))

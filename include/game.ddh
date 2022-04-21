@@ -138,6 +138,13 @@
 	# theme
 	(def dd_sound theme)
 
+	# card sound effects
+	(def dd_sound cardLookSound)
+	(def dd_sound cardPlaceSound)
+
+	(def dd_sound cardSelectSound)
+	(def dd_sound cardDeselectSound)
+
 	(function void create (group))
 	(function void onload (group))
 	#(function void resize (group))
