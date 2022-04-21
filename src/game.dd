@@ -300,6 +300,13 @@
 		)
 	)
 
+	# sound effects
+	(this.cardLookSound.load (asset "assets/card_look.asset" DD_PLY) 0)
+	(this.cardPlaceSound.load (asset "assets/card_place.asset" DD_PLY) 0)
+
+	(this.cardSelectSound.load (asset "assets/card_select.asset" DD_PLY) 0)
+	(this.cardDeselectSound.load (asset "assets/card_deselect.asset" DD_PLY) 0)
+
 	# deck
 	(dd_matrix_identity this.deckMatrix)
 	(dd_matrix_translate this.deckMatrix -0.40 2 0)
@@ -365,6 +372,12 @@
 		(= this.player[i].mesh this.playerMesh[playerAi[i]])
 		(= this.player[i].type playerAi[i])
 
+		(= this.player[i].cardLookSound this.cardLookSound)
+		(= this.player[i].cardPlaceSound this.cardPlaceSound)
+
+		(= this.player[i].cardSelectSound this.cardSelectSound)
+		(= this.player[i].cardDeselectSound this.cardDeselectSound)
+
 		)
 	)
 
@@ -379,6 +392,12 @@
 	(dd_matrix_translate this.player[0].selectedMatrix 0 2.01 -3.6)
 	(dd_matrix_rotate this.player[0].selectedMatrix 90 1 0 0)
 	(dd_matrix_rotate this.player[0].selectedMatrix 180 0 0 1)
+
+	(= this.player[0].cardLookSound this.cardLookSound)
+	(= this.player[0].cardPlaceSound this.cardPlaceSound)
+
+	(= this.player[0].cardSelectSound this.cardSelectSound)
+	(= this.player[0].cardDeselectSound this.cardDeselectSound)
 
 	# temp rotating card
 	(= this.rotating 0)
