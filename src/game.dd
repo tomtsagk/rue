@@ -148,6 +148,9 @@
 	(this.cardFront[14].load (asset "assets/card.asset" DD_PLY))
 	(this.cardFront[14].loadTexture (asset "assets/card_rose_seeker.asset" DD_PLY))
 
+	(this.cardCorner[0].set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.cardCorner[0].loadTexture (asset "assets/card_corner_tear.asset" DD_PLY))
+
 	# cards
 	(= this.cardsTotal 53)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
@@ -167,6 +170,7 @@
 		(group
 		(this.cards[i].setId CARD_SINGLE_STEP)
 		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -175,6 +179,7 @@
 		(group
 		(this.cards[i].setId CARD_THREE_STEPS)
 		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -183,6 +188,7 @@
 		(group
 		(this.cards[i].setId CARD_TRADE)
 		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -191,6 +197,7 @@
 		(group
 		(this.cards[i].setId CARD_CONDITIONAL)
 		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -199,6 +206,7 @@
 		(group
 		(this.cards[i].setId CARD_REPLACE)
 		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -207,6 +215,7 @@
 		(group
 		(this.cards[i].setId CARD_GRAB)
 		(= this.cards[i].mesh this.cardFront[CARD_GRAB])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -215,6 +224,7 @@
 		(group
 		(this.cards[i].setId CARD_GRAB_GENERIC)
 		(= this.cards[i].mesh this.cardFront[CARD_GRAB_GENERIC])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -223,6 +233,7 @@
 		(group
 		(this.cards[i].setId CARD_APPROACH)
 		(= this.cards[i].mesh this.cardFront[CARD_APPROACH])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -231,6 +242,7 @@
 		(group
 		(this.cards[i].setId CARD_WIN)
 		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -239,6 +251,7 @@
 		(group
 		(this.cards[i].setId CARD_HOLD_ONE_STEP)
 		(= this.cards[i].mesh this.cardFront[13])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -247,6 +260,7 @@
 		(group
 		(this.cards[i].setId CARD_NEXT_HAND)
 		(= this.cards[i].mesh this.cardFront[11])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -255,6 +269,7 @@
 		(group
 		(this.cards[i].setId CARD_IGNORE_MOVE)
 		(= this.cards[i].mesh this.cardFront[10])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -263,6 +278,7 @@
 		(group
 		(this.cards[i].setId CARD_ROSE_HELD_STEAL)
 		(= this.cards[i].mesh this.cardFront[14])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 
@@ -271,6 +287,7 @@
 		(group
 		(this.cards[i].setId CARD_EMPTY)
 		(= this.cards[i].mesh this.cardFront[12])
+		(= this.cards[i].meshCorner this.cardCorner[0])
 		)
 	)
 

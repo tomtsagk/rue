@@ -1,9 +1,16 @@
 (include "card.ddh")
 
+(def int CARD_CORNER_NONE 0)
+(def int CARD_CORNER_TEAR 1)
+(def int CARD_CORNER_THUNDER 2)
+(def int CARD_CORNER_FROWN 3)
+(def int CARD_CORNER_HEART 4)
+
 (class_function Card void create (group)
 	(group
 
 	(= this.id 0)
+	(= this.cornerId -1)
 	(dd_matrix_identity this.target)
 
 	(= this.hidden 0)
@@ -12,6 +19,7 @@
 
 	(= this.mesh 0)
 	(= this.meshBack 0)
+	(= this.meshCorner 0)
 
 	# fake stats
 	(= this.idFake -1)
@@ -49,6 +57,14 @@
 		(this.mesh.draw)
 	)
 	(this.meshBack.draw)
+
+	(dd_matrix_push)
+	(dd_translatef 0 0 0.01)
+	(dd_scalef 0.2 0.2 0.2)
+	(if this.meshCorner
+		(this.meshCorner.draw)
+	)
+	(dd_matrix_pop)
 	)
 )
 

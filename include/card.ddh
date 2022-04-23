@@ -1,3 +1,9 @@
+(def extern int CARD_CORNER_NONE)
+(def extern int CARD_CORNER_TEAR)
+(def extern int CARD_CORNER_THUNDER)
+(def extern int CARD_CORNER_FROWN)
+(def extern int CARD_CORNER_HEART)
+
 # card class
 (class Card dd_matrix
 	(group
@@ -8,9 +14,13 @@
 	# id of card - determines its effect
 	(def int id)
 
+	# corner id - determines the corner effect
+	(def int cornerId)
+
 	# front and back of the card
 	(def ref dd_meshTexture mesh)
 	(def ref dd_meshTexture meshBack)
+	(def ref dd_meshTexture meshCorner)
 
 	# it's desired location (where it constantly moves to)
 	(def dd_matrix target)
