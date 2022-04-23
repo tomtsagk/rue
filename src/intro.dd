@@ -12,9 +12,8 @@
 	(= this.delay 30)
 
 	# initialise dd logo
-	#(this.logo.load (asset "assets/logo.ply" DD_PLY))
 	(this.logo.load (asset "assets/logo.asset" DD_PLY))
-	(this.logo.set_colour 0 0 0)
+	(this.logo.set_colour 0.067 0.067 0.067)
 
 	# initialise dd sound
 	(this.sound.load (asset "assets/dd_theme.asset" DD_PLY) 0)
@@ -22,10 +21,6 @@
 
 	# used for resizing
 	(= this.scale 1)
-
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.0 0.0 0.0)
-	(this.font.setColorBack 0.0 0.0 0.0)
 
 	(this.logoProgram.setVertexShader
 		(multistring
@@ -60,7 +55,7 @@
 #			"	pos.y *= max((distance -(anim2 *8.0)) /distance, 0.0);\n"
 
 			"       gl_Position = pos;\n"
-			"       outColour = vec4(colour.rgb, 1.0);\n"
+			"       outColour = vec4(colour.rgb, anim);\n"
 			"}\n"
 		)
 	)
@@ -87,8 +82,8 @@
 	)
 
 	(= this.logoAnim 0)
-	(= this.logoAnimPositive 1)
-	(= this.shaderTime 0)
+	(= this.logoAnimPositive 0)
+	(= this.shaderTime 0.01)
 
 	)
 ) # create
@@ -142,6 +137,10 @@
 			(group
 			(= this.counter (+ this.counter 0.02))
 
+			(if (> this.counter 0.05)
+				(= this.logoAnimPositive 1)
+			)
+
 			(if (&& (> this.counter 0.25) (== this.soundPlayed 0))
 				(group
 				(this.sound.play)
@@ -163,7 +162,6 @@
 			(if (<= this.counter 0)
 				(group
 				(= this.counter 0)
-				#(dd_world_prepareReady world_intro 1)
 				(dd_world_prepareReady world_menu 1)
 				(dd_clearColour 0 0 0 1)
 				)
@@ -183,21 +181,23 @@
 (class_function world_intro void draw (group)
 	(group
 
+	(glEnable GL_BLEND)
+	(glBlendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA)
+
 	(dd_translatef 0 0 -5)
 	(dd_scalef this.scale this.scale this.scale)
 	(dd_translatef 0 0 0)
 	(this.logoProgram.useProgram)
 	(def int colLoc)
 	(= colLoc (avdl_getUniformLocation this.logoProgram "anim"))
-	(avdl_setUniform1f colLoc this.logoAnim)
+	(avdl_setUniform1f colLoc (- 1 (* (- 1 this.logoAnim) (- 1 this.logoAnim))))
 	(def int sdrTimeLoc)
 	(= sdrTimeLoc (avdl_getUniformLocation this.logoProgram "time"))
 	(avdl_setUniform1f sdrTimeLoc this.shaderTime)
 	(this.logo.draw)
 	(avdl_useProgram 0)
-	#(dd_translatef 0 -1.5 0)
-	#(dd_scalef 0.8 0.8 0.1)
-	#(this.font.draw "dark dimension")
+
+	(glDisable GL_BLEND)
 
 	)
 )
