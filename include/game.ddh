@@ -47,6 +47,9 @@
 	# overlay buttons
 	(def OverlayButtons ovButtons)
 
+	# player program
+	(def avdl_program playerProgram)
+
 	# arrow shader
 	(def avdl_program arrowProgramAvdl)
 	(def float arrowActiveCol[3])

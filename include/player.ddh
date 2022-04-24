@@ -36,6 +36,8 @@
 	(def ref dd_sound cardSelectSound)
 	(def ref dd_sound cardDeselectSound)
 
+	(def ref avdl_program transparentProgram)
+
 	# functions
 	(function void create (group))
 	(function void draw (group))

@@ -34,6 +34,8 @@
 	(def int idFake)
 	(def ref dd_meshTexture meshFake)
 
+	(def ref avdl_program transparentProgram)
+
 	(function void create (group))
 	(function void clean (group))
 
