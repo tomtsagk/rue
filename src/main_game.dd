@@ -3,7 +3,7 @@
 #
 (include "intro.ddh")
 #(include "game.ddh")
-#(include "menu.ddh")
+(include "menu.ddh")
 
 #
 # Initialise the game and its stats
@@ -11,12 +11,12 @@
 (function void dd_gameInit (group)
 	(group
 
-	(dd_string3d_activate (asset "assets/letter_?.asset" PLY))
+	(dd_string3d_activate (asset "assets/eng_white.asset" PLY) 14 7 1.0 0.966)
 
 	(dd_setGameTitle "Rue - v0.2.3 - alpha")
-	(dd_world_set_default world_intro)
+	#(dd_world_set_default world_intro)
 	#(dd_world_set_default world_game)
-	#(dd_world_set_default world_menu)
+	(dd_world_set_default world_menu)
 
 	)
 )

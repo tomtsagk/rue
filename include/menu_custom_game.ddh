@@ -43,6 +43,20 @@
 	(def dd_sound clickSmallSound)
 	(def dd_sound clickBigSound)
 
+	# labels
+	(def dd_string3d numOfPlayersLabel)
+	(def dd_string3d num3Label)
+	(def dd_string3d num4Label)
+	(def dd_string3d num5Label)
+
+	(def dd_string3d startingPlayerLabel)
+	(def dd_string3d startingSelfLabel)
+	(def dd_string3d startingAI1Label)
+	(def dd_string3d startingAI2Label)
+	(def dd_string3d startingAI3Label)
+	(def dd_string3d startingAI4Label)
+	(def dd_string3d startingRandomLabel)
+
 	(function void create (group))
 	(function void resize (group))
 	(function void update (group))

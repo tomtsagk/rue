@@ -24,6 +24,9 @@
 
 	(= this.isDisabled 0)
 
+	(this.label.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.description.setAlign DD_STRING3D_ALIGN_CENTER)
+
 	)
 )
 
@@ -131,6 +134,12 @@
 	(this.applyMatrixTransform)
 	(this.drawRaw)
 	(dd_popMatrix)
+	)
+)
+
+(class_function Button void drawText ()
+	(group
+	(this.label.drawLimit 10)
 	)
 )
 

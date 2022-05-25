@@ -7,14 +7,24 @@
 	# background
 	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
 
-	# font
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.8 0.8 0.8)
-	(this.font.setColorBack 0.3 0.3 0.3)
+	(this.labelCredits.setText "Credits:")
+	(this.labelCredits.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.labelTom.setText "Tom Tsagk")
+	(this.labelTom.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.labelProgrammer.setText "Programmer")
+	(this.labelProgrammer.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.labelShiitakespacewarrior.setText "shiitakespacewarrior")
+	(this.labelShiitakespacewarrior.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.labelMusicSfx.setText "Music & SFX")
+	(this.labelMusicSfx.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.anchorCredits.setSize 1 1)
 	(this.anchorCredits.setProportionalPosition 0.5 0.5)
-	(this.anchorCredits.setProportionalWidth 0.1)
+	(this.anchorCredits.setProportionalWidth 0.05)
 	(this.anchorCredits.setProportionalSize 1.0)
 
 	(= this.animation 0)
@@ -71,19 +81,19 @@
 	# draw the credits themselves
 	(dd_matrix_push)
 	(def float height)
-	(= height (dd_screen_height_get (+ (* this.anchorCredits.z -1) 5)))
-	(dd_translatef 0 (+ (* height -0.5) (* height this.animation 2)) -5)
+	(= height (dd_screen_height_get (+ (* this.anchorCredits.z -1) 10)))
+	(dd_translatef 0 (+ (* height -0.5) (* height this.animation 2)) -10)
 	(this.anchorCredits.applyTransform)
 	(dd_translatef 0 -1 1)
-	(this.font.draw "credits")
+	(this.labelCredits.draw)
 	(dd_translatef 0 -2.0 0)
-	(this.font.draw "tom tsagk")
+	(this.labelTom.draw)
 	(dd_translatef 0 -1 0)
-	(this.font.draw "programmer")
+	(this.labelProgrammer.draw)
 	(dd_translatef 0 -2.0 0)
-	(this.font.draw "shiitakespacewarrior")
+	(this.labelShiitakespacewarrior.draw)
 	(dd_translatef 0 -1 0)
-	(this.font.draw "music and sfx")
+	(this.labelMusicSfx.draw)
 	(dd_matrix_pop)
 
 	)

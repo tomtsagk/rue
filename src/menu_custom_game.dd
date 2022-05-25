@@ -23,8 +23,8 @@
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.8 0.8 0.8)
-	(this.font.setColorBack 0.3 0.3 0.3)
+	#(this.font.setColorFront 0.8 0.8 0.8)
+	#(this.font.setColorBack 0.3 0.3 0.3)
 
 	# buttons
 	(= this.buttonTotal 7)
@@ -33,40 +33,50 @@
 	(this.button[0].setProportionalPosition 0.50 0.8)
 	(this.button[0].setProportionalWidth 0.2)
 	(this.button[0].setProportionalSize 0.7)
+	(this.button[0].description.setText "Decrease number of players")
 
 	(this.button[1].mesh.load (asset "assets/button_plus.asset" DD_PLY))
 	(this.button[1].setSize 1 1)
 	(this.button[1].setProportionalPosition 0.8 0.8)
 	(this.button[1].setProportionalWidth 0.2)
 	(this.button[1].setProportionalSize 0.7)
+	(this.button[1].description.setText "Increase number of players")
 
 	(this.button[2].mesh.load (asset "assets/button_minus.asset" DD_PLY))
 	(this.button[2].setSize 1 1)
 	(this.button[2].setProportionalPosition 0.5 0.575)
 	(this.button[2].setProportionalWidth 0.2)
 	(this.button[2].setProportionalSize 0.7)
+	(this.button[2].description.setText "Change starting player")
 
 	(this.button[3].mesh.load (asset "assets/button_plus.asset" DD_PLY))
 	(this.button[3].setSize 1 1)
 	(this.button[3].setProportionalPosition 0.8 0.575)
 	(this.button[3].setProportionalWidth 0.2)
 	(this.button[3].setProportionalSize 0.7)
+	(this.button[3].description.setText "Change starting player")
 
 	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[4].setSize 1 1)
 	(this.button[4].setProportionalPosition 0.5 0.35)
 	(this.button[4].setProportionalWidth 0.2)
 	(this.button[4].setProportionalSize 0.7)
+	(this.button[4].label.setText "Toggle Guide")
+	(this.button[4].description.setText "Enable/Disable tutorial cards ")
 
 	(this.button[5].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[5].setSize 1 1)
 	(this.button[5].setProportionalPosition 0.12 0.15)
 	(this.button[5].setProportionalWidth 0.2)
+	(this.button[5].label.setText "Back")
+	(this.button[5].description.setText "Return to main menu")
 
 	(this.button[6].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[6].setSize 1 1)
 	(this.button[6].setProportionalPosition 0.88 0.15)
 	(this.button[6].setProportionalWidth 0.2)
+	(this.button[6].label.setText "Start")
+	(this.button[6].description.setText "Begin the game!")
 
 	# number of players
 	(this.buttonPlayerNumber.setSize 1 1)
@@ -157,6 +167,40 @@
 	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
 	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
 
+	#(this.numOfPlayersLabel.setText "Number of players:")
+	(this.numOfPlayersLabel.setText "No. of players:")
+	(this.numOfPlayersLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.num3Label.setText "3")
+	(this.num3Label.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.num4Label.setText "4")
+	(this.num4Label.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.num5Label.setText "5")
+	(this.num5Label.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.startingPlayerLabel.setText "Starting Player:")
+	(this.startingPlayerLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.startingRandomLabel.setText "Random")
+	(this.startingRandomLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.startingSelfLabel.setText "You")
+	(this.startingSelfLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.startingAI1Label.setText "AI 1")
+	(this.startingAI1Label.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.startingAI2Label.setText "AI 2")
+	(this.startingAI2Label.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.startingAI3Label.setText "AI 3")
+	(this.startingAI3Label.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.startingAI4Label.setText "AI 4")
+	(this.startingAI4Label.setAlign DD_STRING3D_ALIGN_CENTER)
+
 	)
 )
 
@@ -225,7 +269,7 @@
 	(this.buttonPlayerNumber.applyMatrixTransform)
 	(dd_translatef 0 0 0.1)
 	(dd_scalef 0.2 0.2 0.2)
-	(this.font.draw "number of players")
+	(this.numOfPlayersLabel.draw)
 	(dd_matrix_pop)
 
 	(dd_matrix_push)
@@ -233,7 +277,13 @@
 	(this.buttonPlayerNumberValue.applyMatrixTransform)
 	(dd_translatef 0 0 0.1)
 	(dd_scalef 0.2 0.2 0.2)
-	(this.font.drawInt numberOfPlayers)
+	(if (== numberOfPlayers 3)
+		(this.num3Label.draw)
+	(== numberOfPlayers 4)
+		(this.num4Label.draw)
+	(== numberOfPlayers 5)
+		(this.num5Label.draw)
+	)
 	(dd_matrix_pop)
 
 	# draw starting player
@@ -242,7 +292,7 @@
 	(this.buttonStartingPlayer.applyMatrixTransform)
 	(dd_translatef 0 0 0.1)
 	(dd_scalef 0.2 0.2 0.2)
-	(this.font.draw "starting player")
+	(this.startingPlayerLabel.draw)
 	(dd_matrix_pop)
 
 	(dd_matrix_push)
@@ -251,17 +301,27 @@
 	(dd_translatef 0 0 0.1)
 	(dd_scalef 0.2 0.2 0.2)
 	(if (== startingPlayer -1)
-		(this.font.draw "random")
-	(== startingPlayer 0)
-		(this.font.draw "you")
 		(group
-		(dd_translatef -0.7 0 0)
-		(this.font.draw "AI")
-		(dd_translatef 1.4 0 0)
-		(this.font.drawInt startingPlayer)
+		(this.startingRandomLabel.draw)
+		)
+	(== startingPlayer 0)
+		(group
+		(this.startingSelfLabel.draw)
+		)
+		(group
+		(if (== startingPlayer 1)
+			(this.startingAI1Label.draw)
+		(== startingPlayer 2)
+			(this.startingAI2Label.draw)
+		(== startingPlayer 3)
+			(this.startingAI3Label.draw)
+		(== startingPlayer 4)
+			(this.startingAI4Label.draw)
+		)
 		)
 	)
 	(dd_matrix_pop)
+
 	# draw buttons
 	(this.buttonProgram.useProgram)
 	(def int colLoc)
@@ -315,24 +375,25 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 
-		(if (== i 0)
-			(group)
-		(== i 1)
-			(group)
-		(== i 2)
-			(group)
-		(== i 3)
-			(group)
-		(== i 4)
-			(if (== guide 0)
-				(this.font.draw "include guide")
-				(this.font.draw "no guide")
-			)
-		(== i 5)
-			(this.font.draw "back")
-		(== i 6)
-			(this.font.draw "start")
-		)
+		(this.button[i].label.draw)
+#		(if (== i 0)
+#			(group)
+#		(== i 1)
+#			(group)
+#		(== i 2)
+#			(group)
+#		(== i 3)
+#			(group)
+#		(== i 4)
+#			(if (== guide 0)
+#				(this.font.draw "include guide")
+#				(this.font.draw "no guide")
+#			)
+#		(== i 5)
+#			(this.font.draw "back")
+#		(== i 6)
+#			(this.font.draw "start")
+#		)
 
 		(dd_matrix_pop)
 		)
@@ -347,34 +408,12 @@
 		(this.textButton.applyMatrixTransform)
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
-		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if 0#this.isMovingToNewWorld
-			(this.font.drawLimit "loading" limit)
-		(== this.selection 0)
-			(this.font.drawLimit (this.localisation.getValue "menu_custom_game_desc") limit)
-		(== this.selection 1)
-			(this.font.drawLimit (this.localisation.getValue "menu_play_desc") limit)
-		(== this.selection 2)
-			(this.font.drawLimit (this.localisation.getValue "menu_exit_desc") limit)
-			(this.font.drawLimit (this.localisation.getValue "menu_options_desc") limit)
-		)
-
+		#(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
+		#(this.button[this.selection].description.draw)
+		(this.button[this.selection].description.drawLimit 20)
 		(dd_matrix_pop)
 		)
 	)
-
-	# draw version number
-	(dd_matrix_push)
-	(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
-	(dd_translatef
-		(/ (dd_screen_width_get 5) 2)
-		(+ (/ (dd_screen_height_get 5) -2) 0.15)
-		-5
-	)
-	(dd_scalef 0.15 0.15 0.15)
-	(this.font.draw "alpha version")
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(dd_matrix_pop)
 
 	)
 )

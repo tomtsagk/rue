@@ -58,7 +58,7 @@
 
 (class_function world_menu void onload ()
 	(group
-	(this.theme.load (asset "assets/main_menu_theme.asset" DD_PLY) 0)
+	(this.theme.load (asset "assets/main_menu_theme.asset" DD_PLY))
 	(this.theme.playLoop -1)
 	)
 )

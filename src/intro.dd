@@ -67,6 +67,12 @@
 			"void main() {\n"
 			"	vec4 col = outColour;\n"
 
+			#"	if (mod(gl_FragCoord.x +(mod(gl_FragCoord.y, 2) *2), 4) < 2) {\n"
+			#"	if (mod(gl_FragCoord.x, 2) < 1) {\n"
+			"	if (mod(gl_FragCoord.y, 5) < 1 && mod(gl_FragCoord.x +(mod(gl_FragCoord.y, 2) *10), 20) < 1) {\n"
+			"		discard;\n"
+			"	}\n"
+
 			# squares
 #			"	col.a = (float(mod(gl_FragCoord.x, 100)) "
 #				" +float(mod(gl_FragCoord.y, 100))) /200.0 "
@@ -143,14 +149,14 @@
 
 			(if (&& (> this.counter 0.25) (== this.soundPlayed 0))
 				(group
-				(this.sound.play)
+				#(this.sound.play)
 				(= this.soundPlayed 1)
 				)
 			)
 			(if (>= this.counter 1)
 				(group
 				(= this.counter 1)
-				(= this.positive 0)
+				#(= this.positive 0)
 				(= this.delay 100)
 				)
 			)

@@ -10,11 +10,6 @@
 	# logo
 	(this.logo.load (asset "assets/logo_rue.asset" DD_PLY))
 
-	# font
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.8 0.8 0.8)
-	(this.font.setColorBack 0.3 0.3 0.3)
-
 	# buttons
 	(= this.buttonTotal 5)
 	(this.button[0].mesh.load (asset "assets/button.asset" DD_PLY))
@@ -22,29 +17,39 @@
 	(this.button[0].setProportionalPosition 0.25 0.4)
 	(this.button[0].setProportionalWidth 0.2)
 	(this.button[0].setProportionalSize 0.8)
+	(this.button[0].label.setText (this.localisation.getValue "menu_custom_game"))
+	(this.button[0].description.setText (this.localisation.getValue "menu_custom_game_desc"))
 
 	(this.button[1].mesh.load (asset "assets/button_play.asset" DD_PLY))
 	(this.button[1].setSize 1 1)
 	(this.button[1].setProportionalPosition 0.5 0.4)
 	(this.button[1].setProportionalWidth 0.2)
+	(this.button[1].label.setText (this.localisation.getValue "menu_play"))
+	(this.button[1].description.setText (this.localisation.getValue "menu_play_desc"))
 
 	(this.button[2].mesh.load (asset "assets/button_exit.asset" DD_PLY))
 	(this.button[2].setSize 1 1)
 	(this.button[2].setProportionalPosition 0.75 0.4)
 	(this.button[2].setProportionalWidth 0.2)
 	(this.button[2].setProportionalSize 0.8)
+	(this.button[2].label.setText (this.localisation.getValue "menu_exit"))
+	(this.button[2].description.setText (this.localisation.getValue "menu_exit_desc"))
 
 	(this.button[3].mesh.load (asset "assets/button_options.asset" DD_PLY))
 	(this.button[3].setSize 1 1)
 	(this.button[3].setProportionalPosition 0.85 0.85)
 	(this.button[3].setProportionalWidth 0.2)
 	(this.button[3].setProportionalSize 0.8)
+	(this.button[3].label.setText (this.localisation.getValue "menu_options"))
+	(this.button[3].description.setText (this.localisation.getValue "menu_options_desc"))
 
 	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[4].setSize 1 1)
 	(this.button[4].setProportionalPosition 0.15 0.85)
 	(this.button[4].setProportionalWidth 0.2)
 	(this.button[4].setProportionalSize 0.8)
+	(this.button[4].label.setText (this.localisation.getValue "menu_credits"))
+	(this.button[4].description.setText (this.localisation.getValue "menu_credits_desc"))
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -84,12 +89,6 @@
 
 			"void main() {\n"
 			"	avdl_frag_color = outColour +avdl_texture(image, outTexCoord);\n"
-
-			# For some reason the following line makes the shader to not compile on the following system:
-			#  GeForce GTX 960/PCIe/SSE2
-			#  GL version: 4.6.0 NVIDIA 456.71
-			#  glsl version: 4.60 NVIDIA
-			#"	avdl_frag_color = outColour;\n"
 			"}\n"
 		)
 	)
@@ -112,6 +111,9 @@
 	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY) 0)
 	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
 	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
+
+	(this.versionLabel.setText "v0.2.3")
+	(this.versionLabel.setAlign DD_STRING3D_ALIGN_RIGHT)
 
 	)
 )
@@ -231,16 +233,7 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 
-		(if (== i 0)
-			(this.font.draw (this.localisation.getValue "menu_custom_game"))
-		(== i 1)
-			(this.font.draw (this.localisation.getValue "menu_play"))
-		(== i 2)
-			(this.font.draw (this.localisation.getValue "menu_exit"))
-		(== i 3)
-			(this.font.draw (this.localisation.getValue "menu_options"))
-			(this.font.draw (this.localisation.getValue "menu_credits"))
-		)
+		(this.button[i].drawText)
 
 		(dd_matrix_pop)
 		)
@@ -255,19 +248,20 @@
 		(this.textButton.applyMatrixTransform)
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
-		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if 0#this.isMovingToNewWorld
-			(this.font.drawLimit "loading" limit)
-		(== this.selection 0)
-			(this.font.drawLimit (this.localisation.getValue "menu_custom_game_desc") limit)
-		(== this.selection 1)
-			(this.font.drawLimit (this.localisation.getValue "menu_play_desc") limit)
-		(== this.selection 2)
-			(this.font.drawLimit (this.localisation.getValue "menu_exit_desc") limit)
-		(== this.selection 3)
-			(this.font.drawLimit (this.localisation.getValue "menu_options_desc") limit)
-			(this.font.drawLimit (this.localisation.getValue "menu_credits_desc") limit)
-		)
+		#(def int limit (* (dd_screen_width_get this.textButton.z) -2))
+		(this.button[this.selection].description.drawLimit 20)
+#		(if 0#this.isMovingToNewWorld
+#			(this.font.drawLimit "loading" limit)
+#		(== this.selection 0)
+#			(this.font.drawLimit (this.localisation.getValue "menu_custom_game_desc") limit)
+#		(== this.selection 1)
+#			(this.font.drawLimit (this.localisation.getValue "menu_play_desc") limit)
+#		(== this.selection 2)
+#			(this.font.drawLimit (this.localisation.getValue "menu_exit_desc") limit)
+#		(== this.selection 3)
+#			(this.font.drawLimit (this.localisation.getValue "menu_options_desc") limit)
+#			(this.font.drawLimit (this.localisation.getValue "menu_credits_desc") limit)
+#		)
 
 		(dd_matrix_pop)
 		)
@@ -275,15 +269,13 @@
 
 	# draw version number
 	(dd_matrix_push)
-	(this.font.setAlign DD_STRING3D_ALIGN_RIGHT)
 	(dd_translatef
-		(/ (dd_screen_width_get 5) 2)
+		(+ (/ (dd_screen_width_get 5) 2) -0.15)
 		(+ (/ (dd_screen_height_get 5) -2) 0.15)
 		-5
 	)
 	(dd_scalef 0.15 0.15 0.15)
-	(this.font.draw AVDL_GAME_VERSION)
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.versionLabel.draw)
 	(dd_matrix_pop)
 
 	)

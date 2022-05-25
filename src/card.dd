@@ -24,8 +24,11 @@
 	# fake stats
 	(= this.idFake -1)
 	(= this.meshFake 0)
+	(= this.cardDescriptionFake 0)
 
 	(= this.transparentProgram 0)
+
+	(= this.cardDescription2 0)
 
 	)
 )
@@ -244,12 +247,15 @@
 	)
 )
 
-(class_function Card void setFakeId (group int givenId dd_meshTexture mesh)
+(class_function Card void setFakeId (group int givenId dd_meshTexture mesh dd_string3d label)
 	(group
 	(= this.idFake this.id)
 	(this.setId givenId)
 	(= this.meshFake this.mesh)
 	(= this.mesh mesh)
+
+	(= this.cardDescriptionFake this.cardDescription2)
+	(= this.cardDescription2 label)
 	)
 )
 
@@ -266,6 +272,13 @@
 		(group
 		(= this.mesh this.meshFake)
 		(= this.meshFake 0)
+		)
+	)
+
+	(if this.cardDescriptionFake
+		(group
+		(= this.cardDescription2 this.cardDescriptionFake)
+		(= this.cardDescriptionFake 0)
 		)
 	)
 

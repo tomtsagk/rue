@@ -51,6 +51,8 @@
 (def int ACTION_WIN_CONDITION 16)
 (def int ACTION_IF_SELECTED_CARD_EQUALS 17)
 (def int ACTION_ENDIF 18)
+(def int ACTION_FOREACH_CORNER 19)
+(def int ACTION_ENDFOR 20)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -59,22 +61,24 @@
 
 	(= this.victoriousPlayer -1)
 
+	(this.phaseTextSetup.setText "Setting up table ..." )
+	(this.phaseTextSetup.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextPlanning.setText "Planning Phase" )
+	(this.phaseTextPlanning.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextExecution.setText "Execution Phase" )
+	(this.phaseTextExecution.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextEnd.setText "End Phase" )
+	(this.phaseTextEnd.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextError.setText "Error Phase?" )
+	(this.phaseTextError.setAlign DD_STRING3D_ALIGN_CENTER )
+
 	# game phases text
 	(= this.phaseText "setting up the table")
+	(= this.phaseTextCurrent this.phaseTextSetup)
 
 	# game actions init
 	(= this.actionsTotal 0)
 	(= this.injectActionsTotal 0)
-
-	# font
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.9 0.9 0.9)
-	(this.font.setColorBack 0.3 0.3 0.3)
-
-	# card font
-	(this.cardFont.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.cardFont.setColorFront 0.0 0.0 0.0)
-	(this.cardFont.setColorBack 0.0 0.0 0.0)
 
 	# camera control
 	(= this.rotX 0)
@@ -94,83 +98,102 @@
 	# stage
 	(this.stage.load (asset "assets/stage_2.asset" DD_PLY))
 	(this.table.load (asset "assets/table_2.asset" DD_PLY))
-	(this.table.loadTexture (asset "assets/table-rose.asset" DD_PLY))
+	(this.tableTexture.set (asset "assets/table-rose.asset" DD_PLY))
+	(this.table.setTexture this.tableTexture)
 	(this.tableArrow.load (asset "assets/table_arrow.asset" DD_PLY))
 	(this.tableArrowDecoration.load (asset "assets/table_arrow_decoration.asset" DD_PLY))
 
 	# card back
 	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
-	(this.cardBack.loadTexture (asset "assets/card_border_texture.asset" DD_PLY))
+	(this.cardBackTexture.set (asset "assets/card_border_texture.asset" DD_PLY))
+	(this.cardBack.setTexture this.cardBackTexture)
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[0].loadTexture (asset "assets/card_single_step.asset" DD_PLY))
+	(this.cardFrontTexture[0].set (asset "assets/card_single_step.asset" DD_PLY))
+	(this.cardFront[0].setTexture this.cardFrontTexture[0])
 
 	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[1].loadTexture (asset "assets/card_triple_step.asset" DD_PLY))
+	(this.cardFrontTexture[1].set (asset "assets/card_triple_step.asset" DD_PLY))
+	(this.cardFront[1].setTexture this.cardFrontTexture[1])
 
 	(this.cardFront[2].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[2].loadTexture (asset "assets/card_trade.asset" DD_PLY))
+	(this.cardFrontTexture[2].set (asset "assets/card_trade.asset" DD_PLY))
+	(this.cardFront[2].setTexture this.cardFrontTexture[2])
 
 	(this.cardFront[3].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[3].loadTexture (asset "assets/card_one_step_cond.asset" DD_PLY))
+	(this.cardFrontTexture[3].set (asset "assets/card_one_step_cond.asset" DD_PLY))
+	(this.cardFront[3].setTexture this.cardFrontTexture[3])
 
 	(this.cardFront[4].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[4].loadTexture (asset "assets/card_replace.asset" DD_PLY))
+	(this.cardFrontTexture[4].set (asset "assets/card_replace.asset" DD_PLY))
+	(this.cardFront[4].setTexture this.cardFrontTexture[4])
 
 	(this.cardFront[5].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[5].loadTexture (asset "assets/card_grab.asset" DD_PLY))
+	(this.cardFrontTexture[5].set (asset "assets/card_grab.asset" DD_PLY))
+	(this.cardFront[5].setTexture this.cardFrontTexture[5])
 
 	(this.cardFront[6].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[6].loadTexture (asset "assets/card_grab_gen.asset" DD_PLY))
+	(this.cardFrontTexture[6].set (asset "assets/card_grab_gen.asset" DD_PLY))
+	(this.cardFront[6].setTexture this.cardFrontTexture[6])
 
 	(this.cardFront[7].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[7].loadTexture (asset "assets/card_approach.asset" DD_PLY))
+	(this.cardFrontTexture[7].set (asset "assets/card_approach.asset" DD_PLY))
+	(this.cardFront[7].setTexture this.cardFrontTexture[7])
 
 	(this.cardFront[8].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[8].loadTexture (asset "assets/card_win.asset" DD_PLY))
+	(this.cardFrontTexture[8].set (asset "assets/card_win.asset" DD_PLY))
+	(this.cardFront[8].setTexture this.cardFrontTexture[8])
 
 	(this.cardFront[9].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[9].loadTexture (asset "assets/card_tutorial.asset" DD_PLY))
+	(this.cardFrontTexture[9].set (asset "assets/card_tutorial.asset" DD_PLY))
+	(this.cardFront[9].setTexture this.cardFrontTexture[9])
 
 	(this.cardFront[10].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[10].loadTexture (asset "assets/card_ignore_move.asset" DD_PLY))
+	(this.cardFrontTexture[10].set (asset "assets/card_ignore_move.asset" DD_PLY))
+	(this.cardFront[10].setTexture this.cardFrontTexture[10])
 
 	(this.cardFront[11].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[11].loadTexture (asset "assets/card_next_hand.asset" DD_PLY))
+	(this.cardFrontTexture[11].set (asset "assets/card_next_hand.asset" DD_PLY))
+	(this.cardFront[11].setTexture this.cardFrontTexture[11])
 
 	(this.cardFront[12].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[12].loadTexture (asset "assets/card_empty.asset" DD_PLY))
+	(this.cardFrontTexture[12].set (asset "assets/card_empty.asset" DD_PLY))
+	(this.cardFront[12].setTexture this.cardFrontTexture[12])
 
 	(this.cardFront[13].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[13].loadTexture (asset "assets/card_hold_one_step.asset" DD_PLY))
+	(this.cardFrontTexture[13].set (asset "assets/card_hold_one_step.asset" DD_PLY))
+	(this.cardFront[13].setTexture this.cardFrontTexture[13])
 
 	(this.cardFront[14].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFront[14].loadTexture (asset "assets/card_rose_seeker.asset" DD_PLY))
+	(this.cardFrontTexture[14].set (asset "assets/card_rose_seeker.asset" DD_PLY))
+	(this.cardFront[14].setTexture this.cardFrontTexture[14])
 
 	(this.cardCorner[0].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCorner[0].loadTexture (asset "assets/card_corner_tear.asset" DD_PLY))
+	(this.cardCornerTexture[0].set (asset "assets/card_corner_tear.asset" DD_PLY))
+	(this.cardCorner[0].setTexture this.cardCornerTexture[0])
 
 	(this.cardCorner[1].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCorner[1].loadTexture (asset "assets/card_corner_thunder.asset" DD_PLY))
+	(this.cardCornerTexture[1].set (asset "assets/card_corner_thunder.asset" DD_PLY))
+	(this.cardCorner[1].setTexture this.cardCornerTexture[1])
 
 	(this.cardCorner[2].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCorner[2].loadTexture (asset "assets/card_corner_frown.asset" DD_PLY))
+	(this.cardCornerTexture[2].set (asset "assets/card_corner_frown.asset" DD_PLY))
+	(this.cardCorner[2].setTexture this.cardCornerTexture[2])
 
 	(this.cardCorner[3].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCorner[3].loadTexture (asset "assets/card_corner_heart.asset" DD_PLY))
+	(this.cardCornerTexture[3].set (asset "assets/card_corner_heart.asset" DD_PLY))
+	(this.cardCorner[3].setTexture this.cardCornerTexture[3])
 
 	# cards
 	(= this.cardsTotal 53)
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		#(def int index (dd_math_rand 5))
-		#(= this.cards[i].mesh this.cardFront[index])
-		#(= this.cards[i].font this.font)
 		(= this.cards[i].hidden 1)
-		(= this.cards[i].font this.cardFont)
+		#(= this.cards[i].font this.cardFont)
 		(= this.cards[i].meshBack this.cardBack)
 		(= this.cards[i].transparentProgram this.playerProgram)
+		#(= this.cards[i].cardDescription2 this.cardLabel[2])
 		(dd_matrix_identity this.cards[i])
 		)
 	)
@@ -180,6 +203,7 @@
 		(group
 		(this.cards[i].setId CARD_SINGLE_STEP)
 		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_SINGLE_STEP])
 		)
 	)
 
@@ -188,6 +212,7 @@
 		(group
 		(this.cards[i].setId CARD_THREE_STEPS)
 		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_THREE_STEPS])
 		)
 	)
 
@@ -196,6 +221,7 @@
 		(group
 		(this.cards[i].setId CARD_TRADE)
 		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_TRADE])
 		)
 	)
 	(= this.cards[ 9].cornerId CARD_CORNER_TEAR)
@@ -210,6 +236,7 @@
 		(group
 		(this.cards[i].setId CARD_CONDITIONAL)
 		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_CONDITIONAL])
 		)
 	)
 	(= this.cards[12].cornerId CARD_CORNER_TEAR)
@@ -224,6 +251,7 @@
 		(group
 		(this.cards[i].setId CARD_REPLACE)
 		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_REPLACE])
 		)
 	)
 	(= this.cards[16].cornerId CARD_CORNER_TEAR)
@@ -238,6 +266,7 @@
 		(group
 		(this.cards[i].setId CARD_GRAB)
 		(= this.cards[i].mesh this.cardFront[CARD_GRAB])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_GRAB])
 		)
 	)
 	(= this.cards[19].cornerId CARD_CORNER_TEAR)
@@ -252,6 +281,7 @@
 		(group
 		(this.cards[i].setId CARD_GRAB_GENERIC)
 		(= this.cards[i].mesh this.cardFront[CARD_GRAB_GENERIC])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_GRAB_GENERIC])
 		)
 	)
 	(= this.cards[23].cornerId CARD_CORNER_FROWN)
@@ -268,6 +298,7 @@
 		(group
 		(this.cards[i].setId CARD_APPROACH)
 		(= this.cards[i].mesh this.cardFront[CARD_APPROACH])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_APPROACH])
 		)
 	)
 	(= this.cards[27].cornerId CARD_CORNER_THUNDER)
@@ -282,6 +313,7 @@
 		(group
 		(this.cards[i].setId CARD_WIN)
 		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_WIN])
 		)
 	)
 
@@ -290,6 +322,7 @@
 		(group
 		(this.cards[i].setId CARD_HOLD_ONE_STEP)
 		(= this.cards[i].mesh this.cardFront[13])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_HOLD_ONE_STEP])
 		)
 	)
 
@@ -298,6 +331,7 @@
 		(group
 		(this.cards[i].setId CARD_NEXT_HAND)
 		(= this.cards[i].mesh this.cardFront[11])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_NEXT_HAND])
 		)
 	)
 	(= this.cards[40].cornerId CARD_CORNER_TEAR)
@@ -312,6 +346,7 @@
 		(group
 		(this.cards[i].setId CARD_IGNORE_MOVE)
 		(= this.cards[i].mesh this.cardFront[10])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_IGNORE_MOVE])
 		)
 	)
 	(= this.cards[43].cornerId CARD_CORNER_TEAR)
@@ -326,6 +361,7 @@
 		(group
 		(this.cards[i].setId CARD_ROSE_HELD_STEAL)
 		(= this.cards[i].mesh this.cardFront[14])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_ROSE_HELD_STEAL])
 		)
 	)
 	(= this.cards[46].cornerId CARD_CORNER_THUNDER)
@@ -340,14 +376,15 @@
 		(group
 		(this.cards[i].setId CARD_EMPTY)
 		(= this.cards[i].mesh this.cardFront[12])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_EMPTY])
 		)
 	)
 
 #	# all set debug
 #	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 #		(group
-#		(this.cards[i].setId CARD_ROSE_HELD_STEAL)
-#		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+#		(this.cards[i].setId CARD_SINGLE_STEP)
+#		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
 #		)
 #	)
 
@@ -359,8 +396,9 @@
 		(= this.tutCards[i].hidden 0)
 		(this.tutCards[i].setId (+ CARD_TUT_1 i))
 		(= this.tutCards[i].mesh this.cardFront[9])
-		(= this.tutCards[i].font this.cardFont)
 		(= this.tutCards[i].meshBack this.cardBack)
+		(def int labelIndex (+ 10 i))
+		(= this.tutCards[i].cardDescription2 this.cardLabel[labelIndex])
 		(dd_matrix_identity this.tutCards[i].target)
 		(dd_matrix_translate this.tutCards[i].target -1.75 2.01 2.7)
 		(dd_matrix_rotate this.tutCards[i].target -90 1 0 0)
@@ -397,18 +435,21 @@
 
 	# player meshes
 	(this.playerMesh[0].load (asset "assets/character.asset" DD_PLY))
-	(this.playerMesh[0].loadTexture (asset "assets/character_1.asset" DD_PLY))
+	(this.playerTexture[0].set (asset "assets/character_1.asset" DD_PLY))
+	(this.playerMesh[0].setTexture this.playerTexture[0])
 
 	(this.playerMesh[1].load (asset "assets/character.asset" DD_PLY))
-	(this.playerMesh[1].loadTexture (asset "assets/character_2.asset" DD_PLY))
+	(this.playerTexture[1].set (asset "assets/character_2.asset" DD_PLY))
+	(this.playerMesh[1].setTexture this.playerTexture[1])
 
 	# players 3-8
-	#(= this.playersTotal 4)
 	(= this.playersTotal numberOfPlayers)
 	(= this.player[0].isUser 1)
 	(= this.player[0].mesh this.playerMesh[0])
 	(= this.player[0].cardFronts this.cardFront)
+	(= this.player[0].cardLabels this.cardLabel)
 	(= this.player[0].transparentProgram this.playerProgram)
+	(= this.player[0].labelConfirm this.labelConfirm)
 
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
@@ -449,6 +490,9 @@
 		(= this.player[i].cardDeselectSound this.cardDeselectSound)
 
 		(= this.player[i].transparentProgram this.playerProgram)
+		(= this.player[i].labelConfirm this.labelConfirm)
+
+		(= this.player[i].cardLabels this.cardLabel)
 
 		)
 	)
@@ -477,7 +521,8 @@
 	# rose player
 	(= this.isRoseFlat 1)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
-	(this.roseCardMesh.loadTexture (asset "assets/rose.asset" DD_PLY))
+	(this.roseCardTexture.set (asset "assets/rose.asset" DD_PLY))
+	(this.roseCardMesh.setTexture this.roseCardTexture)
 	(this.roseCard.setId CARD_ROSE)
 	(= this.roseCard.mesh this.roseCardMesh)
 	(= this.roseCard.meshBack this.cardBack)
@@ -552,11 +597,6 @@
 			"void main() {\n"
 			"	avdl_frag_color = outColour +avdl_texture(image, outTexCoord);\n"
 
-			# For some reason the following line makes the shader to not compile on the following system:
-			#  GeForce GTX 960/PCIe/SSE2
-			#  GL version: 4.6.0 NVIDIA 456.71
-			#  glsl version: 4.60 NVIDIA
-			#"	avdl_frag_color = outColour;\n"
 			"}\n"
 		)
 	)
@@ -575,6 +615,154 @@
 
 	(= this.arrowRotation 0)
 	(= this.arrowRotationTarget 0)
+
+	(this.cardLabel[0].setText "Move the Rose 1 step.")
+	(this.cardLabel[0].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[1].setText "Move the Rose 3 steps.")
+	(this.cardLabel[1].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[2].setText (multistring
+		"The Flirt grabs the Rose. "
+		"Give a card to the Flirt and "
+		"receive a random card back. "
+		"If the Rose was picked receive an "
+		"additional card."
+		"Move the Rose 1 step."
+	))
+	(this.cardLabel[2].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[3].setText (multistring
+		"If the previous player is the Flirt, "
+		"move the Rose 1 step."
+		"Otherwise "
+		"move the Rose 3 steps."
+	))
+	(this.cardLabel[3].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[4].setText (multistring
+		"Draw 1 card. "
+		"Discard this card to "
+		"plan and execute "
+		"another card."
+	))
+	(this.cardLabel[4].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[5].setText (multistring
+		"If the Rose is in front of "
+		"you, grab it. Otherwise "
+		"move the Rose 1 step and "
+		"the Flirt grabs the Rose."
+	))
+	(this.cardLabel[5].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[6].setText "The Flirt grabs the Rose.")
+	(this.cardLabel[6].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[7].setText (multistring
+		"If you are not "
+		"the Flirt, "
+		"move the Rose 1 step. "
+		"Otherwise "
+		"move the Rose 3 steps."
+	))
+	(this.cardLabel[7].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[8].setText (multistring
+		"If you are holding "
+		"the Rose, "
+		"discard 1 card. "
+
+		"Move the Rose 1 step"
+	))
+	(this.cardLabel[8].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[9].setText (multistring
+		"A beautiful red rose that smells amazing."
+	))
+	(this.cardLabel[9].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[10].setText (multistring
+		"At start every player draws 5 cards. "
+		"One player gets the Rose card in front of them. "
+		"Whoever has the Rose is known as the Flirt."
+	))
+	(this.cardLabel[10].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[11].setText (multistring
+		"In the planning phase, starting with the Flirt, "
+		"every player picks a card and plans it face down on the table."
+	))
+	(this.cardLabel[11].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[12].setText (multistring
+		"The rose always moves clockwise. "
+		"If a player holds the rose moving it one step will "
+		"make it move in front of that player."
+	))
+	(this.cardLabel[12].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[13].setText (multistring
+		"In the execution phase starting with the Flirt,"
+		"reveal each card and execute its effect."
+	))
+	(this.cardLabel[13].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[14].setText (multistring
+		"In the end phase every player draws one card except the "
+		"Flirt. If a player has 2 or less cards in their hand "
+		"they win."
+	))
+	(this.cardLabel[14].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[15].setText (multistring
+		"The first enemy is called the childish king. "
+		"He will only play a card to move the Rose 1 step."
+	))
+	(this.cardLabel[15].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[16].setText (multistring
+		"The second enemy is called the blurry scream. "
+		"It will only play a card to move the Rose 3 steps."
+	))
+	(this.cardLabel[16].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[17].setText (multistring
+		"If the Flirt is holding the Rose, move it 2 steps. "
+		"Otherwise move the Rose 1 step."
+	))
+	(this.cardLabel[17].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[18].setText (multistring
+		"If the Flirt is holding the Rose, move it 2 steps "
+		"and the Flirt now grabs the Rose."
+	))
+	(this.cardLabel[18].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[19].setText (multistring
+		"Ignore the effect of the next card. "
+		"Move the Rose 1 step."
+	))
+	(this.cardLabel[19].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[20].setText (multistring
+		"If the Rose is held pick 1 random card from the Flirt. "
+		"If the Rose was picked move it 2 steps."
+	))
+	(this.cardLabel[20].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[21].setText (multistring
+		"This card does nothing"
+	))
+	(this.cardLabel[21].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.labelWin.setText "You won! Click anywhere to continue.")
+	(this.labelWin.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.labelLose.setText "You lost! Click anywhere to continue.")
+	(this.labelLose.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.labelConfirm.setText "Confirm?")
+	(this.labelConfirm.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	)
 )
@@ -663,6 +851,7 @@
 			(== this.actions[0].value PHASE_PLAN)
 				(group
 				(= this.phaseText "planning phase")
+				(= this.phaseTextCurrent this.phaseTextPlanning)
 
 				# ask all players to plan a card
 				(for (def int i this.rosePlayer) (< i (+ this.playersTotal this.rosePlayer)) (= i (+ i 1))
@@ -689,6 +878,7 @@
 			(== this.actions[0].value PHASE_EXECUTION)
 				(group
 				(= this.phaseText "execution phase")
+				(= this.phaseTextCurrent this.phaseTextExecution)
 
 				# reveal all planned cards, and execute their actions
 				(for (def int i this.rosePlayer) (< i (+ this.playersTotal this.rosePlayer)) (= i (+ i 1))
@@ -716,6 +906,7 @@
 			(== this.actions[0].value PHASE_END)
 				(group
 				(= this.phaseText "end phase")
+				(= this.phaseTextCurrent this.phaseTextEnd)
 
 				# all players, apart from the rose player, draw a card
 				(for (def int i (+ this.rosePlayer 1)) (< i (+ this.playersTotal this.rosePlayer)) (= i (+ i 1))
@@ -747,6 +938,7 @@
 			# error phase (should never trigger)
 				(group
 				(= this.phaseText "error phase")
+				(= this.phaseTextCurrent this.phaseTextError)
 				)
 			)
 
@@ -913,6 +1105,8 @@
 				(if (== cardId CARD_SINGLE_STEP)
 					(group
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_FOREACH_CORNER CARD_CORNER_TEAR this.actions[0].playerIndex 50)
+					(this.addInjectAction ACTION_ENDFOR 0 0 50)
 					(this.injectActionsToActions)
 					)
 				# move rose three steps
@@ -1335,6 +1529,37 @@
 			(group
 			(= this.actions[0].actionType ACTION_DELAY)
 			)
+		# check corner effects
+		(== this.actions[0].actionType ACTION_FOREACH_CORNER)
+			(group
+
+			(def int cornerCards 0)
+			# active player has corner symbols in their hand - select any number of them to discard
+			(for (def int i) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+				(group
+				(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.actions[0].value)
+					(= cornerCards (+ cornerCards 1))
+				)
+				)
+			)
+
+			# has corner cards to play
+			(if (> cornerCards 0)
+				(group
+				)
+			# no corner cards - skip to ENDFOR
+				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDFOR) (> this.actions[0].actionType ACTION_ENDFOR)) (> this.actionsTotal 0)) (= i i)
+					(this.removeAction)
+				)
+			)
+
+			(= this.actions[0].actionType ACTION_DELAY)
+
+			)
+		(== this.actions[0].actionType ACTION_ENDFOR)
+			(group
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
 
 		) # different behavior for each action
 
@@ -1487,7 +1712,7 @@
 	(dd_translatef 0 0 (+ (* 0.003 this.deckTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
 	(dd_scalef 0.15 0.15 0.15)
-	(this.font.drawInt this.deckTotal)
+	#(this.font.drawInt this.deckTotal)
 	(dd_matrix_pop)
 
 	# draw discard
@@ -1505,7 +1730,7 @@
 	(dd_translatef 0 0 (+ (* 0.003 this.discardTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
 	(dd_scalef 0.15 0.15 0.15)
-	(this.font.drawInt this.discardTotal)
+	#(this.font.drawInt this.discardTotal)
 	(dd_matrix_pop)
 
 	# draw every player apart from self
@@ -1545,27 +1770,37 @@
 	(dd_translatef 0 8 -25)
 	# draw end game
 	(if (>= this.victoriousPlayer 0)
+		(group
 		(if (== this.victoriousPlayer 0)
-			(this.font.drawLimit "You won click anywhere to continue"
-				(* (dd_screen_width_get 25) 1.8)
+			(this.labelWin.drawLimit
+				(* (dd_screen_width_get 25) 0.8)
 			)
-			(this.font.drawLimit "You lost click anywhere to continue"
-				(* (dd_screen_width_get 25) 1.8)
+			(this.labelLose.drawLimit
+				(* (dd_screen_width_get 25) 0.8)
 			)
+		)
 		)
 	# draw text of overlay card
 	this.ovButtons.isLookingAtCard
-		(this.font.drawLimit this.ovButtons.cardToShow.cardDescription
-			(* (dd_screen_width_get 25) 1.8)
+		(if this.ovButtons.cardToShow.cardDescription2
+			(group
+			(this.ovButtons.cardToShow.cardDescription2.drawLimit
+				(* (dd_screen_width_get 25) 0.8)
+			)
+			)
 		)
 	# player looking card
 	(>= this.player[0].userLookingAtCard 0)
-		(this.font.drawLimit this.player[0].cards[this.player[0].userLookingAtCard].cardDescription
-			(* (dd_screen_width_get 25) 1.8)
+		(if this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2
+			(group
+			(this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2.drawLimit
+				(* (dd_screen_width_get 25) 0.8)
+			)
+			)
 		)
 	# draw phase
-		(this.font.drawLimit this.phaseText
-			(* (dd_screen_width_get 25) 1.8)
+		(this.phaseTextCurrent.drawLimit
+			(* (dd_screen_width_get 25) 0.8)
 		)
 	)
 	(dd_matrix_pop)

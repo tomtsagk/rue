@@ -29,6 +29,8 @@
 	(def int hidden)
 
 	(def ref char cardDescription)
+	(def ref dd_string3d cardDescription2)
+	(def ref dd_string3d cardDescriptionFake)
 
 	# stats if card is fake
 	(def int idFake)
@@ -45,7 +47,7 @@
 	(function void drawRaw (group))
 
 	(function void setId (group int id))
-	(function void setFakeId (group int id dd_meshTexture mesh))
+	(function void setFakeId (group int id dd_meshTexture mesh dd_string3d label))
 	(function void clearFakeId (group))
 	(function int getId ())
 

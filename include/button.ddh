@@ -23,6 +23,9 @@
 
 	(def int isDisabled)
 
+	(def dd_string3d label)
+	(def dd_string3d description)
+
 	(function void setSize (group float sizeX float sizeY))
 	(function void setPosition (group float posX float posY float posZ))
 	(function void setProportionalPosition (group float propX float propY))
@@ -35,6 +38,7 @@
 	(function void applyMatrixTransform ())
 	(function void drawRaw ())
 	(function void draw ())
+	(function void drawText ())
 	(function void clean ())
 	(function void resize ())
 
