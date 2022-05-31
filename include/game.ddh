@@ -71,6 +71,7 @@
 	# game actions
 	(def int lastSelectedCardPlayerIndex)
 	(def int lastSelectedCardIndex)
+	(def int filterCorner)
 	(def GameAction actions[100])
 	(def int actionsTotal)
 	(def GameAction injectActions[100])

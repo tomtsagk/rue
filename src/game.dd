@@ -51,8 +51,8 @@
 (def int ACTION_WIN_CONDITION 16)
 (def int ACTION_IF_SELECTED_CARD_EQUALS 17)
 (def int ACTION_ENDIF 18)
-(def int ACTION_FOREACH_CORNER 19)
-(def int ACTION_ENDFOR 20)
+(def int ACTION_IF_SELECTED_CARD_HAS_CORNER 21)
+(def int ACTION_SELECT_CARD_CORNER 22)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -764,6 +764,8 @@
 	(this.labelConfirm.setText "Confirm?")
 	(this.labelConfirm.setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(= this.filterCorner -1)
+
 	)
 )
 
@@ -1008,6 +1010,39 @@
 			# user has to select a card from their own hands
 			(&& (== this.actions[0].playerIndex 0) (== this.actions[0].value this.actions[0].playerIndex))
 				(group
+
+				# player has to select card of given corner filter
+				(if (>= this.filterCorner 0)
+					(group
+
+					# check if player has cards with such corner
+					(def int hasCard 0)
+					(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+						(group
+						(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+							(group
+							(= hasCard 1)
+							(= i this.player[this.actions[0].playerIndex].cardsTotal)
+							)
+						)
+						)
+					)
+
+					# has cards with corner to play - wait for player to choose one
+					(if hasCard
+						(group)
+					# doesn't have card with corner - skip selecting a card
+						(group
+						(= this.actions[0].actionType ACTION_DELAY)
+						(= this.filterCorner -1)
+						(= this.lastSelectedCardPlayerIndex -1)
+						(= this.lastSelectedCardIndex -1)
+						)
+					)
+
+					)
+				)
+
 				(if (== this.guide 2)
 					(group
 					(this.ovButtons.setCard this.tutCards[2])
@@ -1017,12 +1052,64 @@
 				)
 			# AI has to select a card or user selects randomly
 				(group
-				(= this.lastSelectedCardPlayerIndex this.actions[0].value)
-				(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
+
+				# corner filter is active
+				(if (>= this.filterCorner 0)
+					(group
+
+					# find number of available cards
+					(def int cornerCards 0)
+					(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+						(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+							(= cornerCards (+ cornerCards 1))
+						)
+					)
+
+					# has cards with corner to play - pick one randomly
+					(if cornerCards
+						(group
+						(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+						(= this.lastSelectedCardIndex (dd_math_rand cornerCards))
+						(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+							(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+								(group
+								(= cornerCards (- cornerCards 1))
+								(if (<= cornerCards 0)
+									(= this.lastSelectedCardIndex i)
+								)
+								)
+							)
+						)
+						)
+					# doesn't have card with corner - skip selecting a card
+						(group
+						(= this.lastSelectedCardPlayerIndex -1)
+						(= this.lastSelectedCardIndex -1)
+						)
+					)
+					(= this.filterCorner -1)
+
+					)
+				# no corner filter - pick randomly
+					(group
+					(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+					(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
+					(= this.filterCorner -1)
+					)
+				)
 				(= this.actions[0].actionType ACTION_DELAY)
-				#(this.player[this.actions[0].playerIndex].selectCard)
+
 				)
 			)
+
+			)
+		# select a card with a specific corner
+		(== this.actions[0].actionType ACTION_SELECT_CARD_CORNER)
+			(group
+
+			(= this.filterCorner this.actions[0].value)
+			(= this.actions[0].value this.actions[0].playerIndex)
+			(= this.actions[0].actionType ACTION_SELECT_CARD)
 
 			)
 		# plan card
@@ -1033,8 +1120,10 @@
 			(if (== this.actions[0].playerIndex -1)
 				(group
 
+				(if (|| (== this.lastSelectedCardPlayerIndex -1) (== this.lastSelectedCardIndex -1))
+					(echo "tried to plan unselected card!")
 				# player tried to plan the rose! blasphemy! select another card
-				(if (== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].id CARD_ROSE)
+				(== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].id CARD_ROSE)
 					(group
 					(this.addInjectAction ACTION_SELECT_CARD this.lastSelectedCardPlayerIndex this.lastSelectedCardPlayerIndex 0)
 					(this.addInjectAction ACTION_PLAN_CARD -1 0 50)
@@ -1105,8 +1194,15 @@
 				(if (== cardId CARD_SINGLE_STEP)
 					(group
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
-					(this.addInjectAction ACTION_FOREACH_CORNER CARD_CORNER_TEAR this.actions[0].playerIndex 50)
-					(this.addInjectAction ACTION_ENDFOR 0 0 50)
+
+					# example of corner effect
+#					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
+#					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
+#					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+#					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+#					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 1 50)
+#					(this.addInjectAction ACTION_ENDIF 0 0 0)
+
 					(this.injectActionsToActions)
 					)
 				# move rose three steps
@@ -1513,8 +1609,36 @@
 			)
 		(== this.actions[0].actionType ACTION_IF_SELECTED_CARD_EQUALS)
 			(group
-			# rose is selected - continue as normal
-			(if (== (this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].getId) this.actions[0].value)
+			# no card is selected - skip to end of if statement
+			(if (|| (== this.lastSelectedCardPlayerIndex -1) (== this.lastSelectedCardIndex -1))
+				(group
+				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDIF) (> this.actions[0].actionType ACTION_ENDIF)) (> this.actionsTotal 0)) (= i i)
+					(this.removeAction)
+				)
+				)
+			# desired card is selected - continue as normal
+			(== (this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].getId) this.actions[0].value)
+				(group)
+			# not wanted card is selected - skip to end of if statement
+				(group
+				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDIF) (> this.actions[0].actionType ACTION_ENDIF)) (> this.actionsTotal 0)) (= i i)
+					(this.removeAction)
+				)
+				)
+			)
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+		(== this.actions[0].actionType ACTION_IF_SELECTED_CARD_HAS_CORNER)
+			(group
+			# no card is selected - skip to end of if statement
+			(if (|| (== this.lastSelectedCardPlayerIndex -1) (== this.lastSelectedCardIndex -1))
+				(group
+				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDIF) (> this.actions[0].actionType ACTION_ENDIF)) (> this.actionsTotal 0)) (= i i)
+					(this.removeAction)
+				)
+				)
+			# desired corner is selected - continue as normal
+			(== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].cornerId this.actions[0].value)
 				(group)
 			# not wanted card is selected - skip to end of if statement
 				(group
@@ -1526,37 +1650,6 @@
 			(= this.actions[0].actionType ACTION_DELAY)
 			)
 		(== this.actions[0].actionType ACTION_ENDIF)
-			(group
-			(= this.actions[0].actionType ACTION_DELAY)
-			)
-		# check corner effects
-		(== this.actions[0].actionType ACTION_FOREACH_CORNER)
-			(group
-
-			(def int cornerCards 0)
-			# active player has corner symbols in their hand - select any number of them to discard
-			(for (def int i) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
-				(group
-				(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.actions[0].value)
-					(= cornerCards (+ cornerCards 1))
-				)
-				)
-			)
-
-			# has corner cards to play
-			(if (> cornerCards 0)
-				(group
-				)
-			# no corner cards - skip to ENDFOR
-				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDFOR) (> this.actions[0].actionType ACTION_ENDFOR)) (> this.actionsTotal 0)) (= i i)
-					(this.removeAction)
-				)
-			)
-
-			(= this.actions[0].actionType ACTION_DELAY)
-
-			)
-		(== this.actions[0].actionType ACTION_ENDFOR)
 			(group
 			(= this.actions[0].actionType ACTION_DELAY)
 			)
@@ -1881,13 +1974,22 @@
 
 					(= this.lastSelectedCardPlayerIndex 0)
 					(= this.lastSelectedCardIndex this.player[0].highlightCard)
+					(= this.filterCorner -1)
 					(= this.actions[0].actionType ACTION_DELAY)
+					(= this.actions[0].delay 0)
 
 					(= this.player[0].userLookingAtCard -1)
 					(= this.player[0].highlightCard -1)
 					)
 				# just highlighted card
-					(this.player[0].highlightLookingCard)
+					(group
+					(if (|| (== this.filterCorner -1) (&&
+					(>= this.filterCorner 0) (>= this.player[0].userLookingAtCard 0)
+					(== this.player[0].cards[this.player[0].userLookingAtCard].cornerId this.filterCorner)))
+						(this.player[0].highlightLookingCard)
+						(= this.player[0].highlightCard -1)
+					)
+					)
 				)
 
 				)

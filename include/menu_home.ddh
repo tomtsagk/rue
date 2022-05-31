@@ -1,5 +1,4 @@
 (include "button.ddh")
-(include "text.ddh")
 
 # options menu
 # has to open on any menu and draw everything
