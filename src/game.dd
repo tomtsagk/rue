@@ -51,8 +51,9 @@
 (def int ACTION_WIN_CONDITION 16)
 (def int ACTION_IF_SELECTED_CARD_EQUALS 17)
 (def int ACTION_ENDIF 18)
-(def int ACTION_IF_SELECTED_CARD_HAS_CORNER 21)
-(def int ACTION_SELECT_CARD_CORNER 22)
+(def int ACTION_IF_SELECTED_CARD_HAS_CORNER 19)
+(def int ACTION_SELECT_CARD_CORNER 20)
+(def int ACTION_REREVEAL_PLANNED_CARD 21)
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
@@ -380,13 +381,13 @@
 		)
 	)
 
-#	# all set debug
-#	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
-#		(group
-#		(this.cards[i].setId CARD_SINGLE_STEP)
-#		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
-#		)
-#	)
+	# all set debug
+	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_SINGLE_STEP)
+		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		)
+	)
 
 	# tut cards
 	(= this.guide guide)
@@ -790,7 +791,7 @@
 	)
 
 	# execute remaining actions
-	(if (&& (> this.actionsTotal 0) (== this.ovButtons.cardToShow 0))
+	(if (&& (> this.actionsTotal 0) (|| (== this.ovButtons.cardToShow 0) (== this.ovButtons.waitUntilCardConfirmed 0)))
 		(group
 
 		# delay after executing an action
@@ -1032,11 +1033,14 @@
 					(if hasCard
 						(group)
 					# doesn't have card with corner - skip selecting a card
+					# for now user must manually skipped effect
 						(group
-						(= this.actions[0].actionType ACTION_DELAY)
-						(= this.filterCorner -1)
-						(= this.lastSelectedCardPlayerIndex -1)
-						(= this.lastSelectedCardIndex -1)
+						#(= this.actions[0].actionType ACTION_DELAY)
+						#(= this.actions[0].delay 0)
+						#(= this.filterCorner -1)
+						#(= this.lastSelectedCardPlayerIndex -1)
+						#(= this.lastSelectedCardIndex -1)
+						#(this.ovButtons.unsetCard)
 						)
 					)
 
@@ -1088,6 +1092,7 @@
 						)
 					)
 					(= this.filterCorner -1)
+					(this.ovButtons.unsetCard)
 
 					)
 				# no corner filter - pick randomly
@@ -1095,6 +1100,7 @@
 					(= this.lastSelectedCardPlayerIndex this.actions[0].value)
 					(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
 					(= this.filterCorner -1)
+					(this.ovButtons.unsetCard)
 					)
 				)
 				(= this.actions[0].actionType ACTION_DELAY)
@@ -1162,12 +1168,36 @@
 		(== this.actions[0].actionType ACTION_REVEAL_PLANNED_CARD)
 			(group
 			(def int playerIndex this.actions[0].playerIndex)
+			(= this.ovButtons.waitUntilCardConfirmed 1)
 
 			# there is a planned card - reveal it
 			(if (this.player[playerIndex].hasPlannedCard)
 				(group
 				(= this.player[playerIndex].selectedCard2.hidden 0)
 				(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
+				(this.ovButtons.setCard this.player[playerIndex].selectedCard2)
+				)
+			# no planned card - skip this action
+				(group
+				(= this.actions[0].delay 0)
+				)
+			)
+			(= this.actions[0].actionType ACTION_DELAY)
+			)
+		# re-reveal planned card
+		(== this.actions[0].actionType ACTION_REREVEAL_PLANNED_CARD)
+			(group
+			(def int playerIndex this.actions[0].playerIndex)
+
+			# there is a planned card - reveal it
+			(if (this.player[playerIndex].hasPlannedCard)
+				(group
+				# for user - don't wait for user input
+				(if (== playerIndex 0)
+					(= this.ovButtons.waitUntilCardConfirmed 0)
+				# for AI - wait user to confirm action
+					(= this.ovButtons.waitUntilCardConfirmed 1)
+				)
 				(this.ovButtons.setCard this.player[playerIndex].selectedCard2)
 				)
 			# no planned card - skip this action
@@ -1196,12 +1226,14 @@
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
 
 					# example of corner effect
-#					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
-#					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
-#					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
-#					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
-#					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 1 50)
-#					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					#(this.addInjectAction ACTION_REVEAL_PLANNED_CARD this.actions[0].playerIndex 0 50)
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 1 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
 
 					(this.injectActionsToActions)
 					)
@@ -1950,7 +1982,6 @@
 		# was not rotating - click
 		(if (== this.isRotating 0)
 			(group
-
 			# someone has won, move to next menu
 			(if (>= this.victoriousPlayer 0)
 				(group
@@ -1958,37 +1989,57 @@
 				(dd_world_prepare world_menu 1.0)
 				(dd_world_ready)
 				)
-			# showing overlay card
-			this.ovButtons.cardToShow
+			# nobody has won - proceed with input handling
 				(group
-				(this.ovButtons.click)
+
+				# showing overlay card
+				(if this.ovButtons.cardToShow
+					(group
+					(if (this.ovButtons.click)
+						(group
+						(if (== this.actions[0].actionType ACTION_SELECT_CARD)
+							(group
+							(= this.filterCorner -1)
+							(= this.lastSelectedCardPlayerIndex -1)
+							(= this.lastSelectedCardIndex -1)
+							(= this.actions[0].actionType ACTION_DELAY)
+							)
+						)
+						)
+					)
+					)
 				)
-			# waiting user to select a card
-			(&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
-				(group
 
-				# just selected a card
-				(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
-					(>= this.player[0].highlightCard 0))
+				# waiting user to select a card
+				(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
 					(group
 
-					(= this.lastSelectedCardPlayerIndex 0)
-					(= this.lastSelectedCardIndex this.player[0].highlightCard)
-					(= this.filterCorner -1)
-					(= this.actions[0].actionType ACTION_DELAY)
-					(= this.actions[0].delay 0)
+					# just selected a card
+					(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
+						(>= this.player[0].highlightCard 0))
+						(group
 
-					(= this.player[0].userLookingAtCard -1)
-					(= this.player[0].highlightCard -1)
-					)
-				# just highlighted card
-					(group
-					(if (|| (== this.filterCorner -1) (&&
-					(>= this.filterCorner 0) (>= this.player[0].userLookingAtCard 0)
-					(== this.player[0].cards[this.player[0].userLookingAtCard].cornerId this.filterCorner)))
-						(this.player[0].highlightLookingCard)
+						(= this.lastSelectedCardPlayerIndex 0)
+						(= this.lastSelectedCardIndex this.player[0].highlightCard)
+						(= this.filterCorner -1)
+						(this.ovButtons.unsetCard)
+						(= this.actions[0].actionType ACTION_DELAY)
+						(= this.actions[0].delay 0)
+
+						(= this.player[0].userLookingAtCard -1)
 						(= this.player[0].highlightCard -1)
+						)
+					# just highlighted card
+						(group
+						(if (|| (== this.filterCorner -1) (&&
+						(>= this.filterCorner 0) (>= this.player[0].userLookingAtCard 0)
+						(== this.player[0].cards[this.player[0].userLookingAtCard].cornerId this.filterCorner)))
+							(this.player[0].highlightLookingCard)
+							(= this.player[0].highlightCard -1)
+						)
+						)
 					)
+
 					)
 				)
 
