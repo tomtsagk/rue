@@ -381,13 +381,13 @@
 		)
 	)
 
-	# all set debug
-	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_SINGLE_STEP)
-		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
-		)
-	)
+#	# all set debug
+#	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
+#		(group
+#		(this.cards[i].setId CARD_GRAB)
+#		(= this.cards[i].mesh this.cardFront[CARD_GRAB])
+#		)
+#	)
 
 	# tut cards
 	(= this.guide guide)
@@ -629,15 +629,17 @@
 		"receive a random card back. "
 		"If the Rose was picked receive an "
 		"additional card."
-		"Move the Rose 1 step."
+		"Move the Rose 1 step. "
+		"Thunder: The Flirt grabs the Rose."
 	))
 	(this.cardLabel[2].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[3].setText (multistring
-		"If the previous player is the Flirt, "
+		"If the player to your right is the Flirt, "
 		"move the Rose 1 step."
 		"Otherwise "
-		"move the Rose 3 steps."
+		"move the Rose 3 steps. "
+		"Thunder: The Flirt grabs the Rose."
 	))
 	(this.cardLabel[3].setAlign DD_STRING3D_ALIGN_CENTER)
 
@@ -650,22 +652,23 @@
 	(this.cardLabel[4].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[5].setText (multistring
-		"If the Rose is in front of "
-		"you, grab it. Otherwise "
+		"If you are the Flirt "
+		"grab the Rose. Otherwise "
 		"move the Rose 1 step and "
-		"the Flirt grabs the Rose."
+		"the Flirt grabs the Rose. "
+		"Frown: Move the Rose 1 step."
 	))
 	(this.cardLabel[5].setAlign DD_STRING3D_ALIGN_CENTER)
 
-	(this.cardLabel[6].setText "The Flirt grabs the Rose.")
+	(this.cardLabel[6].setText "The Flirt grabs the Rose. Tear: Move the Rose 1 step.")
 	(this.cardLabel[6].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[7].setText (multistring
-		"If you are not "
-		"the Flirt, "
+		"If you are not the Flirt, "
 		"move the Rose 1 step. "
 		"Otherwise "
-		"move the Rose 3 steps."
+		"move the Rose 3 steps. "
+		"Heart: The Flirt grabs the Rose. "
 	))
 	(this.cardLabel[7].setAlign DD_STRING3D_ALIGN_CENTER)
 
@@ -736,19 +739,22 @@
 
 	(this.cardLabel[18].setText (multistring
 		"If the Flirt is holding the Rose, move it 2 steps "
-		"and the Flirt now grabs the Rose."
+		"and the Flirt now grabs the Rose. "
+		"Frown: Move the Rose 1 step."
 	))
 	(this.cardLabel[18].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[19].setText (multistring
 		"Ignore the effect of the next card. "
-		"Move the Rose 1 step."
+		"Move the Rose 1 step. "
+		"Heart: Move the Rose 1 step."
 	))
 	(this.cardLabel[19].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[20].setText (multistring
-		"If the Rose is held pick 1 random card from the Flirt. "
-		"If the Rose was picked move it 2 steps."
+		"If the Rose is held select 1 random card from the Flirt. "
+		"If it was the Rose, move it 2 steps. "
+		"Tear: Move the Rose 1 step."
 	))
 	(this.cardLabel[20].setAlign DD_STRING3D_ALIGN_CENTER)
 
@@ -1225,15 +1231,15 @@
 					(group
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
 
-					# example of corner effect
-					#(this.addInjectAction ACTION_REVEAL_PLANNED_CARD this.actions[0].playerIndex 0 50)
-					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
-					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
-					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
-					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
-					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
-					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 1 50)
-					(this.addInjectAction ACTION_ENDIF 0 0 0)
+#					# example of corner effect
+#					#(this.addInjectAction ACTION_REVEAL_PLANNED_CARD this.actions[0].playerIndex 0 50)
+#					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+#					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
+#					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
+#					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+#					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+#					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 1 50)
+#					(this.addInjectAction ACTION_ENDIF 0 0 0)
 
 					(this.injectActionsToActions)
 					)
@@ -1256,7 +1262,6 @@
 						(if (== this.isRoseFlat 0)
 							(group
 							(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
-							(this.injectActionsToActions)
 							)
 						)
 						)
@@ -1287,10 +1292,18 @@
 						# move rose one step
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
 
-						(this.injectActionsToActions)
-
 						)
 					)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_THUNDER 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_THUNDER 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
+		"Thunder: The Flirt grabs the Rose."
 
 					)
 				# if previous player is the flirt, move Rose one step, otherwise three steps
@@ -1300,16 +1313,24 @@
 					(if (== onePreviousIndex this.rosePlayer)
 						(group
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
-						(this.injectActionsToActions)
 						)
 					# else
 						(group
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
-						(this.injectActionsToActions)
 						)
 					)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_THUNDER 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_THUNDER 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
+
 					)
 				# discard your planned card, draw one card, plan another card and execute it
 				(== cardId CARD_REPLACE)
@@ -1332,15 +1353,22 @@
 					(if (== this.actions[0].playerIndex this.rosePlayer)
 						(group
 						(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
-						(this.injectActionsToActions)
 						)
 					# otherwise, move one step, rose player grabs rose
 						(group
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
 						(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
-						(this.injectActionsToActions)
 						)
 					)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_FROWN 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_FROWN 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
 
 					)
 				# grab generic
@@ -1349,6 +1377,14 @@
 					(group
 
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 
 					)
@@ -1363,14 +1399,21 @@
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
-						(this.injectActionsToActions)
 						)
 					# active user is not rose player, move rose 1 step
 						(group
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
-						(this.injectActionsToActions)
 						)
 					)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
 
 					)
 				# win
@@ -1400,6 +1443,7 @@
 					)
 
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+
 					(this.injectActionsToActions)
 
 					)
@@ -1413,9 +1457,17 @@
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 						(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 20)
 						(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
-						(this.injectActionsToActions)
 						)
 					)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_FROWN 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_FROWN 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
 
 					)
 				# ignore next
@@ -1430,9 +1482,18 @@
 						(dd_matrix_rotate this.player[nextIndex].selectedCard2.target 180 0 1 0)
 						(= this.player[nextIndex].selectedCard2.hidden 0)
 						(this.addInjectAction ACTION_DISCARD_PLANNED_CARD nextIndex 0 50)
-						(this.injectActionsToActions)
 						)
 					)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_HEART 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_HEART 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
 
 					)
 				# rose held steal
@@ -1443,6 +1504,14 @@
 					# if selected card is rose, move two steps
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_EQUALS 0 CARD_ROSE 0)
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+
+					# corner ability
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
