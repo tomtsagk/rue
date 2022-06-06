@@ -30,7 +30,7 @@
 	(def menu_stages menuStages)
 
 	# theme
-	(def dd_sound theme)
+	(def dd_music theme)
 
 	(function void create (group))
 	(function void onload (group))

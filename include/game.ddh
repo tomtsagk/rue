@@ -47,6 +47,9 @@
 	# overlay buttons
 	(def OverlayButtons ovButtons)
 
+	# player program
+	(def avdl_program playerProgram)
+
 	# arrow shader
 	(def avdl_program arrowProgramAvdl)
 	(def float arrowActiveCol[3])
@@ -55,6 +58,12 @@
 
 	# game phases
 	(def ref char phaseText)
+	(def ref dd_string3d phaseTextCurrent)
+	(def dd_string3d phaseTextSetup)
+	(def dd_string3d phaseTextPlanning)
+	(def dd_string3d phaseTextExecution)
+	(def dd_string3d phaseTextEnd)
+	(def dd_string3d phaseTextError)
 	(def int lookingAtChoosenAction)
 	(def int confirmChoosenAction)
 	(def int phase)
@@ -62,6 +71,7 @@
 	# game actions
 	(def int lastSelectedCardPlayerIndex)
 	(def int lastSelectedCardIndex)
+	(def int filterCorner)
 	(def GameAction actions[100])
 	(def int actionsTotal)
 	(def GameAction injectActions[100])
@@ -84,6 +94,7 @@
 
 	# rose player
 	(def dd_meshTexture roseCardMesh)
+	(def dd_image roseCardTexture)
 	(def int rosePlayer)
 	(def Card roseCard)
 	(def int isRoseFlat)
@@ -97,6 +108,7 @@
 	# stage
 	(def dd_meshColour stage)
 	(def dd_meshTexture table)
+	(def dd_image tableTexture)
 	(def dd_meshColour tableArrow)
 	(def dd_meshColour tableArrowDecoration)
 	(def float arrowRotation)
@@ -104,7 +116,11 @@
 
 	# card meshes
 	(def dd_meshTexture cardBack)
+	(def dd_image cardBackTexture)
 	(def dd_meshTexture cardFront[15])
+	(def dd_image cardFrontTexture[15])
+	(def dd_meshTexture cardCorner[4])
+	(def dd_image cardCornerTexture[4])
 
 	# cards
 	(def int cardsTotal)
@@ -127,6 +143,7 @@
 
 	# player meshes
 	(def dd_meshTexture playerMesh[2])
+	(def dd_image playerTexture[2])
 
 	# players
 	(def int startingPlayer)
@@ -144,6 +161,12 @@
 
 	(def dd_sound cardSelectSound)
 	(def dd_sound cardDeselectSound)
+
+	# labels
+	(def dd_string3d cardLabel[22])
+	(def dd_string3d labelWin)
+	(def dd_string3d labelLose)
+	(def dd_string3d labelConfirm)
 
 	(function void create (group))
 	(function void onload (group))

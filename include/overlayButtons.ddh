@@ -14,16 +14,21 @@
 	(def ref Card cardToShow)
 	(def int isLookingAtCard)
 	(def int hasConfirmed)
+	(def int waitUntilCardConfirmed)
+
+	(def dd_string3d confirmLabel)
+	(def dd_string3d skipLabel)
 
 	(function void lookAt (group int x int y))
-	(function void click (group))
+	(function int click ())
+	(function void unsetCard ())
 
 	(function void setCard (group Card c))
-	(function void create (group))
-	(function void update (group))
-	(function void clean (group))
+	(function void create ())
+	(function void update ())
+	(function void clean ())
 
-	(function void draw (group))
+	(function void draw ())
 
 	)
 ) # overlay buttons

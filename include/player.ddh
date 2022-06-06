@@ -29,12 +29,17 @@
 	(def ref Card selectedCard2)
 
 	(def ref dd_meshTexture cardFronts)
+	(def ref dd_string3d cardLabels)
 
 	(def ref dd_sound cardLookSound)
 	(def ref dd_sound cardPlaceSound)
 
 	(def ref dd_sound cardSelectSound)
 	(def ref dd_sound cardDeselectSound)
+
+	(def ref avdl_program transparentProgram)
+
+	(def ref dd_string3d labelConfirm)
 
 	# functions
 	(function void create (group))

@@ -13,8 +13,8 @@
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.9 0.9 0.9)
-	(this.font.setColorBack 0.3 0.3 0.3)
+	#(this.font.setColorFront 0.9 0.9 0.9)
+	#(this.font.setColorBack 0.3 0.3 0.3)
 
 	# selection
 	(= this.highlightCard -1)
@@ -28,6 +28,10 @@
 	(= this.userLookingAtCard -1)
 
 	(= this.cardFronts 0)
+
+	(= this.transparentProgram 0)
+
+	(= this.labelConfirm 0)
 
 	)
 )
@@ -52,8 +56,10 @@
 			(dd_scalef 1.15 1.15 1.15)
 			(this.cards[i].drawRaw)
 			(dd_translatef 0 0 0.01)
-			(dd_scalef 0.1 0.1 0.1)
-			(this.font.draw "confirm")
+			(dd_scalef 0.055 0.055 0.055)
+			(if this.labelConfirm
+				(this.labelConfirm.draw)
+			)
 			(dd_matrix_pop)
 			)
 		# looking at card
@@ -106,7 +112,9 @@
 	# draw player
 	(dd_matrix_push)
 	(dd_multMatrixf this)
+	(this.transparentProgram.useProgram)
 	(this.mesh.draw)
+	(avdl_useProgram 0)
 	(dd_translatef 0 2.2 0.3)
 	(dd_scalef 0.5 0.5 0.5)
 	(this.font.drawInt this.cardsTotal)
@@ -134,12 +142,11 @@
 
 		# test first AI - do not attempt to fake the rose
 		(if (== card.id 9)
-			(group
-			)
+			(group)
 			(if (== this.type 0)
-				(card.setFakeId card 0 this.cardFronts)
+				(card.setFakeId card 0 this.cardFronts this.cardLabels)
 			(== this.type 1)
-				(card.setFakeId card 1 (+ this.cardFronts 1))
+				(card.setFakeId card 1 (+ this.cardFronts 1) (+ this.cardLabels 1))
 			)
 		)
 

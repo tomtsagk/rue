@@ -1,3 +1,9 @@
+(def extern int CARD_CORNER_NONE)
+(def extern int CARD_CORNER_TEAR)
+(def extern int CARD_CORNER_THUNDER)
+(def extern int CARD_CORNER_FROWN)
+(def extern int CARD_CORNER_HEART)
+
 # card class
 (class Card dd_matrix
 	(group
@@ -8,9 +14,13 @@
 	# id of card - determines its effect
 	(def int id)
 
+	# corner id - determines the corner effect
+	(def int cornerId)
+
 	# front and back of the card
 	(def ref dd_meshTexture mesh)
 	(def ref dd_meshTexture meshBack)
+	(def ref dd_meshTexture meshCorner)
 
 	# it's desired location (where it constantly moves to)
 	(def dd_matrix target)
@@ -19,10 +29,14 @@
 	(def int hidden)
 
 	(def ref char cardDescription)
+	(def ref dd_string3d cardDescription2)
+	(def ref dd_string3d cardDescriptionFake)
 
 	# stats if card is fake
 	(def int idFake)
 	(def ref dd_meshTexture meshFake)
+
+	(def ref avdl_program transparentProgram)
 
 	(function void create (group))
 	(function void clean (group))
@@ -33,7 +47,7 @@
 	(function void drawRaw (group))
 
 	(function void setId (group int id))
-	(function void setFakeId (group int id dd_meshTexture mesh))
+	(function void setFakeId (group int id dd_meshTexture mesh dd_string3d label))
 	(function void clearFakeId (group))
 	(function int getId ())
 

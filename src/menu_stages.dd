@@ -14,8 +14,8 @@
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setColorFront 0.8 0.8 0.8)
-	(this.font.setColorBack 0.3 0.3 0.3)
+	#(this.font.setColorFront 0.8 0.8 0.8)
+	#(this.font.setColorBack 0.3 0.3 0.3)
 
 	# buttons
 	(= this.buttonTotal 6)
@@ -24,6 +24,8 @@
 	(this.button[0].setProportionalPosition 0.25 0.75)
 	(this.button[0].setProportionalWidth 0.25)
 	(this.button[0].setProportionalSize 0.8)
+	(this.button[0].label.setText "0")
+	(this.button[0].description.setText "Play stage 0")
 
 	(this.button[1].mesh.load (asset "assets/button.asset" DD_PLY))
 	(this.button[1].setSize 1 1)
@@ -31,7 +33,15 @@
 	(this.button[1].setProportionalWidth 0.25)
 	(this.button[1].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 0) 0)
+		(group
 		(this.button[1].disable)
+		(this.button[1].label.setText "locked")
+		(this.button[1].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[1].label.setText "1")
+		(this.button[1].description.setText "Play stage 1")
+		)
 	)
 
 	(this.button[2].mesh.load (asset "assets/button.asset" DD_PLY))
@@ -40,7 +50,15 @@
 	(this.button[2].setProportionalWidth 0.25)
 	(this.button[2].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 1) 0)
+		(group
 		(this.button[2].disable)
+		(this.button[2].label.setText "locked")
+		(this.button[2].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[2].label.setText "2")
+		(this.button[2].description.setText "Play stage 2")
+		)
 	)
 
 	(this.button[3].mesh.load (asset "assets/button.asset" DD_PLY))
@@ -49,7 +67,15 @@
 	(this.button[3].setProportionalWidth 0.25)
 	(this.button[3].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 2) 0)
+		(group
 		(this.button[3].disable)
+		(this.button[3].label.setText "locked")
+		(this.button[3].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[3].label.setText "3")
+		(this.button[3].description.setText "Play stage 3")
+		)
 	)
 
 	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
@@ -58,7 +84,15 @@
 	(this.button[4].setProportionalWidth 0.25)
 	(this.button[4].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
 		(this.button[4].disable)
+		(this.button[4].label.setText "locked")
+		(this.button[4].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[4].label.setText "4")
+		(this.button[4].description.setText "Play stage 4")
+		)
 	)
 
 #	(this.button[5].mesh.load (asset "assets/button.asset" DD_PLY))
@@ -74,6 +108,8 @@
 	(this.button[5].setSize 1 1)
 	(this.button[5].setProportionalPosition 0.16 0.15)
 	(this.button[5].setProportionalWidth 0.25)
+	(this.button[5].label.setText "Back")
+	(this.button[5].description.setText "Return to main menu")
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -253,14 +289,7 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 
-		(if (&& (>= i 0) (< i 5))
-			(if this.button[i].isDisabled
-				(this.font.draw "locked")
-				(this.font.drawInt i)
-			)
-		# else
-			(this.font.draw "back")
-		)
+		(this.button[i].drawText)
 
 		(dd_matrix_pop)
 		)
@@ -276,40 +305,41 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.2 0.2 0.2)
 		(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		(if 0#this.isMovingToNewWorld
-			(this.font.drawLimit "loading" limit)
-		(== this.selection 0)
-			(if this.button[this.selection].isDisabled
-				(this.font.drawLimit "play previous stage to unlock" limit)
-				(this.font.drawLimit "stage 1" limit)
-			)
-		(== this.selection 1)
-			(if this.button[this.selection].isDisabled
-				(this.font.drawLimit "play previous stage to unlock" limit)
-				(this.font.drawLimit "stage 2" limit)
-			)
-		(== this.selection 2)
-			(if this.button[this.selection].isDisabled
-				(this.font.drawLimit "play previous stage to unlock" limit)
-				(this.font.drawLimit "stage 3" limit)
-			)
-		(== this.selection 3)
-			(if this.button[this.selection].isDisabled
-				(this.font.drawLimit "play previous stage to unlock" limit)
-				(this.font.drawLimit "stage 4" limit)
-			)
-		(== this.selection 4)
-			(if this.button[this.selection].isDisabled
-				(this.font.drawLimit "play previous stage to unlock" limit)
-				(this.font.drawLimit "stage 5" limit)
-			)
-#		(== this.selection 5)
+		(this.button[this.selection].description.draw)
+#		(if 0#this.isMovingToNewWorld
+#			(this.font.drawLimit "loading" limit)
+#		(== this.selection 0)
 #			(if this.button[this.selection].isDisabled
 #				(this.font.drawLimit "play previous stage to unlock" limit)
-#				(this.font.drawLimit "stage 6" limit)
+#				(this.font.drawLimit "stage 1" limit)
 #			)
-			(this.font.drawLimit "back to main menu" limit)
-		)
+#		(== this.selection 1)
+#			(if this.button[this.selection].isDisabled
+#				(this.font.drawLimit "play previous stage to unlock" limit)
+#				(this.font.drawLimit "stage 2" limit)
+#			)
+#		(== this.selection 2)
+#			(if this.button[this.selection].isDisabled
+#				(this.font.drawLimit "play previous stage to unlock" limit)
+#				(this.font.drawLimit "stage 3" limit)
+#			)
+#		(== this.selection 3)
+#			(if this.button[this.selection].isDisabled
+#				(this.font.drawLimit "play previous stage to unlock" limit)
+#				(this.font.drawLimit "stage 4" limit)
+#			)
+#		(== this.selection 4)
+#			(if this.button[this.selection].isDisabled
+#				(this.font.drawLimit "play previous stage to unlock" limit)
+#				(this.font.drawLimit "stage 5" limit)
+#			)
+##		(== this.selection 5)
+##			(if this.button[this.selection].isDisabled
+##				(this.font.drawLimit "play previous stage to unlock" limit)
+##				(this.font.drawLimit "stage 6" limit)
+##			)
+#			(this.font.drawLimit "back to main menu" limit)
+#		)
 
 		(dd_matrix_pop)
 		)
@@ -324,7 +354,7 @@
 		-5
 	)
 	(dd_scalef 0.15 0.15 0.15)
-	(this.font.draw "alpha version")
+	#(this.font.draw "alpha version")
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	(dd_matrix_pop)
 

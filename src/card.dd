@@ -1,9 +1,16 @@
 (include "card.ddh")
 
+(def int CARD_CORNER_NONE -1)
+(def int CARD_CORNER_TEAR 0)
+(def int CARD_CORNER_THUNDER 1)
+(def int CARD_CORNER_FROWN 2)
+(def int CARD_CORNER_HEART 3)
+
 (class_function Card void create (group)
 	(group
 
 	(= this.id 0)
+	(= this.cornerId -1)
 	(dd_matrix_identity this.target)
 
 	(= this.hidden 0)
@@ -12,10 +19,16 @@
 
 	(= this.mesh 0)
 	(= this.meshBack 0)
+	(= this.meshCorner 0)
 
 	# fake stats
 	(= this.idFake -1)
 	(= this.meshFake 0)
+	(= this.cardDescriptionFake 0)
+
+	(= this.transparentProgram 0)
+
+	(= this.cardDescription2 0)
 
 	)
 )
@@ -46,9 +59,26 @@
 (class_function Card void drawRaw (group)
 	(group
 	(if (== this.hidden 0)
+		(group
 		(this.mesh.draw)
+
+		# draw corner - if any
+		(if (&& this.transparentProgram this.meshCorner)
+			(group
+			(this.transparentProgram.useProgram)
+			(dd_matrix_push)
+			(dd_translatef 0.15 0.24 0.01)
+			(dd_scalef 0.05 0.05 0.05)
+			(this.meshCorner.draw)
+			(dd_matrix_pop)
+			(avdl_useProgram 0)
+			)
+		)
+
+		)
 	)
 	(this.meshBack.draw)
+
 	)
 )
 
@@ -217,12 +247,15 @@
 	)
 )
 
-(class_function Card void setFakeId (group int givenId dd_meshTexture mesh)
+(class_function Card void setFakeId (group int givenId dd_meshTexture mesh dd_string3d label)
 	(group
 	(= this.idFake this.id)
 	(this.setId givenId)
 	(= this.meshFake this.mesh)
 	(= this.mesh mesh)
+
+	(= this.cardDescriptionFake this.cardDescription2)
+	(= this.cardDescription2 label)
 	)
 )
 
@@ -239,6 +272,13 @@
 		(group
 		(= this.mesh this.meshFake)
 		(= this.meshFake 0)
+		)
+	)
+
+	(if this.cardDescriptionFake
+		(group
+		(= this.cardDescription2 this.cardDescriptionFake)
+		(= this.cardDescriptionFake 0)
 		)
 	)
 

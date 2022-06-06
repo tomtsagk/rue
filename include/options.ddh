@@ -15,6 +15,8 @@
 	(def float buttonInactiveCol[3])
 
 	# labels
+	(def dd_string3d labelMusic2)
+	(def dd_string3d labelAudio2)
 	(def Button labelMusic)
 	(def Button labelAudio)
 
@@ -35,6 +37,12 @@
 	(def dd_sound hoverSound)
 	(def dd_sound clickSmallSound)
 	(def dd_sound clickBigSound)
+
+	# volume data
+	(def int volumeMusic)
+	(def int volumeSound)
+	(def dd_meshColour volumeParticle)
+	(def dd_meshColour volumeParticleStart)
 
 	(function void create (group))
 	(function void resize (group))
