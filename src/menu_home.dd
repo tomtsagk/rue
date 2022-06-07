@@ -231,7 +231,7 @@
 		(this.button[i].drawRaw)
 
 		(dd_translatef 0 0 0.1)
-		(dd_scalef 0.2 0.2 0.2)
+		(dd_scalef 0.3 0.3 0.3)
 
 		(this.button[i].drawText)
 
@@ -247,9 +247,9 @@
 		(this.textButton.applyTransform)
 		(this.textButton.applyMatrixTransform)
 		(dd_translatef 0 0 0.1)
-		(dd_scalef 0.2 0.2 0.2)
+		(dd_scalef 0.3 0.3 0.3)
 		#(def int limit (* (dd_screen_width_get this.textButton.z) -2))
-		(this.button[this.selection].description.drawLimit 20)
+		(this.button[this.selection].description.drawLimit 25)
 #		(if 0#this.isMovingToNewWorld
 #			(this.font.drawLimit "loading" limit)
 #		(== this.selection 0)
@@ -274,7 +274,7 @@
 		(+ (/ (dd_screen_height_get 5) -2) 0.15)
 		-5
 	)
-	(dd_scalef 0.15 0.15 0.15)
+	(dd_scalef 0.25 0.25 0.25)
 	(this.versionLabel.draw)
 	(dd_matrix_pop)
 

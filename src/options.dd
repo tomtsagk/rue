@@ -254,7 +254,7 @@
 		(this.button[i].drawRaw)
 
 		(dd_translatef 0 0 0.1)
-		(dd_scalef 0.2 0.2 0.2)
+		(dd_scalef 0.3 0.3 0.3)
 
 		(this.button[i].label.draw)
 
@@ -270,10 +270,10 @@
 		(this.textButton.applyTransform)
 		(this.textButton.applyMatrixTransform)
 		(dd_translatef 0 0 0.1)
-		(dd_scalef 0.2 0.2 0.2)
+		(dd_scalef 0.3 0.3 0.3)
 		#(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
 		#(this.button[this.selection].description.draw)
-		(this.button[this.selection].description.drawLimit 20)
+		(this.button[this.selection].description.drawLimit 25)
 		(dd_matrix_pop)
 		)
 	)

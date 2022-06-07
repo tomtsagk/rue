@@ -6,7 +6,7 @@
 (def int CARD_CORNER_FROWN 2)
 (def int CARD_CORNER_HEART 3)
 
-(class_function Card void create (group)
+(class_function Card void create ()
 	(group
 
 	(= this.id 0)
@@ -34,7 +34,7 @@
 )
 
 # draw the card with its transformation matrix
-(class_function Card void draw (group)
+(class_function Card void draw ()
 	(group
 	(dd_matrix_push)
 	(this.applyMatrix)
@@ -43,20 +43,20 @@
 	)
 )
 
-(class_function Card void clean (group)
+(class_function Card void clean ()
 	(group
 	)
 )
 
 # apply the card's matrix
-(class_function Card void applyMatrix (group)
+(class_function Card void applyMatrix ()
 	(group
 	(dd_multMatrixf this)
 	)
 )
 
 # draw the card's mesh with no transformation
-(class_function Card void drawRaw (group)
+(class_function Card void drawRaw ()
 	(group
 	(if (== this.hidden 0)
 		(group
@@ -259,7 +259,7 @@
 	)
 )
 
-(class_function Card void clearFakeId (group)
+(class_function Card void clearFakeId ()
 	(group
 	(if (>= this.idFake 0)
 		(group
