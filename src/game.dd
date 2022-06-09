@@ -57,7 +57,7 @@
 
 (def extern ref dd_meshColour newCardMesh)
 (def extern ref Card newCard)
-(class_function world_game void create (group)
+(class_function world_game void create ()
 	(group
 
 	(= this.victoriousPlayer -1)
@@ -773,22 +773,24 @@
 
 	(= this.filterCorner -1)
 
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+
 	)
 )
 
-(class_function world_game void onload (group)
+(class_function world_game void onload ()
 	(group
 	(this.theme.load (asset "assets/game_theme.asset" DD_PLY) 0)
 	(this.theme.playLoop -1)
 	)
 )
 
-#(class_function world_game void resize (group)
+#(class_function world_game void resize ()
 #	(group
 #	)
 #)
 
-(class_function world_game void update (group)
+(class_function world_game void update ()
 	(group
 
 	# currently displaying a card, handle that instead of game state
@@ -1037,7 +1039,7 @@
 
 					# has cards with corner to play - wait for player to choose one
 					(if hasCard
-						(group)
+						()
 					# doesn't have card with corner - skip selecting a card
 					# for now user must manually skipped effect
 						(group
@@ -1719,7 +1721,7 @@
 				)
 			# desired card is selected - continue as normal
 			(== (this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].getId) this.actions[0].value)
-				(group)
+				()
 			# not wanted card is selected - skip to end of if statement
 				(group
 				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDIF) (> this.actions[0].actionType ACTION_ENDIF)) (> this.actionsTotal 0)) (= i i)
@@ -1740,7 +1742,7 @@
 				)
 			# desired corner is selected - continue as normal
 			(== this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].cornerId this.actions[0].value)
-				(group)
+				()
 			# not wanted card is selected - skip to end of if statement
 				(group
 				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDIF) (> this.actions[0].actionType ACTION_ENDIF)) (> this.actionsTotal 0)) (= i i)
@@ -1850,7 +1852,7 @@
 	)
 ) # update
 
-(class_function world_game void draw (group)
+(class_function world_game void draw ()
 	(group
 
 	(dd_matrix_push)
@@ -1905,8 +1907,8 @@
 	(dd_rotatef 180 1 0 0)
 	(dd_translatef 0 0 (+ (* 0.003 this.deckTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
-	(dd_scalef 0.15 0.15 0.15)
-	#(this.font.drawInt this.deckTotal)
+	(dd_scalef 0.20 0.20 0.20)
+	(this.font.drawInt this.deckTotal)
 	(dd_matrix_pop)
 
 	# draw discard
@@ -1923,8 +1925,8 @@
 	# draw discard number
 	(dd_translatef 0 0 (+ (* 0.003 this.discardTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
-	(dd_scalef 0.15 0.15 0.15)
-	#(this.font.drawInt this.discardTotal)
+	(dd_scalef 0.2 0.2 0.2)
+	(this.font.drawInt this.discardTotal)
 	(dd_matrix_pop)
 
 	# draw every player apart from self
@@ -1961,16 +1963,16 @@
 
 	# states
 	(dd_matrix_push)
-	(dd_translatef 0 8 -25)
+	(dd_translatef 0 7 -20)
 	# draw end game
 	(if (>= this.victoriousPlayer 0)
 		(group
 		(if (== this.victoriousPlayer 0)
 			(this.labelWin.drawLimit
-				(* (dd_screen_width_get 25) 0.8)
+				(* (dd_screen_width_get 20) 2 0.8)
 			)
 			(this.labelLose.drawLimit
-				(* (dd_screen_width_get 25) 0.8)
+				(* (dd_screen_width_get 20) 2 0.8)
 			)
 		)
 		)
@@ -1979,7 +1981,7 @@
 		(if this.ovButtons.cardToShow.cardDescription2
 			(group
 			(this.ovButtons.cardToShow.cardDescription2.drawLimit
-				(* (dd_screen_width_get 25) 0.8)
+				(* (dd_screen_width_get 20) 2 0.8)
 			)
 			)
 		)
@@ -1988,13 +1990,15 @@
 		(if this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2
 			(group
 			(this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2.drawLimit
-				(* (dd_screen_width_get 25) 0.8)
+				(* (dd_screen_width_get 20) 2 0.8)
 			)
 			)
 		)
 	# draw phase
+		(group
 		(this.phaseTextCurrent.drawLimit
-			(* (dd_screen_width_get 25) 0.8)
+			(* (dd_screen_width_get 20) 2 0.8)
+		)
 		)
 	)
 	(dd_matrix_pop)
@@ -2026,7 +2030,7 @@
 	)
 )
 
-(class_function world_game void clean (group)
+(class_function world_game void clean ()
 	(group
 	(this.theme.stop)
 	)
@@ -2066,7 +2070,7 @@
 					(group
 					(if (this.ovButtons.click)
 						(group
-						(if (== this.actions[0].actionType ACTION_SELECT_CARD)
+						(if (&& (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.ovButtons.waitUntilCardConfirmed 0))
 							(group
 							(= this.filterCorner -1)
 							(= this.lastSelectedCardPlayerIndex -1)
@@ -2251,7 +2255,7 @@
 )
 
 # shuffle all cards in the deck
-(class_function world_game void shuffleDeck (group)
+(class_function world_game void shuffleDeck ()
 	(group
 	(for (def int i 0) (< i this.deckTotal) (= i (+ i 1))
 		(group
@@ -2306,7 +2310,7 @@
 	)
 )
 
-(class_function world_game void removeAction (group)
+(class_function world_game void removeAction ()
 	(group
 	(if (<= this.actionsTotal 0)
 		(group
@@ -2341,7 +2345,7 @@
 	)
 )
 
-(class_function world_game void injectActionsToActions (group)
+(class_function world_game void injectActionsToActions ()
 	(group
 	(if (>= (+ this.injectActionsTotal this.actionsTotal) 100)
 		(group
@@ -2386,7 +2390,7 @@
 	)
 )
 
-(class_function world_game void grabRose (group)
+(class_function world_game void grabRose ()
 	(group
 
 	# rose is flat, grab it!
@@ -2401,7 +2405,7 @@
 )
 
 # game actions
-(class_function GameAction void create (group)
+(class_function GameAction void create ()
 	(group
 	(= this.actionType -1)
 	(= this.playerIndex -1)
@@ -2409,7 +2413,7 @@
 	)
 )
 
-(class_function GameAction void clean (group)
+(class_function GameAction void clean ()
 	(group
 	)
 )

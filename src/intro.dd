@@ -2,7 +2,7 @@
 (include "menu.ddh")
 
 # Init intro
-(class_function world_intro void create (group)
+(class_function world_intro void create ()
 	(group
 
 	# initialise animation values
@@ -94,13 +94,13 @@
 	)
 ) # create
 
-(class_function world_intro void onload (group)
+(class_function world_intro void onload ()
 	(group
 	)
 )
 
 # Resize to keep the logo constantly visible
-(class_function world_intro void resize (group)
+(class_function world_intro void resize ()
 	(group
 
 	(def float height)
@@ -118,7 +118,7 @@
 ) # resize
 
 # update - update animations
-(class_function world_intro void update (group)
+(class_function world_intro void update ()
 	(group
 
 	# update shader time
@@ -184,7 +184,7 @@
 # zoom-out so the world is visible
 # rotate the world
 # draw the cube
-(class_function world_intro void draw (group)
+(class_function world_intro void draw ()
 	(group
 
 	(glEnable GL_BLEND)
@@ -218,7 +218,7 @@
 
 
 # Clean intro world
-(class_function world_intro void clean (group)
+(class_function world_intro void clean ()
 	(group
 	)
 )
