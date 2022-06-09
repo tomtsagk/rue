@@ -1,0 +1,68 @@
+name: darkdimension-rue
+base: core18
+version: '0.2.3'
+summary: A card game about deduction, love and regret.
+description: |
+  A card game where all the players are sitting around a table.
+  A rose appears on the table that moves around.
+
+  The aim of the game is for each player to have the rose in front of them at the end of the round.
+  Each player can use cards that influence the rose’s movement.
+
+grade: stable
+confinement: strict
+
+#
+# what is visible to the game when it runs (3d objects and textures)
+#
+layout:
+  /usr/share/rue:
+    bind: $SNAP/usr/share/rue
+
+#
+# the executable that is visible to users
+#
+apps:
+  rue:
+    command: usr/bin/rue
+    environment:
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-gl:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/xorg:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio/
+      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri 
+    plugs:
+      - opengl
+      - x11
+      - wayland
+
+#
+# first build `avdl`, then use that to compile `rue`
+#
+parts:
+  avdl:
+    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.3.4.tar.gz
+    plugin: make
+    override-build: |
+      make prefix=/usr
+      make prefix=/usr install
+    build-packages:
+      - libglew-dev
+      - libsdl2-dev
+      - libsdl2-mixer-dev
+    stage-packages:
+      - libglew-dev
+      - libsdl2-dev
+      - libsdl2-mixer-dev
+  rue:
+    source: https://github.com/tomtsagk/rue/archive/refs/tags/v0.2.3.tar.gz
+    plugin: make
+    override-build: |
+      make prefix=/usr
+      make prefix=/usr DESTDIR="$SNAPCRAFT_PART_INSTALL" install
+    build-packages:
+      - libglew-dev
+      - libsdl2-dev
+      - libsdl2-mixer-dev
+    stage-packages:
+      - libglu1-mesa
+      - libglew-dev
+      - libsdl2-dev
+      - libsdl2-mixer-dev
