@@ -1,6 +1,6 @@
 (include "overlayButtons.ddh")
 
-(class_function OverlayButtons void create (group)
+(class_function OverlayButtons void create ()
 	(group
 
 	(dd_matrix_identity this.previousLoc)
@@ -21,14 +21,14 @@
 	)
 )
 
-(class_function OverlayButtons void update (group)
+(class_function OverlayButtons void update ()
 	(group
 	(= this.bg_rotation (+ this.bg_rotation 0.3))
 	)
 )
 
 # draw the card with its transformation matrix
-(class_function OverlayButtons void draw (group)
+(class_function OverlayButtons void draw ()
 	(group
 	(if this.cardToShow
 		(group
@@ -55,7 +55,7 @@
 	)
 )
 
-(class_function OverlayButtons void clean (group)
+(class_function OverlayButtons void clean ()
 	(group
 	)
 )
@@ -82,7 +82,7 @@
 	)
 )
 
-(class_function OverlayButtons int click (group)
+(class_function OverlayButtons int click ()
 	(group
 	# looking at the card shown
 	(if this.isLookingAtCard
@@ -111,7 +111,7 @@
 	)
 )
 
-(class_function OverlayButtons void unsetCard (group)
+(class_function OverlayButtons void unsetCard ()
 	(group
 	(if this.cardToShow
 		(group
