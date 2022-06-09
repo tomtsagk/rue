@@ -1,0 +1,40 @@
+rue (0.2.3-1) focal; urgency=low
+
+  * Fix bug with shaders, that caused meshes to not draw on some hardware
+
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Fri, 18 Feb 2021 13:14:00 +0100
+
+rue (0.2.1-1) focal; urgency=low
+
+  * Add `cmake` to make compilation easier
+  * Add first 5 stages, that need to be completed in order
+  * Add more fluff in the main menu
+  * Re-add intro screen
+
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Thu, 10 Feb 2021 03:31:00 +0100
+
+rue (0.1.1-1) focal; urgency=low
+
+  * Improved main menu visuals.
+  * Add stages that need to be beat to progress.
+  * Fix localisation issue on compiled games
+
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Fri, 07 Jan 2022 03:47:00 +0100
+
+rue (0.0.4-4) focal; urgency=low
+
+  * Change source to github
+
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Sun, 22 Aug 2021 01:23:00 +0100
+
+rue (0.0.4-3) focal; urgency=low
+
+  * Test automated builds.
+
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Sun, 15 Aug 2021 00:39:00 +0100
+
+rue (0.0.4-2) focal; urgency=low
+
+  * Fix some metadata on `debian/*` files.
+
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Thu, 05 Aug 2021 22:35:25 +0100
