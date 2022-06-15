@@ -112,7 +112,7 @@
 	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
 	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
 
-	(this.versionLabel.setText "v0.2.3")
+	(this.versionLabel.setText "v0.3.0")
 	(this.versionLabel.setAlign DD_STRING3D_ALIGN_RIGHT)
 
 	)

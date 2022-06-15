@@ -1,8 +1,19 @@
+rue (0.3.0-1) focal; urgency=low
+
+  * Add optional corner effects on cards
+  * Text is now using 2D bitamp font
+  * Added music and sound effects
+  * Add credits
+  * Add intro animation
+  * Add new textured table
+
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Wed, 15 Jun 2022 13:48:00 +0100
+
 rue (0.2.3-1) focal; urgency=low
 
   * Fix bug with shaders, that caused meshes to not draw on some hardware
 
- -- Tom Tsagk <tomtsagk@darkdimension.org>  Fri, 18 Feb 2021 13:14:00 +0100
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Fri, 18 Feb 2022 13:14:00 +0100
 
 rue (0.2.1-1) focal; urgency=low
 
@@ -11,7 +22,7 @@ rue (0.2.1-1) focal; urgency=low
   * Add more fluff in the main menu
   * Re-add intro screen
 
- -- Tom Tsagk <tomtsagk@darkdimension.org>  Thu, 10 Feb 2021 03:31:00 +0100
+ -- Tom Tsagk <tomtsagk@darkdimension.org>  Thu, 10 Feb 2022 03:31:00 +0100
 
 rue (0.1.1-1) focal; urgency=low
 
