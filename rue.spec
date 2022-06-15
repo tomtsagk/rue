@@ -1,5 +1,5 @@
 Name:           rue
-Version:        0.2.3
+Version:        0.3.0
 Release:        1%{?dist}
 Summary:        A card game about deduction, love and regret
 
@@ -37,6 +37,14 @@ make %{?_smp_mflags} prefix=/usr DESTDIR=%{buildroot} install
 %license LICENSE
 
 %changelog
+* Wed Jun 15 2022 Tom Tsagk <tomtsagk@darkdimension.org>
+- Add optional corner effects on cards
+- Text is now using 2D bitamp font
+- Added music and sound effects
+- Add credits
+- Add intro animation
+- Add new textured table
+
 * Fri Feb 18 2022 Tom Tsagk <tomtsagk@darkdimension.org>
 - Fix bug that caused shaders to not draw meshes on some hardware
 

@@ -1,6 +1,6 @@
 name: darkdimension-rue
 base: core18
-version: '0.2.3'
+version: '0.3.0'
 summary: A card game about deduction, love and regret.
 description: |
   A card game where all the players are sitting around a table.
@@ -38,7 +38,7 @@ apps:
 #
 parts:
   avdl:
-    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.3.4.tar.gz
+    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.4.1.tar.gz
     plugin: make
     override-build: |
       make prefix=/usr
@@ -52,7 +52,7 @@ parts:
       - libsdl2-dev
       - libsdl2-mixer-dev
   rue:
-    source: https://github.com/tomtsagk/rue/archive/refs/tags/v0.2.3.tar.gz
+    source: https://github.com/tomtsagk/rue/archive/refs/tags/v0.3.0.tar.gz
     plugin: make
     override-build: |
       make prefix=/usr
