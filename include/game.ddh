@@ -64,6 +64,7 @@
 	(def dd_string3d phaseTextExecution)
 	(def dd_string3d phaseTextEnd)
 	(def dd_string3d phaseTextError)
+	(def dd_string3d phaseTextCornerEffectOrSkip)
 	(def int lookingAtChoosenAction)
 	(def int confirmChoosenAction)
 	(def int phase)
