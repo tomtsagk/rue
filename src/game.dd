@@ -771,6 +771,9 @@
 	(this.labelConfirm.setText "Confirm?")
 	(this.labelConfirm.setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.phaseTextCornerEffectOrSkip.setText "Discard card to activate extra effect or skip.")
+	(this.phaseTextCornerEffectOrSkip.setAlign DD_STRING3D_ALIGN_CENTER)
+
 	(= this.filterCorner -1)
 
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -1120,6 +1123,10 @@
 		# select a card with a specific corner
 		(== this.actions[0].actionType ACTION_SELECT_CARD_CORNER)
 			(group
+
+			(if (== this.actions[0].playerIndex 0)
+				(= this.phaseTextCurrent this.phaseTextCornerEffectOrSkip)
+			)
 
 			(= this.filterCorner this.actions[0].value)
 			(= this.actions[0].value this.actions[0].playerIndex)
@@ -2101,6 +2108,7 @@
 
 						(= this.player[0].userLookingAtCard -1)
 						(= this.player[0].highlightCard -1)
+						(= this.phaseTextCurrent this.phaseTextExecution)
 						)
 					# just highlighted card
 						(group
