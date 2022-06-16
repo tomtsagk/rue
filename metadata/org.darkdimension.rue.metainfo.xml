@@ -39,23 +39,23 @@
 
 <!--<translation>-->
 
-<url type="homepage">https://darkdimension.org/games/rue.html</url>
-<url type="donation">https://www.patreon.com/darkdimension</url>
+<url type="homepage">https://darkdimension.org/games/rue</url>
+<url type="donation">https://ko-fi.com/darkdimension</url>
 
 <!--<launchable>org.darkdimension.rue</launchable>-->
 
 <releases>
-	<release version="0.0.5" date="2021-08-28" type="stable">
+	<release version="0.3.0" date="2022-06-16" type="stable">
 
 		<description>
 			<p>Initial release</p>
 		</description>
 
-		<location>https://github.com/tomtsagk/rue/archive/refs/tags/v0.0.5.tar.gz</location>
-		<checksum type="md5">35da271f78301fe6793c3a040b899fff</checksum>
+		<location>https://github.com/tomtsagk/rue/archive/refs/tags/v0.3.0.tar.gz</location>
+		<checksum type="md5">1f52bc1229b2bcbab58c8be72c15e340</checksum>
 
 		<url type="details">
-			https://github.com/tomtsagk/rue/releases/tag/v0.0.5
+			https://github.com/tomtsagk/rue/releases/tag/v0.3.0
 		</url>
 		<!--<size>-->
 		<!--<artifacts>-->
