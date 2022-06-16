@@ -3,7 +3,7 @@
 #
 NAME=rue
 VERSION=0.3.0
-REVISION=0
+REVISION=1
 
 #
 # system data
@@ -19,6 +19,7 @@ COMPILER_FLAGS= -I include/ --save-loc "${savedir}" --install-loc "${assetdir}" 
 	--game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
 LINKER_FLAGS= --game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}" \
 	--install-loc "${assetdir}"
+LINKER_CUSTOM_FLAGS=
 
 #
 # directories - separate for native and android
@@ -96,7 +97,7 @@ ${DIRECTORY_NATIVE_OBJ}/%: assets/%
 	avdl -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS}
+	avdl $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS} ${LINKER_CUSTOM_FLAGS}
 
 #
 # android - compile files
