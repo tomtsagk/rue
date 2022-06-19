@@ -121,13 +121,14 @@ script:
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
   - cd build/native/output
-  - zip "rue-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  - zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
   provider: releases
   api_key: "$GITHUB_DEPLOY_RUE"
-  file: "build/native/output/rue-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
+  file: "build/native/output/rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
   skip_cleanup: true
-  on:
-    tags: true
+  draft: true
+  #on:
+  #  tags: true
