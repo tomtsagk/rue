@@ -6,7 +6,7 @@ branches:
   only:
   - master
 
-# make builds on `bionic` and `xenial` ubuntu images
+# make builds on `bionic` ubuntu images
 # on both `amd64` and `arm64` architectures
 jobs:
   include:
@@ -14,10 +14,11 @@ jobs:
       os: linux
       dist: bionic
       arch: amd64
-#    - name: Bionic Build arm64
-#      os: linux
-#      dist: bionic
-#      arch: arm64
+    - name: Bionic Build arm64
+      os: linux
+      dist: bionic
+      arch: arm64
+# These are disabled for now, possibly not needed at all
 #    - name: Xenial Build amd64
 #      os: linux
 #      dist: xenial
@@ -40,7 +41,7 @@ addons:
       - libxi-dev
       - libgl-dev
 
-      # SDL dependencies
+      # SDL & SDL_mixer dependencies
       - build-essential
       - git
       - make
@@ -78,7 +79,7 @@ addons:
       #- libsdl2-dev
       #- libsdl2-mixer-dev
 
-# compile project - add `avdl` package first
+# compile project - first dependencies then the project itlsef
 script:
   # install SDL
   - git clone https://github.com/libsdl-org/SDL SDL
@@ -132,14 +133,13 @@ script:
   - cp ${HOME}/AVDL_DEPENDENCIES/lib/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
   - cp ${HOME}/AVDL_DEPENDENCIES/lib/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
   - cd build/native/output
-  - zip rue-build.zip -r *
+  - zip "rue-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
   provider: releases
   api_key: "$GITHUB_DEPLOY_RUE"
-  file: "build/native/output/rue-build.zip"
+  file: "build/native/output/rue-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
   skip_cleanup: true
-  draft: true
-#  on:
-#    tags: true
+  on:
+    tags: true
