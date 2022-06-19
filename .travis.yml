@@ -88,7 +88,7 @@ script:
   - git checkout release-2.0.20
   - mkdir build
   - cd build
-  - ../configure --prefix=../../AVDL_DEPENDENCIES
+  - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES
   - make -j6
   - sudo make -j6 install
   - cd ../..
@@ -99,7 +99,7 @@ script:
   - git checkout release-2.0.4
   - mkdir build
   - cd build
-  - ../configure --prefix=../../AVDL_DEPENDENCIES
+  - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES
   - make -j6
   - sudo make -j6 install
   - cd ../..
@@ -111,8 +111,8 @@ script:
   - cd auto
   - make
   - cd ..
-  - make GLEW_DEST=../AVDL_DEPENDENCIES
-  - sudo make GLEW_DEST=../AVDL_DEPENDENCIES install
+  - make GLEW_DEST=${HOME}/AVDL_DEPENDENCIES
+  - sudo make GLEW_DEST=${HOME}/AVDL_DEPENDENCIES install
   - cd ..
 
   # install avdl
@@ -124,15 +124,15 @@ script:
   - cd ..
 
   # install rue
-  - make COMPILER_CUSTOM_FLAGS="-i AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L AVDL_DEPENDENCIES/lib -L AVDL_DEPENDENCIES/lib64" assetdir=
+  - make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64" assetdir=
   - mkdir build/native/output/dependencies
   - mkdir build/native/output/bin
   - echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
   - chmod +x build/native/output/rue.sh
   - mv build/native/output/rue build/native/output/bin/rue
-  - cp AVDL_DEPENDENCIES/lib64/libGLEW.so.2.2.0 build/native/output/dependencies/libGLEW.so.2.2
-  - cp AVDL_DEPENDENCIES/lib/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
-  - cp AVDL_DEPENDENCIES/lib/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so.2.2.0 build/native/output/dependencies/libGLEW.so.2.2
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
   - cd build/native/output
   - zip "rue-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
