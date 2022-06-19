@@ -103,7 +103,7 @@ script:
 
 deploy:
   provider: releases
-  api_key: "GITHUB_DEPLOY_RUE"
+  api_key: "$GITHUB_DEPLOY_RUE"
   file: "build/native/output/rue-build.zip"
   skip_cleanup: true
   draft: true
