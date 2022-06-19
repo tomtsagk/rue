@@ -17,6 +17,7 @@ savedir=~/.${NAME}/saves/
 #
 COMPILER_FLAGS= -I include/ --save-loc "${savedir}" --install-loc "${assetdir}" \
 	--game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
+COMPILER_CUSTOM_FLAGS=
 LINKER_FLAGS= --game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}" \
 	--install-loc "${assetdir}"
 LINKER_CUSTOM_FLAGS=
@@ -91,13 +92,13 @@ android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ ${COMPILER_FLAGS}
+	avdl -c $< -o $@ ${COMPILER_FLAGS} ${COMPILER_CUSTOM_FLAGS}
 
 ${DIRECTORY_NATIVE_OBJ}/%: assets/%
 	avdl -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS} ${LINKER_CUSTOM_FLAGS}
+	avdl $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS} ${LINKER_CUSTOM_FLAGS} ${COMPILER_CUSTOM_FLAGS}
 
 #
 # android - compile files
