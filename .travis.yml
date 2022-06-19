@@ -95,7 +95,7 @@ script:
   - chmod +x build/native/output/rue.sh
   - mv build/native/output/rue build/native/output/bin/rue
   - cp ${HOME}/AVDL_DEPENDENCIES/lib64/libGLEW.so.2.2.0 build/native/output/dependencies/libGLEW.so.2.2
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib/libSDL2-2.0.so.0.18.3 build/native/output/dependencies/libSDL2-2.0.so.0
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
   - cp ${HOME}/AVDL_DEPENDENCIES/lib/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
   - cd build/native/output
   - zip rue-build.zip -r *
