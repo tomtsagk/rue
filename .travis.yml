@@ -18,15 +18,6 @@ jobs:
       os: linux
       dist: bionic
       arch: arm64
-# These are disabled for now, possibly not needed at all
-#    - name: Xenial Build amd64
-#      os: linux
-#      dist: xenial
-#      arch: amd64
-#    - name: Xenial Build arm64
-#      os: linux
-#      dist: xenial
-#      arch: arm64
 
 # install dependencies
 addons:
@@ -75,10 +66,6 @@ addons:
       - libxkbcommon-dev
       - libdrm-dev
       - libgbm-dev
-
-      #- libglew-dev
-      #- libsdl2-dev
-      #- libsdl2-mixer-dev
 
 # compile project - first dependencies then the project itlsef
 script:
@@ -134,13 +121,14 @@ script:
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
   - cd build/native/output
-  - zip "rue-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  - zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
   provider: releases
   api_key: "$GITHUB_DEPLOY_RUE"
-  file: "build/native/output/rue-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
+  file: "build/native/output/rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
   skip_cleanup: true
-  on:
-    tags: true
+  draft: true
+  #on:
+  #  tags: true
