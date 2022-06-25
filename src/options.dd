@@ -134,9 +134,9 @@
 	(= this.enabled 0)
 	(= this.animationOpen 0)
 
-	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY) 0)
-	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
-	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
+	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY))
+	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY))
+	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY))
 
 	(= this.volumeMusic (avdl_music_getVolume))
 	(= this.volumeSound (avdl_sound_getVolume))

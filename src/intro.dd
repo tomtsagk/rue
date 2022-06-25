@@ -16,7 +16,7 @@
 	(this.logo.set_colour 0.067 0.067 0.067)
 
 	# initialise dd sound
-	(this.sound.load (asset "assets/dd_theme.asset" DD_PLY) 0)
+	(this.sound.load (asset "assets/dd_theme.asset" DD_PLY))
 	(= this.soundPlayed 0)
 
 	# used for resizing
