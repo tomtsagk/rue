@@ -8,7 +8,10 @@
 	(this.localisation.set "menu_copy")
 
 	# logo
-	(this.logo.load (asset "assets/logo_rue.asset" DD_PLY))
+	(this.logo.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.logoTexture.set (asset "assets/rue_logo.asset" AVDL_IMAGETYPE_PNG))
+	(this.logo.setTexture this.logoTexture)
+	(this.logo.setTransparency 1)
 
 	# buttons
 	(= this.buttonTotal 5)
@@ -108,9 +111,9 @@
 	(= this.enabled 0)
 	(= this.animationOpen 0)
 
-	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY) 0)
-	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY) 0)
-	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY) 0)
+	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY))
+	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY))
+	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY))
 
 	(this.versionLabel.setText "v0.3.0")
 	(this.versionLabel.setAlign DD_STRING3D_ALIGN_RIGHT)
@@ -172,13 +175,6 @@
 
 	# do not draw if animated out
 	(if (< this.animationOpen 0.01) (return))
-
-	# draw logo
-	(dd_matrix_push)
-	(dd_translatef 0 1.7 -8)
-	(dd_rotatef 10 1 0 0)
-	(this.logo.draw)
-	(dd_matrix_pop)
 
 	# draw buttons
 	(this.buttonProgram.useProgram)
@@ -276,6 +272,12 @@
 	)
 	(dd_scalef 0.25 0.25 0.25)
 	(this.versionLabel.draw)
+	(dd_matrix_pop)
+
+	# draw logo
+	(dd_matrix_push)
+	(dd_translatef 0 0.7 -3)
+	(this.logo.draw)
 	(dd_matrix_pop)
 
 	)

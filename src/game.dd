@@ -99,91 +99,91 @@
 	# stage
 	(this.stage.load (asset "assets/stage_2.asset" DD_PLY))
 	(this.table.load (asset "assets/table_2.asset" DD_PLY))
-	(this.tableTexture.set (asset "assets/table-rose.asset" DD_PLY))
+	(this.tableTexture.set (asset "assets/table-rose.asset" AVDL_IMAGETYPE_PNG))
 	(this.table.setTexture this.tableTexture)
 	(this.tableArrow.load (asset "assets/table_arrow.asset" DD_PLY))
 	(this.tableArrowDecoration.load (asset "assets/table_arrow_decoration.asset" DD_PLY))
 
 	# card back
 	(this.cardBack.load (asset "assets/card_border.asset" DD_PLY))
-	(this.cardBackTexture.set (asset "assets/card_border_texture.asset" DD_PLY))
+	(this.cardBackTexture.set (asset "assets/card_border_texture.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardBack.setTexture this.cardBackTexture)
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[0].set (asset "assets/card_single_step.asset" DD_PLY))
+	(this.cardFrontTexture[0].set (asset "assets/card_single_step.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[0].setTexture this.cardFrontTexture[0])
 
 	(this.cardFront[1].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[1].set (asset "assets/card_triple_step.asset" DD_PLY))
+	(this.cardFrontTexture[1].set (asset "assets/card_triple_step.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[1].setTexture this.cardFrontTexture[1])
 
 	(this.cardFront[2].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[2].set (asset "assets/card_trade.asset" DD_PLY))
+	(this.cardFrontTexture[2].set (asset "assets/card_trade.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[2].setTexture this.cardFrontTexture[2])
 
 	(this.cardFront[3].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[3].set (asset "assets/card_one_step_cond.asset" DD_PLY))
+	(this.cardFrontTexture[3].set (asset "assets/card_one_step_cond.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[3].setTexture this.cardFrontTexture[3])
 
 	(this.cardFront[4].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[4].set (asset "assets/card_replace.asset" DD_PLY))
+	(this.cardFrontTexture[4].set (asset "assets/card_replace.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[4].setTexture this.cardFrontTexture[4])
 
 	(this.cardFront[5].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[5].set (asset "assets/card_grab.asset" DD_PLY))
+	(this.cardFrontTexture[5].set (asset "assets/card_grab.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[5].setTexture this.cardFrontTexture[5])
 
 	(this.cardFront[6].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[6].set (asset "assets/card_grab_gen.asset" DD_PLY))
+	(this.cardFrontTexture[6].set (asset "assets/card_grab_gen.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[6].setTexture this.cardFrontTexture[6])
 
 	(this.cardFront[7].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[7].set (asset "assets/card_approach.asset" DD_PLY))
+	(this.cardFrontTexture[7].set (asset "assets/card_approach.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[7].setTexture this.cardFrontTexture[7])
 
 	(this.cardFront[8].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[8].set (asset "assets/card_win.asset" DD_PLY))
+	(this.cardFrontTexture[8].set (asset "assets/card_win.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[8].setTexture this.cardFrontTexture[8])
 
 	(this.cardFront[9].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[9].set (asset "assets/card_tutorial.asset" DD_PLY))
+	(this.cardFrontTexture[9].set (asset "assets/card_tutorial.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[9].setTexture this.cardFrontTexture[9])
 
 	(this.cardFront[10].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[10].set (asset "assets/card_ignore_move.asset" DD_PLY))
+	(this.cardFrontTexture[10].set (asset "assets/card_ignore_move.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[10].setTexture this.cardFrontTexture[10])
 
 	(this.cardFront[11].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[11].set (asset "assets/card_next_hand.asset" DD_PLY))
+	(this.cardFrontTexture[11].set (asset "assets/card_next_hand.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[11].setTexture this.cardFrontTexture[11])
 
 	(this.cardFront[12].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[12].set (asset "assets/card_empty.asset" DD_PLY))
+	(this.cardFrontTexture[12].set (asset "assets/card_empty.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[12].setTexture this.cardFrontTexture[12])
 
 	(this.cardFront[13].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[13].set (asset "assets/card_hold_one_step.asset" DD_PLY))
+	(this.cardFrontTexture[13].set (asset "assets/card_hold_one_step.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[13].setTexture this.cardFrontTexture[13])
 
 	(this.cardFront[14].load (asset "assets/card.asset" DD_PLY))
-	(this.cardFrontTexture[14].set (asset "assets/card_rose_seeker.asset" DD_PLY))
+	(this.cardFrontTexture[14].set (asset "assets/card_rose_seeker.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[14].setTexture this.cardFrontTexture[14])
 
 	(this.cardCorner[0].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCornerTexture[0].set (asset "assets/card_corner_tear.asset" DD_PLY))
+	(this.cardCornerTexture[0].set (asset "assets/card_corner_tear.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[0].setTexture this.cardCornerTexture[0])
 
 	(this.cardCorner[1].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCornerTexture[1].set (asset "assets/card_corner_thunder.asset" DD_PLY))
+	(this.cardCornerTexture[1].set (asset "assets/card_corner_thunder.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[1].setTexture this.cardCornerTexture[1])
 
 	(this.cardCorner[2].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCornerTexture[2].set (asset "assets/card_corner_frown.asset" DD_PLY))
+	(this.cardCornerTexture[2].set (asset "assets/card_corner_frown.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[2].setTexture this.cardCornerTexture[2])
 
 	(this.cardCorner[3].set_primitive DD_PRIMITIVE_RECTANGLE)
-	(this.cardCornerTexture[3].set (asset "assets/card_corner_heart.asset" DD_PLY))
+	(this.cardCornerTexture[3].set (asset "assets/card_corner_heart.asset" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[3].setTexture this.cardCornerTexture[3])
 
 	# cards
@@ -409,11 +409,11 @@
 	)
 
 	# sound effects
-	(this.cardLookSound.load (asset "assets/card_look.asset" DD_PLY) 0)
-	(this.cardPlaceSound.load (asset "assets/card_place.asset" DD_PLY) 0)
+	(this.cardLookSound.load (asset "assets/card_look.asset" DD_PLY))
+	(this.cardPlaceSound.load (asset "assets/card_place.asset" DD_PLY))
 
-	(this.cardSelectSound.load (asset "assets/card_select.asset" DD_PLY) 0)
-	(this.cardDeselectSound.load (asset "assets/card_deselect.asset" DD_PLY) 0)
+	(this.cardSelectSound.load (asset "assets/card_select.asset" DD_PLY))
+	(this.cardDeselectSound.load (asset "assets/card_deselect.asset" DD_PLY))
 
 	# deck
 	(dd_matrix_identity this.deckMatrix)
@@ -436,11 +436,11 @@
 
 	# player meshes
 	(this.playerMesh[0].load (asset "assets/character.asset" DD_PLY))
-	(this.playerTexture[0].set (asset "assets/character_1.asset" DD_PLY))
+	(this.playerTexture[0].set (asset "assets/character_1.asset" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[0].setTexture this.playerTexture[0])
 
 	(this.playerMesh[1].load (asset "assets/character.asset" DD_PLY))
-	(this.playerTexture[1].set (asset "assets/character_2.asset" DD_PLY))
+	(this.playerTexture[1].set (asset "assets/character_2.asset" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[1].setTexture this.playerTexture[1])
 
 	# players 3-8
@@ -522,7 +522,7 @@
 	# rose player
 	(= this.isRoseFlat 1)
 	(this.roseCardMesh.load (asset "assets/card.asset" DD_PLY))
-	(this.roseCardTexture.set (asset "assets/rose.asset" DD_PLY))
+	(this.roseCardTexture.set (asset "assets/rose.asset" AVDL_IMAGETYPE_PNG))
 	(this.roseCardMesh.setTexture this.roseCardTexture)
 	(this.roseCard.setId CARD_ROSE)
 	(= this.roseCard.mesh this.roseCardMesh)
@@ -783,7 +783,7 @@
 
 (class_function world_game void onload ()
 	(group
-	(this.theme.load (asset "assets/game_theme.asset" DD_PLY) 0)
+	(this.theme.load (asset "assets/game_theme.asset" DD_PLY))
 	(this.theme.playLoop -1)
 	)
 )
