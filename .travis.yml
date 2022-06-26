@@ -69,7 +69,9 @@ addons:
       - libgbm-dev
 
       # read opus files
-      - opusfile
+      - libogg0
+      - libopus0
+      - opus-tools
 
       # read png files
       - libpng-dev
