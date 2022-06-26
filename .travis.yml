@@ -5,6 +5,7 @@ language: c
 branches:
   only:
   - master
+  - feature/convert-audio-to-mp3
 
 # make builds on `bionic` ubuntu images
 # on both `amd64` and `arm64` architectures
