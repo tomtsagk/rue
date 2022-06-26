@@ -67,6 +67,12 @@ addons:
       - libdrm-dev
       - libgbm-dev
 
+      # read opus files
+      - opusfile
+
+      # read png files
+      - libpng-dev
+
 # compile project - first dependencies then the project itlsef
 script:
   # install SDL
