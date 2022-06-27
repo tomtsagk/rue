@@ -159,7 +159,7 @@ script:
   # install avdl
   - git clone https://github.com/tomtsagk/avdl avdl
   - cd avdl
-  - git checkout feature/convert-audio-to-mp3
+  - git checkout feature/play-mp3-files
   - make -j6
   - sudo make -j6 install
   - cd ..
