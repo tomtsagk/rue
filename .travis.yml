@@ -5,7 +5,6 @@ language: c
 branches:
   only:
   - master
-  - feature/convert-audio-to-mp3
 
 # make builds on `bionic` ubuntu images
 # on both `amd64` and `arm64` architectures
@@ -75,16 +74,10 @@ addons:
       - libpng-dev
 
       # opus
-      - autoconf
-      - libtool
-      - pkg-config
-      #- openssl
       - libssl-dev
 
 # compile project - first dependencies then the project itlsef
 script:
-
-  - autoupdate
 
   # install opus
   - git clone https://gitlab.xiph.org/xiph/opus.git opus
@@ -178,7 +171,7 @@ script:
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so.0.8.5 build/native/output/dependencies/libogg.so.0.8.5
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so.0.4.5 build/native/output/dependencies/libopusfile.so.0.4.5
   - cd build/native/output
-  - zip "rue-opustest-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  - zip "rue-$$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
