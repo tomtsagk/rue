@@ -161,7 +161,7 @@ script:
   # install avdl
   - git clone https://github.com/tomtsagk/avdl avdl
   - cd avdl
-  - git checkout feature/play-mp3-files
+  - git checkout feature/play-opus-files
   - make -j6
   - sudo make -j6 install
   - cd ..
