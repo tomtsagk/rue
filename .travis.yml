@@ -125,6 +125,8 @@ script:
   # lib/libopusfile.so.0 ->
   # lib/libopusfile.so.0.4.5
 
+  - export C_INCLUDE_PATH=${HOME}/AVDL_DEPENDENCIES/include
+
   # install SDL
   - git clone https://github.com/libsdl-org/SDL SDL
   - cd SDL
