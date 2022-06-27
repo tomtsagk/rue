@@ -171,7 +171,7 @@ script:
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so.0.8.5 build/native/output/dependencies/libogg.so.0.8.5
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so.0.4.5 build/native/output/dependencies/libopusfile.so.0.4.5
   - cd build/native/output
-  - zip "rue-$$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  - zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
