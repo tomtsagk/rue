@@ -74,8 +74,55 @@ addons:
       # read png files
       - libpng-dev
 
+      # opus
+      - autoconf
+      - libtool
+      - pkg-config
+      #- openssl
+      - libssl-dev
+
 # compile project - first dependencies then the project itlsef
 script:
+
+  - autoupdate
+
+  # install opus
+  - git clone https://gitlab.xiph.org/xiph/opus.git opus
+  - cd opus
+  - ./autogen.sh
+  - ./configure --prefix=${HOME}/AVDL_DEPENDENCIES
+  - make
+  - make install
+  - cd ..
+  # lib/libopus.so ->
+  # lib/libopus.so.0 ->
+  # lib/libopus.so.0.8.0
+
+  # install ogg
+  - git clone https://gitlab.xiph.org/xiph/ogg.git ogg
+  - cd ogg
+  - ./autogen.sh
+  - ./configure --prefix=${HOME}/AVDL_DEPENDENCIES
+  - make -j6
+  - make -j6 install
+  - cd ..
+  # lib/libogg.so ->
+  # lib/libogg.so.0 ->
+  # lib/libogg.so.0.8.5
+
+  # install opusfile
+  - export PKG_CONFIG_PATH=${HOME}/AVDL_DEPENDENCIES
+  - git clone https://gitlab.xiph.org/xiph/opusfile.git opusfile
+  - cd opusfile
+  - ./autogen.sh
+  - ./configure --prefix=${HOME}/AVDL_DEPENDENCIES
+  - make -j6
+  - make -j6 install
+  - cd ..
+  # lib/libopusfile.so ->
+  # lib/libopusfile.so.0 ->
+  # lib/libopusfile.so.0.4.5
+
   # install SDL
   - git clone https://github.com/libsdl-org/SDL SDL
   - cd SDL
@@ -84,7 +131,7 @@ script:
   - cd build
   - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES
   - make -j6
-  - sudo make -j6 install
+  - make -j6 install
   - cd ../..
 
   # install SDL_mixer
@@ -127,6 +174,9 @@ script:
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so.2.2.0 build/native/output/dependencies/libGLEW.so.2.2
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so.0.8.0 build/native/output/dependencies/libopus.so.0.8.0
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so.0.8.5 build/native/output/dependencies/libogg.so.0.8.5
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so.0.4.5 build/native/output/dependencies/libopusfile.so.0.4.5
   - cd build/native/output
   - zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
