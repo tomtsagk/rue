@@ -142,7 +142,7 @@ script:
   - cd build
   - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES
   - make -j6
-  - sudo make -j6 install
+  - make -j6 install
   - cd ../..
 
   # install glew
@@ -153,13 +153,13 @@ script:
   - make
   - cd ..
   - make GLEW_DEST=${HOME}/AVDL_DEPENDENCIES
-  - sudo make GLEW_DEST=${HOME}/AVDL_DEPENDENCIES install
+  - make GLEW_DEST=${HOME}/AVDL_DEPENDENCIES install
   - cd ..
 
   # install avdl
   - git clone https://github.com/tomtsagk/avdl avdl
   - cd avdl
-  - git checkout feature/automate-builds
+  - git checkout feature/convert-audio-to-mp3
   - make -j6
   - sudo make -j6 install
   - cd ..
@@ -178,7 +178,7 @@ script:
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so.0.8.5 build/native/output/dependencies/libogg.so.0.8.5
   - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so.0.4.5 build/native/output/dependencies/libopusfile.so.0.4.5
   - cd build/native/output
-  - zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  - zip "rue-opustest-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
