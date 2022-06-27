@@ -142,7 +142,7 @@ script:
   - git checkout release-2.0.4
   - mkdir build
   - cd build
-  - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES --enalbe-music-ogg-vorbis
+  - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES --enable-music-ogg-vorbis
   - make -j6
   - make -j6 install
   - cd ../..
