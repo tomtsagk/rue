@@ -111,9 +111,9 @@
 	(= this.enabled 0)
 	(= this.animationOpen 0)
 
-	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY))
-	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY))
-	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY))
+	(this.hoverSound.load (asset "assets/button_hover.ogg" DD_PLY))
+	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
+	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
 
 	(this.versionLabel.setText "v0.3.0")
 	(this.versionLabel.setAlign DD_STRING3D_ALIGN_RIGHT)

@@ -5,6 +5,7 @@ language: c
 branches:
   only:
   - master
+  - feature/convert-audio-to-mp3
 
 # make builds on `bionic` ubuntu images
 # on both `amd64` and `arm64` architectures
@@ -79,6 +80,15 @@ addons:
 # compile project - first dependencies then the project itlsef
 script:
 
+  # install vorbis
+  - git clone https://gitlab.xiph.org/xiph/vorbis.git vorbis
+  - cd vorbis
+  - ./autogen.sh
+  - ./configure --prefix=${HOME}/AVDL_DEPENDENCIES
+  - make
+  - make install
+  - cd ..
+
   # install opus
   - git clone https://gitlab.xiph.org/xiph/opus.git opus
   - cd opus
@@ -116,6 +126,8 @@ script:
   # lib/libopusfile.so.0 ->
   # lib/libopusfile.so.0.4.5
 
+  - export C_INCLUDE_PATH=${HOME}/AVDL_DEPENDENCIES/include
+
   # install SDL
   - git clone https://github.com/libsdl-org/SDL SDL
   - cd SDL
@@ -133,7 +145,7 @@ script:
   - git checkout release-2.0.4
   - mkdir build
   - cd build
-  - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES
+  - ../configure --prefix=${HOME}/AVDL_DEPENDENCIES --enable-music-ogg-vorbis
   - make -j6
   - make -j6 install
   - cd ../..
@@ -152,7 +164,7 @@ script:
   # install avdl
   - git clone https://github.com/tomtsagk/avdl avdl
   - cd avdl
-  - git checkout feature/play-mp3-files
+  - git checkout feature/play-opus-files
   - make -j6
   - sudo make -j6 install
   - cd ..
@@ -164,20 +176,23 @@ script:
   - echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
   - chmod +x build/native/output/rue.sh
   - mv build/native/output/rue build/native/output/bin/rue
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so.2.2.0 build/native/output/dependencies/libGLEW.so.2.2
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so.0.8.0 build/native/output/dependencies/libopus.so.0.8.0
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so.0.8.5 build/native/output/dependencies/libogg.so.0.8.5
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so.0.4.5 build/native/output/dependencies/libopusfile.so.0.4.5
+#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so.2.2.0 build/native/output/dependencies/libGLEW.so.2.2
+#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
+#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
+#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so.0.8.0 build/native/output/dependencies/libopus.so.0.8.0
+#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so.0.8.5 build/native/output/dependencies/libogg.so.0.8.5
+#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so.0.4.5 build/native/output/dependencies/libopusfile.so.0.4.5
+  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/* -r build/native/output/dependencies/
   - cd build/native/output
-  - zip "rue-$$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  #- zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  - zip "rue-test-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
   provider: releases
   api_key: "$GITHUB_DEPLOY_RUE"
-  file: "build/native/output/rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
+  #file: "build/native/output/rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
+  file: "build/native/output/rue-test-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip"
   skip_cleanup: true
   draft: true
   #on:
