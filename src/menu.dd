@@ -28,10 +28,10 @@
 
 	# background
 	(= this.bg_rotation 0)
-	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
+	(this.bg.load (asset "assets/stage_2.ply" DD_PLY))
 
 	# background particles
-	(this.bgParticleMesh.load (asset "assets/particle.asset" DD_PLY))
+	(this.bgParticleMesh.load (asset "assets/particle.ply" DD_PLY))
 	(this.bgParticleSystem.assignAsset this.bgParticleMesh)
 	(this.bgParticleSystem.setParticleLife 1000)
 	(this.bgParticleSystem.setDelay 30)
@@ -47,7 +47,7 @@
 	)
 
 	# eyes
-	(this.lookatMesh.load (asset "assets/eye.asset" DD_PLY))
+	(this.lookatMesh.load (asset "assets/eye.ply" DD_PLY))
 	(= this.eyeTargetX 0)
 	(= this.eyeTargetY 0)
 

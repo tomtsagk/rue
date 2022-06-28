@@ -12,11 +12,11 @@
 	(= this.delay 30)
 
 	# initialise dd logo
-	(this.logo.load (asset "assets/logo.asset" DD_PLY))
+	(this.logo.load (asset "assets/logo.ply" DD_PLY))
 	(this.logo.set_colour 0.067 0.067 0.067)
 
 	# initialise dd sound
-	(this.sound.load (asset "assets/dd_theme.asset" DD_PLY))
+	(this.sound.load (asset "assets/dd_theme.ogg" DD_PLY))
 	(= this.soundPlayed 0)
 
 	# used for resizing

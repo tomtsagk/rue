@@ -48,7 +48,7 @@ HEADERS=$(wildcard include/*.ddh)
 #
 PLY=$(wildcard assets/*.ply)
 BMP=$(wildcard assets/*.bmp) $(wildcard assets/*.png)
-WAV=$(wildcard assets/*.wav)
+WAV=$(wildcard assets/*.wav) $(wildcard assets/*.opus)
 OGG=$(wildcard assets/*.ogg)
 JSON=$(wildcard assets/*.json)
 ASSETS=${PLY} ${BMP} ${WAV} ${OGG} ${JSON}

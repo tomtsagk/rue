@@ -11,7 +11,7 @@
 (function void dd_gameInit ()
 	(group
 
-	(dd_string3d_activate (asset "assets/eng_white.asset" AVDL_IMAGETYPE_PNG) 10 10 0.997 0.997)
+	(dd_string3d_activate (asset "assets/eng_white.png" AVDL_IMAGETYPE_PNG) 10 10 0.997 0.997)
 	(dd_string3d_setKerning 0.5)
 
 	(dd_setGameTitle "Rue - v0.3.0 - alpha")

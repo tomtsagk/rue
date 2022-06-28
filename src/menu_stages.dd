@@ -19,7 +19,7 @@
 
 	# buttons
 	(= this.buttonTotal 6)
-	(this.button[0].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[0].setSize 1 1)
 	(this.button[0].setProportionalPosition 0.25 0.75)
 	(this.button[0].setProportionalWidth 0.25)
@@ -27,7 +27,7 @@
 	(this.button[0].label.setText "0")
 	(this.button[0].description.setText "Play stage 0")
 
-	(this.button[1].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[1].setSize 1 1)
 	(this.button[1].setProportionalPosition 0.5 0.75)
 	(this.button[1].setProportionalWidth 0.25)
@@ -44,7 +44,7 @@
 		)
 	)
 
-	(this.button[2].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[2].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[2].setSize 1 1)
 	(this.button[2].setProportionalPosition 0.75 0.75)
 	(this.button[2].setProportionalWidth 0.25)
@@ -61,7 +61,7 @@
 		)
 	)
 
-	(this.button[3].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[3].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[3].setSize 1 1)
 	(this.button[3].setProportionalPosition 0.25 0.45)
 	(this.button[3].setProportionalWidth 0.25)
@@ -78,7 +78,7 @@
 		)
 	)
 
-	(this.button[4].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[4].setSize 1 1)
 	(this.button[4].setProportionalPosition 0.5 0.45)
 	(this.button[4].setProportionalWidth 0.25)
@@ -95,7 +95,7 @@
 		)
 	)
 
-#	(this.button[5].mesh.load (asset "assets/button.asset" DD_PLY))
+#	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
 #	(this.button[5].setSize 1 1)
 #	(this.button[5].setProportionalPosition 0.75 0.45)
 #	(this.button[5].setProportionalWidth 0.25)
@@ -104,7 +104,7 @@
 #		(this.button[5].disable)
 #	)
 
-	(this.button[5].mesh.load (asset "assets/button.asset" DD_PLY))
+	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[5].setSize 1 1)
 	(this.button[5].setProportionalPosition 0.16 0.15)
 	(this.button[5].setProportionalWidth 0.25)
@@ -174,9 +174,9 @@
 	(= this.enabled 0)
 	(= this.animationOpen 0)
 
-	(this.hoverSound.load (asset "assets/button-hover.asset" DD_PLY))
-	(this.clickSmallSound.load (asset "assets/button_click_small.asset" DD_PLY))
-	(this.clickBigSound.load (asset "assets/button_click_big.asset" DD_PLY))
+	(this.hoverSound.load (asset "assets/button_hover.ogg" DD_PLY))
+	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
+	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
 
 	)
 )

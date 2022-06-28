@@ -5,7 +5,7 @@
 	(group
 
 	# background
-	(this.bg.load (asset "assets/stage_2.asset" DD_PLY))
+	(this.bg.load (asset "assets/stage_2.ply" DD_PLY))
 
 	(this.labelCredits.setText "Credits:")
 	(this.labelCredits.setAlign DD_STRING3D_ALIGN_CENTER)

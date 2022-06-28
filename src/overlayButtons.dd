@@ -8,7 +8,7 @@
 	(= this.isLookingAtCard 0)
 	(= this.hasConfirmed 0)
 
-	(this.bgMesh.load (asset "assets/overlay_background.asset" DD_PLY))
+	(this.bgMesh.load (asset "assets/overlay_background.ply" DD_PLY))
 	(= this.bg_rotation 0)
 
 	(= this.waitUntilCardConfirmed 1)
