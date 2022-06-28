@@ -191,7 +191,7 @@ script:
   - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so* build/native/output/dependencies/
   - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so* build/native/output/dependencies/
   - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so* build/native/output/dependencies/
-  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libpng* build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libpng*.so* build/native/output/dependencies/
   #- cp ${HOME}/AVDL_DEPENDENCIES/lib*/* -r build/native/output/dependencies/
   - cd build/native/output
   #- zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
