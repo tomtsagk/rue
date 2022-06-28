@@ -5,7 +5,7 @@ language: c
 branches:
   only:
   - master
-  - feature/convert-audio-to-mp3
+  - feature/convert-audio-to-opus-ogg
 
 # make builds on `bionic` ubuntu images
 # on both `amd64` and `arm64` architectures
@@ -79,6 +79,14 @@ addons:
 
 # compile project - first dependencies then the project itlsef
 script:
+
+  # libpng
+  - git clone git://git.code.sf.net/p/libpng/code libpng
+  - cd libpng
+  - ./configure --prefix=${HOME}/AVDL_DEPENDENCIES
+  - make -j6
+  - make -j6 install
+  - cd ..
 
   # install vorbis
   - git clone https://gitlab.xiph.org/xiph/vorbis.git vorbis
@@ -177,16 +185,17 @@ script:
   - echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
   - chmod +x build/native/output/rue.sh
   - mv build/native/output/rue build/native/output/bin/rue
-#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so.2.2.0 build/native/output/dependencies/libGLEW.so.2.2
-#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so.0.18.2 build/native/output/dependencies/libSDL2-2.0.so.0
-#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so.0.2.2 build/native/output/dependencies/libSDL2_mixer-2.0.so.0
-#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so.0.8.0 build/native/output/dependencies/libopus.so.0.8.0
-#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so.0.8.5 build/native/output/dependencies/libogg.so.0.8.5
-#  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so.0.4.5 build/native/output/dependencies/libopusfile.so.0.4.5
-  - cp ${HOME}/AVDL_DEPENDENCIES/lib*/* -r build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so* build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so* build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so* build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so* build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so* build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so* build/native/output/dependencies/
+  - cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libpng* build/native/output/dependencies/
+  #- cp ${HOME}/AVDL_DEPENDENCIES/lib*/* -r build/native/output/dependencies/
   - cd build/native/output
   #- zip "rue-$TRAVIS_BRANCH-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
-  - zip "rue-test-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
+  - zip --symlinks "rue-test-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip" -r *
   - cd ../../../
 
 deploy:
