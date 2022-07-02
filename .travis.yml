@@ -26,6 +26,7 @@ addons:
       - git
       - make
       - zip
+      - ca-certificates
 
       # glew dependencies
       - build-essential
