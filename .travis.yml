@@ -10,10 +10,10 @@ branches:
 # on both `amd64` and `arm64` architectures
 jobs:
   include:
-#    - name: Bionic Build amd64
-#      os: linux
-#      dist: bionic
-#      arch: amd64
+    - name: Bionic Build amd64
+      os: linux
+      dist: bionic
+      arch: amd64
     - name: Bionic Build arm64
       os: linux
       dist: bionic
@@ -73,9 +73,6 @@ addons:
 
       # opus
       - libssl-dev
-
-      # test
-      - ntp
 
 # compile project - first dependencies then the project itlsef
 script:
