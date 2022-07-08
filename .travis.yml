@@ -229,3 +229,25 @@ script:
   - cmake --build . --config Release
   - cmake --install .
   - cd ../../
+
+  # install SDL
+  - git clone https://github.com/libsdl-org/SDL SDL
+  - cd SDL
+  - git checkout release-2.0.20
+  - mkdir build
+  - cd build
+  - cmake ../ .
+  - cmake --build . --config Release
+  - cmake --install .
+  - cd ../..
+
+  # install SDL_mixer
+  - git clone https://github.com/libsdl-org/SDL_mixer SDL_mixer
+  - cd SDL_mixer
+  - git checkout release-2.0.4
+  - mkdir build
+  - cd build
+  - cmake ../ .
+  - cmake --build . --config Release
+  - cmake --install .
+  - cd ../..
