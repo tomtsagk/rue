@@ -245,9 +245,12 @@ script:
   - git clone https://github.com/libsdl-org/SDL_mixer SDL_mixer
   - cd SDL_mixer
   - git checkout release-2.6.0
+  - cd external
+  - ./download.sh
+  - cd ..
   - mkdir build
   - cd build
-  - cmake ../ .
+  - cmake ../ . -DSDL2MIXER_OPUS=ON -DSDL2MIXER_OGG=ON
   - cmake --build . --config Release
   - cmake --install .
   - cd ../..
