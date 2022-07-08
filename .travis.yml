@@ -244,7 +244,7 @@ script:
   # install SDL_mixer
   - git clone https://github.com/libsdl-org/SDL_mixer SDL_mixer
   - cd SDL_mixer
-  - git checkout release-2.0.4
+  - git checkout release-2.6.0
   - mkdir build
   - cd build
   - cmake ../ .
