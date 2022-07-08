@@ -206,8 +206,13 @@ jobs:
 #  #  tags: true
 
 script:
-  - cmake --version
-  - ls
-  - pwd
-  - curl --version
-  - wget --version
+  - mkdir dependencies
+  - cd dependencies
+  - wget http://www.zlib.net/zlib-1.2.12.tar.gz
+  - tar xf zlib-1.2.12.tar.gz
+  - cd zlib-1.2.12
+  - mkdir build
+  - cd build
+  - cmake ../ .
+  - cmake --build . --config Release
+  - cmake --install .
