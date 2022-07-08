@@ -208,6 +208,8 @@ jobs:
 script:
   - mkdir dependencies
   - cd dependencies
+
+  # zlib
   - wget http://www.zlib.net/zlib-1.2.12.tar.gz
   - tar xf zlib-1.2.12.tar.gz
   - cd zlib-1.2.12
@@ -216,3 +218,14 @@ script:
   - cmake ../ .
   - cmake --build . --config Release
   - cmake --install .
+  - cd ../../
+
+  # libpng
+  - git clone git://git.code.sf.net/p/libpng/code libpng
+  - cd libpng
+  - mkdir build
+  - cd build
+  - cmake ../ .
+  - cmake --build . --config Release
+  - cmake --install .
+  - cd ../../
