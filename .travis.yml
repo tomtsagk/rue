@@ -266,12 +266,12 @@ script:
   - cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/rue_install"
   - cmake --build . --config Release
   - cmake --install .
-  - 7z a rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.7z "C:/Program Files/rue_install"
+  - 7z a -tzip rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip "C:/Program Files/rue_install" -r
 
 deploy:
   provider: releases
   api_key: "$GITHUB_DEPLOY_RUE"
-  file: "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.7z"
+  file: "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
   skip_cleanup: true
   draft: true
   #on:
