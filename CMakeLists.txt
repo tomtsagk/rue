@@ -11,11 +11,13 @@ add_compile_definitions(
 
 # add the executable
 add_executable(rue WIN32
+	cengine/avdl_achievements.c
 	cengine/avdl_assetManager.c
 	cengine/avdl_data.c
 	cengine/avdl_localisation.c
 	cengine/avdl_particle_system.c
 	cengine/avdl_shaders.c
+	cengine/avdl_steam.c
 	cengine/dd_dynamic_array.c
 	cengine/dd_filetomesh.c
 	cengine/dd_fov.c
@@ -30,6 +32,7 @@ add_executable(rue WIN32
 	cengine/dd_meshColour.c
 	cengine/dd_meshTexture.c
 	cengine/dd_mouse.c
+	cengine/dd_music.c
 	cengine/dd_opengl.c
 	cengine/dd_sound.c
 	cengine/dd_string3d.c
@@ -37,8 +40,10 @@ add_executable(rue WIN32
 	cengine/dd_vec4.c
 	cengine/dd_world.c
 	cengine/main.c
+
 	src/button.c
 	src/card.c
+	src/credits.c
 	src/game.c
 	src/intro.c
 	src/main_game.c
@@ -53,20 +58,63 @@ add_executable(rue WIN32
 	rue.rc
 )
 
-# dependencies
-set(SDL2_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/libraries/SDL2-2.0.20"     )
-set(SDL2_mixer_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libraries/SDL2_mixer-2.0.4")
-set(GLEW_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/libraries/glew-2.2.0"      )
+# SDL dependency
+#set(SDL2_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/libraries/SDL2-2.0.22"     )
+set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2-2.0.22/include")
+if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+	set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2-2.0.22/lib/x64/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2-2.0.22/lib/x64/SDL2main.lib")
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2-2.0.22/lib/x64/SDL2.dll" DESTINATION bin/)
+else ()
+	set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2-2.0.22/lib/x86/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2-2.0.22/lib/x86/SDL2main.lib")
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2-2.0.22/lib/x86/SDL2.dll" DESTINATION bin/)
+endif ()
 
-find_package(SDL2       REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(GLEW       REQUIRED)
+# SDL_mixer dependency
+#set(SDL2_mixer_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libraries/SDL2_mixer-2.6.0/cmake")
+set(SDL2_MIXER_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/include")
+
+if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+	set(SDL2_MIXER_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/SDL2_mixer.lib")
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/SDL2_mixer.dll" DESTINATION bin/)
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libogg-0.dll" DESTINATION bin/)
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libopus-0.dll" DESTINATION bin/)
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libopusfile-0.dll" DESTINATION bin/)
+else ()
+	set(SDL2_MIXER_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/SDL2_mixer.lib")
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/SDL2_mixer.dll" DESTINATION bin/)
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libogg-0.dll" DESTINATION bin/)
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libopus-0.dll" DESTINATION bin/)
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libopusfile-0.dll" DESTINATION bin/)
+endif ()
+
+# glew dependency
+#set(GLEW_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/libraries/glew-2.2.0"      )
+set(GLEW_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/libraries/glew-2.2.0/include")
+
+if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+	set(GLEW_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/glew-2.2.0/lib/Release/x64/glew32.lib;${CMAKE_CURRENT_LIST_DIR}/libraries/glew-2.2.0/lib/Release/x64/glew32s.lib")
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/glew-2.2.0/bin/Release/x64/glew32.dll" DESTINATION bin/)
+else ()
+	set(GLEW_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/glew-2.2.0/lib/Release/Win32/glew32.lib;${CMAKE_CURRENT_LIST_DIR}/libraries/glew-2.2.0/lib/Release/Win32/glew32s.lib")
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/glew-2.2.0/bin/Release/Win32/glew32.dll" DESTINATION bin/)
+endif ()
+
+# dependency zlib
+install(FILES "C:/Program Files (x86)/zlib/bin/zlib.dll" DESTINATION bin/)
+
+# dependency png
+set(PNG_LIBRARY "C:/Program Files (x86)/libpng/lib/libpng16.lib")
+set(PNG_PNG_INCLUDE_DIR "C:/Program Files (x86)/libpng/include")
+install(FILES "C:/Program Files (x86)/libpng/bin/libpng16.dll" DESTINATION bin/)
+
 find_package(OpenGL     REQUIRED)
+find_package(PNG	REQUIRED)
 
 target_link_libraries(rue ${GLEW_LIBRARIES}      )
 target_link_libraries(rue ${SDL2_LIBRARIES}      )
 target_link_libraries(rue ${SDL2_MIXER_LIBRARIES})
 target_link_libraries(rue ${OPENGL_LIBRARIES}    )
+target_link_libraries(rue ${PNG_LIBRARY}         )
 
 # add include directory, for binary `rue`, including dependencies
 target_include_directories(rue PUBLIC
@@ -76,6 +124,8 @@ target_include_directories(rue PUBLIC
 	${SDL2_MIXER_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
 	${OPENGL_INCLUDE_DIR}
+	${PNG_PNG_INCLUDE_DIR}
+	${ZLIB_INCLUDE_DIR}
 )
 
 # main executable
@@ -83,83 +133,72 @@ install(TARGETS rue DESTINATION bin/)
 
 # install assets
 install(FILES
-	assets/button.asset
-	assets/button_disabled.asset
-	assets/button_exit.asset
-	assets/button_minus.asset
-	assets/button_options.asset
-	assets/button_play.asset
-	assets/button_plus.asset
-	assets/card.asset
-	assets/card_approach.asset
-	assets/card_border.asset
-	assets/card_border_texture.asset
-	assets/card_grab.asset
-	assets/card_grab_gen.asset
-	assets/card_one_step_cond.asset
-	assets/card_replace.asset
-	assets/card_single_step.asset
-	assets/card_trade.asset
-	assets/card_triple_step.asset
-	assets/card_tutorial.asset
-	assets/card_win.asset
-	assets/character.asset
-	assets/character_1.asset
-	assets/character_2.asset
-	assets/dd_theme.asset
-	assets/eye.asset
-	assets/letter_0.asset
-	assets/letter_1.asset
-	assets/letter_2.asset
-	assets/letter_3.asset
-	assets/letter_4.asset
-	assets/letter_5.asset
-	assets/letter_6.asset
-	assets/letter_7.asset
-	assets/letter_8.asset
-	assets/letter_9.asset
-	assets/letter_a.asset
-	assets/letter_b.asset
-	assets/letter_c.asset
-	assets/letter_d.asset
-	assets/letter_e.asset
-	assets/letter_f.asset
-	assets/letter_g.asset
-	assets/letter_h.asset
-	assets/letter_i.asset
-	assets/letter_j.asset
-	assets/letter_k.asset
-	assets/letter_l.asset
-	assets/letter_m.asset
-	assets/letter_n.asset
-	assets/letter_o.asset
-	assets/letter_p.asset
-	assets/letter_q.asset
-	assets/letter_r.asset
-	assets/letter_s.asset
-	assets/letter_t.asset
-	assets/letter_u.asset
-	assets/letter_v.asset
-	assets/letter_w.asset
-	assets/letter_x.asset
-	assets/letter_y.asset
-	assets/letter_z.asset
-	assets/logo.asset
-	assets/logo_rue.asset
-	assets/logo_rue_texture.asset
-	assets/looking_at.asset
-	assets/menu_copy.asset
-	assets/overlay_background.asset
-	assets/particle.asset
-	assets/rose.asset
-	assets/stage_1.asset
-	assets/stage_2.asset
-	assets/table_1.asset
-	assets/table_arrow.asset
-	assets/table_arrow_decoration.asset
+	assets/button_click_big.ogg
+	assets/button_click_small.ogg
+	assets/button_disabled.ply
+	assets/button_exit.ply
+	assets/button_hover.ogg
+	assets/button_minus.ply
+	assets/button_options.ply
+	assets/button_play.ply
+	assets/button_plus.ply
+	assets/button.ply
+	assets/card_approach.png
+	assets/card_border.ply
+	assets/card_border_texture.png
+	assets/card_corner_frown.png
+	assets/card_corner_heart.png
+	assets/card_corner_tear.png
+	assets/card_corner_thunder.png
+	assets/card_deselect.ogg
+	assets/card_empty.png
+	assets/card_grab_gen.png
+	assets/card_grab.png
+	assets/card_hold_one_step.png
+	assets/card_ignore_move.png
+	assets/card_look.ogg
+	assets/card_next_hand.png
+	assets/card_one_step_cond.png
+	assets/card_place.ogg
+	assets/card.ply
+	assets/card_replace.png
+	assets/card_rose_seeker.png
+	assets/card_select.ogg
+	assets/card_single_step.png
+	assets/card_trade.png
+	assets/card_triple_step.png
+	assets/card_tutorial.png
+	assets/card_win.png
+	assets/character_1.png
+	assets/character_2.png
+	assets/character_3.png
+	assets/character.ply
+	assets/dd_theme.ogg
+	assets/eng_white.png
+	assets/eye.ply
+	assets/game_theme.opus
+	assets/logo.ply
+	assets/logo_rue_texture.png
+	assets/looking_at.ply
+	assets/main_menu_theme.opus
+	assets/menu_copy.json
+	assets/overlay_background.ply
+	assets/particle.ply
+	assets/rose.png
+	assets/rue_logo.png
+	assets/stage_1.ply
+	assets/stage_2.ply
+	assets/table_1.ply
+	assets/table_2.ply
+	assets/table_arrow_decoration.ply
+	assets/table_arrow.ply
+	assets/table_rose.png
+	assets/ui_particle.ply
+	assets/ui_particle_start.ply
 	DESTINATION
 	assets
 )
+
 
 # packaging using `cpack`
 include(InstallRequiredSystemLibraries)
