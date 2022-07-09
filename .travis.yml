@@ -273,7 +273,7 @@ script:
   - cd avdl
   - mkdir build
   - cd build
-  - cmake ../ .
+  - cmake ../ . -DCMAKE_INSTALL_PREFIX="$(pwd)/../../../avdl
   - cmake --build . --config Release
   - cmake --install .
   - cd ../..
@@ -286,7 +286,8 @@ script:
 
   # build rue itself
   - mkdir build
-  - for i in src/*.dd; do avdl.exe -I include/ $i -o ${i/.dd/.c}; echo $i; done
+  #- for i in src/*.dd; do avdl.exe -I include/ $i -o ${i/.dd/.c}; echo $i; done
+  - for i in src/*.dd; do avdl/bin/avdl.exe -I include/ $i -o ${i/.dd/.c}; echo $i; done
   - cmake ../ . -DCMAKE_INSTALL_PREFIX="$(pwd)/rue_install
   - cmake --build . --config Release
   - cmake --install .
