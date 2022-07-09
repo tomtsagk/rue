@@ -266,7 +266,7 @@ script:
   - cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/rue_install"
   - cmake --build . --config Release
   - cmake --install .
-  - 7z a -tzip rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip "C:/Program Files/rue_install" -r
+  - 7z a -tzip rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip "C:/Program Files/rue_install/*" -r
 
 deploy:
   provider: releases
