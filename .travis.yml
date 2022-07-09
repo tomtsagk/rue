@@ -271,6 +271,7 @@ script:
 
   - git clone https://github.com/tomtsagk/avdl avdl
   - cd avdl
+  - git checkout develop
   - mkdir build
   - cd build
   - cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/avdl"
