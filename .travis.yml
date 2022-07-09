@@ -286,7 +286,7 @@ script:
 
   # build rue itself
   - mkdir build
-  - for i in src/*.dd; do avdl -I include/ $i -o ${i/.dd/.c}; echo $i; done
+  - for i in src/*.dd; do avdl.exe -I include/ $i -o ${i/.dd/.c}; echo $i; done
   - cmake ../ . -DCMAKE_INSTALL_PREFIX="$(pwd)/rue_install
   - cmake --build . --config Release
   - cmake --install .
