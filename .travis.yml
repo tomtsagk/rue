@@ -206,51 +206,64 @@ jobs:
 #  #  tags: true
 
 script:
-  - mkdir dependencies
-  - cd dependencies
+  - mkdir libraries
+  - cd libraries
 
-# # zlib
-# - wget http://www.zlib.net/zlib-1.2.12.tar.gz
-# - tar xf zlib-1.2.12.tar.gz
-# - cd zlib-1.2.12
-# - mkdir build
-# - cd build
-# - cmake ../ .
-# - cmake --build . --config Release
-# - cmake --install .
-# - cd ../../
+ # zlib
+ - wget http://www.zlib.net/zlib-1.2.12.tar.gz
+ - tar xf zlib-1.2.12.tar.gz
+ - cd zlib-1.2.12
+ - mkdir build
+ - cd build
+ - cmake ../ .
+ - cmake --build . --config Release
+ - cmake --install .
+ - cd ../../
 
-# # libpng
-# - git clone git://git.code.sf.net/p/libpng/code libpng
-# - cd libpng
-# - mkdir build
-# - cd build
-# - cmake ../ .
-# - cmake --build . --config Release
-# - cmake --install .
-# - cd ../../
+ # libpng
+ - git clone git://git.code.sf.net/p/libpng/code libpng
+ - cd libpng
+ - mkdir build
+ - cd build
+ - cmake ../ .
+ - cmake --build . --config Release
+ - cmake --install .
+ - cd ../../
 
   # install SDL
-  - git clone https://github.com/libsdl-org/SDL SDL
-  - cd SDL
-  - git checkout release-2.0.20
-  - mkdir build
-  - cd build
-  - cmake ../ .
-  - cmake --build . --config Release
-  - cmake --install .
-  - cd ../..
+#  - git clone https://github.com/libsdl-org/SDL SDL
+#  - cd SDL
+#  - git checkout release-2.0.20
+#  - mkdir build
+#  - cd build
+#  - cmake ../ .
+#  - cmake --build . --config Release
+#  - cmake --install .
+#  - cd ../..
 
-  # install SDL_mixer
-  - git clone https://github.com/libsdl-org/SDL_mixer SDL_mixer
-  - cd SDL_mixer
-  - git checkout release-2.6.0
-  - cd external
-  - ./download.sh
-  - cd ..
-  - mkdir build
-  - cd build
-  - cmake ../ . -DSDL2MIXER_OPUS=ON -DSDL2MIXER_OGG=ON
-  - cmake --build . --config Release
-  - cmake --install .
-  - cd ../..
+  # SDL
+  - wget https://www.libsdl.org/release/SDL2-devel-2.0.22-VC.zip
+  - unzip SDL2-devel-2.0.22-VC.zip
+
+  # SDL_mixer
+  - wget https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
+  - unzip SDL2_mixer-devel-2.6.0-VC.zip
+
+  # glew
+  - wget https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+  - unzip glew-2.2.0-win32.zip
+
+
+#  # install SDL_mixer
+#  - git clone https://github.com/libsdl-org/SDL_mixer SDL_mixer
+#  - cd SDL_mixer
+#  - git checkout release-2.6.0
+#  - cd external
+#  - ./download.sh
+#  - cd ..
+#  - mkdir build
+#  - cd build
+#  - cmake ../ . -DSDL2MIXER_OPUS=ON -DSDL2MIXER_OGG=ON
+#  - cmake --build . --config Release
+#  - cmake --install .
+#  - cd ../..
