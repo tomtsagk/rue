@@ -242,7 +242,8 @@ script:
 #  - cd ../..
 
   # SDL
-  - wget https://www.libsdl.org/release/SDL2-devel-2.0.22-VC.zip
+#  - wget https://www.libsdl.org/release/SDL2-devel-2.0.22-VC.zip
+  - wget https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
   - unzip SDL2-devel-2.0.22-VC.zip
 
   # SDL_mixer
