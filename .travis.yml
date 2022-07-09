@@ -268,3 +268,27 @@ script:
 #  - cmake --build . --config Release
 #  - cmake --install .
 #  - cd ../..
+
+  - git clone https://github.com/tomtsagk/avdl avdl
+  - cd avdl
+  - mkdir build
+  - cd build
+  - cmake ../ .
+  - cmake --build . --config Release
+  - cmake --install .
+  - cd ../..
+
+  - mkdir ../cengine
+  - cp -r avdl/engines/cengine/src/*.c avdl/engines/cengine/include/*.h ../cengine
+
+  # exit dependencies
+  - cd ..
+
+  # build rue itself
+  - mkdir build
+  - for i in src/*.dd; do avdl -I include/ $i -o ${i/.dd/.c}; echo $i; done
+  - cmake ../ . -DCMAKE_INSTALL_PREFIX="$(pwd)/rue_install
+  - cmake --build . --config Release
+  - cmake --install .
+  - ls rue_install
+  - tree rue_install
