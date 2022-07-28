@@ -11,25 +11,28 @@ branches:
 # on both `amd64` and `arm64` architectures
 jobs:
   include:
-#    - name: Bionic Build amd64
-#      os: linux
-#      dist: bionic
-#      arch: amd64
-#      script: bash ./travis/build_linux.sh "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+    - name: Bionic Build amd64
+      os: linux
+      dist: bionic
+      arch: amd64
+      script: bash ./travis/build_linux.sh "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="generic"
     - name: Bionic Build amd64
       os: linux
       dist: bionic
       arch: amd64
       script: bash ./travis/build_linux_steam.sh "rue-steam-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
       env: RUE_BUILD_NAME="steam"
-#    - name: Bionic Build arm64
-#      os: linux
-#      dist: bionic
-#      arch: arm64
-#      script: bash ./travis/build_linux.sh "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
-#    - name: Windows
-#      os: windows
-#      script: bash ./travis/build_windows.sh "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+    - name: Bionic Build arm64
+      os: linux
+      dist: bionic
+      arch: arm64
+      script: bash ./travis/build_linux.sh "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="generic"
+    - name: Windows
+      os: windows
+      script: bash ./travis/build_windows.sh "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="generic"
 
 # install dependencies
 addons:
@@ -89,7 +92,6 @@ addons:
 deploy:
   provider: releases
   api_key: "$GITHUB_DEPLOY_RUE"
-  #file: "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
   file: "rue-$RUE_BUILD_NAME-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
   skip_cleanup: true
   draft: true
