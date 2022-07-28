@@ -2,7 +2,7 @@ set -ev
 
 # install steam
 #curl https://partner.steamgames.com/downloads/steamworks_sdk.zip > steamworks_sdk.zip
-wget https://www.dropbox.com/s/ha8rj5v9qmfmaxj/steamworks_sdk.zip
+wget ${STEAMWORKS_DOWNLOAD_LINK}
 unzip steamworks_sdk.zip
 
 # libpng
