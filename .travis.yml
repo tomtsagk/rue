@@ -279,7 +279,8 @@ addons:
 deploy:
   provider: releases
   api_key: "$GITHUB_DEPLOY_RUE"
-  file: "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+  #file: "rue-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+  file: "rue-steam-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
   skip_cleanup: true
   draft: true
   #on:
