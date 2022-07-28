@@ -1,5 +1,9 @@
 set -ev
 
+# install steam
+wget https://partner.steamgames.com/downloads/steamworks_sdk.zip
+unzip steamworks_sdk.zip
+
 # libpng
 git clone git://git.code.sf.net/p/libpng/code libpng
 cd libpng
@@ -88,10 +92,6 @@ git checkout develop
 make -j6
 sudo make -j6 install
 cd ..
-
-# install steam
-wget https://partner.steamgames.com/downloads/steamworks_sdk.zip
-unzip steamworks_sdk.zip
 
 # install rue
 make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include --steam" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64 --steam -i sdk/public/steam -L sdk/redistributable_bin/linux64/" assetdir=
