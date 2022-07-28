@@ -100,7 +100,7 @@ mkdir build/native/output/bin
 echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
 chmod +x build/native/output/rue.sh
 mv build/native/output/rue build/native/output/bin/rue
-cp sdk/redistributable_bin/linux64/libsteam_api.so
+cp sdk/redistributable_bin/linux64/libsteam_api.so build/native/output/dependencies/
 cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so* build/native/output/dependencies/
 cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so* build/native/output/dependencies/
 cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so* build/native/output/dependencies/
