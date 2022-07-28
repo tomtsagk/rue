@@ -94,7 +94,6 @@ wget https://partner.steamgames.com/downloads/steamworks_sdk.zip
 unzip steamworks_sdk.zip
 
 # install rue
-	--install-loc "${assetdir}" --steam -i steam_sdk/public/steam/ -L steam_sdk/redistributable_bin/linux64/
 make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include --steam" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64 --steam -i sdk/public/steam -L sdk/redistributable_bin/linux64/" assetdir=
 mkdir build/native/output/dependencies
 mkdir build/native/output/bin
