@@ -10,7 +10,6 @@ add_compile_definitions(
 )
 
 set(AVDL_SRC
-	cengine/avdl_achievements.c
 	cengine/avdl_assetManager.c
 	cengine/avdl_data.c
 	cengine/avdl_localisation.c
@@ -55,21 +54,21 @@ set(AVDL_SRC
 	src/saveload.c
 	rue.rc
 )
-message("steam test")
 if (${AVDL_STEAM})
-	message("add steam files")
-	set(AVDL_SRC
-		${AVDL_SRC}
-		cengine/avdl_achievements.c
-		cengine/avdl_steam.c
-	)
-else()
-	message("no steam files")
 	set(AVDL_SRC
 		${AVDL_SRC}
 		cengine/avdl_achievements_steam.cpp
 		cengine/avdl_steam_cpp.cpp
 		cengine/main_cpp.cpp
+	)
+	add_compile_definitions(
+		AVDL_STEAM
+	)
+else()
+	set(AVDL_SRC
+		${AVDL_SRC}
+		cengine/avdl_achievements.c
+		cengine/avdl_steam.c
 	)
 endif()
 
@@ -131,11 +130,23 @@ install(FILES "C:/Program Files (x86)/libpng/bin/libpng16.dll" DESTINATION bin/)
 find_package(OpenGL     REQUIRED)
 find_package(PNG	REQUIRED)
 
+if (${AVDL_STEAM})
+	set(STEAM_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/public/steam")
+	if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+		set(STEAM_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/win64/steam_api64.lib")
+		install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/win64/steam_api64.dll" DESTINATION bin/)
+	else()
+		set(STEAM_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/steam_api.lib")
+		install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/steam_api.dll" DESTINATION bin/)
+	endif()
+endif()
+
 target_link_libraries(rue ${GLEW_LIBRARIES}      )
 target_link_libraries(rue ${SDL2_LIBRARIES}      )
 target_link_libraries(rue ${SDL2_MIXER_LIBRARIES})
 target_link_libraries(rue ${OPENGL_LIBRARIES}    )
 target_link_libraries(rue ${PNG_LIBRARY}         )
+target_link_libraries(rue ${STEAM_LIBRARY}       )
 
 
 if (${AVDL_STEAM})
@@ -153,6 +164,7 @@ target_include_directories(rue PUBLIC
 	${OPENGL_INCLUDE_DIR}
 	${PNG_PNG_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIR}
+	${STEAM_INCLUDE_DIR}
 )
 
 # main executable
