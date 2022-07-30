@@ -10,28 +10,28 @@ branches:
 # on both `amd64` and `arm64` architectures
 jobs:
   include:
-#    - name: Bionic Build amd64
-#      os: linux
-#      dist: bionic
-#      arch: amd64
-#      script: bash ./travis/build_linux.sh "rue-generic-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
-#      env: RUE_BUILD_NAME="generic"
-#    - name: Bionic Build amd64 - Steam
-#      os: linux
-#      dist: bionic
-#      arch: amd64
-#      script: bash ./travis/build_linux_steam.sh "rue-steam-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
-#      env: RUE_BUILD_NAME="steam"
-#    - name: Bionic Build arm64
-#      os: linux
-#      dist: bionic
-#      arch: arm64
-#      script: bash ./travis/build_linux.sh "rue-generic-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
-#      env: RUE_BUILD_NAME="generic"
-#    - name: Windows
-#      os: windows
-#      script: bash ./travis/build_windows.sh "rue-generic-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
-#      env: RUE_BUILD_NAME="generic"
+    - name: Bionic Build amd64
+      os: linux
+      dist: bionic
+      arch: amd64
+      script: bash ./travis/build_linux.sh "rue-generic-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="generic"
+    - name: Bionic Build amd64 - Steam
+      os: linux
+      dist: bionic
+      arch: amd64
+      script: bash ./travis/build_linux_steam.sh "rue-steam-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="steam"
+    - name: Bionic Build arm64
+      os: linux
+      dist: bionic
+      arch: arm64
+      script: bash ./travis/build_linux.sh "rue-generic-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="generic"
+    - name: Windows
+      os: windows
+      script: bash ./travis/build_windows.sh "rue-generic-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="generic"
      - name: Windows - Steam
        os: windows
        script: bash ./travis/build_windows_steam.sh "rue-steam-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
