@@ -9,15 +9,13 @@ add_compile_definitions(
 	AVDL_DYNAMIC_PKG_LOCATION
 )
 
-# add the executable
-add_executable(rue WIN32
+set(AVDL_SRC
 	cengine/avdl_achievements.c
 	cengine/avdl_assetManager.c
 	cengine/avdl_data.c
 	cengine/avdl_localisation.c
 	cengine/avdl_particle_system.c
 	cengine/avdl_shaders.c
-	cengine/avdl_steam.c
 	cengine/dd_dynamic_array.c
 	cengine/dd_filetomesh.c
 	cengine/dd_fov.c
@@ -57,6 +55,29 @@ add_executable(rue WIN32
 	src/saveload.c
 	rue.rc
 )
+message("steam test")
+if (${AVDL_STEAM})
+	message("add steam files")
+	set(AVDL_SRC
+		${AVDL_SRC}
+		cengine/avdl_achievements.c
+		cengine/avdl_steam.c
+	)
+else()
+	message("no steam files")
+	set(AVDL_SRC
+		${AVDL_SRC}
+		cengine/avdl_achievements_steam.cpp
+		cengine/avdl_steam_cpp.cpp
+		cengine/main_cpp.cpp
+	)
+endif()
+
+# add the executable
+add_executable(rue WIN32
+	${AVDL_SRC}
+)
+
 
 # SDL dependency
 #set(SDL2_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/libraries/SDL2-2.0.22"     )
@@ -115,6 +136,12 @@ target_link_libraries(rue ${SDL2_LIBRARIES}      )
 target_link_libraries(rue ${SDL2_MIXER_LIBRARIES})
 target_link_libraries(rue ${OPENGL_LIBRARIES}    )
 target_link_libraries(rue ${PNG_LIBRARY}         )
+
+
+if (${AVDL_STEAM})
+	target_link_libraries(rue "libraries/sdk/redistributable_bin/win64/steam_api64")
+	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/win64/steam_api64.dll" DESTINATION bin/)
+endif()
 
 # add include directory, for binary `rue`, including dependencies
 target_include_directories(rue PUBLIC
@@ -198,7 +225,6 @@ install(FILES
 	DESTINATION
 	assets
 )
-
 
 # packaging using `cpack`
 include(InstallRequiredSystemLibraries)
