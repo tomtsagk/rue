@@ -148,12 +148,6 @@ target_link_libraries(rue ${OPENGL_LIBRARIES}    )
 target_link_libraries(rue ${PNG_LIBRARY}         )
 target_link_libraries(rue ${STEAM_LIBRARY}       )
 
-
-if (${AVDL_STEAM})
-	target_link_libraries(rue "libraries/sdk/redistributable_bin/win64/steam_api64")
-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/win64/steam_api64.dll" DESTINATION bin/)
-endif()
-
 # add include directory, for binary `rue`, including dependencies
 target_include_directories(rue PUBLIC
 	cengine
