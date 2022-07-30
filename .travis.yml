@@ -32,10 +32,10 @@ jobs:
       os: windows
       script: bash ./travis/build_windows.sh "rue-generic-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
       env: RUE_BUILD_NAME="generic"
-     - name: Windows - Steam
-       os: windows
-       script: bash ./travis/build_windows_steam.sh "rue-steam-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
-       env: RUE_BUILD_NAME="steam"
+    - name: Windows - Steam
+      os: windows
+      script: bash ./travis/build_windows_steam.sh "rue-steam-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-build_$TRAVIS_BUILD_NUMBER.zip"
+      env: RUE_BUILD_NAME="steam"
 
 # install dependencies
 addons:
