@@ -5,7 +5,6 @@ language: c
 branches:
   only:
   - master
-  - test/steam-builds-windows
 
 # make builds on `bionic` ubuntu images
 # on both `amd64` and `arm64` architectures
