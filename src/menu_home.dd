@@ -276,7 +276,7 @@
 
 	# draw logo
 	(dd_matrix_push)
-	(dd_translatef 0 0.7 -3)
+	(dd_translatef 0 0.6 -2.5)
 	(this.logo.draw)
 	(dd_matrix_pop)
 
