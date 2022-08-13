@@ -111,39 +111,39 @@
 
 	# card cardFront
 	(this.cardFront[0].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[0].set (asset "assets/card_single_step.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[0].set (asset "assets/card_01_single_step.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[0].setTexture this.cardFrontTexture[0])
 
 	(this.cardFront[1].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[1].set (asset "assets/card_triple_step.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[1].set (asset "assets/card_02_triple_step.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[1].setTexture this.cardFrontTexture[1])
 
 	(this.cardFront[2].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[2].set (asset "assets/card_trade.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[2].set (asset "assets/card_03_trade.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[2].setTexture this.cardFrontTexture[2])
 
 	(this.cardFront[3].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[3].set (asset "assets/card_one_step_cond.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[3].set (asset "assets/card_04_one_step_cond.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[3].setTexture this.cardFrontTexture[3])
 
 	(this.cardFront[4].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[4].set (asset "assets/card_replace.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[4].set (asset "assets/card_05_replace.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[4].setTexture this.cardFrontTexture[4])
 
 	(this.cardFront[5].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[5].set (asset "assets/card_grab.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[5].set (asset "assets/card_06_grab.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[5].setTexture this.cardFrontTexture[5])
 
 	(this.cardFront[6].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[6].set (asset "assets/card_grab_gen.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[6].set (asset "assets/card_07_grab_gen.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[6].setTexture this.cardFrontTexture[6])
 
 	(this.cardFront[7].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[7].set (asset "assets/card_approach.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[7].set (asset "assets/card_08_approach.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[7].setTexture this.cardFrontTexture[7])
 
 	(this.cardFront[8].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[8].set (asset "assets/card_win.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[8].set (asset "assets/card_09_win.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[8].setTexture this.cardFrontTexture[8])
 
 	(this.cardFront[9].load (asset "assets/card.ply" DD_PLY))
@@ -151,23 +151,23 @@
 	(this.cardFront[9].setTexture this.cardFrontTexture[9])
 
 	(this.cardFront[10].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[10].set (asset "assets/card_ignore_move.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[10].set (asset "assets/card_12_ignore_move.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[10].setTexture this.cardFrontTexture[10])
 
 	(this.cardFront[11].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[11].set (asset "assets/card_next_hand.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[11].set (asset "assets/card_11_next_hand.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[11].setTexture this.cardFrontTexture[11])
 
 	(this.cardFront[12].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[12].set (asset "assets/card_empty.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[12].set (asset "assets/card_14_empty.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[12].setTexture this.cardFrontTexture[12])
 
 	(this.cardFront[13].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[13].set (asset "assets/card_hold_one_step.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[13].set (asset "assets/card_10_always_one.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[13].setTexture this.cardFrontTexture[13])
 
 	(this.cardFront[14].load (asset "assets/card.ply" DD_PLY))
-	(this.cardFrontTexture[14].set (asset "assets/card_rose_seeker.png" AVDL_IMAGETYPE_PNG))
+	(this.cardFrontTexture[14].set (asset "assets/card_13_steal.png" AVDL_IMAGETYPE_PNG))
 	(this.cardFront[14].setTexture this.cardFrontTexture[14])
 
 	(this.cardCorner[0].set_primitive DD_PRIMITIVE_RECTANGLE)
@@ -226,10 +226,10 @@
 		)
 	)
 	(= this.cards[ 9].cornerId CARD_CORNER_TEAR)
-	(= this.cards[10].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[10].cornerId CARD_CORNER_HEART)
 	(= this.cards[11].cornerId CARD_CORNER_FROWN)
 	(= this.cards[ 9].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-	(= this.cards[10].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[10].meshCorner this.cardCorner[CARD_CORNER_HEART])
 	(= this.cards[11].meshCorner this.cardCorner[CARD_CORNER_FROWN])
 
 	# conditional
@@ -624,12 +624,9 @@
 	(this.cardLabel[1].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[2].setText (multistring
-		"The Flirt grabs the Rose. "
-		"Give a card to the Flirt and "
-		"receive a random card back. "
-		"If the Rose was picked receive an "
-		"additional card."
-		"Move the Rose 1 step. "
+		"Exchange 1 random card with The Flirt. "
+		"If a player received The Rose, "
+		"they take 1 additional random card. "
 		"Thunder: The Flirt grabs the Rose."
 	))
 	(this.cardLabel[2].setAlign DD_STRING3D_ALIGN_CENTER)
@@ -644,10 +641,11 @@
 	(this.cardLabel[3].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[4].setText (multistring
-		"Draw 1 card. "
-		"Discard this card to "
-		"plan and execute "
-		"another card."
+		"Draw 1 card and "
+		"discard this card. "
+
+		"Plan and execute "
+		"another card from your hand."
 	))
 	(this.cardLabel[4].setAlign DD_STRING3D_ALIGN_CENTER)
 
