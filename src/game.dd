@@ -193,7 +193,6 @@
 		(= this.cards[i].hidden 1)
 		#(= this.cards[i].font this.cardFont)
 		(= this.cards[i].meshBack this.cardBack)
-		(= this.cards[i].transparentProgram this.playerProgram)
 		#(= this.cards[i].cardDescription2 this.cardLabel[2])
 		(dd_matrix_identity this.cards[i])
 		)
@@ -438,10 +437,32 @@
 	(this.playerMesh[0].load (asset "assets/character.ply" DD_PLY))
 	(this.playerTexture[0].set (asset "assets/character_1.png" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[0].setTexture this.playerTexture[0])
+	(this.playerMesh[0].setTransparency 1)
 
 	(this.playerMesh[1].load (asset "assets/character.ply" DD_PLY))
 	(this.playerTexture[1].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[1].setTexture this.playerTexture[1])
+	(this.playerMesh[1].setTransparency 1)
+
+	(this.playerMesh[2].load (asset "assets/character.ply" DD_PLY))
+	(this.playerTexture[2].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerMesh[2].setTexture this.playerTexture[2])
+	(this.playerMesh[2].setTransparency 1)
+
+	(this.playerMesh[3].load (asset "assets/character.ply" DD_PLY))
+	(this.playerTexture[3].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerMesh[3].setTexture this.playerTexture[3])
+	(this.playerMesh[3].setTransparency 1)
+
+	(this.playerMesh[4].load (asset "assets/character.ply" DD_PLY))
+	(this.playerTexture[4].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerMesh[4].setTexture this.playerTexture[4])
+	(this.playerMesh[4].setTransparency 1)
+
+	(this.playerMesh[5].load (asset "assets/character.ply" DD_PLY))
+	(this.playerTexture[5].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerMesh[5].setTexture this.playerTexture[5])
+	(this.playerMesh[5].setTransparency 1)
 
 	# players 3-8
 	(= this.playersTotal numberOfPlayers)
@@ -449,7 +470,6 @@
 	(= this.player[0].mesh this.playerMesh[0])
 	(= this.player[0].cardFronts this.cardFront)
 	(= this.player[0].cardLabels this.cardLabel)
-	(= this.player[0].transparentProgram this.playerProgram)
 	(= this.player[0].labelConfirm this.labelConfirm)
 
 	# init player positions
@@ -479,7 +499,7 @@
 
 		(= this.player[i].cardFronts this.cardFront)
 		(if (== playerAi[i] -1)
-			(= playerAi[i] (dd_math_rand 2))
+			(= playerAi[i] (dd_math_rand 6))
 		)
 		(= this.player[i].mesh this.playerMesh[playerAi[i]])
 		(= this.player[i].type playerAi[i])
@@ -490,7 +510,6 @@
 		(= this.player[i].cardSelectSound this.cardSelectSound)
 		(= this.player[i].cardDeselectSound this.cardDeselectSound)
 
-		(= this.player[i].transparentProgram this.playerProgram)
 		(= this.player[i].labelConfirm this.labelConfirm)
 
 		(= this.player[i].cardLabels this.cardLabel)
@@ -530,43 +549,6 @@
 
 	# begin the game
 	(this.addAction ACTION_CHANGE_PHASE 0 PHASE_INIT 50)
-
-	(this.playerProgram.setVertexShader
-		(multistring
-			"AVDL_IN vec4 position;\n"
-			"AVDL_IN vec3 colour;\n"
-			"AVDL_IN vec2 texCoord;\n"
-
-			"uniform mat4 matrix;\n"
-
-			"AVDL_OUT vec2 outTexCoord;\n"
-			"AVDL_OUT vec4 outColour;\n"
-
-			"void main() {\n"
-			"	vec4 pos = matrix *position;\n"
-			"       gl_Position = pos;\n"
-			"       outColour = vec4(colour.rgb, 1.0);\n"
-			"	outTexCoord  = texCoord;\n"
-			"}\n"
-		)
-	)
-	(this.playerProgram.setFragmentShader
-		(multistring
-			"AVDL_IN vec4 outColour;\n"
-			"AVDL_IN vec2 outTexCoord;\n"
-
-			"uniform sampler2D image;\n"
-
-			"void main() {\n"
-			"	vec4 col = outColour +avdl_texture(image, outTexCoord);\n"
-			#"	if (col.r >= 0.70 && col.g <= 0.30 && col.b >= 0.70) {\n"
-			"	if (col.r <= 0.05 && col.g <= 0.05 && col.b <= 0.05) {\n"
-			"		discard;\n"
-			"	}\n"
-			"	avdl_frag_color = outColour +avdl_texture(image, outTexCoord);\n"
-			"}\n"
-		)
-	)
 
 	(this.arrowProgramAvdl.setVertexShader
 		(multistring

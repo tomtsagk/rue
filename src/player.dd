@@ -147,6 +147,15 @@
 				(card.setFakeId card 0 this.cardFronts this.cardLabels)
 			(== this.type 1)
 				(card.setFakeId card 1 (+ this.cardFronts 1) (+ this.cardLabels 1))
+			(== this.type 2)
+				(card.setFakeId card 3 (+ this.cardFronts 3) (+ this.cardLabels 3))
+			(== this.type 3)
+				(card.setFakeId card 2 (+ this.cardFronts 2) (+ this.cardLabels 2))
+			(== this.type 4)
+				(card.setFakeId card 6 (+ this.cardFronts 6) (+ this.cardLabels 6))
+			# TODO - smart ai
+			(== this.type 5)
+				(card.setFakeId card 0 (+ this.cardFronts 0) (+ this.cardLabels 0))
 			)
 		)
 
