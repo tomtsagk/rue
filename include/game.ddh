@@ -47,9 +47,6 @@
 	# overlay buttons
 	(def OverlayButtons ovButtons)
 
-	# player program
-	(def avdl_program playerProgram)
-
 	# arrow shader
 	(def avdl_program arrowProgramAvdl)
 	(def float arrowActiveCol[3])
@@ -143,8 +140,8 @@
 	(def int discardTotal)
 
 	# player meshes
-	(def dd_meshTexture playerMesh[2])
-	(def dd_image playerTexture[2])
+	(def dd_meshTexture playerMesh[6])
+	(def dd_image playerTexture[6])
 
 	# players
 	(def int startingPlayer)
