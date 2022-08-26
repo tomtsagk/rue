@@ -37,8 +37,6 @@
 	(def ref dd_sound cardSelectSound)
 	(def ref dd_sound cardDeselectSound)
 
-	(def ref avdl_program transparentProgram)
-
 	(def ref dd_string3d labelConfirm)
 
 	# functions

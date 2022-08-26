@@ -29,8 +29,6 @@
 
 	(= this.cardFronts 0)
 
-	(= this.transparentProgram 0)
-
 	(= this.labelConfirm 0)
 
 	)
@@ -112,9 +110,7 @@
 	# draw player
 	(dd_matrix_push)
 	(dd_multMatrixf this)
-	(this.transparentProgram.useProgram)
 	(this.mesh.draw)
-	(avdl_useProgram 0)
 	(dd_translatef 0 2.2 0.3)
 	(dd_scalef 0.5 0.5 0.5)
 	(this.font.drawInt this.cardsTotal)

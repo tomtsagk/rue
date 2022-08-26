@@ -12,12 +12,14 @@
 	(def avdl_localisation localisation)
 
 	# home buttons
-	(def Button button[7])
+	(def Button button[18])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
 	(def float buttonClickCol[3])
 	(def float buttonActiveCol[3])
 	(def float buttonInactiveCol[3])
+	(def int buttonPage)
+	(def int extraButtons)
 
 	# text display
 	(def Button textButton)

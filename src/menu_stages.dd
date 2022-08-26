@@ -17,8 +17,10 @@
 	#(this.font.setColorFront 0.8 0.8 0.8)
 	#(this.font.setColorBack 0.3 0.3 0.3)
 
+	(= this.buttonPage 0)
+
 	# buttons
-	(= this.buttonTotal 6)
+	(= this.buttonTotal 17)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[0].setSize 1 1)
 	(this.button[0].setProportionalPosition 0.25 0.75)
@@ -95,21 +97,198 @@
 		)
 	)
 
-#	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
-#	(this.button[5].setSize 1 1)
-#	(this.button[5].setProportionalPosition 0.75 0.45)
-#	(this.button[5].setProportionalWidth 0.25)
-#	(this.button[5].setProportionalSize 0.8)
-#	(if (== (this.saveLoad.IsStageComplete 4) 0)
-#		(this.button[5].disable)
-#	)
-
 	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[5].setSize 1 1)
-	(this.button[5].setProportionalPosition 0.16 0.15)
+	(this.button[5].setProportionalPosition 0.8 0.45)
 	(this.button[5].setProportionalWidth 0.25)
-	(this.button[5].label.setText "Back")
-	(this.button[5].description.setText "Return to main menu")
+	(this.button[5].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[5].disable)
+		(this.button[5].label.setText "locked")
+		(this.button[5].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[5].label.setText "5")
+		(this.button[5].description.setText "Play stage 5")
+		)
+	)
+
+	(this.button[6].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[6].setSize 1 1)
+	(this.button[6].setProportionalPosition 0.6 0.45)
+	(this.button[6].setProportionalWidth 0.25)
+	(this.button[6].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[6].disable)
+		(this.button[6].label.setText "locked")
+		(this.button[6].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[6].label.setText "6")
+		(this.button[6].description.setText "Play stage 6")
+		)
+	)
+
+	(this.button[7].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[7].setSize 1 1)
+	(this.button[7].setProportionalPosition 0.7 0.45)
+	(this.button[7].setProportionalWidth 0.25)
+	(this.button[7].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[7].disable)
+		(this.button[7].label.setText "locked")
+		(this.button[7].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[7].label.setText "7")
+		(this.button[7].description.setText "Play stage 7")
+		)
+	)
+
+	(this.button[8].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[8].setSize 1 1)
+	(this.button[8].setProportionalPosition 0.8 0.45)
+	(this.button[8].setProportionalWidth 0.25)
+	(this.button[8].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[8].disable)
+		(this.button[8].label.setText "locked")
+		(this.button[8].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[8].label.setText "8")
+		(this.button[8].description.setText "Play stage 8")
+		)
+	)
+
+	(this.button[9].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[9].setSize 1 1)
+	(this.button[9].setProportionalPosition 0.9 0.45)
+	(this.button[9].setProportionalWidth 0.25)
+	(this.button[9].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[9].disable)
+		(this.button[9].label.setText "locked")
+		(this.button[9].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[9].label.setText "9")
+		(this.button[9].description.setText "Play stage 9")
+		)
+	)
+
+	(this.button[10].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[10].setSize 1 1)
+	(this.button[10].setProportionalPosition 0.5 0.45)
+	(this.button[10].setProportionalWidth 0.25)
+	(this.button[10].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[10].disable)
+		(this.button[10].label.setText "locked")
+		(this.button[10].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[10].label.setText "10")
+		(this.button[10].description.setText "Play stage 10")
+		)
+	)
+
+	(this.button[11].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[11].setSize 1 1)
+	(this.button[11].setProportionalPosition 0.5 0.45)
+	(this.button[11].setProportionalWidth 0.25)
+	(this.button[11].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[11].disable)
+		(this.button[11].label.setText "locked")
+		(this.button[11].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[11].label.setText "11")
+		(this.button[11].description.setText "Play stage 11")
+		)
+	)
+
+	(this.button[12].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[12].setSize 1 1)
+	(this.button[12].setProportionalPosition 0.5 0.45)
+	(this.button[12].setProportionalWidth 0.25)
+	(this.button[12].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[12].disable)
+		(this.button[12].label.setText "locked")
+		(this.button[12].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[12].label.setText "12")
+		(this.button[12].description.setText "Play stage 12")
+		)
+	)
+
+	(this.button[13].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[13].setSize 1 1)
+	(this.button[13].setProportionalPosition 0.5 0.45)
+	(this.button[13].setProportionalWidth 0.25)
+	(this.button[13].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[13].disable)
+		(this.button[13].label.setText "locked")
+		(this.button[13].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[13].label.setText "13")
+		(this.button[13].description.setText "Play stage 13")
+		)
+	)
+
+	(this.button[14].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[14].setSize 1 1)
+	(this.button[14].setProportionalPosition 0.5 0.45)
+	(this.button[14].setProportionalWidth 0.25)
+	(this.button[14].setProportionalSize 0.8)
+	(if (== (this.saveLoad.IsStageComplete 3) 0)
+		(group
+		(this.button[14].disable)
+		(this.button[14].label.setText "locked")
+		(this.button[14].description.setText "Play previous stage to unlock")
+		)
+		(group
+		(this.button[14].label.setText "14")
+		(this.button[14].description.setText "Play stage 14")
+		)
+	)
+
+	(this.button[15].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[15].setSize 1 1)
+	(this.button[15].setProportionalPosition 0.16 0.15)
+	(this.button[15].setProportionalWidth 0.25)
+	(this.button[15].label.setText "Back")
+	(this.button[15].description.setText "Return to main menu")
+
+	(this.button[16].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[16].setSize 1 1)
+	(this.button[16].setProportionalPosition 0.1 0.5)
+	(this.button[16].setProportionalWidth 0.25)
+	(this.button[16].label.setText "<")
+	(this.button[16].description.setText "Previous Page")
+
+	(this.button[17].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[17].setSize 1 1)
+	(this.button[17].setProportionalPosition 0.9 0.5)
+	(this.button[17].setProportionalWidth 0.25)
+	(this.button[17].label.setText ">")
+	(this.button[17].description.setText "Next Page")
+
+	(= this.extraButtons 3)
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -183,8 +362,19 @@
 
 (class_function menu_stages void resize ()
 	(group
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
-		(this.button[i].resize)
+	(for (def int i (* this.buttonPage 6)) (&& (< i (+ (* (+ this.buttonPage 1) 6) this.extraButtons)) (< i this.buttonTotal)) (= i (+ i 1))
+		(group
+
+		(def int index)
+		(if (>= i (* (+ this.buttonPage 1) 6))
+			(group
+			(= index (+ 15 (% i (* (+ this.buttonPage 1) 6))))
+			)
+			(= index i)
+		)
+
+		(this.button[index].resize)
+		)
 	)
 	(this.textButton.resize)
 	)
@@ -208,21 +398,29 @@
 	(if (== (this.isEnabled) 0) (return))
 
 	# check if mouse is hovering over a button
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+	(for (def int i (* this.buttonPage 6)) (&& (< i (+ (* (+ this.buttonPage 1) 6) this.extraButtons)) (< i this.buttonTotal)) (= i (+ i 1))
 		(group
 
-		(if (== this.selection i)
+		(def int index)
+		(if (>= i (* (+ this.buttonPage 1) 6))
+			(group
+			(= index (+ 15 (% i (* (+ this.buttonPage 1) 6))))
+			)
+			(= index i)
+		)
+
+		(if (== this.selection index)
 			(group
 			)
-			(if (this.button[i].hasMouseCollided)
+			(if (this.button[index].hasMouseCollided)
 				(group
 				(this.hoverSound.play)
-				(= this.selection i)
+				(= this.selection index)
 				)
 			)
 		)
 
-		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+		(this.button[index].update (== this.selection index) (== this.selectionClick index))
 
 		)
 	)
@@ -240,36 +438,45 @@
 	(this.buttonProgram.useProgram)
 	(def int colLoc)
 	(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+	(for (def int i (* this.buttonPage 6)) (&& (< i (+ (* (+ this.buttonPage 1) 6) this.extraButtons)) (< i this.buttonTotal)) (= i (+ i 1))
 		(group
+
+		(def int index)
+		(if (>= i (* (+ this.buttonPage 1) 6))
+			(group
+			(= index (+ 15 (% i (* (+ this.buttonPage 1) 6))))
+			)
+			(= index i)
+		)
+
 		(dd_matrix_push)
 
 		# change the shader colour when clicked
-		(if (> this.button[i].idleCol 1.0)
+		(if (> this.button[index].idleCol 1.0)
 			(avdl_setUniform3f colLoc
 				(dd_math_ease_linear
-					(- this.button[i].idleCol 1.0)
+					(- this.button[index].idleCol 1.0)
 					this.buttonActiveCol[0] this.buttonClickCol[0]
 				)
 				(dd_math_ease_linear
-					(- this.button[i].idleCol 1.0)
+					(- this.button[index].idleCol 1.0)
 					this.buttonActiveCol[1] this.buttonClickCol[1]
 				)
 				(dd_math_ease_linear
-					(- this.button[i].idleCol 1.0)
+					(- this.button[index].idleCol 1.0)
 					this.buttonActiveCol[2] this.buttonClickCol[2]
 				)
 			)
 		# change colour when selected
 			(avdl_setUniform3f colLoc
-				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
-				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
-				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
+				(dd_math_ease_linear this.button[index].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+				(dd_math_ease_linear this.button[index].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+				(dd_math_ease_linear this.button[index].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
 			)
 		)
 
-		(this.button[i].applyTransform)
-		(this.button[i].applyMatrixTransform)
+		(this.button[index].applyTransform)
+		(this.button[index].applyMatrixTransform)
 		(def float anim)
 		# big numbers make animation faster, but blends less together (max 4 - number of buttons)
 		# small numbers make animation slower. At 1.0, all buttons animate together
@@ -277,19 +484,19 @@
 		(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
 		(= anim (dd_math_min
 				(dd_math_max
-					(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
+					(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) index)) animationSpeed)
 					0
 				)
 				1
 			)
 		)
 		(dd_scalef anim anim anim)
-		(this.button[i].drawRaw)
+		(this.button[index].drawRaw)
 
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.3 0.3 0.3)
 
-		(this.button[i].drawText)
+		(this.button[index].drawText)
 
 		(dd_matrix_pop)
 		)
@@ -304,43 +511,7 @@
 		(this.textButton.applyMatrixTransform)
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.3 0.3 0.3)
-		#(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
 		(this.button[this.selection].description.drawLimit 15)
-#		(if 0#this.isMovingToNewWorld
-#			(this.font.drawLimit "loading" limit)
-#		(== this.selection 0)
-#			(if this.button[this.selection].isDisabled
-#				(this.font.drawLimit "play previous stage to unlock" limit)
-#				(this.font.drawLimit "stage 1" limit)
-#			)
-#		(== this.selection 1)
-#			(if this.button[this.selection].isDisabled
-#				(this.font.drawLimit "play previous stage to unlock" limit)
-#				(this.font.drawLimit "stage 2" limit)
-#			)
-#		(== this.selection 2)
-#			(if this.button[this.selection].isDisabled
-#				(this.font.drawLimit "play previous stage to unlock" limit)
-#				(this.font.drawLimit "stage 3" limit)
-#			)
-#		(== this.selection 3)
-#			(if this.button[this.selection].isDisabled
-#				(this.font.drawLimit "play previous stage to unlock" limit)
-#				(this.font.drawLimit "stage 4" limit)
-#			)
-#		(== this.selection 4)
-#			(if this.button[this.selection].isDisabled
-#				(this.font.drawLimit "play previous stage to unlock" limit)
-#				(this.font.drawLimit "stage 5" limit)
-#			)
-##		(== this.selection 5)
-##			(if this.button[this.selection].isDisabled
-##				(this.font.drawLimit "play previous stage to unlock" limit)
-##				(this.font.drawLimit "stage 6" limit)
-##			)
-#			(this.font.drawLimit "back to main menu" limit)
-#		)
-
 		(dd_matrix_pop)
 		)
 	)
@@ -376,12 +547,20 @@
 
 	# re-check selection, this allows the user to directly click on a button
 	# in a touch screen device
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+	(for (def int i (* this.buttonPage 6)) (&& (< i (+ (* (+ this.buttonPage 1) 6) this.extraButtons)) (< i this.buttonTotal)) (= i (+ i 1))
 		(group
 
-		(if (this.button[i].hasMouseCollided)
+		(def int index)
+		(if (>= i (* (+ this.buttonPage 1) 6))
 			(group
-			(= this.selection i)
+			(= index (+ 15 (% i (* (+ this.buttonPage 1) 6))))
+			)
+			(= index i)
+		)
+
+		(if (this.button[index].hasMouseCollided)
+			(group
+			(= this.selection index)
 			)
 		)
 
@@ -427,13 +606,12 @@
 
 				(this.clickBigSound.play)
 
-				# 3 enemies - all move rose one step
-				(= numberOfPlayers 4)
+				# 2 enemies - move one step and move three steps
+				(= numberOfPlayers 3)
 				(= startingPlayer 0)
 				(= guide -1)
 				(= playerAi[1] 0)
 				(= playerAi[2] 0)
-				(= playerAi[3] 0)
 				(= stageId 1)
 
 				(this.disable)
@@ -445,13 +623,14 @@
 
 				(this.clickBigSound.play)
 
-				# 2 enemies -
-				# 2 move rose three steps
+				# 3 enemies -
+				# single step + 2 three steps
 				(= numberOfPlayers 3)
 				(= startingPlayer 0)
 				(= guide 11)
-				(= playerAi[1] 1)
+				(= playerAi[1] 0)
 				(= playerAi[2] 1)
+				(= playerAi[3] 1)
 				(= stageId 2)
 
 				(this.disable)
@@ -463,15 +642,14 @@
 
 				(this.clickBigSound.play)
 
-				# 3 enemies -
-				# 2 move rose one step
-				# 1 move rose three steps
-				(= numberOfPlayers 4)
+				# 2 enemies -
+				# one step cond
+				# single step
+				(= numberOfPlayers 3)
 				(= startingPlayer 0)
 				(= guide -1)
-				(= playerAi[1] 0)
+				(= playerAi[1] 2)
 				(= playerAi[2] 0)
-				(= playerAi[3] 1)
 				(= stageId 3)
 
 				(this.disable)
@@ -483,33 +661,259 @@
 
 				(this.clickBigSound.play)
 
-				# 4 enemies -
-				# 2 move rose one step
-				# 2 move rose three steps
+				# 3 enemies -
+				# triple
+				# one step cond
+				# single
 				(= numberOfPlayers 4)
 				(= startingPlayer 0)
 				(= guide -1)
-				(= playerAi[1] 0)
-				(= playerAi[2] 1)
-				(= playerAi[3] 1)
-				(= playerAi[4] 0)
+				(= playerAi[1] 1)
+				(= playerAi[2] 2)
+				(= playerAi[3] 0)
 				(= stageId 4)
 
 				(this.disable)
 				(return 1)
 				)
-#			# stage 6
-#			(== this.selectionClick 5)
-#				(group
-#				(this.disable)
-#				(return 1)
-#				)
-			# back to home menu
+			# stage 6
 			(== this.selectionClick 5)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 4 enemies -
+				# one step cond
+				# single
+				# one step cond
+				# triple
+				(= numberOfPlayers 4)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 2)
+				(= playerAi[2] 0)
+				(= playerAi[3] 2)
+				(= playerAi[4] 1)
+				(= stageId 5)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 7
+			(== this.selectionClick 6)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 2 enemies -
+				# trade
+				# triple
+				(= numberOfPlayers 3)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 3)
+				(= playerAi[2] 1)
+				(= stageId 6)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 8
+			(== this.selectionClick 7)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 3 enemies -
+				# one step cond
+				# trade
+				# triple
+				(= numberOfPlayers 4)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 2)
+				(= playerAi[2] 3)
+				(= playerAi[3] 1)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 9
+			(== this.selectionClick 8)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 4 enemies -
+				# one step cond
+				# single
+				# one step cond
+				# trade
+				(= numberOfPlayers 5)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 2)
+				(= playerAi[2] 0)
+				(= playerAi[3] 2)
+				(= playerAi[4] 3)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 10
+			(== this.selectionClick 9)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 3 enemies -
+				# grab
+				# single
+				# one step cond
+				(= numberOfPlayers 4)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 4)
+				(= playerAi[2] 0)
+				(= playerAi[3] 2)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 11
+			(== this.selectionClick 10)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 4 enemies -
+				# trade
+				# grab
+				# triple
+				# one step cond
+				(= numberOfPlayers 5)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 3)
+				(= playerAi[2] 4)
+				(= playerAi[3] 1)
+				(= playerAi[4] 2)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 12
+			(== this.selectionClick 11)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 4 enemies -
+				# single
+				# trade
+				# one step cond
+				# grab
+				(= numberOfPlayers 5)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 0)
+				(= playerAi[2] 3)
+				(= playerAi[3] 2)
+				(= playerAi[4] 4)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 13
+			(== this.selectionClick 12)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 3 enemies -
+				# grab
+				# smart
+				# triple
+				(= numberOfPlayers 5)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 4)
+				(= playerAi[2] 5)
+				(= playerAi[3] 1)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 14
+			(== this.selectionClick 13)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 4 enemies -
+				# single
+				# smart
+				# grab
+				# one step cond
+				(= numberOfPlayers 5)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 0)
+				(= playerAi[2] 5)
+				(= playerAi[3] 4)
+				(= playerAi[4] 2)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# stage 15
+			(== this.selectionClick 14)
+				(group
+
+				(this.clickBigSound.play)
+
+				# 4 enemies -
+				# grab
+				# smart
+				# smart
+				# trade
+				(= numberOfPlayers 5)
+				(= startingPlayer 0)
+				(= guide -1)
+				(= playerAi[1] 4)
+				(= playerAi[2] 5)
+				(= playerAi[3] 5)
+				(= playerAi[4] 3)
+				(= stageId this.selectionClick)
+
+				(this.disable)
+				(return 1)
+				)
+			# back to home menu
+			(== this.selectionClick 15)
 				(group
 				(this.clickBigSound.play)
 				(this.disable)
 				(return -1)
+				)
+			# previous page
+			(== this.selectionClick 16)
+				(group
+				(= this.buttonPage (dd_math_max 0 (- this.buttonPage 1)))
+				(this.clickBigSound.play)
+				)
+			# previous page
+			(== this.selectionClick 17)
+				(group
+				(= this.buttonPage (dd_math_min 3 (+ this.buttonPage 1)))
+				(this.clickBigSound.play)
 				)
 			)
 
