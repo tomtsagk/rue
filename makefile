@@ -2,8 +2,8 @@
 # project data
 #
 NAME=rue
-VERSION=0.3.0
-REVISION=2
+VERSION=0.4.0
+REVISION=0
 
 #
 # system data
