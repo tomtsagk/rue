@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(rue VERSION 0.2.3)
+project(rue VERSION 0.4.0)
 
 # compile for windows, with dynamic location
 add_compile_definitions(
@@ -176,7 +176,20 @@ install(FILES
 	assets/button_play.ply
 	assets/button_plus.ply
 	assets/button.ply
-	assets/card_approach.png
+	assets/card_01_single_step.png
+	assets/card_02_triple_step.png
+	assets/card_03_trade.png
+	assets/card_04_one_step_cond.png
+	assets/card_05_replace.png
+	assets/card_06_grab.png
+	assets/card_07_grab_gen.png
+	assets/card_08_approach.png
+	assets/card_09_win.png
+	assets/card_10_always_one.png
+	assets/card_11_next_hand.png
+	assets/card_12_ignore_move.png
+	assets/card_13_steal.png
+	assets/card_14_empty.png
 	assets/card_border.ply
 	assets/card_border_texture.png
 	assets/card_corner_frown.png
@@ -184,27 +197,17 @@ install(FILES
 	assets/card_corner_tear.png
 	assets/card_corner_thunder.png
 	assets/card_deselect.ogg
-	assets/card_empty.png
-	assets/card_grab_gen.png
-	assets/card_grab.png
-	assets/card_hold_one_step.png
-	assets/card_ignore_move.png
 	assets/card_look.ogg
-	assets/card_next_hand.png
-	assets/card_one_step_cond.png
 	assets/card_place.ogg
 	assets/card.ply
-	assets/card_replace.png
-	assets/card_rose_seeker.png
 	assets/card_select.ogg
-	assets/card_single_step.png
-	assets/card_trade.png
-	assets/card_triple_step.png
 	assets/card_tutorial.png
-	assets/card_win.png
 	assets/character_1.png
 	assets/character_2.png
 	assets/character_3.png
+	assets/character_4.png
+	assets/character_5.png
+	assets/character_6.png
 	assets/character.ply
 	assets/dd_theme.ogg
 	assets/eng_white.png
@@ -221,6 +224,8 @@ install(FILES
 	assets/rue_logo.png
 	assets/stage_1.ply
 	assets/stage_2.ply
+	assets/stage_3.ply
+	assets/stage_3_texture.png
 	assets/table_1.ply
 	assets/table_2.ply
 	assets/table_arrow_decoration.ply
