@@ -97,7 +97,30 @@
 	(dd_matrix_translate this.matCenter 0 -4 -5)
 
 	# stage
-	(this.stage.load (asset "assets/stage_2.ply" DD_PLY))
+	(if (== stageId -1)
+
+		# non-story related stage
+		(if (== (dd_math_rand 2) 0)
+			(group
+			(this.stage.load (asset "assets/stage_3.ply" DD_PLY))
+			(this.stageTexture.set (asset "assets/stage_3_texture.png" AVDL_IMAGETYPE_PNG))
+			(this.stage.setTexture this.stageTexture)
+			)
+			(this.stage.load (asset "assets/stage_2.ply" DD_PLY))
+		)
+
+		# story related stage
+		(group
+		(if (== (% (+ stageId 1) 3) 0)
+			(group
+			(this.stage.load (asset "assets/stage_3.ply" DD_PLY))
+			(this.stageTexture.set (asset "assets/stage_3_texture.png" AVDL_IMAGETYPE_PNG))
+			(this.stage.setTexture this.stageTexture)
+			)
+			(this.stage.load (asset "assets/stage_2.ply" DD_PLY))
+		)
+		)
+	)
 	(this.table.load (asset "assets/table_2.ply" DD_PLY))
 	(this.tableTexture.set (asset "assets/table_rose.png" AVDL_IMAGETYPE_PNG))
 	(this.table.setTexture this.tableTexture)
