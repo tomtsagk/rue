@@ -1536,8 +1536,21 @@
 				(if (>= winningPlayer 0)
 					(group
 					(= this.victoriousPlayer winningPlayer)
-					#(dd_world_prepare world_menu 1.0)
-					#(dd_world_ready)
+
+					# Handle achievements
+					(if (&& (== this.victoriousPlayer 0) (== stageId 0))
+						(avdl_achievements_set 0 "ACHIEVEMENT_FIRST_STEPS")
+					(&& (== this.victoriousPlayer 0) (== stageId 2))
+						(avdl_achievements_set 0 "ACHIEVEMENT_OPTIONAL_EFFECTS")
+					(&& (== this.victoriousPlayer 0) (== stageId 5))
+						(avdl_achievements_set 0 "ACHIEVEMENT_TRADE_STEAL")
+					(&& (== this.victoriousPlayer 0) (== stageId 8))
+						(avdl_achievements_set 0 "ACHIEVEMENT_GRAB")
+					(&& (== this.victoriousPlayer 0) (== stageId 11))
+						(avdl_achievements_set 0 "ACHIEVEMENT_SMART")
+					(&& (== this.victoriousPlayer 0) (== stageId 14))
+						(avdl_achievements_set 0 "ACHIEVEMENT_STORY_DONE")
+					)
 					)
 				# nobody won
 					(group
