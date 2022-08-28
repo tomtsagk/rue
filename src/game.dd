@@ -188,6 +188,16 @@
 
 	# cards
 	(= this.cardsTotal 53)
+
+	(if (&& (>= stageId 0) (< stageId 3))
+		(this.prepareDeckMove)
+	(&& (>= stageId 0) (< stageId 6))
+		(this.prepareDeckOptionalEffects)
+	(&& (>= stageId 0) (< stageId 9))
+		(this.prepareDeckTradeAndSteal)
+		(this.prepareDeckFull)
+	)
+
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
 		(= this.cards[i].hidden 1)
@@ -195,188 +205,6 @@
 		(= this.cards[i].meshBack this.cardBack)
 		#(= this.cards[i].cardDescription2 this.cardLabel[2])
 		(dd_matrix_identity this.cards[i])
-		)
-	)
-
-	# single steps
-	(for (def int i 0) (< i 5) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_SINGLE_STEP)
-		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_SINGLE_STEP])
-		)
-	)
-
-	# triple steps
-	(for (def int i 5) (< i (+ 5 4)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_THREE_STEPS)
-		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_THREE_STEPS])
-		)
-	)
-
-	# trade
-	(for (def int i 9) (< i (+ 9 3)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_TRADE)
-		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_TRADE])
-		)
-	)
-	(= this.cards[ 9].cornerId CARD_CORNER_TEAR)
-	(= this.cards[10].cornerId CARD_CORNER_HEART)
-	(= this.cards[11].cornerId CARD_CORNER_FROWN)
-	(= this.cards[ 9].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-	(= this.cards[10].meshCorner this.cardCorner[CARD_CORNER_HEART])
-	(= this.cards[11].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-
-	# conditional
-	(for (def int i 12) (< i (+ 12 4)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_CONDITIONAL)
-		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_CONDITIONAL])
-		)
-	)
-	(= this.cards[12].cornerId CARD_CORNER_TEAR)
-	(= this.cards[13].cornerId CARD_CORNER_FROWN)
-	(= this.cards[14].cornerId CARD_CORNER_HEART)
-	(= this.cards[12].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-	(= this.cards[13].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-	(= this.cards[14].meshCorner this.cardCorner[CARD_CORNER_HEART])
-
-	# replace
-	(for (def int i 16) (< i (+ 16 3)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_REPLACE)
-		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_REPLACE])
-		)
-	)
-	(= this.cards[16].cornerId CARD_CORNER_TEAR)
-	(= this.cards[17].cornerId CARD_CORNER_FROWN)
-	(= this.cards[18].cornerId CARD_CORNER_HEART)
-	(= this.cards[16].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-	(= this.cards[17].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-	(= this.cards[18].meshCorner this.cardCorner[CARD_CORNER_HEART])
-
-	# grab
-	(for (def int i 19) (< i (+ 19 4)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_GRAB)
-		(= this.cards[i].mesh this.cardFront[CARD_GRAB])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_GRAB])
-		)
-	)
-	(= this.cards[19].cornerId CARD_CORNER_TEAR)
-	(= this.cards[20].cornerId CARD_CORNER_THUNDER)
-	(= this.cards[21].cornerId CARD_CORNER_HEART)
-	(= this.cards[19].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-	(= this.cards[20].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
-	(= this.cards[21].meshCorner this.cardCorner[CARD_CORNER_HEART])
-
-	# grab gen
-	(for (def int i 23) (< i (+ 23 4)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_GRAB_GENERIC)
-		(= this.cards[i].mesh this.cardFront[CARD_GRAB_GENERIC])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_GRAB_GENERIC])
-		)
-	)
-	(= this.cards[23].cornerId CARD_CORNER_FROWN)
-	(= this.cards[24].cornerId CARD_CORNER_THUNDER)
-	(= this.cards[25].cornerId CARD_CORNER_HEART)
-	(= this.cards[26].cornerId CARD_CORNER_HEART)
-	(= this.cards[23].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-	(= this.cards[24].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
-	(= this.cards[25].meshCorner this.cardCorner[CARD_CORNER_HEART])
-	(= this.cards[26].meshCorner this.cardCorner[CARD_CORNER_HEART])
-
-	# approach
-	(for (def int i 27) (< i (+ 27 3)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_APPROACH)
-		(= this.cards[i].mesh this.cardFront[CARD_APPROACH])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_APPROACH])
-		)
-	)
-	(= this.cards[27].cornerId CARD_CORNER_THUNDER)
-	(= this.cards[28].cornerId CARD_CORNER_FROWN)
-	(= this.cards[29].cornerId CARD_CORNER_TEAR)
-	(= this.cards[27].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
-	(= this.cards[28].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-	(= this.cards[29].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-
-	# win
-	(for (def int i 30) (< i (+ 30 5)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_WIN)
-		(= this.cards[i].mesh this.cardFront[CARD_WIN])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_WIN])
-		)
-	)
-
-	# hold one step
-	(for (def int i 35) (< i (+ 35 5)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_HOLD_ONE_STEP)
-		(= this.cards[i].mesh this.cardFront[13])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_HOLD_ONE_STEP])
-		)
-	)
-
-	# next hand
-	(for (def int i 40) (< i (+ 40 3)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_NEXT_HAND)
-		(= this.cards[i].mesh this.cardFront[11])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_NEXT_HAND])
-		)
-	)
-	(= this.cards[40].cornerId CARD_CORNER_TEAR)
-	(= this.cards[41].cornerId CARD_CORNER_HEART)
-	(= this.cards[42].cornerId CARD_CORNER_THUNDER)
-	(= this.cards[40].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-	(= this.cards[41].meshCorner this.cardCorner[CARD_CORNER_HEART])
-	(= this.cards[42].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
-
-	# ignore move
-	(for (def int i 43) (< i (+ 43 3)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_IGNORE_MOVE)
-		(= this.cards[i].mesh this.cardFront[10])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_IGNORE_MOVE])
-		)
-	)
-	(= this.cards[43].cornerId CARD_CORNER_TEAR)
-	(= this.cards[44].cornerId CARD_CORNER_THUNDER)
-	(= this.cards[45].cornerId CARD_CORNER_FROWN)
-	(= this.cards[43].meshCorner this.cardCorner[CARD_CORNER_TEAR])
-	(= this.cards[44].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
-	(= this.cards[45].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-
-	# rose held
-	(for (def int i 46) (< i (+ 46 3)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_ROSE_HELD_STEAL)
-		(= this.cards[i].mesh this.cardFront[14])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_ROSE_HELD_STEAL])
-		)
-	)
-	(= this.cards[46].cornerId CARD_CORNER_THUNDER)
-	(= this.cards[47].cornerId CARD_CORNER_FROWN)
-	(= this.cards[48].cornerId CARD_CORNER_HEART)
-	(= this.cards[46].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
-	(= this.cards[47].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-	(= this.cards[48].meshCorner this.cardCorner[CARD_CORNER_HEART])
-
-	# empty
-	(for (def int i 49) (< i (+ 49 4)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_EMPTY)
-		(= this.cards[i].mesh this.cardFront[12])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_EMPTY])
 		)
 	)
 
@@ -445,22 +273,22 @@
 	(this.playerMesh[1].setTransparency 1)
 
 	(this.playerMesh[2].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[2].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerTexture[2].set (asset "assets/character_3.png" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[2].setTexture this.playerTexture[2])
 	(this.playerMesh[2].setTransparency 1)
 
 	(this.playerMesh[3].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[3].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerTexture[3].set (asset "assets/character_4.png" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[3].setTexture this.playerTexture[3])
 	(this.playerMesh[3].setTransparency 1)
 
 	(this.playerMesh[4].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[4].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerTexture[4].set (asset "assets/character_5.png" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[4].setTexture this.playerTexture[4])
 	(this.playerMesh[4].setTransparency 1)
 
 	(this.playerMesh[5].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[5].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
+	(this.playerTexture[5].set (asset "assets/character_6.png" AVDL_IMAGETYPE_PNG))
 	(this.playerMesh[5].setTexture this.playerTexture[5])
 	(this.playerMesh[5].setTransparency 1)
 
@@ -763,8 +591,8 @@
 
 (class_function world_game void onload ()
 	(group
-	(this.theme.load (asset "assets/game_theme.opus" DD_PLY))
-	(this.theme.playLoop -1)
+	#(this.theme.load (asset "assets/game_theme.opus" DD_PLY))
+	#(this.theme.playLoop -1)
 	)
 )
 
@@ -2412,5 +2240,426 @@
 	(= this.playerIndex playerIndex)
 	(= this.value valueAmount)
 	(= this.delay delay)
+	)
+)
+
+(class_function world_game void prepareDeckMove ()
+	(group
+	(= this.cardsTotal 30)
+	# single steps
+	(for (def int i 0) (< i 12) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_SINGLE_STEP)
+		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_SINGLE_STEP])
+		)
+	)
+
+	# triple steps
+	(for (def int i 12) (< i (+ 12 9)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_THREE_STEPS)
+		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_THREE_STEPS])
+		)
+	)
+
+	# empty
+	(for (def int i 21) (< i (+ 21 9)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_EMPTY)
+		(= this.cards[i].mesh this.cardFront[12])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_EMPTY])
+		)
+	)
+	)
+)
+
+(class_function world_game void prepareDeckOptionalEffects ()
+	(group
+	(= this.cardsTotal 46)
+	# single steps
+	(for (def int i 0) (< i 10) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_SINGLE_STEP)
+		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_SINGLE_STEP])
+		)
+	)
+
+	# triple steps
+	(for (def int i 10) (< i (+ 10 8)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_THREE_STEPS)
+		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_THREE_STEPS])
+		)
+	)
+
+	# conditional
+	(for (def int i 18) (< i (+ 18 8)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_CONDITIONAL)
+		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_CONDITIONAL])
+		)
+	)
+	(= this.cards[18].cornerId CARD_CORNER_TEAR)
+	(= this.cards[19].cornerId CARD_CORNER_FROWN)
+	(= this.cards[20].cornerId CARD_CORNER_HEART)
+	(= this.cards[21].cornerId CARD_CORNER_TEAR)
+	(= this.cards[22].cornerId CARD_CORNER_FROWN)
+	(= this.cards[23].cornerId CARD_CORNER_HEART)
+	(= this.cards[18].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[19].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[20].meshCorner this.cardCorner[CARD_CORNER_HEART])
+	(= this.cards[21].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[22].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[23].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# approach
+	(for (def int i 26) (< i (+ 26 6)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_APPROACH)
+		(= this.cards[i].mesh this.cardFront[CARD_APPROACH])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_APPROACH])
+		)
+	)
+	(= this.cards[26].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[27].cornerId CARD_CORNER_FROWN)
+	(= this.cards[28].cornerId CARD_CORNER_TEAR)
+	(= this.cards[29].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[30].cornerId CARD_CORNER_FROWN)
+	(= this.cards[31].cornerId CARD_CORNER_TEAR)
+	(= this.cards[26].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[27].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[28].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[29].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[30].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[31].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+
+	# ignore move
+	(for (def int i 32) (< i (+ 32 6)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_IGNORE_MOVE)
+		(= this.cards[i].mesh this.cardFront[10])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_IGNORE_MOVE])
+		)
+	)
+	(= this.cards[32].cornerId CARD_CORNER_TEAR)
+	(= this.cards[33].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[34].cornerId CARD_CORNER_FROWN)
+	(= this.cards[35].cornerId CARD_CORNER_TEAR)
+	(= this.cards[36].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[37].cornerId CARD_CORNER_FROWN)
+	(= this.cards[32].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[33].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[34].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[35].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[36].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[37].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+
+	# empty
+	(for (def int i 38) (< i (+ 38 8)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_EMPTY)
+		(= this.cards[i].mesh this.cardFront[12])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_EMPTY])
+		)
+	)
+	)
+)
+
+(class_function world_game void prepareDeckTradeAndSteal ()
+	(group
+	(= this.cardsTotal 40)
+	# single steps
+	(for (def int i 0) (< i 5) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_SINGLE_STEP)
+		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_SINGLE_STEP])
+		)
+	)
+
+	# triple steps
+	(for (def int i 5) (< i (+ 5 5)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_THREE_STEPS)
+		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_THREE_STEPS])
+		)
+	)
+
+	# trade
+	(for (def int i 10) (< i (+ 10 4)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_TRADE)
+		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_TRADE])
+		)
+	)
+	(= this.cards[10].cornerId CARD_CORNER_TEAR)
+	(= this.cards[11].cornerId CARD_CORNER_HEART)
+	(= this.cards[12].cornerId CARD_CORNER_FROWN)
+	(= this.cards[10].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[11].meshCorner this.cardCorner[CARD_CORNER_HEART])
+	(= this.cards[12].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+
+	# conditional
+	(for (def int i 14) (< i (+ 14 6)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_CONDITIONAL)
+		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_CONDITIONAL])
+		)
+	)
+	(= this.cards[20].cornerId CARD_CORNER_TEAR)
+	(= this.cards[21].cornerId CARD_CORNER_FROWN)
+	(= this.cards[22].cornerId CARD_CORNER_HEART)
+	(= this.cards[20].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[21].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[22].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# replace
+	(for (def int i 20) (< i (+ 20 4)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_REPLACE)
+		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_REPLACE])
+		)
+	)
+	(= this.cards[20].cornerId CARD_CORNER_TEAR)
+	(= this.cards[21].cornerId CARD_CORNER_FROWN)
+	(= this.cards[22].cornerId CARD_CORNER_HEART)
+	(= this.cards[20].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[21].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[22].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# approach
+	(for (def int i 24) (< i (+ 24 5)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_APPROACH)
+		(= this.cards[i].mesh this.cardFront[CARD_APPROACH])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_APPROACH])
+		)
+	)
+	(= this.cards[24].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[25].cornerId CARD_CORNER_FROWN)
+	(= this.cards[26].cornerId CARD_CORNER_TEAR)
+	(= this.cards[24].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[25].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[26].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+
+	# ignore move
+	(for (def int i 29) (< i (+ 29 5)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_IGNORE_MOVE)
+		(= this.cards[i].mesh this.cardFront[10])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_IGNORE_MOVE])
+		)
+	)
+	(= this.cards[29].cornerId CARD_CORNER_TEAR)
+	(= this.cards[30].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[31].cornerId CARD_CORNER_FROWN)
+	(= this.cards[29].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[30].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[31].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+
+	# empty
+	(for (def int i 34) (< i (+ 34 6)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_EMPTY)
+		(= this.cards[i].mesh this.cardFront[12])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_EMPTY])
+		)
+	)
+	)
+)
+
+(class_function world_game void prepareDeckFull ()
+	(group
+	(= this.cardsTotal 53)
+	# single steps
+	(for (def int i 0) (< i 5) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_SINGLE_STEP)
+		(= this.cards[i].mesh this.cardFront[CARD_SINGLE_STEP])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_SINGLE_STEP])
+		)
+	)
+
+	# triple steps
+	(for (def int i 5) (< i (+ 5 4)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_THREE_STEPS)
+		(= this.cards[i].mesh this.cardFront[CARD_THREE_STEPS])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_THREE_STEPS])
+		)
+	)
+
+	# trade
+	(for (def int i 9) (< i (+ 9 3)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_TRADE)
+		(= this.cards[i].mesh this.cardFront[CARD_TRADE])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_TRADE])
+		)
+	)
+	(= this.cards[ 9].cornerId CARD_CORNER_TEAR)
+	(= this.cards[10].cornerId CARD_CORNER_HEART)
+	(= this.cards[11].cornerId CARD_CORNER_FROWN)
+	(= this.cards[ 9].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[10].meshCorner this.cardCorner[CARD_CORNER_HEART])
+	(= this.cards[11].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+
+	# conditional
+	(for (def int i 12) (< i (+ 12 4)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_CONDITIONAL)
+		(= this.cards[i].mesh this.cardFront[CARD_CONDITIONAL])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_CONDITIONAL])
+		)
+	)
+	(= this.cards[12].cornerId CARD_CORNER_TEAR)
+	(= this.cards[13].cornerId CARD_CORNER_FROWN)
+	(= this.cards[14].cornerId CARD_CORNER_HEART)
+	(= this.cards[12].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[13].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[14].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# replace
+	(for (def int i 16) (< i (+ 16 3)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_REPLACE)
+		(= this.cards[i].mesh this.cardFront[CARD_REPLACE])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_REPLACE])
+		)
+	)
+	(= this.cards[16].cornerId CARD_CORNER_TEAR)
+	(= this.cards[17].cornerId CARD_CORNER_FROWN)
+	(= this.cards[18].cornerId CARD_CORNER_HEART)
+	(= this.cards[16].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[17].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[18].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# grab
+	(for (def int i 19) (< i (+ 19 4)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_GRAB)
+		(= this.cards[i].mesh this.cardFront[CARD_GRAB])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_GRAB])
+		)
+	)
+	(= this.cards[19].cornerId CARD_CORNER_TEAR)
+	(= this.cards[20].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[21].cornerId CARD_CORNER_HEART)
+	(= this.cards[19].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[20].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[21].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# grab gen
+	(for (def int i 23) (< i (+ 23 4)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_GRAB_GENERIC)
+		(= this.cards[i].mesh this.cardFront[CARD_GRAB_GENERIC])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_GRAB_GENERIC])
+		)
+	)
+	(= this.cards[23].cornerId CARD_CORNER_FROWN)
+	(= this.cards[24].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[25].cornerId CARD_CORNER_HEART)
+	(= this.cards[26].cornerId CARD_CORNER_HEART)
+	(= this.cards[23].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[24].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[25].meshCorner this.cardCorner[CARD_CORNER_HEART])
+	(= this.cards[26].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# approach
+	(for (def int i 27) (< i (+ 27 3)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_APPROACH)
+		(= this.cards[i].mesh this.cardFront[CARD_APPROACH])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_APPROACH])
+		)
+	)
+	(= this.cards[27].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[28].cornerId CARD_CORNER_FROWN)
+	(= this.cards[29].cornerId CARD_CORNER_TEAR)
+	(= this.cards[27].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[28].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[29].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+
+	# win
+	(for (def int i 30) (< i (+ 30 5)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_WIN)
+		(= this.cards[i].mesh this.cardFront[CARD_WIN])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_WIN])
+		)
+	)
+
+	# hold one step
+	(for (def int i 35) (< i (+ 35 5)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_HOLD_ONE_STEP)
+		(= this.cards[i].mesh this.cardFront[13])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_HOLD_ONE_STEP])
+		)
+	)
+
+	# next hand
+	(for (def int i 40) (< i (+ 40 3)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_NEXT_HAND)
+		(= this.cards[i].mesh this.cardFront[11])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_NEXT_HAND])
+		)
+	)
+	(= this.cards[40].cornerId CARD_CORNER_TEAR)
+	(= this.cards[41].cornerId CARD_CORNER_HEART)
+	(= this.cards[42].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[40].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[41].meshCorner this.cardCorner[CARD_CORNER_HEART])
+	(= this.cards[42].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+
+	# ignore move
+	(for (def int i 43) (< i (+ 43 3)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_IGNORE_MOVE)
+		(= this.cards[i].mesh this.cardFront[10])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_IGNORE_MOVE])
+		)
+	)
+	(= this.cards[43].cornerId CARD_CORNER_TEAR)
+	(= this.cards[44].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[45].cornerId CARD_CORNER_FROWN)
+	(= this.cards[43].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(= this.cards[44].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[45].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+
+	# rose held
+	(for (def int i 46) (< i (+ 46 3)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_ROSE_HELD_STEAL)
+		(= this.cards[i].mesh this.cardFront[14])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_ROSE_HELD_STEAL])
+		)
+	)
+	(= this.cards[46].cornerId CARD_CORNER_THUNDER)
+	(= this.cards[47].cornerId CARD_CORNER_FROWN)
+	(= this.cards[48].cornerId CARD_CORNER_HEART)
+	(= this.cards[46].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
+	(= this.cards[47].meshCorner this.cardCorner[CARD_CORNER_FROWN])
+	(= this.cards[48].meshCorner this.cardCorner[CARD_CORNER_HEART])
+
+	# empty
+	(for (def int i 49) (< i (+ 49 4)) (= i (+ i 1))
+		(group
+		(this.cards[i].setId CARD_EMPTY)
+		(= this.cards[i].mesh this.cardFront[12])
+		(= this.cards[i].cardDescription2 this.cardLabel[CARD_EMPTY])
+		)
+	)
 	)
 )

@@ -20,11 +20,11 @@
 	(= this.buttonPage 0)
 
 	# buttons
-	(= this.buttonTotal 17)
+	(= this.buttonTotal 18)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[0].setSize 1 1)
-	(this.button[0].setProportionalPosition 0.25 0.75)
-	(this.button[0].setProportionalWidth 0.25)
+	(this.button[0].setProportionalPosition 0.3 0.75)
+	(this.button[0].setProportionalWidth 0.2)
 	(this.button[0].setProportionalSize 0.8)
 	(this.button[0].label.setText "0")
 	(this.button[0].description.setText "Play stage 0")
@@ -32,7 +32,7 @@
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[1].setSize 1 1)
 	(this.button[1].setProportionalPosition 0.5 0.75)
-	(this.button[1].setProportionalWidth 0.25)
+	(this.button[1].setProportionalWidth 0.2)
 	(this.button[1].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 0) 0)
 		(group
@@ -48,8 +48,8 @@
 
 	(this.button[2].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[2].setSize 1 1)
-	(this.button[2].setProportionalPosition 0.75 0.75)
-	(this.button[2].setProportionalWidth 0.25)
+	(this.button[2].setProportionalPosition 0.7 0.75)
+	(this.button[2].setProportionalWidth 0.2)
 	(this.button[2].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 1) 0)
 		(group
@@ -65,8 +65,8 @@
 
 	(this.button[3].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[3].setSize 1 1)
-	(this.button[3].setProportionalPosition 0.25 0.45)
-	(this.button[3].setProportionalWidth 0.25)
+	(this.button[3].setProportionalPosition 0.3 0.45)
+	(this.button[3].setProportionalWidth 0.2)
 	(this.button[3].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 2) 0)
 		(group
@@ -83,7 +83,7 @@
 	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[4].setSize 1 1)
 	(this.button[4].setProportionalPosition 0.5 0.45)
-	(this.button[4].setProportionalWidth 0.25)
+	(this.button[4].setProportionalWidth 0.2)
 	(this.button[4].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -99,8 +99,8 @@
 
 	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[5].setSize 1 1)
-	(this.button[5].setProportionalPosition 0.8 0.45)
-	(this.button[5].setProportionalWidth 0.25)
+	(this.button[5].setProportionalPosition 0.7 0.45)
+	(this.button[5].setProportionalWidth 0.2)
 	(this.button[5].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -116,8 +116,8 @@
 
 	(this.button[6].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[6].setSize 1 1)
-	(this.button[6].setProportionalPosition 0.6 0.45)
-	(this.button[6].setProportionalWidth 0.25)
+	(this.button[6].setProportionalPosition 0.3 0.75)
+	(this.button[6].setProportionalWidth 0.2)
 	(this.button[6].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -133,8 +133,8 @@
 
 	(this.button[7].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[7].setSize 1 1)
-	(this.button[7].setProportionalPosition 0.7 0.45)
-	(this.button[7].setProportionalWidth 0.25)
+	(this.button[7].setProportionalPosition 0.5 0.75)
+	(this.button[7].setProportionalWidth 0.2)
 	(this.button[7].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -150,8 +150,8 @@
 
 	(this.button[8].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[8].setSize 1 1)
-	(this.button[8].setProportionalPosition 0.8 0.45)
-	(this.button[8].setProportionalWidth 0.25)
+	(this.button[8].setProportionalPosition 0.7 0.75)
+	(this.button[8].setProportionalWidth 0.2)
 	(this.button[8].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -167,8 +167,8 @@
 
 	(this.button[9].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[9].setSize 1 1)
-	(this.button[9].setProportionalPosition 0.9 0.45)
-	(this.button[9].setProportionalWidth 0.25)
+	(this.button[9].setProportionalPosition 0.3 0.45)
+	(this.button[9].setProportionalWidth 0.2)
 	(this.button[9].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -185,7 +185,7 @@
 	(this.button[10].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[10].setSize 1 1)
 	(this.button[10].setProportionalPosition 0.5 0.45)
-	(this.button[10].setProportionalWidth 0.25)
+	(this.button[10].setProportionalWidth 0.2)
 	(this.button[10].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -201,8 +201,8 @@
 
 	(this.button[11].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[11].setSize 1 1)
-	(this.button[11].setProportionalPosition 0.5 0.45)
-	(this.button[11].setProportionalWidth 0.25)
+	(this.button[11].setProportionalPosition 0.7 0.45)
+	(this.button[11].setProportionalWidth 0.2)
 	(this.button[11].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -218,8 +218,8 @@
 
 	(this.button[12].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[12].setSize 1 1)
-	(this.button[12].setProportionalPosition 0.5 0.45)
-	(this.button[12].setProportionalWidth 0.25)
+	(this.button[12].setProportionalPosition 0.3 0.62)
+	(this.button[12].setProportionalWidth 0.2)
 	(this.button[12].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -235,8 +235,8 @@
 
 	(this.button[13].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[13].setSize 1 1)
-	(this.button[13].setProportionalPosition 0.5 0.45)
-	(this.button[13].setProportionalWidth 0.25)
+	(this.button[13].setProportionalPosition 0.5 0.62)
+	(this.button[13].setProportionalWidth 0.2)
 	(this.button[13].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -252,8 +252,8 @@
 
 	(this.button[14].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[14].setSize 1 1)
-	(this.button[14].setProportionalPosition 0.5 0.45)
-	(this.button[14].setProportionalWidth 0.25)
+	(this.button[14].setProportionalPosition 0.7 0.62)
+	(this.button[14].setProportionalWidth 0.2)
 	(this.button[14].setProportionalSize 0.8)
 	(if (== (this.saveLoad.IsStageComplete 3) 0)
 		(group
@@ -270,23 +270,26 @@
 	(this.button[15].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[15].setSize 1 1)
 	(this.button[15].setProportionalPosition 0.16 0.15)
-	(this.button[15].setProportionalWidth 0.25)
+	(this.button[15].setProportionalWidth 0.2)
 	(this.button[15].label.setText "Back")
 	(this.button[15].description.setText "Return to main menu")
 
 	(this.button[16].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[16].setSize 1 1)
 	(this.button[16].setProportionalPosition 0.1 0.5)
-	(this.button[16].setProportionalWidth 0.25)
+	(this.button[16].setProportionalWidth 0.2)
 	(this.button[16].label.setText "<")
 	(this.button[16].description.setText "Previous Page")
+	(this.button[16].setProportionalSize 0.5)
+	(= this.button[16].isVisible 0)
 
 	(this.button[17].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[17].setSize 1 1)
 	(this.button[17].setProportionalPosition 0.9 0.5)
-	(this.button[17].setProportionalWidth 0.25)
+	(this.button[17].setProportionalWidth 0.2)
 	(this.button[17].label.setText ">")
 	(this.button[17].description.setText "Next Page")
+	(this.button[17].setProportionalSize 0.5)
 
 	(= this.extraButtons 3)
 
@@ -362,19 +365,8 @@
 
 (class_function menu_stages void resize ()
 	(group
-	(for (def int i (* this.buttonPage 6)) (&& (< i (+ (* (+ this.buttonPage 1) 6) this.extraButtons)) (< i this.buttonTotal)) (= i (+ i 1))
-		(group
-
-		(def int index)
-		(if (>= i (* (+ this.buttonPage 1) 6))
-			(group
-			(= index (+ 15 (% i (* (+ this.buttonPage 1) 6))))
-			)
-			(= index i)
-		)
-
-		(this.button[index].resize)
-		)
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(this.button[i].resize)
 	)
 	(this.textButton.resize)
 	)
@@ -412,7 +404,7 @@
 		(if (== this.selection index)
 			(group
 			)
-			(if (this.button[index].hasMouseCollided)
+			(if (&& this.button[index].isVisible (this.button[index].hasMouseCollided))
 				(group
 				(this.hoverSound.play)
 				(= this.selection index)
@@ -490,6 +482,7 @@
 				1
 			)
 		)
+
 		(dd_scalef anim anim anim)
 		(this.button[index].drawRaw)
 
@@ -558,10 +551,8 @@
 			(= index i)
 		)
 
-		(if (this.button[index].hasMouseCollided)
-			(group
+		(if (&& this.button[index].isVisible (this.button[index].hasMouseCollided))
 			(= this.selection index)
-			)
 		)
 
 		)
@@ -580,7 +571,8 @@
 		# clicked on a button
 		(if (&& (== this.selection this.selectionClick)
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided)
-			(== this.button[this.selection].isDisabled 0))
+			(== this.button[this.selection].isDisabled 0)
+			)
 			(group
 
 			# stage 1
@@ -907,12 +899,28 @@
 			(== this.selectionClick 16)
 				(group
 				(= this.buttonPage (dd_math_max 0 (- this.buttonPage 1)))
+				(= this.button[17].isVisible 1)
+				(if (== this.buttonPage 0)
+					(group
+					(= this.button[16].isVisible 0)
+					(= this.selectionClick -1)
+					(= this.selection -1)
+					)
+				)
 				(this.clickBigSound.play)
 				)
-			# previous page
+			# next page
 			(== this.selectionClick 17)
 				(group
-				(= this.buttonPage (dd_math_min 3 (+ this.buttonPage 1)))
+				(= this.buttonPage (dd_math_min 2 (+ this.buttonPage 1)))
+				(= this.button[16].isVisible 1)
+				(if (== this.buttonPage 2)
+					(group
+					(= this.button[17].isVisible 0)
+					(= this.selectionClick -1)
+					(= this.selection -1)
+					)
+				)
 				(this.clickBigSound.play)
 				)
 			)

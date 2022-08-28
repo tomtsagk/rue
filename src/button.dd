@@ -23,6 +23,7 @@
 	(= this.pSize -5)
 
 	(= this.isDisabled 0)
+	(= this.isVisible 1)
 
 	(this.label.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.description.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -70,6 +71,10 @@
 # animate the tiles to the current side
 (class_function Button void update (group int isSelected int isClicked)
 	(group
+
+	(if (== this.isVisible 0)
+		(return)
+	)
 
 	# animate to target if clicked
 	(if isClicked
@@ -122,6 +127,9 @@
 # draw tile based on its side
 (class_function Button void drawRaw ()
 	(group
+	(if (== this.isVisible 0)
+		(return)
+	)
 	(this.mesh.draw)
 	)
 )
@@ -129,6 +137,9 @@
 # draw tile based on its side
 (class_function Button void draw ()
 	(group
+	(if (== this.isVisible 0)
+		(return)
+	)
 	(dd_pushMatrix)
 	(this.applyTransform)
 	(this.applyMatrixTransform)
@@ -139,6 +150,9 @@
 
 (class_function Button void drawText ()
 	(group
+	(if (== this.isVisible 0)
+		(return)
+	)
 	(this.label.drawLimit 10)
 	)
 )
