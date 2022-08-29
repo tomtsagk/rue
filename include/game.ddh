@@ -104,7 +104,8 @@
 	(def dd_matrix matCenter)
 
 	# stage
-	#(def dd_meshColour stage)
+	(def int isStageColour)
+	(def dd_meshColour stageCol)
 	(def dd_meshTexture stage)
 	(def dd_image stageTexture)
 	(def dd_meshTexture table)
