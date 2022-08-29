@@ -225,6 +225,7 @@ install(FILES
 	assets/stage_1.ply
 	assets/stage_2.ply
 	assets/stage_3.ply
+	assets/stage_2_texture.png
 	assets/stage_3_texture.png
 	assets/table_1.ply
 	assets/table_2.ply
