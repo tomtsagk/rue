@@ -565,14 +565,12 @@
 	(this.cardLabel[14].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[15].setText (multistring
-		"The first enemy is called the childish king. "
-		"He will only play a card to move the Rose 1 step."
+		"The first enemy will only play a card to move the Rose 1 step."
 	))
 	(this.cardLabel[15].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[16].setText (multistring
-		"The second enemy is called the blurry scream. "
-		"It will only play a card to move the Rose 3 steps."
+		"The second enemy will only play a card to move the Rose 3 steps."
 	))
 	(this.cardLabel[16].setAlign DD_STRING3D_ALIGN_CENTER)
 

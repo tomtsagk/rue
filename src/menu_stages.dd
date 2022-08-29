@@ -603,7 +603,7 @@
 				(= startingPlayer 0)
 				(= guide -1)
 				(= playerAi[1] 0)
-				(= playerAi[2] 0)
+				(= playerAi[2] 1)
 				(= stageId 1)
 
 				(this.disable)
@@ -617,7 +617,7 @@
 
 				# 3 enemies -
 				# single step + 2 three steps
-				(= numberOfPlayers 3)
+				(= numberOfPlayers 4)
 				(= startingPlayer 0)
 				(= guide 11)
 				(= playerAi[1] 0)
@@ -679,7 +679,7 @@
 				# single
 				# one step cond
 				# triple
-				(= numberOfPlayers 4)
+				(= numberOfPlayers 5)
 				(= startingPlayer 0)
 				(= guide -1)
 				(= playerAi[1] 2)

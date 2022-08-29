@@ -56,7 +56,9 @@ cd ..
 # build rue itself
 mkdir build
 for i in src/*.dd; do C:/Program\ Files/avdl/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+cd build
 cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/rue_install"
 cmake --build . --config Release
 cmake --install .
+cd ..
 7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
