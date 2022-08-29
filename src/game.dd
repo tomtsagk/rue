@@ -106,7 +106,11 @@
 			(this.stageTexture.set (asset "assets/stage_3_texture.png" AVDL_IMAGETYPE_PNG))
 			(this.stage.setTexture this.stageTexture)
 			)
+			(group
 			(this.stage.load (asset "assets/stage_2.ply" DD_PLY))
+			(this.stageTexture.set (asset "assets/stage_2_texture.png" AVDL_IMAGETYPE_PNG))
+			(this.stage.setTexture this.stageTexture)
+			)
 		)
 
 		# story related stage
@@ -117,7 +121,11 @@
 			(this.stageTexture.set (asset "assets/stage_3_texture.png" AVDL_IMAGETYPE_PNG))
 			(this.stage.setTexture this.stageTexture)
 			)
+			(group
 			(this.stage.load (asset "assets/stage_2.ply" DD_PLY))
+			(this.stageTexture.set (asset "assets/stage_2_texture.png" AVDL_IMAGETYPE_PNG))
+			(this.stage.setTexture this.stageTexture)
+			)
 		)
 		)
 	)
@@ -614,8 +622,8 @@
 
 (class_function world_game void onload ()
 	(group
-	#(this.theme.load (asset "assets/game_theme.opus" DD_PLY))
-	#(this.theme.playLoop -1)
+	(this.theme.load (asset "assets/game_theme.opus" DD_PLY))
+	(this.theme.playLoop -1)
 	)
 )
 
