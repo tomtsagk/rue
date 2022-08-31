@@ -1,3 +1,11 @@
+rue (0.4.0-1) focal; urgency=low
+
+  * 15 stages implemented.
+  * 5 working AI characters.
+  * 1 new background
+
+ -- Tom Tsagk <tomtsagk@afloofdev.com>  Wed, 31 Aug 2022 19:00:00 +0100
+
 rue (0.3.0-1) focal; urgency=low
 
   * Add optional corner effects on cards

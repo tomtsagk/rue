@@ -119,6 +119,5 @@
 	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
 		(= this.fastForward 0)
 	)
-	(return 0)
 	)
 ) # mouse input

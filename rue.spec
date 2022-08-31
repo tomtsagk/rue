@@ -1,14 +1,14 @@
 Name:           rue
-Version:        0.3.0
+Version:        0.4.0
 Release:        1%{?dist}
 Summary:        A card game about deduction, love and regret
 
 License:        GPLv3
-URL:            https://darkdimension.org/games/rue.html
+URL:            https://afloofdev.com/games/rue
 Source0:        https://github.com/tomtsagk/%{name}/archive/refs/tags/v%{version}.tar.gz
 
-BuildRequires:  make, gcc, avdl, glew-devel, SDL2-devel, SDL2_mixer-devel
-Requires:       glew-devel, SDL2-devel, SDL2_mixer-devel
+BuildRequires:  glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, opus, opus-tools, libopusenc, libogg-devel, opusfile
+Requires:       glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, opus, opus-tools, libopusenc, libogg-devel, opusfile
 
 %description
 A card game where all the players are sitting around a table.
@@ -37,6 +37,11 @@ make %{?_smp_mflags} prefix=/usr DESTDIR=%{buildroot} install
 %license LICENSE
 
 %changelog
+* Wed Aug 31 2022 Tom Tsagk <tomtsagk@afloofdev.com>
+- 15 stages implemented.
+- 5 working AI characters.
+- 1 new background
+
 * Wed Jun 15 2022 Tom Tsagk <tomtsagk@darkdimension.org>
 - Add optional corner effects on cards
 - Text is now using 2D bitamp font
