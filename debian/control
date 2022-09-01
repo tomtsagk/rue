@@ -3,11 +3,11 @@ Maintainer: Tom Tsagk <tomtsagk@afloofdev.com>
 Section: misc
 Priority: optional
 Standards-Version: 4.5.0
-Build-Depends: debhelper (>= 9), avdl, libglew-dev, libsdl2-dev, libsdl2-mixer-dev, libpng-dev, libvorbis-dev, opus-tools, libopus-dev, libogg-dev, libopusfile-dev
+Build-Depends: debhelper (>= 9), avdl, libglew-dev, libsdl2-dev, libsdl2-mixer-dev, libpng-dev, libvorbis-dev, opus-tools, libopus-dev, libogg-dev, libopusfile-dev, libopus0, libogg0, libopusfile0
 
 Package: rue
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libglew-dev, libsdl2-dev, libsdl2-mixer-dev, libpng-dev, libvorbis-dev, opus-tools, libopus-dev, libogg-dev, libopusfile-dev
+Depends: ${shlibs:Depends}, ${misc:Depends}, libglew-dev, libsdl2-dev, libsdl2-mixer-dev, libpng-dev, libvorbis-dev, opus-tools, libopus-dev, libogg-dev, libopusfile-dev, libopus0, libogg0, libopusfile0
 Description: A card game about deduction, love and regret.
  Card game, where all the players are sitting around a table.
  A rose appears on the table that moves around.
