@@ -36,28 +36,13 @@ jobs:
         sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
         sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-        #make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64" assetdir=
         make AVDL_BIN="${HOME}/AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_BUILD/dependencies/lib -L ${HOME}/AVDL_BUILD/dependencies/lib64" assetdir=
-#    - name: collect_dependencies
-#      run: |
-#        mkdir ${HOME}/avdl_dependencies_linux
-#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so* ${HOME}/avdl_dependencies_linux
-#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so* ${HOME}/avdl_dependencies_linux
-#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so* ${HOME}/avdl_dependencies_linux
-#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so* ${HOME}/avdl_dependencies_linux
-#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so* ${HOME}/avdl_dependencies_linux
-#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so* ${HOME}/avdl_dependencies_linux
-#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libpng*.so* ${HOME}/avdl_dependencies_linux
-#    - name: init_avdl
-#      uses: actions/checkout@v1
-#    - name: build & package avdl
-#      run: |
-#        make -j6 prefix=AVDL_BUILD/ CC=gcc
-#        make -j6 prefix=AVDL_BUILD/ CC=gcc install
-#        mkdir AVDL_BUILD/dependencies
-#        cp ${HOME}/avdl_dependencies_linux/* AVDL_BUILD/dependencies
-#    - name: upload_artifact
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: avdl_build
-#        path: AVDL_BUILD
+    - name: package
+      run: |
+        mkdir build/native/output/dependencies
+        cp ${HOME}/AVDL_BUILD/dependencies/lib/* build/native/output/dependencies
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build
+        path: build/native/output
