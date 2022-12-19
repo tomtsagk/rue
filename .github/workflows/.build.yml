@@ -33,7 +33,7 @@ jobs:
         chmod +x ${HOME}/avdl/bin/avdl
         sudo cp ${HOME}/avdl/include/* /usr/include
         #make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64" assetdir=
-        make AVDL_BIN=${HOME}/avdl/bin/avdl COMPILER_CUSTOM_FLAGS="-i ${HOME}/avdl/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/avdl/dependencies/lib -L ${HOME}/avdl/dependencies/lib64 --install-loc avdl" assetdir=
+        make AVDL_BIN="${HOME}/avdl/bin/avdl --install-loc ${HOME}/avdl" COMPILER_CUSTOM_FLAGS="-i ${HOME}/avdl/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/avdl/dependencies/lib -L ${HOME}/avdl/dependencies/lib64" assetdir=
 #    - name: collect_dependencies
 #      run: |
 #        mkdir ${HOME}/avdl_dependencies_linux
