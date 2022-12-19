@@ -21,19 +21,19 @@ jobs:
     - name: get_avdl
       run: |
         wget https://www.dropbox.com/s/fx2u863asz3ngeg/avdl_build.zip?dl=0 -O avdl_build.zip
-        mkdir ${HOME}/avdl
-        mv avdl_build.zip ${HOME}/avdl
-        cd ${HOME}/avdl
+        mkdir ${HOME}/AVDL_BUILD
+        mv avdl_build.zip ${HOME}/AVDL_BUILD
+        cd ${HOME}/AVDL_BUILD
         unzip avdl_build.zip
         cd ..
     - name: init_rue
       uses: actions/checkout@v1
     - name: compile_rue
       run: |
-        chmod +x ${HOME}/avdl/bin/avdl
-        sudo cp ${HOME}/avdl/include/* /usr/include
+        chmod +x ${HOME}/AVDL_BUILD/bin/avdl
+        sudo cp ${HOME}/AVDL_BUILD/include/* /usr/include
         #make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64" assetdir=
-        make AVDL_BIN="${HOME}/avdl/bin/avdl --install-loc ${HOME}/avdl" COMPILER_CUSTOM_FLAGS="-i ${HOME}/avdl/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/avdl/dependencies/lib -L ${HOME}/avdl/dependencies/lib64" assetdir=
+        make AVDL_BIN="${HOME}/AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_BUILD/dependencies/lib -L ${HOME}/AVDL_BUILD/dependencies/lib64" assetdir=
 #    - name: collect_dependencies
 #      run: |
 #        mkdir ${HOME}/avdl_dependencies_linux
