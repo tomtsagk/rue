@@ -30,8 +30,7 @@ jobs:
       uses: actions/checkout@v1
     - name: compile_rue
       run: |
-        ls
-        ls ${HOME}/avdl
+        chmod +x ${HOME}/avdl/bin/avdl
         #make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64" assetdir=
         make AVDL_BIN=${HOME}/avdl/bin/avdl COMPILER_CUSTOM_FLAGS="-i ${HOME}/avdl/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/avdl/dependencies/lib -L ${HOME}/avdl/dependencies/lib64 --install-loc avdl" assetdir=
 #    - name: collect_dependencies
