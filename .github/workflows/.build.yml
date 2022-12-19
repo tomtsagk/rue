@@ -15,9 +15,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-#    - name: update packages
-#      run: |
-#         sudo apt update && sudo apt install -y gcc pkg-config libgl1-mesa-dev
+    - name: update packages
+      run: |
+         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
     - name: get_avdl
       run: |
         wget https://www.dropbox.com/s/fx2u863asz3ngeg/avdl_build.zip?dl=0 -O avdl_build.zip
@@ -32,6 +32,7 @@ jobs:
       run: |
         chmod +x ${HOME}/AVDL_BUILD/bin/avdl
         sudo cp ${HOME}/AVDL_BUILD/include/* /usr/include
+        sudo cp ${HOME}/AVDL_BUILD/lib/* /usr/lib
         cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
         #make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64" assetdir=
         make AVDL_BIN="${HOME}/AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_BUILD/dependencies/lib -L ${HOME}/AVDL_BUILD/dependencies/lib64" assetdir=
