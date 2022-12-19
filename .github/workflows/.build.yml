@@ -1,0 +1,57 @@
+name: Create Build
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+      - feature/github_build
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+#    - name: update packages
+#      run: |
+#         sudo apt update && sudo apt install -y gcc pkg-config libgl1-mesa-dev
+    - name: get_avdl
+      run: |
+        wget https://www.dropbox.com/s/fx2u863asz3ngeg/avdl_build.zip?dl=0 -O avdl_build.zip
+        mkdir avdl
+        mv avdl_build.zip avdl
+        cd avdl
+        unzip avdl_build.zip
+        cd ..
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: compile_rue
+      run: |
+        #make COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_DEPENDENCIES/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_DEPENDENCIES/lib -L ${HOME}/AVDL_DEPENDENCIES/lib64" assetdir=
+        make AVDL_BIN=avdl/bin/avdl COMPILER_CUSTOM_FLAGS="-i ${HOME}/avdl/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/avdl/dependencies/lib -L ${HOME}/avdl/dependencies/lib64 --install-loc avdl" assetdir=
+#    - name: collect_dependencies
+#      run: |
+#        mkdir ${HOME}/avdl_dependencies_linux
+#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libGLEW.so* ${HOME}/avdl_dependencies_linux
+#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2-2.0.so* ${HOME}/avdl_dependencies_linux
+#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libSDL2_mixer-2.0.so* ${HOME}/avdl_dependencies_linux
+#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopus.so* ${HOME}/avdl_dependencies_linux
+#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libogg.so* ${HOME}/avdl_dependencies_linux
+#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libopusfile.so* ${HOME}/avdl_dependencies_linux
+#        cp -d ${HOME}/AVDL_DEPENDENCIES/lib*/libpng*.so* ${HOME}/avdl_dependencies_linux
+#    - name: init_avdl
+#      uses: actions/checkout@v1
+#    - name: build & package avdl
+#      run: |
+#        make -j6 prefix=AVDL_BUILD/ CC=gcc
+#        make -j6 prefix=AVDL_BUILD/ CC=gcc install
+#        mkdir AVDL_BUILD/dependencies
+#        cp ${HOME}/avdl_dependencies_linux/* AVDL_BUILD/dependencies
+#    - name: upload_artifact
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: avdl_build
+#        path: AVDL_BUILD
