@@ -20,7 +20,7 @@ jobs:
          sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
     - name: get_avdl
       run: |
-        wget https://www.dropbox.com/s/fx2u863asz3ngeg/avdl_build.zip?dl=0 -O avdl_build.zip
+        wget https://www.dropbox.com/s/m7m6t90jph5u2g5/avdl_build.zip?dl=0 -O avdl_build.zip
         mkdir ${HOME}/AVDL_BUILD
         mv avdl_build.zip ${HOME}/AVDL_BUILD
         cd ${HOME}/AVDL_BUILD
