@@ -32,7 +32,7 @@ jobs:
       run: |
         chmod +x AVDL_BUILD/bin/avdl
         sudo cp AVDL_BUILD/include/* /usr/include
-        sudo cp AVDL_BUILD/dependencies/lib/* /usr/lib
+        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
         sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
         sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
