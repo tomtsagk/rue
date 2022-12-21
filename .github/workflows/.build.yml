@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v1
     - name: get_avdl
       run: |
-        wget https://www.dropbox.com/s/wzzcausbjrk6tqc/avdl_build.zip?dl=0 -O avdl_build.zip
+        wget https://www.dropbox.com/s/i7exr71ruwxqhhc/avdl_build.zip?dl=0 -O avdl_build.zip
         mkdir AVDL_BUILD
         mv avdl_build.zip AVDL_BUILD
         cd AVDL_BUILD
@@ -37,6 +37,8 @@ jobs:
         sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
         make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
+        mv build/native/output/rue build/native/output/bin/rue
+        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
     - name: package
       run: |
         mkdir build/native/output/dependencies
