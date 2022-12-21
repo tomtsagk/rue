@@ -18,29 +18,29 @@ jobs:
     - name: update packages
       run: |
          sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
-    - name: get_avdl
-      run: |
-        wget https://www.dropbox.com/s/m7m6t90jph5u2g5/avdl_build.zip?dl=0 -O avdl_build.zip
-        mkdir ${HOME}/AVDL_BUILD
-        mv avdl_build.zip ${HOME}/AVDL_BUILD
-        cd ${HOME}/AVDL_BUILD
-        unzip avdl_build.zip
-        cd ..
     - name: init_rue
       uses: actions/checkout@v1
+    - name: get_avdl
+      run: |
+        wget https://www.dropbox.com/s/u8czsfgf7ftzu3x/avdl_build.zip?dl=0 -O avdl_build.zip
+        mkdir AVDL_BUILD
+        mv avdl_build.zip AVDL_BUILD
+        cd AVDL_BUILD
+        unzip avdl_build.zip
+        cd ..
     - name: compile_rue
       run: |
-        chmod +x ${HOME}/AVDL_BUILD/bin/avdl
-        sudo cp ${HOME}/AVDL_BUILD/include/* /usr/include
-        sudo cp ${HOME}/AVDL_BUILD/dependencies/lib/* /usr/lib
+        chmod +x AVDL_BUILD/bin/avdl
+        sudo cp AVDL_BUILD/include/* /usr/include
+        sudo cp AVDL_BUILD/dependencies/lib/* /usr/lib
         sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
         sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-        cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-        make AVDL_BIN="${HOME}/AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i ${HOME}/AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L ${HOME}/AVDL_BUILD/dependencies/lib -L ${HOME}/AVDL_BUILD/dependencies/lib64" assetdir=
+        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
     - name: package
       run: |
         mkdir build/native/output/dependencies
-        cp ${HOME}/AVDL_BUILD/dependencies/lib/* build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
