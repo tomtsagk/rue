@@ -91,13 +91,36 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v1
-    - name: get_glew
+    - name: prepare_libraries
+      shell: bash
+      run: |
+        mkdir libraries
+    - name: get_libraries
       run: |
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
     - name: glew
       shell: bash
       run: |
+        mv glew-2.2.0-win32.zip libraries
+        cd libraries
         unzip glew-2.2.0-win32.zip
+        cd ..
+    - name: sdl
+      shell: bash
+      run: |
+        mv SDL2-devel-2.0.22-VC.zip libraries
+        cd libraries
+        unzip SDL2-devel-2.0.22-VC.zip
+        cd ..
+    - name: sdl_mixer
+      shell: bash
+      run: |
+        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
+        cd libraries
+        unzip SDL2_mixer-devel-2.6.0-VC.zip
+        cd ..
     - name: get_avdl
       run: |
         C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/7f9a02ddzro274j/avdl_build_windows.zip
