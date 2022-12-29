@@ -103,6 +103,7 @@ jobs:
         unzip avdl_build_windows.zip
         cd ..
     - name: compile_rue
+      shell: bash
       run: |
         mkdir build
         for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
