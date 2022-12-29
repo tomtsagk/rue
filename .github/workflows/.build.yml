@@ -94,11 +94,11 @@ jobs:
     - name: get_avdl
       shell: bash
       run: |
-        curl https://www.dropbox.com/s/36cl1tn4zg1sysi/avdl_build_windows.zip > avdl_build.zip
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/36cl1tn4zg1sysi/avdl_build_windows.zip
         mkdir AVDL_BUILD
-        mv avdl_build.zip AVDL_BUILD
+        mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
-        unzip avdl_build.zip
+        unzip avdl_build_windows.zip
         cd ..
     - name: compile_rue
       run: |
