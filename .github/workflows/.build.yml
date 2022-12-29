@@ -154,9 +154,9 @@ jobs:
         mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
         unzip avdl_build_windows.zip
-        cp -r dependencies/libpng libaries/
-        cp -r dependencies/zlib libaries/
-        ls libraries
+        cp -r dependencies/libpng ../libaries/
+        cp -r dependencies/zlib ../libaries/
+        ls ../libraries
         cd ..
     - name: compile_rue
       shell: bash
