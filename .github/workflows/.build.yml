@@ -91,6 +91,13 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v1
+    - name: get_glew
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+    - name: glew
+      shell: bash
+      run: |
+        unzip glew-2.2.0-win32.zip
     - name: get_avdl
       run: |
         C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/7f9a02ddzro274j/avdl_build_windows.zip
