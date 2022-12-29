@@ -105,6 +105,8 @@ jobs:
     - name: compile_rue
       shell: bash
       run: |
+        mkdir ../cengine
+        cp -r AVDL_BUILD/engines/cengine/src/*.c avdl/engines/cengine/include/*.h ../cengine
         mkdir build
         for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
         cd build
