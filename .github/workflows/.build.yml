@@ -12,17 +12,89 @@ on:
       - master
 
 jobs:
-  build_linux:
-    runs-on: ubuntu-latest
+#  build_linux:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: update packages
+#      run: |
+#         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
+#    - name: init_rue
+#      uses: actions/checkout@v1
+#    - name: get_avdl
+#      run: |
+#        wget https://www.dropbox.com/s/hfmihrew70bcls4/avdl_build.zip -O avdl_build.zip
+#        mkdir AVDL_BUILD
+#        mv avdl_build.zip AVDL_BUILD
+#        cd AVDL_BUILD
+#        unzip avdl_build.zip
+#        cd ..
+#    - name: compile_rue
+#      run: |
+#        chmod +x AVDL_BUILD/bin/avdl
+#        sudo cp AVDL_BUILD/include/* /usr/include
+#        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
+#        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
+#        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
+#        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
+#        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
+#        mkdir build/native/output/bin
+#        mv build/native/output/rue build/native/output/bin/
+#        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+#    - name: package
+#      run: |
+#        mkdir build/native/output/dependencies
+#        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
+#    - name: upload_artifact
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: rue_build_linux
+#        path: build/native/output
+#  build_linux_steam:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: update packages
+#      run: |
+#         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
+#    - name: init_rue
+#      uses: actions/checkout@v1
+#    - name: get_avdl
+#      run: |
+#        wget https://www.dropbox.com/s/hfmihrew70bcls4/avdl_build.zip -O avdl_build.zip
+#        mkdir AVDL_BUILD
+#        mv avdl_build.zip AVDL_BUILD
+#        cd AVDL_BUILD
+#        unzip avdl_build.zip
+#        cd ..
+#    - name: compile_rue
+#      run: |
+#        chmod +x AVDL_BUILD/bin/avdl
+#        sudo cp AVDL_BUILD/include/* /usr/include
+#        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
+#        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
+#        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
+#        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam -i AVDL_BUILD/dependencies/steamworks/public/steam -L AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/" assetdir=
+#        mkdir build/native/output/bin
+#        mv build/native/output/rue build/native/output/bin/
+#        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+#    - name: package
+#      run: |
+#        mkdir build/native/output/dependencies
+#        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
+#        cp AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/* build/native/output/dependencies
+#    - name: upload_artifact
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: rue_build_linux_steam
+#        path: build/native/output
+  build_windows:
+    runs-on: windows-latest
     steps:
-    - name: update packages
-      run: |
-         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
     - name: init_rue
       uses: actions/checkout@v1
     - name: get_avdl
+      shell: bash
       run: |
-        wget https://www.dropbox.com/s/hfmihrew70bcls4/avdl_build.zip -O avdl_build.zip
+        wget https://www.dropbox.com/s/36cl1tn4zg1sysi/avdl_build_windows.zip -O avdl_build.zip
         mkdir AVDL_BUILD
         mv avdl_build.zip AVDL_BUILD
         cd AVDL_BUILD
@@ -30,59 +102,31 @@ jobs:
         cd ..
     - name: compile_rue
       run: |
-        chmod +x AVDL_BUILD/bin/avdl
-        sudo cp AVDL_BUILD/include/* /usr/include
-        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
+        mkdir build
+        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+        cd build
+        #cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/rue_install"
+        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD"
+        cmake --build . --config Release
+        cmake --install .
+        cd ..
+        #7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
+        #chmod +x AVDL_BUILD/bin/avdl
+        #sudo cp AVDL_BUILD/include/* /usr/include
+        #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
+        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
+        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
-        mkdir build/native/output/bin
-        mv build/native/output/rue build/native/output/bin/
-        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-    - name: package
-      run: |
-        mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
+        #make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
+        #mkdir build/native/output/bin
+        #mv build/native/output/rue build/native/output/bin/
+        #echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+#    - name: package
+#      run: |
+#        mkdir build/native/output/dependencies
+#        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_build_linux
-        path: build/native/output
-  build_linux_steam:
-    runs-on: ubuntu-latest
-    steps:
-    - name: update packages
-      run: |
-         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
-    - name: init_rue
-      uses: actions/checkout@v1
-    - name: get_avdl
-      run: |
-        wget https://www.dropbox.com/s/hfmihrew70bcls4/avdl_build.zip -O avdl_build.zip
-        mkdir AVDL_BUILD
-        mv avdl_build.zip AVDL_BUILD
-        cd AVDL_BUILD
-        unzip avdl_build.zip
-        cd ..
-    - name: compile_rue
-      run: |
-        chmod +x AVDL_BUILD/bin/avdl
-        sudo cp AVDL_BUILD/include/* /usr/include
-        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam -i AVDL_BUILD/dependencies/steamworks/public/steam -L AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/" assetdir=
-        mkdir build/native/output/bin
-        mv build/native/output/rue build/native/output/bin/
-        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-    - name: package
-      run: |
-        mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/* build/native/output/dependencies
-    - name: upload_artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: rue_build_linux_steam
-        path: build/native/output
+        name: rue_build_windows
+        path: RUE_BUILD
