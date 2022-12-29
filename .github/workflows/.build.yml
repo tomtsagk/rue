@@ -92,9 +92,11 @@ jobs:
     - name: init_rue
       uses: actions/checkout@v1
     - name: get_avdl
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/36cl1tn4zg1sysi/avdl_build_windows.zip
+    - name: unpack_avdl
       shell: bash
       run: |
-        C:/msys64/usr/bin/wget.exe -q https://www.dropbox.com/s/36cl1tn4zg1sysi/avdl_build_windows.zip
         mkdir AVDL_BUILD
         mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
