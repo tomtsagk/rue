@@ -93,7 +93,7 @@ jobs:
       uses: actions/checkout@v1
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/2fqqdylbk2t9l7u/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/7f9a02ddzro274j/avdl_build_windows.zip
     - name: unpack_avdl
       shell: bash
       run: |
