@@ -100,29 +100,29 @@ jobs:
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
         C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
         C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
-        C:\msys64\usr\bin\wget.exe -q http://www.zlib.net/zlib-1.2.13.tar.gz
-    - name: zlib
-      shell: bash
-      run: |
-        tar xf zlib-1.2.13.tar.gz
-        cd zlib-1.2.13
-        mkdir build
-        cd build
-        cmake ../ .
-        cmake --build . --config Release
-        cmake --install .
-        cd ../../
-    - name: libpng
-      shell: bash
-      run: |
-        git clone git://git.code.sf.net/p/libpng/code libpng
-        cd libpng
-        mkdir build
-        cd build
-        cmake ../ .
-        cmake --build . --config Release
-        cmake --install .
-        cd ../../
+#        C:\msys64\usr\bin\wget.exe -q http://www.zlib.net/zlib-1.2.13.tar.gz
+#    - name: zlib
+#      shell: bash
+#      run: |
+#        tar xf zlib-1.2.13.tar.gz
+#        cd zlib-1.2.13
+#        mkdir build
+#        cd build
+#        cmake ../ .
+#        cmake --build . --config Release
+#        cmake --install .
+#        cd ../../
+#    - name: libpng
+#      shell: bash
+#      run: |
+#        git clone git://git.code.sf.net/p/libpng/code libpng
+#        cd libpng
+#        mkdir build
+#        cd build
+#        cmake ../ .
+#        cmake --build . --config Release
+#        cmake --install .
+#        cd ../../
     - name: glew
       shell: bash
       run: |
@@ -154,6 +154,9 @@ jobs:
         mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
         unzip avdl_build_windows.zip
+        cp -r dependencies/libpng libaries/
+        cp -r dependencies/zlib libaries/
+        ls libraries
         cd ..
     - name: compile_rue
       shell: bash
