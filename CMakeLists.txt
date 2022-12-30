@@ -48,6 +48,7 @@ set(AVDL_SRC
 	src/menu_custom_game.c
 	src/menu_home.c
 	src/menu_stages.c
+	src/menu_multiplayer.c
 	src/options.c
 	src/overlayButtons.c
 	src/player.c
