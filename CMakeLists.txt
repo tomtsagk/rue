@@ -48,6 +48,7 @@ set(AVDL_SRC
 	src/menu_custom_game.c
 	src/menu_home.c
 	src/menu_stages.c
+	src/menu_multiplayer.c
 	src/options.c
 	src/overlayButtons.c
 	src/player.c
@@ -58,6 +59,7 @@ if (${AVDL_STEAM})
 	set(AVDL_SRC
 		${AVDL_SRC}
 		cengine/avdl_achievements_steam.cpp
+		cengine/avdl_multiplayer_steam.cpp
 		cengine/avdl_steam_cpp.cpp
 		cengine/main_cpp.cpp
 	)
@@ -69,6 +71,7 @@ else()
 		${AVDL_SRC}
 		cengine/avdl_achievements.c
 		cengine/avdl_steam.c
+		cengine/avdl_multiplayer.c
 	)
 endif()
 

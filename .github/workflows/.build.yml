@@ -91,13 +91,10 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v1
-    - name: get_glew
-      run: |
-        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
-    - name: glew
+    - name: prepare_libraries
       shell: bash
       run: |
-        unzip glew-2.2.0-win32.zip
+        mkdir libraries
     - name: get_avdl
       run: |
         C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/7f9a02ddzro274j/avdl_build_windows.zip
@@ -108,6 +105,57 @@ jobs:
         mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
         unzip avdl_build_windows.zip
+        cp -r dependencies/libpng ../libaries/
+        cp -r dependencies/zlib ../libaries/
+        ls ../libraries
+        cd ..
+    - name: zlib
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
+#        cd AVDL_BUILD/dependencies/zlib
+#        mkdir build
+#        cd build
+#        cmake ../ .
+#        cmake --build . --config Release
+#        cmake --install .
+#        cd ../../../../
+    - name: libpng
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
+#        cd AVDL_BUILD/dependencies/libpng
+#        mkdir build
+#        cd build
+#        cmake ../ .
+#        cmake --build . --config Release
+#        cmake --install .
+#        cd ../../../../
+    - name: get_libraries
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
+    - name: glew
+      shell: bash
+      run: |
+        mv glew-2.2.0-win32.zip libraries
+        cd libraries
+        unzip glew-2.2.0-win32.zip
+        cd ..
+    - name: sdl
+      shell: bash
+      run: |
+        mv SDL2-devel-2.0.22-VC.zip libraries
+        cd libraries
+        unzip SDL2-devel-2.0.22-VC.zip
+        cd ..
+    - name: sdl_mixer
+      shell: bash
+      run: |
+        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
+        cd libraries
+        unzip SDL2_mixer-devel-2.6.0-VC.zip
         cd ..
     - name: compile_rue
       shell: bash
