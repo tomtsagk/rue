@@ -112,7 +112,7 @@ jobs:
     - name: zlib
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files/zlib"
+        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
 #        cd AVDL_BUILD/dependencies/zlib
 #        mkdir build
 #        cd build
@@ -123,7 +123,7 @@ jobs:
     - name: libpng
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files/libpng"
+        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
 #        cd AVDL_BUILD/dependencies/libpng
 #        mkdir build
 #        cd build
