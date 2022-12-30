@@ -189,7 +189,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: rue_build_windows
-        path: RUE_BUILD
+        path: build/RUE_BUILD
   build_windows_steam:
     runs-on: windows-latest
     steps:
@@ -293,5 +293,5 @@ jobs:
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_build_windows
-        path: RUE_BUILD
+        name: rue_build_windows_steam
+        path: buuld/RUE_BUILD
