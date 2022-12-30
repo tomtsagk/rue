@@ -58,6 +58,7 @@ if (${AVDL_STEAM})
 	set(AVDL_SRC
 		${AVDL_SRC}
 		cengine/avdl_achievements_steam.cpp
+		cengine/avdl_multiplayer_steam.cpp
 		cengine/avdl_steam_cpp.cpp
 		cengine/main_cpp.cpp
 	)
@@ -69,6 +70,7 @@ else()
 		${AVDL_SRC}
 		cengine/avdl_achievements.c
 		cengine/avdl_steam.c
+		cengine/avdl_multiplayer.c
 	)
 endif()
 
