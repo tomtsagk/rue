@@ -112,23 +112,25 @@ jobs:
     - name: zlib
       shell: bash
       run: |
-        cd AVDL_BUILD/dependencies/zlib
-        mkdir build
-        cd build
-        cmake ../ .
-        cmake --build . --config Release
-        cmake --install .
-        cd ../../../../
+        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files/zlib"
+#        cd AVDL_BUILD/dependencies/zlib
+#        mkdir build
+#        cd build
+#        cmake ../ .
+#        cmake --build . --config Release
+#        cmake --install .
+#        cd ../../../../
     - name: libpng
       shell: bash
       run: |
-        cd AVDL_BUILD/dependencies/libpng
-        mkdir build
-        cd build
-        cmake ../ .
-        cmake --build . --config Release
-        cmake --install .
-        cd ../../../../
+        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files/libpng"
+#        cd AVDL_BUILD/dependencies/libpng
+#        mkdir build
+#        cd build
+#        cmake ../ .
+#        cmake --build . --config Release
+#        cmake --install .
+#        cd ../../../../
     - name: get_libraries
       run: |
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
