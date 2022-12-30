@@ -97,7 +97,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/7f9a02ddzro274j/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/ia5kaiksprtpqez/avdl_build_windows.zip
     - name: unpack_avdl
       shell: bash
       run: |
@@ -107,7 +107,6 @@ jobs:
         unzip avdl_build_windows.zip
         cp -r dependencies/libpng ../libaries/
         cp -r dependencies/zlib ../libaries/
-        ls ../libraries
         cd ..
     - name: zlib
       shell: bash
@@ -202,7 +201,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/7f9a02ddzro274j/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/ia5kaiksprtpqez/avdl_build_windows.zip
     - name: unpack_avdl
       shell: bash
       run: |
