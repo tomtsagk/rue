@@ -213,6 +213,7 @@ jobs:
         mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
         unzip avdl_build_windows.zip
+        mkdir ../libraries
         cp -r dependencies/steamworks ../libraries/sdk
         cd ..
     - name: compile_rue
