@@ -32,8 +32,9 @@ jobs:
       run: |
         chmod +x AVDL_BUILD/bin/avdl
         #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-        mkdir test_libs
-        cp AVDL_BUILD/dependencies/lib/*.so* test_libs
+        #mkdir test_libs
+        #cp AVDL_BUILD/dependencies/lib/*.so* test_libs
+        cp AVDL_BUILD/dependencies/lib/libSDL2-2.0.so.0 AVDL_BUILD/dependencies/lib/libSDL2.so
         sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
         sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
