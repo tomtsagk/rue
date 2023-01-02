@@ -95,7 +95,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q $AVDL_BUILD_URL_WINDOWS
+        C:\msys64\usr\bin\wget.exe -q $Env:AVDL_BUILD_URL_WINDOWS
     - name: unpack_avdl
       shell: bash
       run: |
@@ -184,7 +184,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q $AVDL_BUILD_URL_WINDOWS
+        C:\msys64\usr\bin\wget.exe -q $Env:AVDL_BUILD_URL_WINDOWS
     - name: unpack_avdl
       shell: bash
       run: |
