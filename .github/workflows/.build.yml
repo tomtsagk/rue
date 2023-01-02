@@ -62,9 +62,9 @@ jobs:
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         mkdir AVDL_BUILD
-        mv avdl_build.zip AVDL_BUILD
+        mv avdl_build_linux.zip AVDL_BUILD
         cd AVDL_BUILD
-        unzip avdl_build.zip
+        unzip avdl_build_linux.zip
         cd ..
     - name: compile_rue
       run: |
