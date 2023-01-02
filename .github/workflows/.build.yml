@@ -86,6 +86,7 @@ jobs:
 #      with:
 #        name: rue_build_linux_steam
 #        path: build/native/output
+#C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/ia5kaiksprtpqez/avdl_build_windows.zip
   build_windows:
     runs-on: windows-latest
     steps:
@@ -97,7 +98,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/ia5kaiksprtpqez/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/tomtsagk/avdl/releases/download/untagged-da0887d7676f6bb4635f/avdl_build_linux.zip
     - name: unpack_avdl
       shell: bash
       run: |
