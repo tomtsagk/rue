@@ -194,7 +194,6 @@ jobs:
         unzip avdl_build_windows.zip
         cp -r dependencies/libpng ../libaries/
         cp -r dependencies/zlib ../libaries/
-        cp -r dependencies/steamworks ../libraries/sdk
         cd ..
     - name: zlib
       shell: bash
