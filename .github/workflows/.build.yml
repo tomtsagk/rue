@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v1
     - name: get_avdl
       run: |
-        wget https://www.dropbox.com/s/edz0rkd0fgpqbj8/avdl_build_linux.zip -O avdl_build_linux.zip
+        wget https://www.dropbox.com/s/ajqlfk8a73a39j5/avdl_build_linux.zip -O avdl_build_linux.zip
         mkdir AVDL_BUILD
         mv avdl_build_linux.zip AVDL_BUILD
         cd AVDL_BUILD
@@ -31,11 +31,9 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        #cp AVDL_BUILD/dependencies/lib/libSDL2-2.0.so.0 AVDL_BUILD/dependencies/lib/libSDL2.so
-        #cp AVDL_BUILD/dependencies/lib/libSDL2_mixer-2.0.so.0 AVDL_BUILD/dependencies/lib/libSDL2_mixer.so
         ls AVDL_BUILD/dependencies/lib
-        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
+        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
+        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 -L test_libs" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
