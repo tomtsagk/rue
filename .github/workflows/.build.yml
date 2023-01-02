@@ -38,7 +38,7 @@ jobs:
         sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
         sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-        ls test_libs
+        #ls test_libs
         make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 -L test_libs" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
