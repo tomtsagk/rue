@@ -36,7 +36,7 @@ jobs:
       run: |
         chmod +x AVDL_BUILD/bin/avdl
         ls AVDL_BUILD/dependencies/lib
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 -L test_libs" assetdir=
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
@@ -69,11 +69,7 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        sudo cp AVDL_BUILD/include/* /usr/include
-        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam -i AVDL_BUILD/dependencies/steamworks/public/steam -L AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/" assetdir=
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
