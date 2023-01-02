@@ -12,7 +12,7 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/n9fss20u0vjjy66/avdl_build_linux.zip
+  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/hl1wa2247h78q7t/avdl_build_linux.zip
 
 jobs:
   # Linux
@@ -99,7 +99,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/s01jbyld4t4odi9/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/tsqxc40myxbq2hy/avdl_build_windows.zip
     - name: unpack_avdl
       shell: bash
       run: |
@@ -188,7 +188,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/s01jbyld4t4odi9/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/tsqxc40myxbq2hy/avdl_build_windows.zip
     - name: unpack_avdl
       shell: bash
       run: |
