@@ -11,7 +11,11 @@ on:
       - develop
       - master
 
+env:
+  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/n9fss20u0vjjy66/avdl_build_linux.zip
+
 jobs:
+  # Linux
   build_linux:
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +26,7 @@ jobs:
       uses: actions/checkout@v1
     - name: get_avdl
       run: |
-        wget https://www.dropbox.com/s/ajqlfk8a73a39j5/avdl_build_linux.zip -O avdl_build_linux.zip
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         mkdir AVDL_BUILD
         mv avdl_build_linux.zip AVDL_BUILD
         cd AVDL_BUILD
@@ -32,8 +36,6 @@ jobs:
       run: |
         chmod +x AVDL_BUILD/bin/avdl
         ls AVDL_BUILD/dependencies/lib
-        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
         make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 -L test_libs" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
@@ -47,233 +49,236 @@ jobs:
       with:
         name: rue_build_linux
         path: build/native/output
-#  build_linux_steam:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - name: update packages
-#      run: |
-#         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
-#    - name: init_rue
-#      uses: actions/checkout@v1
-#    - name: get_avdl
-#      run: |
-#        wget https://www.dropbox.com/s/hfmihrew70bcls4/avdl_build.zip -O avdl_build.zip
-#        mkdir AVDL_BUILD
-#        mv avdl_build.zip AVDL_BUILD
-#        cd AVDL_BUILD
-#        unzip avdl_build.zip
-#        cd ..
-#    - name: compile_rue
-#      run: |
-#        chmod +x AVDL_BUILD/bin/avdl
-#        sudo cp AVDL_BUILD/include/* /usr/include
-#        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-#        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-#        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-#        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam -i AVDL_BUILD/dependencies/steamworks/public/steam -L AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/" assetdir=
-#        mkdir build/native/output/bin
-#        mv build/native/output/rue build/native/output/bin/
-#        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+  # Linux Steam
+  build_linux_steam:
+    runs-on: ubuntu-latest
+    steps:
+    - name: update packages
+      run: |
+         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build.zip AVDL_BUILD
+        cd AVDL_BUILD
+        unzip avdl_build.zip
+        cd ..
+    - name: compile_rue
+      run: |
+        chmod +x AVDL_BUILD/bin/avdl
+        sudo cp AVDL_BUILD/include/* /usr/include
+        sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
+        sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
+        sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam -i AVDL_BUILD/dependencies/steamworks/public/steam -L AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/" assetdir=
+        mkdir build/native/output/bin
+        mv build/native/output/rue build/native/output/bin/
+        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+    - name: package
+      run: |
+        mkdir build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/* build/native/output/dependencies
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_linux_steam
+        path: build/native/output
+  # Windows
+  build_windows:
+    runs-on: windows-latest
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: prepare_libraries
+      shell: bash
+      run: |
+        mkdir libraries
+    - name: get_avdl
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/s01jbyld4t4odi9/avdl_build_windows.zip
+    - name: unpack_avdl
+      shell: bash
+      run: |
+        mkdir AVDL_BUILD
+        mv avdl_build_windows.zip AVDL_BUILD
+        cd AVDL_BUILD
+        unzip avdl_build_windows.zip
+        cp -r dependencies/libpng ../libaries/
+        cp -r dependencies/zlib ../libaries/
+        cd ..
+    - name: zlib
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
+    - name: libpng
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
+    - name: get_libraries
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
+    - name: glew
+      shell: bash
+      run: |
+        mv glew-2.2.0-win32.zip libraries
+        cd libraries
+        unzip glew-2.2.0-win32.zip
+        cd ..
+    - name: sdl
+      shell: bash
+      run: |
+        mv SDL2-devel-2.0.22-VC.zip libraries
+        cd libraries
+        unzip SDL2-devel-2.0.22-VC.zip
+        cd ..
+    - name: sdl_mixer
+      shell: bash
+      run: |
+        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
+        cd libraries
+        unzip SDL2_mixer-devel-2.6.0-VC.zip
+        cd ..
+    - name: compile_rue
+      shell: bash
+      run: |
+        mkdir cengine
+        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/include/*.h cengine
+        mkdir build
+        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+        cd build
+        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD"
+        cmake --build . --config Release
+        cmake --install .
+        cd ..
+        #7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
+        #chmod +x AVDL_BUILD/bin/avdl
+        #sudo cp AVDL_BUILD/include/* /usr/include
+        #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
+        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
+        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
+        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
+        #make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
+        #mkdir build/native/output/bin
+        #mv build/native/output/rue build/native/output/bin/
+        #echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
 #    - name: package
 #      run: |
 #        mkdir build/native/output/dependencies
 #        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
-#        cp AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/* build/native/output/dependencies
-#    - name: upload_artifact
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: rue_build_linux_steam
-#        path: build/native/output
-#  build_windows:
-#    runs-on: windows-latest
-#    steps:
-#    - name: init_rue
-#      uses: actions/checkout@v1
-#    - name: prepare_libraries
-#      shell: bash
-#      run: |
-#        mkdir libraries
-#    - name: get_avdl
-#      run: |
-#        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/ia5kaiksprtpqez/avdl_build_windows.zip
-#    - name: unpack_avdl
-#      shell: bash
-#      run: |
-#        mkdir AVDL_BUILD
-#        mv avdl_build_windows.zip AVDL_BUILD
-#        cd AVDL_BUILD
-#        unzip avdl_build_windows.zip
-#        cp -r dependencies/libpng ../libaries/
-#        cp -r dependencies/zlib ../libaries/
-#        cd ..
-#    - name: zlib
-#      shell: bash
-#      run: |
-#        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
-#    - name: libpng
-#      shell: bash
-#      run: |
-#        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
-#    - name: get_libraries
-#      run: |
-#        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
-#        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
-#        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
-#    - name: glew
-#      shell: bash
-#      run: |
-#        mv glew-2.2.0-win32.zip libraries
-#        cd libraries
-#        unzip glew-2.2.0-win32.zip
-#        cd ..
-#    - name: sdl
-#      shell: bash
-#      run: |
-#        mv SDL2-devel-2.0.22-VC.zip libraries
-#        cd libraries
-#        unzip SDL2-devel-2.0.22-VC.zip
-#        cd ..
-#    - name: sdl_mixer
-#      shell: bash
-#      run: |
-#        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
-#        cd libraries
-#        unzip SDL2_mixer-devel-2.6.0-VC.zip
-#        cd ..
-#    - name: compile_rue
-#      shell: bash
-#      run: |
-#        mkdir cengine
-#        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/include/*.h cengine
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_windows
+        path: build/RUE_BUILD
+  # Windows Steam
+  build_windows_steam:
+    runs-on: windows-latest
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: prepare_libraries
+      shell: bash
+      run: |
+        mkdir libraries
+    - name: get_avdl
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/s01jbyld4t4odi9/avdl_build_windows.zip
+    - name: unpack_avdl
+      shell: bash
+      run: |
+        mkdir AVDL_BUILD
+        mv avdl_build_windows.zip AVDL_BUILD
+        cd AVDL_BUILD
+        unzip avdl_build_windows.zip
+        cp -r dependencies/libpng ../libaries/
+        cp -r dependencies/zlib ../libaries/
+        cp -r dependencies/steamworks ../libraries/sdk
+        cd ..
+    - name: zlib
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
+#        cd AVDL_BUILD/dependencies/zlib
 #        mkdir build
-#        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
 #        cd build
-#        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD"
+#        cmake ../ .
 #        cmake --build . --config Release
 #        cmake --install .
-#        cd ..
-#        #7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
-#        #chmod +x AVDL_BUILD/bin/avdl
-#        #sudo cp AVDL_BUILD/include/* /usr/include
-#        #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-#        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-#        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-#        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-#        #make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
-#        #mkdir build/native/output/bin
-#        #mv build/native/output/rue build/native/output/bin/
-#        #echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-##    - name: package
-##      run: |
-##        mkdir build/native/output/dependencies
-##        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
-#    - name: upload_artifact
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: rue_build_windows
-#        path: build/RUE_BUILD
-#  build_windows_steam:
-#    runs-on: windows-latest
-#    steps:
-#    - name: init_rue
-#      uses: actions/checkout@v1
-#    - name: prepare_libraries
-#      shell: bash
-#      run: |
-#        mkdir libraries
-#    - name: get_avdl
-#      run: |
-#        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/ia5kaiksprtpqez/avdl_build_windows.zip
-#    - name: unpack_avdl
-#      shell: bash
-#      run: |
-#        mkdir AVDL_BUILD
-#        mv avdl_build_windows.zip AVDL_BUILD
-#        cd AVDL_BUILD
-#        unzip avdl_build_windows.zip
-#        cp -r dependencies/libpng ../libaries/
-#        cp -r dependencies/zlib ../libaries/
-#        cp -r dependencies/steamworks ../libraries/sdk
-#        cd ..
-#    - name: zlib
-#      shell: bash
-#      run: |
-#        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
-##        cd AVDL_BUILD/dependencies/zlib
-##        mkdir build
-##        cd build
-##        cmake ../ .
-##        cmake --build . --config Release
-##        cmake --install .
-##        cd ../../../../
-#    - name: libpng
-#      shell: bash
-#      run: |
-#        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
-##        cd AVDL_BUILD/dependencies/libpng
-##        mkdir build
-##        cd build
-##        cmake ../ .
-##        cmake --build . --config Release
-##        cmake --install .
-##        cd ../../../../
-#    - name: get_libraries
-#      run: |
-#        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
-#        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
-#        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
-#    - name: glew
-#      shell: bash
-#      run: |
-#        mv glew-2.2.0-win32.zip libraries
-#        cd libraries
-#        unzip glew-2.2.0-win32.zip
-#        cd ..
-#    - name: sdl
-#      shell: bash
-#      run: |
-#        mv SDL2-devel-2.0.22-VC.zip libraries
-#        cd libraries
-#        unzip SDL2-devel-2.0.22-VC.zip
-#        cd ..
-#    - name: sdl_mixer
-#      shell: bash
-#      run: |
-#        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
-#        cd libraries
-#        unzip SDL2_mixer-devel-2.6.0-VC.zip
-#        cd ..
-#    - name: compile_rue
-#      shell: bash
-#      run: |
-#        mkdir cengine
-#        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
-#        #cp -r AVDL_BUILD/engines/cengine/src/*.c AVDL_BUILD/engines/cengine/include/*.h ../cengine
+#        cd ../../../../
+    - name: libpng
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
+#        cd AVDL_BUILD/dependencies/libpng
 #        mkdir build
-#        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
 #        cd build
-#        #cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/rue_install"
-#        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD" -DAVDL_STEAM=1
+#        cmake ../ .
 #        cmake --build . --config Release
 #        cmake --install .
-#        cd ..
-#        #7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
-#        #chmod +x AVDL_BUILD/bin/avdl
-#        #sudo cp AVDL_BUILD/include/* /usr/include
-#        #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-#        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-#        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-#        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-#        #make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
-#        #mkdir build/native/output/bin
-#        #mv build/native/output/rue build/native/output/bin/
-#        #echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-##    - name: package
-##      run: |
-##        mkdir build/native/output/dependencies
-##        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
-#    - name: upload_artifact
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: rue_build_windows_steam
-#        path: build/RUE_BUILD
+#        cd ../../../../
+    - name: get_libraries
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
+    - name: glew
+      shell: bash
+      run: |
+        mv glew-2.2.0-win32.zip libraries
+        cd libraries
+        unzip glew-2.2.0-win32.zip
+        cd ..
+    - name: sdl
+      shell: bash
+      run: |
+        mv SDL2-devel-2.0.22-VC.zip libraries
+        cd libraries
+        unzip SDL2-devel-2.0.22-VC.zip
+        cd ..
+    - name: sdl_mixer
+      shell: bash
+      run: |
+        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
+        cd libraries
+        unzip SDL2_mixer-devel-2.6.0-VC.zip
+        cd ..
+    - name: compile_rue
+      shell: bash
+      run: |
+        mkdir cengine
+        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
+        #cp -r AVDL_BUILD/engines/cengine/src/*.c AVDL_BUILD/engines/cengine/include/*.h ../cengine
+        mkdir build
+        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+        cd build
+        #cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/rue_install"
+        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD" -DAVDL_STEAM=1
+        cmake --build . --config Release
+        cmake --install .
+        cd ..
+        #7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
+        #chmod +x AVDL_BUILD/bin/avdl
+        #sudo cp AVDL_BUILD/include/* /usr/include
+        #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
+        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
+        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
+        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
+        #make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
+        #mkdir build/native/output/bin
+        #mv build/native/output/rue build/native/output/bin/
+        #echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+#    - name: package
+#      run: |
+#        mkdir build/native/output/dependencies
+#        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_windows_steam
+        path: build/RUE_BUILD
