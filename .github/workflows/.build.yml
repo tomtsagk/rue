@@ -69,7 +69,7 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam" assetdir=
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam -i AVDL_BUILD/dependencies/steamworks/public/steam -L AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
