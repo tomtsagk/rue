@@ -22,11 +22,11 @@ jobs:
       uses: actions/checkout@v1
     - name: get_avdl
       run: |
-        wget https://www.dropbox.com/s/hfmihrew70bcls4/avdl_build.zip -O avdl_build.zip
+        wget https://www.dropbox.com/s/dkua7ipq813uo74/avdl_build_linux.zip -O avdl_build_linux.zip
         mkdir AVDL_BUILD
-        mv avdl_build.zip AVDL_BUILD
+        mv avdl_build_linux.zip AVDL_BUILD
         cd AVDL_BUILD
-        unzip avdl_build.zip
+        unzip avdl_build_linux.zip
         cd ..
     - name: compile_rue
       run: |
