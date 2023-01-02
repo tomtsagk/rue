@@ -12,7 +12,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/hl1wa2247h78q7t/avdl_build_linux.zip
+  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/qhicpmou9be7rz8/avdl_build_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://www.dropbox.com/s/50mvou9fi0chyir/avdl_build_windows.zip
 
 jobs:
   # Linux
@@ -69,15 +70,14 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam -i AVDL_BUILD/dependencies/steamworks/public/steam -L AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/" assetdir=
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
     - name: package
       run: |
         mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/steamworks/redistributable_bin/linux64/* build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/lib/*.so build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -95,7 +95,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/tsqxc40myxbq2hy/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q $AVDL_BUILD_URL_WINDOWS
     - name: unpack_avdl
       shell: bash
       run: |
@@ -184,7 +184,7 @@ jobs:
         mkdir libraries
     - name: get_avdl
       run: |
-        C:\msys64\usr\bin\wget.exe -q https://www.dropbox.com/s/tsqxc40myxbq2hy/avdl_build_windows.zip
+        C:\msys64\usr\bin\wget.exe -q $AVDL_BUILD_URL_WINDOWS
     - name: unpack_avdl
       shell: bash
       run: |
