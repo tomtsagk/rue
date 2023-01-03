@@ -12,8 +12,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/qhicpmou9be7rz8/avdl_build_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://www.dropbox.com/s/50mvou9fi0chyir/avdl_build_windows.zip
+  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/ounhbxs8swk4d0o/avdl_build_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://www.dropbox.com/s/gtjtr16xd35jye0/avdl_build_windows.zip
 
 jobs:
   # Linux
@@ -36,15 +36,15 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        ls AVDL_BUILD/dependencies/lib
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
+        ls AVDL_BUILD/dependencies/linux/lib
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
     - name: package
       run: |
         mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -70,14 +70,14 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64 --steam" assetdir=
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include --steam" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib --steam" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
     - name: package
       run: |
         mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/lib/*.so build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/linux/lib/*.so build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -103,17 +103,17 @@ jobs:
         mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
         unzip avdl_build_windows.zip
-        cp -r dependencies/libpng ../libaries/
-        cp -r dependencies/zlib ../libaries/
+        cp -r dependencies/windows/libpng ../libaries/
+        cp -r dependencies/windows/zlib ../libaries/
         cd ..
     - name: zlib
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
+        cp -r AVDL_BUILD/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
     - name: libpng
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
+        cp -r AVDL_BUILD/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
     - name: get_libraries
       run: |
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
@@ -152,21 +152,6 @@ jobs:
         cmake --build . --config Release
         cmake --install .
         cd ..
-        #7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
-        #chmod +x AVDL_BUILD/bin/avdl
-        #sudo cp AVDL_BUILD/include/* /usr/include
-        #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-        #make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
-        #mkdir build/native/output/bin
-        #mv build/native/output/rue build/native/output/bin/
-        #echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-#    - name: package
-#      run: |
-#        mkdir build/native/output/dependencies
-#        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -192,31 +177,17 @@ jobs:
         mv avdl_build_windows.zip AVDL_BUILD
         cd AVDL_BUILD
         unzip avdl_build_windows.zip
-        cp -r dependencies/libpng ../libaries/
-        cp -r dependencies/zlib ../libaries/
+        cp -r dependencies/windows/libpng ../libaries/
+        cp -r dependencies/windows/zlib ../libaries/
         cd ..
     - name: zlib
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/zlib "C:/Program Files (x86)/zlib"
-#        cd AVDL_BUILD/dependencies/zlib
-#        mkdir build
-#        cd build
-#        cmake ../ .
-#        cmake --build . --config Release
-#        cmake --install .
-#        cd ../../../../
+        cp -r AVDL_BUILD/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
     - name: libpng
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/libpng "C:/Program Files (x86)/libpng"
-#        cd AVDL_BUILD/dependencies/libpng
-#        mkdir build
-#        cd build
-#        cmake ../ .
-#        cmake --build . --config Release
-#        cmake --install .
-#        cd ../../../../
+        cp -r AVDL_BUILD/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
     - name: get_libraries
       run: |
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
@@ -248,30 +219,13 @@ jobs:
       run: |
         mkdir cengine
         cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
-        #cp -r AVDL_BUILD/engines/cengine/src/*.c AVDL_BUILD/engines/cengine/include/*.h ../cengine
         mkdir build
         for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
         cd build
-        #cmake ../ . -DCMAKE_INSTALL_PREFIX="C:/Program Files/rue_install"
         cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD" -DAVDL_STEAM=1
         cmake --build . --config Release
         cmake --install .
         cd ..
-        #7z a -tzip "$1" "C:/Program Files/rue_install/*" -r
-        #chmod +x AVDL_BUILD/bin/avdl
-        #sudo cp AVDL_BUILD/include/* /usr/include
-        #sudo cp AVDL_BUILD/dependencies/lib/*.so* /usr/lib
-        #sudo ln -s /usr/lib/libSDL2-2.0.so.0 /usr/lib/libSDL2.so
-        #sudo ln -s /usr/lib/libSDL2_mixer-2.0.so.0 /usr/lib/libSDL2_mixer.so
-        #cp -r ${HOME}/AVDL_BUILD AVDL_BUILD
-        #make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/dependencies/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/lib -L AVDL_BUILD/dependencies/lib64" assetdir=
-        #mkdir build/native/output/bin
-        #mv build/native/output/rue build/native/output/bin/
-        #echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-#    - name: package
-#      run: |
-#        mkdir build/native/output/dependencies
-#        cp AVDL_BUILD/dependencies/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
