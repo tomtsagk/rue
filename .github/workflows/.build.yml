@@ -12,8 +12,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/jxt35ijbw6uu0mw/avdl_build_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://www.dropbox.com/s/br5o7mnmb4c4q6m/avdl_build_windows.zip
+  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/thenver4h5q3zoy/avdl_build_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://www.dropbox.com/s/5qf7f85mcv463qh/avdl_build_windows.zip
 
 jobs:
   # Linux
