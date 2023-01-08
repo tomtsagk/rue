@@ -48,7 +48,7 @@ jobs:
     - name: verify
       run: |
         cd build/native/output/
-        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify" > build/native/output/rue-verify.sh
+        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify" > rue-verify.sh
         chmod +x bin/rue rue.sh rue-verify.sh
         rm rue-verify.sh
         cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
