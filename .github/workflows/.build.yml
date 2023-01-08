@@ -45,6 +45,13 @@ jobs:
       run: |
         mkdir build/native/output/dependencies
         cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
+    - name: verify
+      run: |
+        cd build/native/output/
+        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify" > build/native/output/rue-verify.sh
+        chmod +x bin/rue rue.sh rue-verify.sh
+        rm rue-verify.sh
+        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -52,7 +59,7 @@ jobs:
         path: build/native/output
   # Linux Steam
   build_linux_steam:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: update packages
       run: |
