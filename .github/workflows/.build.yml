@@ -49,7 +49,6 @@ jobs:
       run: |
         cd build/native/output/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify" > rue-verify.sh
-        rm dependencies/*GLEW*
         chmod +x bin/rue rue.sh rue-verify.sh
         ./rue-verify.sh
         rm rue-verify.sh
