@@ -12,8 +12,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/yqt2z4st97heuhp/avdl_build_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://www.dropbox.com/s/vh0ahvpqxbfo3rz/avdl_build_windows.zip
+  AVDL_BUILD_URL_LINUX: https://www.dropbox.com/s/v6vugc1tnnqs3rh/avdl_build_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://www.dropbox.com/s/9wycvdadp7gnpt4/avdl_build_windows.zip
 
 jobs:
   # Linux
@@ -37,7 +37,7 @@ jobs:
       run: |
         chmod +x AVDL_BUILD/bin/avdl
         ls AVDL_BUILD/dependencies/linux/lib
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib" assetdir=
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include --standalone" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib --standalone" assetdir=
         mkdir build/native/output/bin
         mv build/native/output/rue build/native/output/bin/
         echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
@@ -45,15 +45,13 @@ jobs:
       run: |
         mkdir build/native/output/dependencies
         cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
+        rm build/native/output/dependencies/*steam*
     - name: verify
       run: |
         cd build/native/output/
-        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify" > rue-verify.sh
-        chmod +x bin/rue rue.sh rue-verify.sh
-        ./rue-verify.sh
-        rm rue-verify.sh
+        chmod +x bin/rue
+        LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify
         cd ../../../
-        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -86,7 +84,7 @@ jobs:
     - name: package
       run: |
         mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/linux/lib/*.so build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
