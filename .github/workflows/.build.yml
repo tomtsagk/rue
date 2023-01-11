@@ -234,3 +234,79 @@ jobs:
       with:
         name: rue_build_windows_steam
         path: build/RUE_BUILD
+  create_release:
+    #if: ${{ github.ref_type == 'tag' }}
+    runs-on: ubuntu-20.04
+    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam]
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_linux
+        path: rue_build_linux
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_linux_steam
+        path: rue_build_linux_steam
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_windows
+        path: rue_build_windows
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_windows_steam
+        path: rue_build_windows_steam
+    - name: zip packages
+      run: |
+         sudo apt update && sudo apt install -y zip
+         zip avdl_build_linux.zip avdl_build_linux -r
+         zip avdl_build_linux_steam.zip avdl_build_linux_steam -r
+         zip avdl_build_windows.zip avdl_build_windows -r
+         zip avdl_build_windows_steam.zip avdl_build_windows_steam -r
+    - name: create release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: true
+        prerelease: false
+        release_name: ${{ steps.version.outputs.version }}
+#        release_name: test_release
+        tag_name: ${{ github.ref }}
+#        body_path: CHANGELOG.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: upload linux artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_linux.zip
+        asset_name: avdl_${{ github.ref }}_linux.zip
+        asset_content_type: application/gzip
+    - name: upload linux steam artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_linux_steam.zip
+        asset_name: avdl_${{ github.ref }}_linux_steam.zip
+        asset_content_type: application/gzip
+    - name: upload windows artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_windows.zip
+        asset_name: avdl_${{ github.ref }}_windows.zip
+        asset_content_type: application/gzip
+    - name: upload windows steam artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_windows_steam.zip
+        asset_name: avdl_${{ github.ref }}_windows_steam.zip
+        asset_content_type: application/gzip
