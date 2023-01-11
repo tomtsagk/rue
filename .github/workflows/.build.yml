@@ -68,11 +68,10 @@ jobs:
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_linux.zip AVDL_BUILD
-        cd AVDL_BUILD
         unzip avdl_build_linux.zip
-        cd ..
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
@@ -105,13 +104,12 @@ jobs:
     - name: unpack_avdl
       shell: bash
       run: |
-        mkdir AVDL_BUILD
-        mv avdl_build_windows.zip AVDL_BUILD
-        cd AVDL_BUILD
         unzip avdl_build_windows.zip
-        cp -r dependencies/windows/libpng ../libaries/
-        cp -r dependencies/windows/zlib ../libaries/
-        cd ..
+        mkdir AVDL_BUILD
+        mv avdl_build_windows/* AVDL_BUILD
+        rmdir avdl_build_windows
+        cp -r AVDL_BUILD/dependencies/windows/libpng ./libaries/
+        cp -r AVDL_BUILD/dependencies/windows/zlib ./libaries/
     - name: zlib
       shell: bash
       run: |
@@ -179,13 +177,12 @@ jobs:
     - name: unpack_avdl
       shell: bash
       run: |
-        mkdir AVDL_BUILD
-        mv avdl_build_windows.zip AVDL_BUILD
-        cd AVDL_BUILD
         unzip avdl_build_windows.zip
-        cp -r dependencies/windows/libpng ../libaries/
-        cp -r dependencies/windows/zlib ../libaries/
-        cd ..
+        mkdir AVDL_BUILD
+        mv avdl_build_windows/* AVDL_BUILD
+        rmdir avdl_build_windows
+        cp -r AVDL_BUILD/dependencies/windows/libpng ./libaries/
+        cp -r AVDL_BUILD/dependencies/windows/zlib ./libaries/
     - name: zlib
       shell: bash
       run: |
