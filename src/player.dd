@@ -152,6 +152,9 @@
 			# TODO - smart ai
 			(== this.type 5)
 				(card.setFakeId card 0 (+ this.cardFronts 0) (+ this.cardLabels 0))
+			# network user
+			(== this.type 10)
+				(group)
 			)
 		)
 
@@ -348,7 +351,7 @@
 
 		# get index, either by card being looked at, or random for AI
 		(def int index)
-		(if this.isUser
+		(if (|| this.isUser this.isNetworkUser)
 			(group
 			(= index this.highlightCard)
 			(= this.highlightCard -1)
@@ -417,6 +420,30 @@
 
 		)
 	) # looking at hand's layer
+
+	# looking at the same card as previously
+	(if (== this.userLookingAtCard lookingAtCard)
+		(group
+		)
+	# looking at a new card
+		(group
+		(this.cardLookSound.play)
+		)
+	)
+
+	(= this.userLookingAtCard lookingAtCard)
+
+	)
+) # look at card
+
+(class_function Player void lookAtCardByIndex (group int index)
+	(group
+
+	(if (|| (< index 0) (>= index this.cardsTotal))
+		(return)
+	)
+
+	(def int lookingAtCard index)
 
 	# looking at the same card as previously
 	(if (== this.userLookingAtCard lookingAtCard)

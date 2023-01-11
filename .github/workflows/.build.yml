@@ -1,0 +1,312 @@
+name: Create Build
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+    tags:
+      "v[0-9]+.[0-9]+.[0-9]+"
+  pull_request:
+    branches:
+      - develop
+      - master
+
+env:
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.6.0/avdl_v0.6.0_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.6.0/avdl_v0.6.0_windows.zip
+
+jobs:
+  # Linux
+  build_linux:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: update packages
+      run: |
+         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        unzip avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
+    - name: compile_rue
+      run: |
+        chmod +x AVDL_BUILD/bin/avdl
+        ls AVDL_BUILD/dependencies/linux/lib
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include --standalone" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib --standalone" assetdir=
+        mkdir build/native/output/bin
+        mv build/native/output/rue build/native/output/bin/
+        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+    - name: package
+      run: |
+        mkdir build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
+        rm build/native/output/dependencies/*steam*
+    - name: verify
+      run: |
+        cd build/native/output/
+        chmod +x bin/rue
+        LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify
+        cd ../../../
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_linux
+        path: build/native/output
+  # Linux Steam
+  build_linux_steam:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: update packages
+      run: |
+         sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        unzip avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
+    - name: compile_rue
+      run: |
+        chmod +x AVDL_BUILD/bin/avdl
+        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include --steam --standalone" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib --steam --standalone" assetdir=
+        mkdir build/native/output/bin
+        mv build/native/output/rue build/native/output/bin/
+        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
+    - name: package
+      run: |
+        mkdir build/native/output/dependencies
+        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_linux_steam
+        path: build/native/output
+  # Windows
+  build_windows:
+    runs-on: windows-latest
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: prepare_libraries
+      shell: bash
+      run: |
+        mkdir libraries
+    - name: get_avdl
+      run: |
+        C:\msys64\usr\bin\wget.exe -q $Env:AVDL_BUILD_URL_WINDOWS -O avdl_build_windows.zip
+    - name: unpack_avdl
+      shell: bash
+      run: |
+        unzip avdl_build_windows.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_windows/* AVDL_BUILD
+        rmdir avdl_build_windows
+        cp -r AVDL_BUILD/dependencies/windows/libpng ./libaries/
+        cp -r AVDL_BUILD/dependencies/windows/zlib ./libaries/
+    - name: zlib
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
+    - name: libpng
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
+    - name: get_libraries
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
+    - name: glew
+      shell: bash
+      run: |
+        mv glew-2.2.0-win32.zip libraries
+        cd libraries
+        unzip glew-2.2.0-win32.zip
+        cd ..
+    - name: sdl
+      shell: bash
+      run: |
+        mv SDL2-devel-2.0.22-VC.zip libraries
+        cd libraries
+        unzip SDL2-devel-2.0.22-VC.zip
+        cd ..
+    - name: sdl_mixer
+      shell: bash
+      run: |
+        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
+        cd libraries
+        unzip SDL2_mixer-devel-2.6.0-VC.zip
+        cd ..
+    - name: compile_rue
+      shell: bash
+      run: |
+        mkdir cengine
+        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/include/*.h cengine
+        mkdir build
+        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+        cd build
+        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD"
+        cmake --build . --config Release
+        cmake --install .
+        cd ..
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_windows
+        path: build/RUE_BUILD
+  # Windows Steam
+  build_windows_steam:
+    runs-on: windows-latest
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v1
+    - name: prepare_libraries
+      shell: bash
+      run: |
+        mkdir libraries
+    - name: get_avdl
+      run: |
+        C:\msys64\usr\bin\wget.exe -q $Env:AVDL_BUILD_URL_WINDOWS -O avdl_build_windows.zip
+    - name: unpack_avdl
+      shell: bash
+      run: |
+        unzip avdl_build_windows.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_windows/* AVDL_BUILD
+        rmdir avdl_build_windows
+        cp -r AVDL_BUILD/dependencies/windows/libpng ./libaries/
+        cp -r AVDL_BUILD/dependencies/windows/zlib ./libaries/
+    - name: zlib
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
+    - name: libpng
+      shell: bash
+      run: |
+        cp -r AVDL_BUILD/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
+    - name: get_libraries
+      run: |
+        C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL/releases/download/release-2.0.22/SDL2-devel-2.0.22-VC.zip
+        C:\msys64\usr\bin\wget.exe -q https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.0/SDL2_mixer-devel-2.6.0-VC.zip
+    - name: glew
+      shell: bash
+      run: |
+        mv glew-2.2.0-win32.zip libraries
+        cd libraries
+        unzip glew-2.2.0-win32.zip
+        cd ..
+    - name: sdl
+      shell: bash
+      run: |
+        mv SDL2-devel-2.0.22-VC.zip libraries
+        cd libraries
+        unzip SDL2-devel-2.0.22-VC.zip
+        cd ..
+    - name: sdl_mixer
+      shell: bash
+      run: |
+        mv SDL2_mixer-devel-2.6.0-VC.zip libraries
+        cd libraries
+        unzip SDL2_mixer-devel-2.6.0-VC.zip
+        cd ..
+    - name: compile_rue
+      shell: bash
+      run: |
+        mkdir cengine
+        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
+        mkdir build
+        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+        cd build
+        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD" -DAVDL_STEAM=1
+        cmake --build . --config Release
+        cmake --install .
+        cd ..
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_windows_steam
+        path: build/RUE_BUILD
+  create_release:
+    if: ${{ github.ref_type == 'tag' }}
+    runs-on: ubuntu-20.04
+    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam]
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_linux
+        path: rue_build_linux
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_linux_steam
+        path: rue_build_linux_steam
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_windows
+        path: rue_build_windows
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_windows_steam
+        path: rue_build_windows_steam
+    - name: zip packages
+      run: |
+         sudo apt update && sudo apt install -y zip
+         zip avdl_build_linux.zip rue_build_linux -r
+         zip avdl_build_linux_steam.zip rue_build_linux_steam -r
+         zip avdl_build_windows.zip rue_build_windows -r
+         zip avdl_build_windows_steam.zip rue_build_windows_steam -r
+    - name: create release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: true
+        prerelease: false
+        release_name: ${{ steps.version.outputs.version }}
+        tag_name: ${{ github.ref }}
+#        body_path: CHANGELOG.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: upload linux artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_linux.zip
+        asset_name: avdl_${{ github.ref_name }}_linux.zip
+        asset_content_type: application/gzip
+    - name: upload linux steam artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_linux_steam.zip
+        asset_name: avdl_${{ github.ref_name }}_linux_steam.zip
+        asset_content_type: application/gzip
+    - name: upload windows artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_windows.zip
+        asset_name: avdl_${{ github.ref_name }}_windows.zip
+        asset_content_type: application/gzip
+    - name: upload windows steam artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: avdl_build_windows_steam.zip
+        asset_name: avdl_${{ github.ref_name }}_windows_steam.zip
+        asset_content_type: application/gzip

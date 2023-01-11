@@ -3,6 +3,7 @@
 (include "menu_home.ddh")
 (include "menu_custom_game.ddh")
 (include "menu_stages.ddh")
+(include "menu_multiplayer.ddh")
 
 # menu world
 (class world_menu dd_world
@@ -28,6 +29,7 @@
 	(def options opt)
 	(def menu_custom_game menuCustomGame)
 	(def menu_stages menuStages)
+	(def menu_multiplayer menuMultiplayer)
 
 	# theme
 	(def dd_music theme)

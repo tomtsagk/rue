@@ -1,0 +1,64 @@
+(include "button.ddh")
+
+# multiplayer menu
+(class menu_multiplayer dd_matrix
+	(group
+
+	# localisation
+	(def avdl_localisation localisation)
+
+	# home buttons
+	(def Button button[20])
+	(def int buttonTotal)
+	(def avdl_program buttonProgram)
+	(def float buttonClickCol[3])
+	(def float buttonActiveCol[3])
+	(def float buttonInactiveCol[3])
+
+	# label - number of players
+	(def Button buttonLobbyNumber)
+	(def Button buttonLobbyNumberValue)
+
+	# text display
+	(def Button textButton)
+
+	# font
+	(def dd_string3d font)
+
+	(def int selection)
+	(def int selectionClick)
+
+	# open/close data
+	(def int enabled)
+	(def float animationOpen)
+
+	# button sounds
+	(def dd_sound hoverSound)
+	(def dd_sound clickSmallSound)
+	(def dd_sound clickBigSound)
+
+	# labels
+	(def dd_string3d numOfLobbiesLabel)
+	(def dd_string3d selfNameLabel)
+
+	(def int msgDelay)
+
+	(def int startingGame)
+
+	# friend list ui
+	(def dd_string3d friendlistLabel)
+
+	(function void create (group))
+	(function void resize (group))
+	(function void update (group))
+	(function void draw (group))
+	(function void key_input (group char key))
+	(function int mouse_input (group int button int type))
+	(function void clean (group))
+
+	(function int isEnabled (group))
+	(function void enable (group))
+	(function void disable (group))
+
+	)
+) # options menu

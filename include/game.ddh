@@ -163,6 +163,8 @@
 	(def dd_sound cardSelectSound)
 	(def dd_sound cardDeselectSound)
 
+	(def int msgDelay)
+
 	# labels
 	(def dd_string3d cardLabel[22])
 	(def dd_string3d labelWin)

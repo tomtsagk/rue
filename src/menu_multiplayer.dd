@@ -1,0 +1,863 @@
+(include "menu_multiplayer.ddh")
+(include "game.ddh")
+
+(def extern int numberOfPlayers)
+(def extern int startingPlayer)
+(def extern int guide)
+(def extern int playerAi[5])
+(def extern int stageId)
+(def extern int isMultiplayerGame)
+(def extern int isHost)
+(def extern int networkOffsetindex)
+
+(def int numberOfLobbies 0)
+(def int isInLobby 0)
+(def int isFriendListOpen 0)
+(def int friendCount 0)
+(def int friendListPage 0)
+(def int attempQuickJoin 0)
+
+# for multiplayer
+(def int MESSAGE_ID_START_GAME 0)
+(class MultiplayerMessage 0
+	(group
+	(def int messageId)
+	)
+)
+(class MultiplayerMessageStartGame 0
+	(group
+	(def MultiplayerMessage info)
+	(def int startingPlayer)
+	(def int numberOfPlayers)
+	(def int seed)
+	(def int offsetPlayer)
+	(def avdl_multiplayer_identity playerId[5])
+	(def avdl_multiplayer_identity host[1])
+	)
+)
+
+(function void OnLobbyCreated (int success)
+	(group
+
+	# lobby created
+	(if success
+		(group
+		(echo "rue: lobby created")
+		(= isInLobby 1)
+		(= isFriendListOpen 0)
+		(= friendCount (avdl_multiplayer_getFriendCount 0))
+		(def int members)
+		(= members (avdl_multiplayer_getLobbyMemberCurrent 0 0))
+		(echo "members: " members)
+		(= isHost 1)
+		)
+	# lobby creation failed
+		(group
+		(echo "rue: lobby creation failed")
+		)
+	)
+
+	)
+)
+
+(function void OnLobbyListReceived (int lobbyCount)
+	(group
+	(def int lc lobbyCount)
+	(echo "rue: List of lobbies: " lc)
+	(= numberOfLobbies lobbyCount)
+	)
+)
+
+(function void OnLobbyListReceivedQuickJoin (int lobbyCount)
+	(group
+	(def int lc lobbyCount)
+	(echo "rue: List of lobbies to quick join: " lc)
+	(= numberOfLobbies lobbyCount)
+	(= attempQuickJoin 1)
+	)
+)
+
+(function void OnLobbyJoined ()
+	(group
+	(echo "rue: just joined lobby")
+	(= isInLobby 1)
+	(= isFriendListOpen 0)
+	(= friendCount (avdl_multiplayer_getFriendCount 0))
+	(def int members)
+	(= members (avdl_multiplayer_getLobbyMemberCurrent 0 0))
+	(echo "members: " members)
+	)
+)
+
+(function void OnLobbyLeft ()
+	(group
+	(echo "rue: just joined lobby")
+	(= isInLobby 0)
+	(= isFriendListOpen 0)
+	)
+)
+
+(def int BUTTON_BACK 0)
+(def int BUTTON_FRIEND_LIST 1)
+(def int BUTTON_START_GAME 2)
+(def int BUTTON_PRIVATE_LOBBY 3)
+(def int BUTTON_LEAVE_LOBBY 4)
+(def int BUTTON_QUICK_PLAY 5)
+(def int BUTTON_FRIEND_1 6)
+(def int BUTTON_FRIEND_2 7)
+(def int BUTTON_FRIEND_3 8)
+(def int BUTTON_FRIEND_NEXT 9)
+(def int BUTTON_FRIEND_PREVIOUS 10)
+
+(class_function menu_multiplayer void create ()
+	(group
+
+	(= this.startingGame 0)
+
+	# init default game values
+	(= numberOfPlayers 3)
+	(= startingPlayer -1)
+	(= guide 0)
+	(for (def int i 0) (< i 5) (= i (+ i 1))
+		(= playerAi[i] -1)
+	)
+	(= stageId -1)
+
+	# localisation
+	(this.localisation.set "menu_copy")
+
+	# font
+	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	#(this.font.setColorFront 0.8 0.8 0.8)
+	#(this.font.setColorBack 0.3 0.3 0.3)
+
+	# buttons
+	(= this.buttonTotal 11)
+	(this.button[BUTTON_BACK].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_BACK].setSize 1 1)
+	(this.button[BUTTON_BACK].setProportionalPosition 0.15 0.15)
+	(this.button[BUTTON_BACK].setProportionalWidth 0.2)
+	(this.button[BUTTON_BACK].setProportionalSize 0.7)
+	(this.button[BUTTON_BACK].label.setText "Back")
+	(this.button[BUTTON_BACK].description.setText "Back")
+
+	(this.button[BUTTON_START_GAME].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_START_GAME].setSize 1 1)
+	(this.button[BUTTON_START_GAME].setProportionalPosition 0.85 0.15)
+	(this.button[BUTTON_START_GAME].setProportionalWidth 0.2)
+	(this.button[BUTTON_START_GAME].setProportionalSize 0.7)
+	(this.button[BUTTON_START_GAME].label.setText "Start Game")
+	(this.button[BUTTON_START_GAME].description.setText "Start the game")
+
+	(this.button[BUTTON_LEAVE_LOBBY].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_LEAVE_LOBBY].setSize 1 1)
+	(this.button[BUTTON_LEAVE_LOBBY].setProportionalPosition 0.15 0.15)
+	(this.button[BUTTON_LEAVE_LOBBY].setProportionalWidth 0.2)
+	(this.button[BUTTON_LEAVE_LOBBY].setProportionalSize 0.7)
+	(this.button[BUTTON_LEAVE_LOBBY].label.setText "Leave lobby")
+	(this.button[BUTTON_LEAVE_LOBBY].description.setText "Leave current lobby ")
+
+	(this.button[BUTTON_QUICK_PLAY].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_QUICK_PLAY].setSize 1 1)
+	(this.button[BUTTON_QUICK_PLAY].setProportionalPosition 0.3 0.5)
+	(this.button[BUTTON_QUICK_PLAY].setProportionalWidth 0.2)
+	(this.button[BUTTON_QUICK_PLAY].setProportionalSize 0.7)
+	(this.button[BUTTON_QUICK_PLAY].label.setText "Quick Play")
+	(this.button[BUTTON_QUICK_PLAY].description.setText "Play with random players")
+
+	(this.button[BUTTON_PRIVATE_LOBBY].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_PRIVATE_LOBBY].setSize 1 1)
+	(this.button[BUTTON_PRIVATE_LOBBY].setProportionalPosition 0.7 0.5)
+	(this.button[BUTTON_PRIVATE_LOBBY].setProportionalWidth 0.2)
+	(this.button[BUTTON_PRIVATE_LOBBY].setProportionalSize 0.7)
+	(this.button[BUTTON_PRIVATE_LOBBY].label.setText "Private Lobby")
+	(this.button[BUTTON_PRIVATE_LOBBY].description.setText "Invite-only lobby")
+
+	(this.button[BUTTON_FRIEND_LIST].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_FRIEND_LIST].setSize 1 1)
+	(this.button[BUTTON_FRIEND_LIST].setProportionalPosition 0.15 0.85)
+	(this.button[BUTTON_FRIEND_LIST].setProportionalWidth 0.2)
+	(this.button[BUTTON_FRIEND_LIST].setProportionalSize 0.7)
+	(this.button[BUTTON_FRIEND_LIST].label.setText "Friend List")
+	(this.button[BUTTON_FRIEND_LIST].description.setText "Invite friends")
+
+	(this.button[BUTTON_FRIEND_1].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_FRIEND_1].setSize 1 1)
+	(this.button[BUTTON_FRIEND_1].setProportionalPosition 0.25 0.6)
+	(this.button[BUTTON_FRIEND_1].setProportionalWidth 0.2)
+	(this.button[BUTTON_FRIEND_1].setProportionalSize 0.7)
+	(this.button[BUTTON_FRIEND_1].label.setText "Friend 1")
+	(this.button[BUTTON_FRIEND_1].description.setText "Friend 1")
+
+	(this.button[BUTTON_FRIEND_2].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_FRIEND_2].setSize 1 1)
+	(this.button[BUTTON_FRIEND_2].setProportionalPosition 0.5 0.6)
+	(this.button[BUTTON_FRIEND_2].setProportionalWidth 0.2)
+	(this.button[BUTTON_FRIEND_2].setProportionalSize 0.7)
+	(this.button[BUTTON_FRIEND_2].label.setText "Friend 2")
+	(this.button[BUTTON_FRIEND_2].description.setText "Friend 2")
+
+	(this.button[BUTTON_FRIEND_3].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_FRIEND_3].setSize 1 1)
+	(this.button[BUTTON_FRIEND_3].setProportionalPosition 0.75 0.6)
+	(this.button[BUTTON_FRIEND_3].setProportionalWidth 0.2)
+	(this.button[BUTTON_FRIEND_3].setProportionalSize 0.7)
+	(this.button[BUTTON_FRIEND_3].label.setText "Friend 3")
+	(this.button[BUTTON_FRIEND_3].description.setText "Friend 3")
+
+	(this.button[BUTTON_FRIEND_NEXT].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_FRIEND_NEXT].setSize 1 1)
+	(this.button[BUTTON_FRIEND_NEXT].setProportionalPosition 0.65 0.3)
+	(this.button[BUTTON_FRIEND_NEXT].setProportionalWidth 0.2)
+	(this.button[BUTTON_FRIEND_NEXT].setProportionalSize 0.7)
+	(this.button[BUTTON_FRIEND_NEXT].label.setText ">")
+	(this.button[BUTTON_FRIEND_NEXT].description.setText "Next page")
+
+	(this.button[BUTTON_FRIEND_PREVIOUS].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[BUTTON_FRIEND_PREVIOUS].setSize 1 1)
+	(this.button[BUTTON_FRIEND_PREVIOUS].setProportionalPosition 0.35 0.3)
+	(this.button[BUTTON_FRIEND_PREVIOUS].setProportionalWidth 0.2)
+	(this.button[BUTTON_FRIEND_PREVIOUS].setProportionalSize 0.7)
+	(this.button[BUTTON_FRIEND_PREVIOUS].label.setText "<")
+	(this.button[BUTTON_FRIEND_PREVIOUS].description.setText "Previous page")
+
+	# number of players
+	(this.buttonLobbyNumber.setSize 1 1)
+	(this.buttonLobbyNumber.setProportionalPosition 0.25 0.8)
+	(this.buttonLobbyNumber.setProportionalWidth 0.2)
+	(this.buttonLobbyNumber.setProportionalSize 1.0)
+
+	(this.buttonLobbyNumberValue.setSize 1 1)
+	(this.buttonLobbyNumberValue.setProportionalPosition 0.45 0.8)
+	(this.buttonLobbyNumberValue.setProportionalWidth 0.2)
+	(this.buttonLobbyNumberValue.setProportionalSize 1.0)
+
+	# text display
+	(this.textButton.setSize 1 1)
+	(this.textButton.setProportionalPosition 0.5 0.15)
+	(this.textButton.setProportionalWidth 0.2)
+
+	(= this.selection 0)
+	(= this.selectionClick -1)
+	#(= this.isMovingToNewWorld 0)
+
+	(this.buttonProgram.setVertexShader
+		(multistring
+			"AVDL_IN vec4 position;\n"
+			"AVDL_IN vec3 colour;\n"
+			"AVDL_IN vec2 texCoord;\n"
+
+			"uniform mat4 matrix;\n"
+			"uniform vec3 tint;\n"
+
+			"AVDL_OUT vec2 outTexCoord;\n"
+			"AVDL_OUT vec4 outColour;\n"
+
+			"void main() {\n"
+			"	vec4 pos = matrix *position;\n"
+			"       gl_Position = pos;\n"
+			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
+			"	outTexCoord  = texCoord;\n"
+			"}\n"
+		)
+	)
+	(this.buttonProgram.setFragmentShader
+		(multistring
+			"AVDL_IN vec4 outColour;\n"
+			"AVDL_IN vec2 outTexCoord;\n"
+
+			"uniform sampler2D image;\n"
+
+			"void main() {\n"
+			"	avdl_frag_color = outColour +avdl_texture(image, outTexCoord);\n"
+
+			# For some reason the following line makes the shader to not compile on the following system:
+			#  GeForce GTX 960/PCIe/SSE2
+			#  GL version: 4.6.0 NVIDIA 456.71
+			#  glsl version: 4.60 NVIDIA
+			#"	avdl_frag_color = outColour;\n"
+			"}\n"
+		)
+	)
+
+	(= this.buttonClickCol[0] 0.389)
+	(= this.buttonClickCol[1] 0.055)
+	(= this.buttonClickCol[2] 0.682)
+
+	(= this.buttonActiveCol[0] 0.916)
+	(= this.buttonActiveCol[1] 0.516)
+	(= this.buttonActiveCol[2] 0.074)
+
+	(= this.buttonInactiveCol[0] 0.694)
+	(= this.buttonInactiveCol[1] 0.137)
+	(= this.buttonInactiveCol[2] 0.137)
+
+	(= this.enabled 0)
+	(= this.animationOpen 0)
+
+	(this.hoverSound.load (asset "assets/button_hover.ogg" DD_PLY))
+	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
+	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
+
+	#(this.numOfPlayersLabel.setText "Number of players:")
+	(this.numOfLobbiesLabel.setText "No. of lobbies:")
+	(this.numOfLobbiesLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.selfNameLabel.setText (avdl_multiplayer_getSelfName 0))
+	(this.selfNameLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(= isFriendListOpen 0)
+	(this.friendlistLabel.setText "Friend List")
+	(this.friendlistLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	)
+)
+
+(class_function menu_multiplayer void resize ()
+	(group
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(this.button[i].resize)
+	)
+	(this.textButton.resize)
+	(this.buttonLobbyNumber.resize)
+	(this.buttonLobbyNumberValue.resize)
+	)
+)
+
+(class_function menu_multiplayer void update ()
+	(group
+
+	# disabled and animated out, do not update
+	(if (&& (== (this.isEnabled) 0) (< this.animationOpen 0.01)) (return))
+
+	# animate opening/closing
+	(if (this.isEnabled)
+		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 1))
+		(= this.animationOpen (dd_math_min (+ this.animationOpen 0.08) 1))
+		(= this.animationOpen (dd_math_max (- this.animationOpen 0.08) 0))
+		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 0))
+	)
+
+	# disabled do not calculate hovering buttons
+	(if (== (this.isEnabled) 0) (return))
+
+	# check if mouse is hovering over a button
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (== this.button[i].isVisible 0)
+			(group)
+			(if (== this.selection i)
+				(group
+				)
+				(if (this.button[i].hasMouseCollided)
+					(group
+					(this.hoverSound.play)
+					(= this.selection i)
+					)
+				)
+			)
+		)
+
+		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+
+		)
+	)
+
+	# in lobby, show lobby UI
+	(if isInLobby
+		(group
+		(= this.button[BUTTON_BACK].isVisible 0)
+		(= this.button[BUTTON_START_GAME].isVisible 1)
+		(= this.button[BUTTON_LEAVE_LOBBY].isVisible 1)
+		(= this.button[BUTTON_QUICK_PLAY].isVisible 0)
+		(= this.button[BUTTON_PRIVATE_LOBBY].isVisible 0)
+		(= this.button[BUTTON_FRIEND_LIST].isVisible 1)
+
+		(= this.button[BUTTON_FRIEND_1].isVisible 0)
+		(= this.button[BUTTON_FRIEND_2].isVisible 0)
+		(= this.button[BUTTON_FRIEND_3].isVisible 0)
+		(= this.button[BUTTON_FRIEND_NEXT].isVisible 0)
+		(= this.button[BUTTON_FRIEND_PREVIOUS].isVisible 0)
+		(if isFriendListOpen
+			(group
+			(if (> friendCount 0)
+				(= this.button[BUTTON_FRIEND_1].isVisible 1)
+				(= this.button[BUTTON_FRIEND_1].isVisible 0)
+			)
+			(if (> friendCount 1)
+				(= this.button[BUTTON_FRIEND_2].isVisible 1)
+				(= this.button[BUTTON_FRIEND_2].isVisible 0)
+			)
+			(if (> friendCount 2)
+				(= this.button[BUTTON_FRIEND_3].isVisible 1)
+				(= this.button[BUTTON_FRIEND_3].isVisible 0)
+			)
+			(if (< friendListPage (/ friendCount 3))
+				(= this.button[BUTTON_FRIEND_NEXT].isVisible 1)
+				(= this.button[BUTTON_FRIEND_NEXT].isVisible 0)
+			)
+			(if (> friendListPage 0)
+				(= this.button[BUTTON_FRIEND_PREVIOUS].isVisible 1)
+				(= this.button[BUTTON_FRIEND_PREVIOUS].isVisible 0)
+			)
+			)
+		)
+
+		)
+	# not in lobby, show UI on how to join one
+		(group
+		(= this.button[BUTTON_BACK].isVisible 1)
+		(= this.button[BUTTON_START_GAME].isVisible 0)
+		(= this.button[BUTTON_LEAVE_LOBBY].isVisible 0)
+		(= this.button[BUTTON_QUICK_PLAY].isVisible 1)
+		(= this.button[BUTTON_PRIVATE_LOBBY].isVisible 1)
+		(= this.button[BUTTON_FRIEND_LIST].isVisible 0)
+
+		(= this.button[BUTTON_FRIEND_1].isVisible 0)
+		(= this.button[BUTTON_FRIEND_2].isVisible 0)
+		(= this.button[BUTTON_FRIEND_3].isVisible 0)
+		(= this.button[BUTTON_FRIEND_NEXT].isVisible 0)
+		(= this.button[BUTTON_FRIEND_PREVIOUS].isVisible 0)
+		)
+	)
+
+	(= this.msgDelay (+ this.msgDelay 1))
+	(if (> this.msgDelay 100)
+		(group
+		(if (avdl_multiplayer_receiveMessages 0)
+			(group
+			(echo "got message, checking magic word")
+			(def ref MultiplayerMessage msg)
+			(= msg (avdl_multiplayer_getMessageData 0))
+			(def int msgId)
+			(= msgId msg.messageId)
+			(echo "id: " msgId)
+			(if (== msg.messageId MESSAGE_ID_START_GAME)
+				(group
+				(def ref MultiplayerMessageStartGame msgStart)
+				(= msgStart msg)
+				(= numberOfPlayers msgStart.numberOfPlayers)
+				(= startingPlayer (% (- (+ msgStart.startingPlayer numberOfPlayers) msgStart.offsetPlayer) numberOfPlayers))
+				(= networkOffsetindex msgStart.offsetPlayer)
+				(for (def int i 0) (< i numberOfPlayers) (= i (+ i 1))
+					(= playerAi[i] 10)
+				)
+				(for (def int i numberOfPlayers) (< i 5) (= i (+ i 1))
+					(= playerAi[i] -1)
+				)
+				(= stageId 0)
+				(dd_math_randPseudoSetSeed msgStart.seed)
+				#(avdl_multiplayer_confirmLobby 0)
+				(avdl_multiplayer_confirmLobby2 0 msgStart.numberOfPlayers msgStart.playerId msgStart.host)
+				(= isMultiplayerGame 1)
+				(= isHost 0)
+				(= guide -1)
+				(dd_world_prepare world_game 1.0)
+				(dd_world_ready)
+				)
+				(group
+				(echo "received message with unknown value")
+				)
+			)
+			#(def int value)
+			#(= value msg.value)
+			#(echo "received message with value: " value)
+			(avdl_multiplayer_releaseMessage 0)
+			)
+		)
+		(= this.msgDelay 0)
+
+		# test friend id
+		(this.button[BUTTON_FRIEND_1].label.setText (avdl_multiplayer_getFriendNameIndex 0 0))
+		(this.button[BUTTON_FRIEND_2].label.setText (avdl_multiplayer_getFriendNameIndex 0 1))
+		(this.button[BUTTON_FRIEND_3].label.setText (avdl_multiplayer_getFriendNameIndex 0 2))
+		)
+	)
+
+	(if attempQuickJoin
+		(group
+		(echo "rue: attempting quick join")
+		(= attempQuickJoin 0)
+
+		# no lobbies available, create a new lobby
+		(if (<= numberOfLobbies 0)
+			(group
+			(avdl_multiplayer_createLobby 0 AVDL_MULTIPLAYER_LOBBYTYPE_PUBLIC 5 OnLobbyCreated)
+			)
+		# join first lobby available
+			(group
+			(avdl_multiplayer_joinLobby 0 0 OnLobbyJoined)
+			)
+		)
+
+		)
+	)
+
+	)
+) # update
+
+(class_function menu_multiplayer void draw ()
+	(group
+
+	# do not draw if animated out
+	(if (< this.animationOpen 0.01) (return))
+
+#	(if (== isInLobby 0)
+#		(group
+#		# draw number of players
+#		(dd_matrix_push)
+#		(this.buttonLobbyNumber.applyTransform)
+#		(this.buttonLobbyNumber.applyMatrixTransform)
+#		(dd_translatef 0 0 0.1)
+#		(dd_scalef 0.2 0.2 0.2)
+#		(this.numOfLobbiesLabel.draw)
+#		(dd_matrix_pop)
+#	
+#		(dd_matrix_push)
+#		(this.buttonLobbyNumberValue.applyTransform)
+#		(this.buttonLobbyNumberValue.applyMatrixTransform)
+#		(dd_translatef 0 0 0.1)
+#		(dd_scalef 0.2 0.2 0.2)
+#		(this.numOfLobbiesLabel.drawInt numberOfLobbies)
+#		(dd_matrix_pop)
+#		)
+#	)
+
+#	(dd_matrix_push)
+#	(dd_translatef 0 1 -5)
+#	(dd_scalef 0.2 0.2 0.2)
+#	(this.selfNameLabel.draw)
+#	(dd_matrix_pop)
+
+	(if isFriendListOpen
+		(group
+		(dd_matrix_push)
+		(dd_translatef 0 1.5 -5)
+		(dd_scalef 0.2 0.2 0.2)
+		(this.friendlistLabel.draw)
+		(dd_matrix_pop)
+		)
+	)
+
+	# draw buttons
+	(this.buttonProgram.useProgram)
+	(def int colLoc)
+	(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (== this.button[i].isVisible 0) (group)
+		(group
+
+		(dd_matrix_push)
+
+		# change the shader colour when clicked
+		(if (> this.button[i].idleCol 1.0)
+			(avdl_setUniform3f colLoc
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[0] this.buttonClickCol[0]
+				)
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[1] this.buttonClickCol[1]
+				)
+				(dd_math_ease_linear
+					(- this.button[i].idleCol 1.0)
+					this.buttonActiveCol[2] this.buttonClickCol[2]
+				)
+			)
+		# change colour when selected
+			(avdl_setUniform3f colLoc
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+				(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
+			)
+		)
+
+		(this.button[i].applyTransform)
+		(this.button[i].applyMatrixTransform)
+		(def float anim)
+		# big numbers make animation faster, but blends less together (max 4 - number of buttons)
+		# small numbers make animation slower. At 1.0, all buttons animate together
+		(def float animationSpeed 2.0)
+		(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
+		(= anim (dd_math_min
+				(dd_math_max
+					(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
+					0
+				)
+				1
+			)
+		)
+		(dd_scalef anim anim anim)
+		(this.button[i].drawRaw)
+
+		(dd_translatef 0 0 0.1)
+		(dd_scalef 0.3 0.3 0.3)
+
+		(this.button[i].label.draw)
+
+		(dd_matrix_pop)
+
+		)
+		)
+
+		)
+	)
+	(avdl_useProgram 0)
+
+	# draw button description
+	(if (>= this.selection 0)
+		(group
+		(dd_matrix_push)
+		(this.textButton.applyTransform)
+		(this.textButton.applyMatrixTransform)
+		(dd_translatef 0 0 0.1)
+		(dd_scalef 0.3 0.3 0.3)
+		(this.button[this.selection].description.drawLimit 20)
+		(dd_matrix_pop)
+		)
+	)
+
+	)
+)
+
+(class_function menu_multiplayer void key_input (group char key)
+	(group
+	)
+)
+
+(class_function menu_multiplayer void clean ()
+	(group
+	)
+)
+
+(class_function menu_multiplayer int mouse_input (group int button int type)
+	(group
+
+	# re-check selection, this allows the user to directly click on a button
+	# in a touch screen device
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (== this.button[i].isVisible 0)
+			(group)
+			(if (== this.selection i)
+				(group
+				)
+				(if (this.button[i].hasMouseCollided)
+					(group
+					(= this.selection i)
+					)
+				)
+			)
+		)
+
+		)
+	)
+
+	# control the camera look at point when click and dragging
+	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+		(group
+		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+			(= this.selectionClick this.selection)
+		)
+		)
+	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+		(group
+
+		# clicked on a button
+		(if (&& (== this.selection this.selectionClick)
+			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+			(group
+
+			# back
+			(if (== this.selectionClick BUTTON_BACK)
+				(group
+				(if isInLobby
+					(group
+					(avdl_multiplayer_leaveLobby 0 0)
+					(= isInLobby 0)
+					)
+				)
+				#(this.clickSmallSound.play)
+				(this.disable)
+				(return 1)
+				)
+			# start game
+			(== this.selectionClick BUTTON_START_GAME)
+				(group
+				(if (== this.startingGame 0)
+					(group
+
+					(= numberOfPlayers (dd_math_max 3 (avdl_multiplayer_getLobbyMemberCurrent 0 0)))
+					#(= startingPlayer (dd_math_rand numberOfPlayers))
+					(= startingPlayer 0)
+					(for (def int i 0) (< i (avdl_multiplayer_getLobbyMemberCurrent 0 0)) (= i (+ i 1))
+						(= playerAi[i] 10)
+					)
+					(for (def int i (avdl_multiplayer_getLobbyMemberCurrent 0 0)) (< i 5) (= i (+ i 1))
+						(= playerAi[i] -1)
+					)
+					(= stageId 0)
+					(def int newSeed (dd_math_rand 1000000))
+					(dd_math_randPseudoSetSeed newSeed)
+
+					(avdl_multiplayer_confirmLobby 0)
+
+					(int memberCount)
+					(= memberCount (avdl_multiplayer_getLobbyMemberCurrent 0 0))
+					(for (def int i 0) (< i memberCount) (= i (+ i 1))
+						(group
+						(def MultiplayerMessageStartGame msg)
+						(= msg.info.messageId MESSAGE_ID_START_GAME)
+						(= msg.startingPlayer startingPlayer)
+						(= msg.seed newSeed)
+						(= msg.numberOfPlayers numberOfPlayers)
+						(= msg.offsetPlayer i)
+						(avdl_multiplayer_getPlayerId 0 0 msg.playerId[0])
+						(avdl_multiplayer_getPlayerId 0 1 msg.playerId[1])
+						(avdl_multiplayer_getPlayerId 0 2 msg.playerId[2])
+						(avdl_multiplayer_getPlayerId 0 3 msg.playerId[3])
+						(avdl_multiplayer_getPlayerId 0 4 msg.playerId[4])
+						(avdl_multiplayer_getHostId 0 msg.host[0])
+						(echo "rue: sending start game message")
+						(avdl_multiplayer_sendMessage 0 i msg MultiplayerMessageStartGame)
+						)
+					)
+					(= networkOffsetindex 0)
+					(= isMultiplayerGame 1)
+					(= isHost 1)
+					(= guide -1)
+					#(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessage)
+#					(dd_world_prepare world_game 1.0)
+#					(dd_world_ready)
+#					(= this.startingGame 1)
+					(return 2)
+
+					)
+				#(avdl_multiplayer_joinLobby 0 0 OnLobbyJoined)
+				#(this.clickSmallSound.play)
+				#(= startingPlayer (dd_math_max (- startingPlayer 1) -1))
+				)
+				)
+			# leave lobby
+			(== this.selectionClick BUTTON_LEAVE_LOBBY)
+				(group
+				(echo "left lobby")
+				(avdl_multiplayer_leaveLobby 0 0)
+				(= isInLobby 0)
+				(= isFriendListOpen 0)
+#				(this.clickSmallSound.play)
+#				(if (== guide 0)
+#					(= guide -1)
+#					(= guide 0)
+#				)
+				)
+			# quick join
+			(== this.selectionClick BUTTON_QUICK_PLAY)
+				(group
+				(avdl_multiplayer_getLobbies 0 OnLobbyListReceivedQuickJoin)
+				)
+			# private lobby
+			(== this.selectionClick BUTTON_PRIVATE_LOBBY)
+				(group
+				(avdl_multiplayer_createLobby 0 AVDL_MULTIPLAYER_LOBBYTYPE_PRIVATE 5 OnLobbyCreated)
+				#(avdl_multiplayer_openOverlay 0)
+				#(avdl_multiplayer_joinLobby 0 2 OnLobbyJoined)
+				)
+			# toggle friend list
+			(== this.selectionClick BUTTON_FRIEND_LIST)
+				(group
+				(if isFriendListOpen
+					(= isFriendListOpen 0)
+					(group
+					(= isFriendListOpen 1)
+					(= friendListPage 0)
+					)
+				)
+				#(avdl_multiplayer_openOverlay 0)
+				#(avdl_multiplayer_joinLobby 0 2 OnLobbyJoined)
+				)
+			# invite friend 1
+			(== this.selectionClick BUTTON_FRIEND_1)
+				(group
+				)
+			# invite friend 2
+			(== this.selectionClick BUTTON_FRIEND_2)
+				(group
+				)
+			# invite friend 3
+			(== this.selectionClick BUTTON_FRIEND_3)
+				(group
+				)
+			# friend next page
+			(== this.selectionClick BUTTON_FRIEND_NEXT)
+				(group
+				(if (< friendListPage (/ friendCount 3))
+					(= friendListPage (+ friendListPage 1))
+				)
+				(def int fTotalCount)
+				(= fTotalCount friendCount)
+				(def int pg)
+				(= pg friendListPage)
+				(echo "page inc: " pg " | " fTotalCount)
+				)
+			# friend previous page
+			(== this.selectionClick BUTTON_FRIEND_PREVIOUS)
+				(group
+				(if (> friendListPage 0)
+					(= friendListPage (- friendListPage 1))
+				)
+				(def int pg)
+				(= pg friendListPage)
+				(echo "page dec: " pg)
+				)
+#			# back to main menu
+#			(== this.selectionClick 5)
+#				(group
+#				(this.clickBigSound.play)
+#				#(dd_world_prepare world_menu 1.0)
+#				#(dd_world_ready)
+#				#(= this.isMovingToNewWorld 1)
+#				(this.disable)
+#				(return 1)
+#				)
+			)
+
+			)
+		)
+
+		(= this.selectionClick -1)
+
+		)
+	) # mouse button released
+
+	(return 0)
+
+	)
+) # mouse input
+
+(class_function menu_multiplayer int isEnabled ()
+	(group
+	(return this.enabled)
+	)
+)
+
+(class_function menu_multiplayer void enable ()
+	(group
+	(= this.enabled 1)
+	(= this.selectionClick -1)
+	(avdl_multiplayer_create)
+	#(avdl_multiplayer_getLobbies 0 OnLobbyListReceived)
+	(= attempQuickJoin 0)
+	)
+)
+
+(class_function menu_multiplayer void disable ()
+	(group
+	(= this.enabled 0)
+	)
+)

@@ -7,6 +7,18 @@
 (def int guide)
 (def int playerAi[5])
 (def int stageId)
+(def int isMultiplayerGame)
+(def int turnCount)
+(def int isHost)
+(def int networkOffsetindex)
+
+# multiplayer
+(class MultiplayerMessageGameTurn 0
+	(group
+	(def int playerIndex)
+	(def int cardIndex)
+	)
+)
 
 # game phases
 (def int PHASE_INIT 0)
@@ -60,7 +72,9 @@
 (class_function world_game void create ()
 	(group
 
+	(= turnCount 0)
 	(= this.victoriousPlayer -1)
+	(= this.msgDelay 0)
 
 	(this.phaseTextSetup.setText "Setting up table ..." )
 	(this.phaseTextSetup.setAlign DD_STRING3D_ALIGN_CENTER )
@@ -135,6 +149,7 @@
 		)
 		)
 	)
+	#(this.table.load (asset "assets/table_3.ply" DD_PLY))
 	(this.table.load (asset "assets/table_2.ply" DD_PLY))
 	(this.tableTexture.set (asset "assets/table_rose.png" AVDL_IMAGETYPE_PNG))
 	(this.table.setTexture this.tableTexture)
@@ -337,6 +352,9 @@
 	(= this.player[0].cardLabels this.cardLabel)
 	(= this.player[0].labelConfirm this.labelConfirm)
 
+	(def int mg isMultiplayerGame)
+	(echo "is multiplayer game: " mg)
+
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
 		(group
@@ -364,9 +382,15 @@
 
 		(= this.player[i].cardFronts this.cardFront)
 		(if (== playerAi[i] -1)
-			(= playerAi[i] (dd_math_rand 6))
+			#(= playerAi[i] (dd_math_rand 6))
+			(= playerAi[i] 1)
 		)
-		(= this.player[i].mesh this.playerMesh[playerAi[i]])
+		# network user, random appearance
+		(if (== playerAi[i] 10)
+			(= this.player[i].mesh this.playerMesh[0])
+		# ai, use unique appearance
+			(= this.player[i].mesh this.playerMesh[playerAi[i]])
+		)
 		(= this.player[i].type playerAi[i])
 
 		(= this.player[i].cardLookSound this.cardLookSound)
@@ -378,6 +402,7 @@
 		(= this.player[i].labelConfirm this.labelConfirm)
 
 		(= this.player[i].cardLabels this.cardLabel)
+		(= this.player[i].isNetworkUser isMultiplayerGame)
 
 		)
 	)
@@ -675,7 +700,7 @@
 				# all players draw starting cards
 				(for (def int j 0) (< j 5) (= j (+ j 1))
 				(for (def int i 0) (< i this.playersTotal) (= i (+ i 1))
-					(this.addAction ACTION_DRAW_CARD i 0 5)
+					(this.addAction ACTION_DRAW_CARD (% (+ i startingPlayer) this.playersTotal) 0 5)
 				)
 				)
 
@@ -908,53 +933,154 @@
 					)
 				)
 				)
-			# AI has to select a card or user selects randomly
+			# network user selects card from themselves, wait for their input
+			(&& (== this.player[this.actions[0].playerIndex].type 10) (== this.actions[0].value this.actions[0].playerIndex))
 				(group
+				(echo "waiting network user to have a turn")
+				)
+			# AI has to select a card or user selects randomly or network user selects randomly
+				(group
+				(echo "AI selects card")
 
 				# corner filter is active
 				(if (>= this.filterCorner 0)
 					(group
 
-					# find number of available cards
-					(def int cornerCards 0)
-					(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
-						(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
-							(= cornerCards (+ cornerCards 1))
-						)
-					)
-
-					# has cards with corner to play - pick one randomly
-					(if cornerCards
+					# network game - host makes ai decision and sends it
+					# to other players
+					(if isMultiplayerGame
 						(group
-						(= this.lastSelectedCardPlayerIndex this.actions[0].value)
-						(= this.lastSelectedCardIndex (dd_math_rand cornerCards))
-						(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
-							(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
-								(group
-								(= cornerCards (- cornerCards 1))
-								(if (<= cornerCards 0)
-									(= this.lastSelectedCardIndex i)
-								)
+
+						(if isHost
+							(group
+
+							# find number of available cards
+							(def int cornerCards 0)
+							(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+								(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+									(= cornerCards (+ cornerCards 1))
 								)
 							)
+
+							# has cards with corner to play - pick one randomly
+							(if cornerCards
+								(group
+								(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+								(= this.lastSelectedCardIndex (dd_math_rand cornerCards))
+								(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+									(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+										(group
+										(= cornerCards (- cornerCards 1))
+										(if (<= cornerCards 0)
+											(= this.lastSelectedCardIndex i)
+										)
+										)
+									)
+								)
+								)
+							# doesn't have card with corner - skip selecting a card
+								(group
+								(= this.lastSelectedCardPlayerIndex -1)
+								(= this.lastSelectedCardIndex -1)
+								)
+							)
+							(= this.filterCorner -1)
+							(this.ovButtons.unsetCard)
+
+							(echo "sending ai corner move to all players")
+							(def MultiplayerMessageGameTurn msg)
+							(= msg.playerIndex this.lastSelectedCardPlayerIndex)
+							(= msg.cardIndex this.lastSelectedCardIndex)
+							(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessageGameTurn)
+
+							)
+						# non-host users wait for host to
+						# send ai moves
+							(group
+							)
 						)
+
 						)
-					# doesn't have card with corner - skip selecting a card
+					# not network game - continue as normal
 						(group
-						(= this.lastSelectedCardPlayerIndex -1)
-						(= this.lastSelectedCardIndex -1)
+
+						# find number of available cards
+						(def int cornerCards 0)
+						(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+							(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+								(= cornerCards (+ cornerCards 1))
+							)
+						)
+
+						# has cards with corner to play - pick one randomly
+						(if cornerCards
+							(group
+							(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+							(= this.lastSelectedCardIndex (dd_math_rand cornerCards))
+							(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+								(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+									(group
+									(= cornerCards (- cornerCards 1))
+									(if (<= cornerCards 0)
+										(= this.lastSelectedCardIndex i)
+									)
+									)
+								)
+							)
+							)
+						# doesn't have card with corner - skip selecting a card
+							(group
+							(= this.lastSelectedCardPlayerIndex -1)
+							(= this.lastSelectedCardIndex -1)
+							)
+						)
+						(= this.filterCorner -1)
+						(this.ovButtons.unsetCard)
+
 						)
 					)
-					(= this.filterCorner -1)
-					(this.ovButtons.unsetCard)
 
 					)
 				# no corner filter - pick randomly
 					(group
-					(= this.lastSelectedCardPlayerIndex this.actions[0].value)
-					(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
-					(= this.filterCorner -1)
-					(this.ovButtons.unsetCard)
+
+					# network game
+					(if isMultiplayerGame
+						(group
+
+						# host allows ai to make decisions and
+						# sends moves to other users
+						(if isHost
+							(group
+							(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+							(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
+							(= this.filterCorner -1)
+							(this.ovButtons.unsetCard)
+
+							(def MultiplayerMessageGameTurn msg)
+							(= msg.playerIndex this.lastSelectedCardPlayerIndex)
+							(= msg.cardIndex this.lastSelectedCardIndex)
+
+							(echo "sending ai move to all players")
+							(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessageGameTurn)
+
+							)
+						# non-host users wait for host to
+						# send ai moves
+							(group
+							)
+						)
+
+						)
+					# not network game - make ai decision
+						(group
+						(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+						(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
+						(= this.filterCorner -1)
+						(this.ovButtons.unsetCard)
+						)
+					)
+
 					)
 				)
 				(= this.actions[0].actionType ACTION_DELAY)
@@ -1053,7 +1179,7 @@
 				# for user - don't wait for user input
 				(if (== playerIndex 0)
 					(= this.ovButtons.waitUntilCardConfirmed 0)
-				# for AI - wait user to confirm action
+				# for AI or network user - wait user to confirm action
 					(= this.ovButtons.waitUntilCardConfirmed 1)
 				)
 				(this.ovButtons.setCard this.player[playerIndex].selectedCard2)
@@ -1712,6 +1838,54 @@
 
 	(this.ovButtons.update)
 
+	(if isMultiplayerGame
+		(group
+		(= this.msgDelay (+ this.msgDelay 1))
+		(if (> this.msgDelay 100)
+			(group
+
+			# received a move from a network player
+			(if (avdl_multiplayer_receiveMessages 0)
+				(group
+				(echo "got message, checking magic word")
+
+				(def ref MultiplayerMessageGameTurn msg)
+				(= msg (avdl_multiplayer_getMessageData 0))
+
+				# host sends the move to all other players
+				# except the one that just made the move
+				(if (avdl_multiplayer_isHost 0)
+					(group
+					#(avdl_multiplayer_syncMessage 0 msg MultiplayerMessageGameTurn)
+					)
+				)
+
+				# update the state of the game based on the received move
+				(= this.lastSelectedCardPlayerIndex (% (- (+ msg.playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+				#(= this.lastSelectedCardIndex this.player[(+ msg.playerIndex networkOffsetindex)].highlightCard)
+				(= this.lastSelectedCardIndex msg.cardIndex)
+				(def int pind this.lastSelectedCardPlayerIndex)
+				(def int cind this.lastSelectedCardIndex)
+				(echo "player card index received: " pind " | " cind)
+				(= this.filterCorner -1)
+				(this.ovButtons.unsetCard)
+				(= this.actions[0].actionType ACTION_DELAY)
+				(= this.actions[0].delay 0)
+
+				#(= this.player[0].userLookingAtCard -1)
+				#(= this.player[0].highlightCard -1)
+				(= this.phaseTextCurrent this.phaseTextExecution)
+				(echo "received move, and applied it")
+				)
+				(echo "no messages")
+			)
+
+			(= this.msgDelay 0)
+			)
+		)
+		)
+	)
+
 	)
 ) # update
 
@@ -1949,6 +2123,11 @@
 					)
 				)
 
+				# network user, wait for their input
+				(if (== this.player[this.actions[0].playerIndex].type 10)
+					(return)
+				)
+
 				# waiting user to select a card
 				(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
 					(group
@@ -1968,6 +2147,32 @@
 						(= this.player[0].userLookingAtCard -1)
 						(= this.player[0].highlightCard -1)
 						(= this.phaseTextCurrent this.phaseTextExecution)
+
+						# multiplayer game, send move to other players
+						(if isMultiplayerGame
+							(group
+
+							# prepare move
+							(def MultiplayerMessageGameTurn msg)
+							(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+							(= msg.cardIndex this.lastSelectedCardIndex)
+
+							# host sends move to all other players
+							(if (avdl_multiplayer_isHost 0)
+								(group
+								(echo "sending move to all players")
+								(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessageGameTurn)
+								)
+							# non-host players send move to host
+								(group
+								(echo "sending move to host")
+								(avdl_multiplayer_sendMessageToHost 0 msg MultiplayerMessageGameTurn)
+								)
+							)
+
+							)
+						)
+
 						)
 					# just highlighted card
 						(group
@@ -1981,6 +2186,9 @@
 					)
 
 					)
+				# waiting network user to select a card
+				(&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.player[this.actions[0].playerIndex].type 10) )
+					(group)
 				)
 
 				)
@@ -2126,7 +2334,8 @@
 	(group
 	(for (def int i 0) (< i this.deckTotal) (= i (+ i 1))
 		(group
-		(def int target (dd_math_rand this.deckTotal))
+		#(def int target (dd_math_rand this.deckTotal))
+		(def int target (dd_math_randPseudo this.deckTotal))
 		(def ref Card temp)
 		(= temp this.deck[i])
 		(= this.deck[i] this.deck[target])

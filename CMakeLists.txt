@@ -48,6 +48,7 @@ set(AVDL_SRC
 	src/menu_custom_game.c
 	src/menu_home.c
 	src/menu_stages.c
+	src/menu_multiplayer.c
 	src/options.c
 	src/overlayButtons.c
 	src/player.c
@@ -58,6 +59,7 @@ if (${AVDL_STEAM})
 	set(AVDL_SRC
 		${AVDL_SRC}
 		cengine/avdl_achievements_steam.cpp
+		cengine/avdl_multiplayer_steam.cpp
 		cengine/avdl_steam_cpp.cpp
 		cengine/main_cpp.cpp
 	)
@@ -69,6 +71,7 @@ else()
 		${AVDL_SRC}
 		cengine/avdl_achievements.c
 		cengine/avdl_steam.c
+		cengine/avdl_multiplayer.c
 	)
 endif()
 
@@ -131,13 +134,13 @@ find_package(OpenGL     REQUIRED)
 find_package(PNG	REQUIRED)
 
 if (${AVDL_STEAM})
-	set(STEAM_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/public/steam")
+	set(STEAM_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/AVDL_BUILD/dependencies/windows/include")
 	if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
-		set(STEAM_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/win64/steam_api64.lib")
-		install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/win64/steam_api64.dll" DESTINATION bin/)
+		set(STEAM_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/AVDL_BUILD/dependencies/windows/lib/steam_api64.lib")
+		install(FILES "${CMAKE_CURRENT_LIST_DIR}/AVDL_BUILD/dependencies/windows/lib/steam_api64.dll" DESTINATION bin/)
 	else()
-		set(STEAM_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/steam_api.lib")
-		install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/sdk/redistributable_bin/steam_api.dll" DESTINATION bin/)
+		set(STEAM_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/AVDL_BUILD/dependencies/windows/lib/steam_api.lib")
+		install(FILES "${CMAKE_CURRENT_LIST_DIR}/AVDL_BUILD/dependencies/windows/lib/steam_api.dll" DESTINATION bin/)
 	endif()
 endif()
 
