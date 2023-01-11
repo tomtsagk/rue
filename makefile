@@ -15,6 +15,7 @@ savedir=~/.${NAME}/saves/
 #
 # compiler flags
 #
+AVDL_BIN=avdl
 COMPILER_FLAGS= -I include/ --save-loc "${savedir}" --install-loc "${assetdir}" \
 	--game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
 COMPILER_CUSTOM_FLAGS=
@@ -86,28 +87,28 @@ all: native
 native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS}
 
 android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
-	avdl --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ}
+	${AVDL_BIN} --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ}
 
 #
 # native - compile files - assets - final executable
 #
 ${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl -c $< -o $@ ${COMPILER_FLAGS} ${COMPILER_CUSTOM_FLAGS}
+	${AVDL_BIN} -c $< -o $@ ${COMPILER_FLAGS} ${COMPILER_CUSTOM_FLAGS}
 
 ${DIRECTORY_NATIVE_OBJ}/%: assets/%
-	avdl -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
+	${AVDL_BIN} -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
 
 ${NATIVE_OUT}: ${NATIVE_OBJ}
-	avdl $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS} ${LINKER_CUSTOM_FLAGS} ${COMPILER_CUSTOM_FLAGS}
+	${AVDL_BIN} $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS} ${LINKER_CUSTOM_FLAGS} ${COMPILER_CUSTOM_FLAGS}
 
 #
 # android - compile files
 #
 ${DIRECTORY_ANDROID_OBJ}/%.o: src/%.dd ${HEADERS}
-	avdl --android -c $< -o $@ -I include/
+	${AVDL_BIN} --android -c $< -o $@ -I include/
 
 ${DIRECTORY_ANDROID_OBJ}/%: assets/%
-	avdl --android -c $< -o ${DIRECTORY_ANDROID_OUT} && touch $@
+	${AVDL_BIN} --android -c $< -o ${DIRECTORY_ANDROID_OUT} && touch $@
 
 #
 # make any directory needed

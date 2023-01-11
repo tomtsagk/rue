@@ -7,6 +7,7 @@
 	# user works a bit different than AI
 	# if AI, define its type
 	(def int isUser)
+	(def int isNetworkUser)
 	(def int type)
 
 	# actual location (different than the displayed)
@@ -59,6 +60,7 @@
 	(function int hasPlannedCard ())
 
 	(function void lookAtCard (group float rotX float rotY))
+	(function void lookAtCardByIndex (group int index))
 
 	)
 ) # player

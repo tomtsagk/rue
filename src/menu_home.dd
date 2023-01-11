@@ -20,8 +20,10 @@
 	(this.button[0].setProportionalPosition 0.25 0.4)
 	(this.button[0].setProportionalWidth 0.2)
 	(this.button[0].setProportionalSize 0.8)
-	(this.button[0].label.setText (this.localisation.getValue "menu_custom_game"))
-	(this.button[0].description.setText (this.localisation.getValue "menu_custom_game_desc"))
+	#(this.button[0].label.setText (this.localisation.getValue "menu_custom_game"))
+	(this.button[0].label.setText "Multiplayer")
+	#(this.button[0].description.setText (this.localisation.getValue "menu_custom_game_desc"))
+	(this.button[0].description.setText "Play online with strangers or friends")
 
 	(this.button[1].mesh.load (asset "assets/button_play.ply" DD_PLY))
 	(this.button[1].setSize 1 1)
