@@ -5,7 +5,8 @@ on:
     branches:
       - develop
       - master
-      - feature/github_build
+    tags:
+      "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
     branches:
       - develop
@@ -235,7 +236,7 @@ jobs:
         name: rue_build_windows_steam
         path: build/RUE_BUILD
   create_release:
-    #if: ${{ github.ref_type == 'tag' }}
+    if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
     needs: [build_linux, build_linux_steam, build_windows, build_windows_steam]
     steps:
@@ -269,7 +270,6 @@ jobs:
         draft: true
         prerelease: false
         release_name: ${{ steps.version.outputs.version }}
-#        release_name: test_release
         tag_name: ${{ github.ref }}
 #        body_path: CHANGELOG.md
       env:
