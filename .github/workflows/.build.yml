@@ -33,6 +33,7 @@ jobs:
         cd AVDL_BUILD
         unzip avdl_build_linux.zip
         cd ..
+        ls -R
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
