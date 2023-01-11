@@ -258,10 +258,10 @@ jobs:
     - name: zip packages
       run: |
          sudo apt update && sudo apt install -y zip
-         zip avdl_build_linux.zip avdl_build_linux -r
-         zip avdl_build_linux_steam.zip avdl_build_linux_steam -r
-         zip avdl_build_windows.zip avdl_build_windows -r
-         zip avdl_build_windows_steam.zip avdl_build_windows_steam -r
+         zip avdl_build_linux.zip rue_build_linux -r
+         zip avdl_build_linux_steam.zip rue_build_linux_steam -r
+         zip avdl_build_windows.zip rue_build_windows -r
+         zip avdl_build_windows_steam.zip rue_build_windows_steam -r
     - name: create release
       uses: actions/create-release@v1
       id: create_release
@@ -281,7 +281,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: avdl_build_linux.zip
-        asset_name: avdl_${{ github.ref }}_linux.zip
+        asset_name: avdl_${{ github.ref_name }}_linux.zip
         asset_content_type: application/gzip
     - name: upload linux steam artifact
       uses: actions/upload-release-asset@v1
@@ -290,7 +290,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: avdl_build_linux_steam.zip
-        asset_name: avdl_${{ github.ref }}_linux_steam.zip
+        asset_name: avdl_${{ github.ref_name }}_linux_steam.zip
         asset_content_type: application/gzip
     - name: upload windows artifact
       uses: actions/upload-release-asset@v1
@@ -299,7 +299,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: avdl_build_windows.zip
-        asset_name: avdl_${{ github.ref }}_windows.zip
+        asset_name: avdl_${{ github.ref_name }}_windows.zip
         asset_content_type: application/gzip
     - name: upload windows steam artifact
       uses: actions/upload-release-asset@v1
@@ -308,5 +308,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: avdl_build_windows_steam.zip
-        asset_name: avdl_${{ github.ref }}_windows_steam.zip
+        asset_name: avdl_${{ github.ref_name }}_windows_steam.zip
         asset_content_type: application/gzip
