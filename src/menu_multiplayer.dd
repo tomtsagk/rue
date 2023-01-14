@@ -3,9 +3,7 @@
 
 (def extern int numberOfPlayers)
 (def extern int startingPlayer)
-(def extern int guide)
 (def extern int playerAi[5])
-(def extern int stageId)
 (def extern int isMultiplayerGame)
 (def extern int isHost)
 (def extern int networkOffsetindex)
@@ -117,11 +115,9 @@
 	# init default game values
 	(= numberOfPlayers 3)
 	(= startingPlayer -1)
-	(= guide 0)
 	(for (def int i 0) (< i 5) (= i (+ i 1))
 		(= playerAi[i] -1)
 	)
-	(= stageId -1)
 
 	# localisation
 	(this.localisation.set "menu_copy")
@@ -446,13 +442,11 @@
 				(for (def int i numberOfPlayers) (< i 5) (= i (+ i 1))
 					(= playerAi[i] -1)
 				)
-				(= stageId 0)
 				(dd_math_randPseudoSetSeed msgStart.seed)
 				#(avdl_multiplayer_confirmLobby 0)
 				(avdl_multiplayer_confirmLobby2 0 msgStart.numberOfPlayers msgStart.playerId msgStart.host)
 				(= isMultiplayerGame 1)
 				(= isHost 0)
-				(= guide -1)
 				(dd_world_prepare world_game 1.0)
 				(dd_world_ready)
 				)
@@ -701,7 +695,6 @@
 					(for (def int i (avdl_multiplayer_getLobbyMemberCurrent 0 0)) (< i 5) (= i (+ i 1))
 						(= playerAi[i] -1)
 					)
-					(= stageId 0)
 					(def int newSeed (dd_math_rand 1000000))
 					(dd_math_randPseudoSetSeed newSeed)
 
@@ -730,7 +723,6 @@
 					(= networkOffsetindex 0)
 					(= isMultiplayerGame 1)
 					(= isHost 1)
-					(= guide -1)
 					#(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessage)
 #					(dd_world_prepare world_game 1.0)
 #					(dd_world_ready)
@@ -751,10 +743,6 @@
 				(= isInLobby 0)
 				(= isFriendListOpen 0)
 #				(this.clickSmallSound.play)
-#				(if (== guide 0)
-#					(= guide -1)
-#					(= guide 0)
-#				)
 				)
 			# quick join
 			(== this.selectionClick BUTTON_QUICK_PLAY)

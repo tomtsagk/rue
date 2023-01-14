@@ -199,9 +199,6 @@
 
 	(function void grabRose (group))
 
-	(function void prepareDeckMove ())
-	(function void prepareDeckOptionalEffects ())
-	(function void prepareDeckTradeAndSteal ())
 	(function void prepareDeckFull ())
 
 	)

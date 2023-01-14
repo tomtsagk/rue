@@ -24,6 +24,9 @@
 	(this.button[0].label.setText "Multiplayer")
 	#(this.button[0].description.setText (this.localisation.getValue "menu_custom_game_desc"))
 	(this.button[0].description.setText "Play online with strangers or friends")
+	(if (== (avdl_multiplayer_isEnabled) 0)
+		(= this.button[0].isVisible 0)
+	)
 
 	(this.button[1].mesh.load (asset "assets/button_play.ply" DD_PLY))
 	(this.button[1].setSize 1 1)
