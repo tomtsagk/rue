@@ -37,7 +37,7 @@ jobs:
     - name: compile_apk
       run: |
         cd build/android/output
-        ls
+        chmod +x gradlew
         ./gradlew build
 #  # Linux
 #  build_linux:
