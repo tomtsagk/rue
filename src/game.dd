@@ -40,7 +40,10 @@
 (def int CARD_NEXT_HAND 18)
 (def int CARD_IGNORE_MOVE 19)
 (def int CARD_ROSE_HELD_STEAL 20)
-(def int CARD_EMPTY 21)
+(def int CARD_EMPTY_HEART 21)
+(def int CARD_EMPTY_TEAR 22)
+(def int CARD_EMPTY_THUNDER 23)
+(def int CARD_EMPTY_FROWN 24)
 
 # actions
 (def int ACTION_DELAY 0)
@@ -590,9 +593,24 @@
 	(this.cardLabel[20].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[21].setText (multistring
-		"This card does nothing"
+		"Heart: The Flirt grabs The Rose."
 	))
 	(this.cardLabel[21].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[22].setText (multistring
+		"Tear: The Flirt grabs The Rose."
+	))
+	(this.cardLabel[22].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[23].setText (multistring
+		"Thunder: The Flirt grabs The Rose."
+	))
+	(this.cardLabel[23].setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.cardLabel[24].setText (multistring
+		"Frown: The Flirt grabs The Rose."
+	))
+	(this.cardLabel[24].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.labelWin.setText "You won! Click anywhere to continue.")
 	(this.labelWin.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -1435,13 +1453,42 @@
 
 					)
 				# empty
-				# this card does nothing
-				(== cardId CARD_EMPTY)
+				# if special card in hand, flirt grabs rose
+				(== cardId CARD_EMPTY_TEAR)
 					(group
-					# corner ability
 					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
-					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex cornerId 50)
-					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 cornerId 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_TEAR 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
+					)
+				(== cardId CARD_EMPTY_HEART)
+					(group
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_HEART 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_HEART 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
+					)
+				(== cardId CARD_EMPTY_THUNDER)
+					(group
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_THUNDER 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_THUNDER 0)
+					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_ENDIF 0 0 0)
+					(this.injectActionsToActions)
+					)
+				(== cardId CARD_EMPTY_FROWN)
+					(group
+					(this.addInjectAction ACTION_REREVEAL_PLANNED_CARD this.actions[0].playerIndex 0 0)
+					(this.addInjectAction ACTION_SELECT_CARD_CORNER this.actions[0].playerIndex CARD_CORNER_FROWN 50)
+					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_FROWN 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
@@ -2627,20 +2674,21 @@
 	(= this.cards[48].meshCorner this.cardCorner[CARD_CORNER_HEART])
 
 	# empty
-	(for (def int i 49) (< i (+ 49 4)) (= i (+ i 1))
-		(group
-		(this.cards[i].setId CARD_EMPTY)
-		(= this.cards[i].mesh this.cardFront[12])
-		(= this.cards[i].cardDescription2 this.cardLabel[CARD_EMPTY])
-		)
-	)
-	(= this.cards[49].cornerId CARD_CORNER_THUNDER)
-	(= this.cards[50].cornerId CARD_CORNER_FROWN)
-	(= this.cards[51].cornerId CARD_CORNER_HEART)
-	(= this.cards[52].cornerId CARD_CORNER_TEAR)
-	(= this.cards[49].meshCorner this.cardCorner[CARD_CORNER_THUNDER])
-	(= this.cards[50].meshCorner this.cardCorner[CARD_CORNER_FROWN])
-	(= this.cards[51].meshCorner this.cardCorner[CARD_CORNER_HEART])
-	(= this.cards[52].meshCorner this.cardCorner[CARD_CORNER_TEAR])
+	(this.cards[49].setId CARD_EMPTY_TEAR)
+	(= this.cards[49].mesh this.cardFront[12])
+	(= this.cards[49].cardDescription2 this.cardLabel[CARD_EMPTY_TEAR])
+
+	(this.cards[50].setId CARD_EMPTY_HEART)
+	(= this.cards[50].mesh this.cardFront[12])
+	(= this.cards[50].cardDescription2 this.cardLabel[CARD_EMPTY_HEART])
+
+	(this.cards[51].setId CARD_EMPTY_THUNDER)
+	(= this.cards[51].mesh this.cardFront[12])
+	(= this.cards[51].cardDescription2 this.cardLabel[CARD_EMPTY_THUNDER])
+
+	(this.cards[52].setId CARD_EMPTY_FROWN)
+	(= this.cards[52].mesh this.cardFront[12])
+	(= this.cards[52].cardDescription2 this.cardLabel[CARD_EMPTY_FROWN])
+
 	)
 )

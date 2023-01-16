@@ -166,7 +166,7 @@
 	(def int msgDelay)
 
 	# labels
-	(def dd_string3d cardLabel[22])
+	(def dd_string3d cardLabel[25])
 	(def dd_string3d labelWin)
 	(def dd_string3d labelLose)
 	(def dd_string3d labelConfirm)
