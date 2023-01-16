@@ -37,7 +37,8 @@ jobs:
     - name: compile_apk
       run: |
         cd build/android/output
-        ./grandlew build
+        ls
+        ./gradlew build
 #  # Linux
 #  build_linux:
 #    runs-on: ubuntu-20.04
