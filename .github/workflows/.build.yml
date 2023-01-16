@@ -24,8 +24,15 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v2
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        unzip avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
     - name: generate_android_project
-      run: make android
+      run: make AVDL_BIN="AVDL_BUILD/bin/avdl" android
     - name: compile_apk
       run: |
         cd build/android/output
