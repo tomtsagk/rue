@@ -3,6 +3,9 @@
 (include "credits.ddh")
 
 (def extern int isMultiplayerGame)
+(def extern int numberOfPlayers)
+(def extern int startingPlayer)
+(def extern int playerAi[5])
 
 (function float particleMovementY (group float t)
 	(group
@@ -69,10 +72,8 @@
 
 (class_function world_menu void resize ()
 	(group
-	(this.menuCustomGame.resize)
 	(this.menuMultiplayer.resize)
 	(this.menuHome.resize)
-	(this.menuStages.resize)
 	(this.opt.resize)
 	)
 )
@@ -88,10 +89,8 @@
 
 	(this.bgParticleSystem.update)
 
-	(this.menuCustomGame.update)
 	(this.menuMultiplayer.update)
 	(this.menuHome.update)
-	(this.menuStages.update)
 	(this.opt.update)
 
 	# lookat animation
@@ -111,28 +110,12 @@
 		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuHome.button[this.menuHome.selection].idleRot -0.003)))
 		)
 	# lookat custom game menu buttons
-	(this.menuCustomGame.isEnabled)
-		(group
-		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuCustomGame.button[this.menuCustomGame.selection].x this.eyeTargetX) 0.1)))
-		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuCustomGame.button[this.menuCustomGame.selection].y this.eyeTargetY) 0.1)))
-
-		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuCustomGame.button[this.menuCustomGame.selection].idleRot -0.003)))
-		)
-	# lookat custom game menu buttons
 	(this.menuMultiplayer.isEnabled)
 		(group
 		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].x this.eyeTargetX) 0.1)))
 		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].y this.eyeTargetY) 0.1)))
 
 		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuMultiplayer.button[this.menuMultiplayer.selection].idleRot -0.003)))
-		)
-	# lookat stages menu buttons
-	(this.menuStages.isEnabled)
-		(group
-		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuStages.button[this.menuStages.selection].x this.eyeTargetX) 0.1)))
-		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuStages.button[this.menuStages.selection].y this.eyeTargetY) 0.1)))
-
-		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuStages.button[this.menuStages.selection].idleRot -0.003)))
 		)
 	)
 	(def float tempZ 3)
@@ -180,10 +163,8 @@
 	(glClear GL_DEPTH_BUFFER_BIT)
 	#(avdl_clear_depth)
 
-	(this.menuCustomGame.draw)
 	(this.menuMultiplayer.draw)
 	(this.menuHome.draw)
-	(this.menuStages.draw)
 	(this.opt.draw)
 
 	)
@@ -223,13 +204,19 @@
 		# custom game
 		(if (== returnMenu 1)
 			(group
-			#(this.menuCustomGame.enable)
 			(this.menuMultiplayer.enable)
 			)
 		# play
 		(== returnMenu 2)
 			(group
-			(this.menuStages.enable)
+			(= numberOfPlayers (+ 3 (dd_math_rand 3)))
+			(= startingPlayer (dd_math_rand numberOfPlayers))
+			(for (def int i 0) (< i numberOfPlayers) (= i (+ i 1))
+				(= playerAi[i] 0)
+			)
+			(= isMultiplayerGame 0)
+			(dd_world_prepare world_game 1.0)
+			(dd_world_ready)
 			)
 		# options
 		(== returnMenu 3)
@@ -244,25 +231,6 @@
 			)
 		)
 		)
-	# custom game menu is open
-	(this.menuCustomGame.isEnabled)
-		(group
-		(def int returnMenu (this.menuCustomGame.mouse_input button type))
-		# back to home
-		(if (== returnMenu 1)
-			(group
-			(this.menuHome.enable)
-			)
-		# start game
-		(== returnMenu 2)
-			(group
-			(= isMultiplayerGame 0)
-			(dd_world_prepare world_game 1.0)
-			(dd_world_ready)
-			)
-		)
-
-		)
 	(this.menuMultiplayer.isEnabled)
 		(group
 		(def int returnMenu (this.menuMultiplayer.mouse_input button type))
@@ -274,24 +242,6 @@
 		# start game
 		(== returnMenu 2)
 			(group
-			(dd_world_prepare world_game 1.0)
-			(dd_world_ready)
-			)
-		)
-
-		)
-	# stages menu is open
-	(this.menuStages.isEnabled)
-		(group
-		(def int returnMenu (this.menuStages.mouse_input button type))
-		# back to home
-		(if (== returnMenu -1)
-			(group
-			(this.menuHome.enable)
-			)
-		(== returnMenu 1)
-			(group
-			(= isMultiplayerGame 0)
 			(dd_world_prepare world_game 1.0)
 			(dd_world_ready)
 			)

@@ -1,13 +1,15 @@
 (class SaveLoad 0
 	(group
 
-	(def int stageComplete[6])
+	(def int gamesWon)
+	(def int hadTutorial)
 
 	(function void create ())
 	(function void clean ())
 
-	(function int IsStageComplete (group int index))
-	(function void CompleteStage (group int index))
+	(function int GetGamesComplete ())
+	(function void CompleteGame ())
+	(function int HadTutorial ())
 
 	)
 )

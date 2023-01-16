@@ -15,10 +15,8 @@
 	(def float buttonInactiveCol[3])
 
 	# labels
-	(def dd_string3d labelMusic2)
-	(def dd_string3d labelAudio2)
-	(def Button labelMusic)
-	(def Button labelAudio)
+	(def dd_string3d labelYes)
+	(def dd_string3d labelNo)
 
 	# text display
 	(def Button textButton)
