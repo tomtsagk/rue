@@ -31,6 +31,7 @@ jobs:
         mkdir AVDL_BUILD
         mv avdl_build_linux/* AVDL_BUILD
         rmdir avdl_build_linux
+        chmod +x AVDL_BUILD/bin/avdl
     - name: generate_android_project
       run: make AVDL_BIN="AVDL_BUILD/bin/avdl" android
     - name: compile_apk
