@@ -39,6 +39,11 @@ jobs:
         cd build/android/output
         chmod +x gradlew
         ./gradlew build
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android.apk
+        path: build/android/output/app/build/outputs/apk/release/app-universal-release-unsigned.apk
 #  # Linux
 #  build_linux:
 #    runs-on: ubuntu-20.04
