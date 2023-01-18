@@ -47,7 +47,7 @@ jobs:
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android.apk
+        name: rue_android_debug.apk
         path: build/android/output/app/build/outputs/apk/debug/app-universal-debug.apk
 #  # Linux
 #  build_linux:
