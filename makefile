@@ -87,7 +87,9 @@ all: native
 native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS}
 
 android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
-	${AVDL_BIN} --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ}
+	${AVDL_BIN} --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ} --game-version "${VERSION}" --game-version-code 1 --game-package-name "org.darkdimension.rue" --game-icon-foreground "icon_foreground.png" --game-icon-background "icon_background.png" --game-name "${NAME}"
+	rm -f ${DIRECTORY_ANDROID_OUT}/app/src/main/res/values/strings.xml.in
+	rm -f ${DIRECTORY_ANDROID_OUT}/app/build.gradle.in
 
 #
 # native - compile files - assets - final executable
