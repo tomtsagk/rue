@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
 # set the project name
-project(rue VERSION 0.6.0)
+project(rue VERSION 0.7.0)
 
 # compile for windows, with dynamic location
 add_compile_definitions(
@@ -225,6 +225,7 @@ install(FILES
 	assets/table_rose.png
 	assets/ui_particle.ply
 	assets/ui_particle_start.ply
+	assets/bg_exit_menu.png
 	DESTINATION
 	assets
 )
