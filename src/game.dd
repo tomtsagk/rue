@@ -143,7 +143,6 @@
 	(= this.isStageColour 1)
 	(this.stageCol.load (asset "assets/stage_2.ply" DD_PLY))
 
-	#(this.table.load (asset "assets/table_3.ply" DD_PLY))
 	(this.table.load (asset "assets/table_2.ply" DD_PLY))
 	(this.tableTexture.set (asset "assets/table_rose.png" AVDL_IMAGETYPE_PNG))
 	(this.table.setTexture this.tableTexture)
@@ -313,31 +312,6 @@
 	(this.playerMesh[0].setTexture this.playerTexture[0])
 	(this.playerMesh[0].setTransparency 1)
 
-	(this.playerMesh[1].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[1].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[1].setTexture this.playerTexture[1])
-	(this.playerMesh[1].setTransparency 1)
-
-	(this.playerMesh[2].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[2].set (asset "assets/character_3.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[2].setTexture this.playerTexture[2])
-	(this.playerMesh[2].setTransparency 1)
-
-	(this.playerMesh[3].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[3].set (asset "assets/character_4.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[3].setTexture this.playerTexture[3])
-	(this.playerMesh[3].setTransparency 1)
-
-	(this.playerMesh[4].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[4].set (asset "assets/character_5.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[4].setTexture this.playerTexture[4])
-	(this.playerMesh[4].setTransparency 1)
-
-	(this.playerMesh[5].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[5].set (asset "assets/character_6.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[5].setTexture this.playerTexture[5])
-	(this.playerMesh[5].setTransparency 1)
-
 	# players 3-8
 	(= this.playersTotal numberOfPlayers)
 	(= this.player[0].isUser 1)
@@ -381,7 +355,7 @@
 		(if (== playerAi[i] 10)
 			(= this.player[i].mesh this.playerMesh[0])
 		# ai, use unique appearance
-			(= this.player[i].mesh this.playerMesh[playerAi[i]])
+			(= this.player[i].mesh this.playerMesh[0])
 		)
 		(= this.player[i].type playerAi[i])
 

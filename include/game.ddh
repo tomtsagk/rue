@@ -144,7 +144,7 @@
 	(def int discardTotal)
 
 	# player meshes
-	(def dd_meshTexture playerMesh[6])
+	(def dd_meshTexture playerMesh[1])
 	(def dd_image playerTexture[6])
 
 	# players
