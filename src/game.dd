@@ -73,6 +73,34 @@
 (class_function world_game void create ()
 	(group
 
+	# exit menu buttons
+	(= this.buttonTotal 2)
+	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[0].setSize 1 1)
+	(this.button[0].setProportionalPosition 0.3 0.3)
+	(this.button[0].setProportionalWidth 0.2)
+	(this.button[0].setProportionalSize 0.8)
+	(this.button[0].label.setText "Exit")
+
+	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[1].setSize 1 1)
+	(this.button[1].setProportionalPosition 0.7 0.3)
+	(this.button[1].setProportionalWidth 0.2)
+	(this.button[1].setProportionalSize 0.8)
+	(this.button[1].label.setText "Resume")
+
+	(this.labelExitMenu.setText "Exit game ?")
+	(this.labelExitMenu.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	(this.bgExitMenuTexture.set (asset "assets/bg_exit_menu.png" AVDL_IMAGETYPE_PNG))
+	(this.bgExitMenu.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.bgExitMenu.setTransparency 1)
+	(this.bgExitMenu.setTexture this.bgExitMenuTexture)
+
+	(= this.selection 0)
+	(= this.selectionClick -1)
+	(= this.isExitMenu 0)
+
 	(= turnCount 0)
 	(= this.victoriousPlayer -1)
 	(= this.msgDelay 0)
@@ -115,7 +143,6 @@
 	(= this.isStageColour 1)
 	(this.stageCol.load (asset "assets/stage_2.ply" DD_PLY))
 
-	#(this.table.load (asset "assets/table_3.ply" DD_PLY))
 	(this.table.load (asset "assets/table_2.ply" DD_PLY))
 	(this.tableTexture.set (asset "assets/table_rose.png" AVDL_IMAGETYPE_PNG))
 	(this.table.setTexture this.tableTexture)
@@ -285,31 +312,6 @@
 	(this.playerMesh[0].setTexture this.playerTexture[0])
 	(this.playerMesh[0].setTransparency 1)
 
-	(this.playerMesh[1].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[1].set (asset "assets/character_2.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[1].setTexture this.playerTexture[1])
-	(this.playerMesh[1].setTransparency 1)
-
-	(this.playerMesh[2].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[2].set (asset "assets/character_3.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[2].setTexture this.playerTexture[2])
-	(this.playerMesh[2].setTransparency 1)
-
-	(this.playerMesh[3].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[3].set (asset "assets/character_4.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[3].setTexture this.playerTexture[3])
-	(this.playerMesh[3].setTransparency 1)
-
-	(this.playerMesh[4].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[4].set (asset "assets/character_5.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[4].setTexture this.playerTexture[4])
-	(this.playerMesh[4].setTransparency 1)
-
-	(this.playerMesh[5].load (asset "assets/character.ply" DD_PLY))
-	(this.playerTexture[5].set (asset "assets/character_6.png" AVDL_IMAGETYPE_PNG))
-	(this.playerMesh[5].setTexture this.playerTexture[5])
-	(this.playerMesh[5].setTransparency 1)
-
 	# players 3-8
 	(= this.playersTotal numberOfPlayers)
 	(= this.player[0].isUser 1)
@@ -319,7 +321,6 @@
 	(= this.player[0].labelConfirm this.labelConfirm)
 
 	(def int mg isMultiplayerGame)
-	(echo "is multiplayer game: " mg)
 
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
@@ -354,7 +355,7 @@
 		(if (== playerAi[i] 10)
 			(= this.player[i].mesh this.playerMesh[0])
 		# ai, use unique appearance
-			(= this.player[i].mesh this.playerMesh[playerAi[i]])
+			(= this.player[i].mesh this.playerMesh[0])
 		)
 		(= this.player[i].type playerAi[i])
 
@@ -627,6 +628,51 @@
 
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.buttonProgram.setVertexShader
+		(multistring
+			"AVDL_IN vec4 position;\n"
+			"AVDL_IN vec3 colour;\n"
+			"AVDL_IN vec2 texCoord;\n"
+
+			"uniform mat4 matrix;\n"
+			"uniform vec3 tint;\n"
+
+			"AVDL_OUT vec2 outTexCoord;\n"
+			"AVDL_OUT vec4 outColour;\n"
+
+			"void main() {\n"
+			"	vec4 pos = matrix *position;\n"
+			"       gl_Position = pos;\n"
+			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
+			"	outTexCoord  = texCoord;\n"
+			"}\n"
+		)
+	)
+	(this.buttonProgram.setFragmentShader
+		(multistring
+			"AVDL_IN vec4 outColour;\n"
+			"AVDL_IN vec2 outTexCoord;\n"
+
+			"uniform sampler2D image;\n"
+
+			"void main() {\n"
+			"	avdl_frag_color = outColour +avdl_texture(image, outTexCoord);\n"
+			"}\n"
+		)
+	)
+
+	(= this.buttonClickCol[0] 0.389)
+	(= this.buttonClickCol[1] 0.055)
+	(= this.buttonClickCol[2] 0.682)
+
+	(= this.buttonActiveCol[0] 0.916)
+	(= this.buttonActiveCol[1] 0.516)
+	(= this.buttonActiveCol[2] 0.074)
+
+	(= this.buttonInactiveCol[0] 0.694)
+	(= this.buttonInactiveCol[1] 0.137)
+	(= this.buttonInactiveCol[2] 0.137)
+
 	)
 )
 
@@ -637,10 +683,13 @@
 	)
 )
 
-#(class_function world_game void resize ()
-#	(group
-#	)
-#)
+(class_function world_game void resize ()
+	(group
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(this.button[i].resize)
+	)
+	)
+)
 
 (class_function world_game void update ()
 	(group
@@ -1882,6 +1931,26 @@
 		)
 	)
 
+	# check if mouse is hovering over a button
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (== this.selection i)
+			(group
+			)
+			(if (this.button[i].hasMouseCollided)
+				(group
+				#(this.hoverSound.play)
+				(= this.selection i)
+				)
+			)
+		)
+
+		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+
+		)
+	)
+
 	)
 ) # update
 
@@ -1998,46 +2067,50 @@
 	#(avdl_clear_depth)
 
 	# states
-	(dd_matrix_push)
-	(dd_translatef 0 7 -20)
-	# draw end game
-	(if (>= this.victoriousPlayer 0)
+	(if (== this.isExitMenu 0)
 		(group
-		(if (== this.victoriousPlayer 0)
-			(this.labelWin.drawLimit
-				(* (dd_screen_width_get 20) 2 0.8)
-			)
-			(this.labelLose.drawLimit
-				(* (dd_screen_width_get 20) 2 0.8)
-			)
-		)
-		)
-	# draw text of overlay card
-	this.ovButtons.isLookingAtCard
-		(if this.ovButtons.cardToShow.cardDescription2
+		(dd_matrix_push)
+		(dd_translatef 0 7 -20)
+		# draw end game
+		(if (>= this.victoriousPlayer 0)
 			(group
-			(this.ovButtons.cardToShow.cardDescription2.drawLimit
-				(* (dd_screen_width_get 20) 2 0.8)
+			(if (== this.victoriousPlayer 0)
+				(this.labelWin.drawLimit
+					(* (dd_screen_width_get 20) 2 0.8)
+				)
+				(this.labelLose.drawLimit
+					(* (dd_screen_width_get 20) 2 0.8)
+				)
 			)
 			)
-		)
-	# player looking card
-	(>= this.player[0].userLookingAtCard 0)
-		(if this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2
+		# draw text of overlay card
+		this.ovButtons.isLookingAtCard
+			(if this.ovButtons.cardToShow.cardDescription2
+				(group
+				(this.ovButtons.cardToShow.cardDescription2.drawLimit
+					(* (dd_screen_width_get 20) 2 0.8)
+				)
+				)
+			)
+		# player looking card
+		(>= this.player[0].userLookingAtCard 0)
+			(if this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2
+				(group
+				(this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2.drawLimit
+					(* (dd_screen_width_get 20) 2 0.8)
+				)
+				)
+			)
+		# draw phase
 			(group
-			(this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2.drawLimit
+			(this.phaseTextCurrent.drawLimit
 				(* (dd_screen_width_get 20) 2 0.8)
 			)
 			)
 		)
-	# draw phase
-		(group
-		(this.phaseTextCurrent.drawLimit
-			(* (dd_screen_width_get 20) 2 0.8)
-		)
+		(dd_matrix_pop)
 		)
 	)
-	(dd_matrix_pop)
 
 	# clear depth
 	(glClear GL_DEPTH_BUFFER_BIT)
@@ -2051,6 +2124,90 @@
 
 	(this.player[0].drawLookingAtText)
 
+	(if this.isExitMenu
+		(group
+
+		(glClear GL_DEPTH_BUFFER_BIT)
+
+		# bg
+		(dd_matrix_push)
+		(dd_translatef 0 0 -15)
+		(dd_scalef (dd_screen_width_get 15) (dd_screen_height_get 15) 0)
+		(this.bgExitMenu.draw)
+		(dd_matrix_pop)
+
+		(glClear GL_DEPTH_BUFFER_BIT)
+
+		(dd_matrix_push)
+		(dd_translatef 0 3 -15)
+		(this.labelExitMenu.drawLimit
+			(* (dd_screen_width_get 20) 2 0.8)
+		)
+		(dd_matrix_pop)
+
+		# draw buttons
+		(this.buttonProgram.useProgram)
+		(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
+		(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+			(group
+			(dd_matrix_push)
+
+			# change the shader colour when clicked
+			(if (> this.button[i].idleCol 1.0)
+				(avdl_setUniform3f colLoc
+					(dd_math_ease_linear
+						(- this.button[i].idleCol 1.0)
+						this.buttonActiveCol[0] this.buttonClickCol[0]
+					)
+					(dd_math_ease_linear
+						(- this.button[i].idleCol 1.0)
+						this.buttonActiveCol[1] this.buttonClickCol[1]
+					)
+					(dd_math_ease_linear
+						(- this.button[i].idleCol 1.0)
+						this.buttonActiveCol[2] this.buttonClickCol[2]
+					)
+				)
+			# change colour when selected
+				(avdl_setUniform3f colLoc
+					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
+				)
+			)
+
+			(this.button[i].applyTransform)
+			(this.button[i].applyMatrixTransform)
+			(def float anim)
+			# big numbers make animation faster, but blends less together (max 4 - number of buttons)
+			# small numbers make animation slower. At 1.0, all buttons animate together
+			(def float animationSpeed 2.0)
+			(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
+			(= anim (dd_math_min
+					(dd_math_max
+						1
+						#(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
+						0
+					)
+					1
+				)
+			)
+			(dd_scalef anim anim anim)
+			(this.button[i].drawRaw)
+
+			(dd_translatef 0 0 0.1)
+			(dd_scalef 0.3 0.3 0.3)
+
+			(this.button[i].drawText)
+
+			(dd_matrix_pop)
+			)
+		)
+		(avdl_useProgram 0)
+
+		)
+	)
+
 	)
 )
 
@@ -2059,8 +2216,15 @@
 	(if (== key 27)
 		(group
 		#(= dd_flag_exit 1) # exit game
-		(dd_world_prepare world_menu 1.0)
-		(dd_world_ready)
+		#(dd_world_prepare world_menu 1.0)
+		#(dd_world_ready)
+		(if this.isExitMenu
+			(group
+			(dd_world_prepare world_menu 1.0)
+			(dd_world_ready)
+			)
+			(= this.isExitMenu 1)
+		)
 		)
 	) # key input
 	)
@@ -2074,6 +2238,55 @@
 
 (class_function world_game void mouse_input (group int button int type)
 	(group
+
+	# re-check selection, this allows the user to directly click on a button
+	# in a touch screen device
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+
+		(if (this.button[i].hasMouseCollided)
+			(group
+			(= this.selection i)
+			)
+		)
+
+		)
+	)
+
+	# pass input to exit menu
+	(if this.isExitMenu
+		(group
+		(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+			(group
+			(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+				(= this.selectionClick this.selection)
+			)
+			)
+		(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+			(group
+			(if (&& (== this.selection this.selectionClick)
+				(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
+				(group
+				# exit game
+				(if (== this.selectionClick 0)
+					(group
+					(dd_world_prepare world_menu 1.0)
+					(dd_world_ready)
+					)
+				# resume
+				(== this.selectionClick 1)
+					(group
+					(= this.isExitMenu 0)
+					)
+				)
+				)
+			)
+			(= this.selectionClick -1)
+			)
+		)
+		(return)
+		)
+	)
 
 	# control the camera look at point when click and dragging
 	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)

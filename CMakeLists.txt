@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
 # set the project name
-project(rue VERSION 0.6.0)
+project(rue VERSION 0.7.0)
 
 # compile for windows, with dynamic location
 add_compile_definitions(
@@ -204,11 +204,6 @@ install(FILES
 	assets/card_select.ogg
 	assets/card_tutorial.png
 	assets/character_1.png
-	assets/character_2.png
-	assets/character_3.png
-	assets/character_4.png
-	assets/character_5.png
-	assets/character_6.png
 	assets/character.ply
 	assets/dd_theme.ogg
 	assets/eng_white.png
@@ -223,18 +218,14 @@ install(FILES
 	assets/particle.ply
 	assets/rose.png
 	assets/rue_logo.png
-	assets/stage_1.ply
 	assets/stage_2.ply
-	assets/stage_3.ply
-	assets/stage_2_texture.png
-	assets/stage_3_texture.png
-	assets/table_1.ply
 	assets/table_2.ply
 	assets/table_arrow_decoration.ply
 	assets/table_arrow.ply
 	assets/table_rose.png
 	assets/ui_particle.ply
 	assets/ui_particle_start.ply
+	assets/bg_exit_menu.png
 	DESTINATION
 	assets
 )

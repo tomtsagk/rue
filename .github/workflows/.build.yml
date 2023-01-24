@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - master
+      - feature/github_android_builds
     tags:
       "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
@@ -13,10 +14,41 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.6.1/avdl_v0.6.1_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.6.1/avdl_v0.6.1_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.6.14/avdl_v0.6.14_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.6.14/avdl_v0.6.14_windows.zip
 
 jobs:
+  # Android
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v2
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        unzip avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
+        chmod +x AVDL_BUILD/bin/avdl
+    - name: generate_android_project
+      run: make AVDL_BIN="AVDL_BUILD/bin/avdl" android
+    - name: compile_apk
+      run: |
+        cd build/android/output
+        chmod +x gradlew
+        ./gradlew build
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android.apk
+        path: build/android/output/app/build/outputs/apk/release/app-universal-release-unsigned.apk
+    - name: upload_artifact_debug
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android_debug.apk
+        path: build/android/output/app/build/outputs/apk/debug/app-universal-debug.apk
   # Linux
   build_linux:
     runs-on: ubuntu-20.04
@@ -238,7 +270,7 @@ jobs:
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam]
+    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android]
     steps:
     - uses: actions/download-artifact@v3
       with:
@@ -256,13 +288,17 @@ jobs:
       with:
         name: rue_build_windows_steam
         path: rue_build_windows_steam
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_android.apk
+        path: rue_android.apk
     - name: zip packages
       run: |
          sudo apt update && sudo apt install -y zip
-         zip avdl_build_linux.zip rue_build_linux -r
-         zip avdl_build_linux_steam.zip rue_build_linux_steam -r
-         zip avdl_build_windows.zip rue_build_windows -r
-         zip avdl_build_windows_steam.zip rue_build_windows_steam -r
+         zip rue_build_linux.zip rue_build_linux -r
+         zip rue_build_linux_steam.zip rue_build_linux_steam -r
+         zip rue_build_windows.zip rue_build_windows -r
+         zip rue_build_windows_steam.zip rue_build_windows_steam -r
     - name: create release
       uses: actions/create-release@v1
       id: create_release
@@ -280,8 +316,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: avdl_build_linux.zip
-        asset_name: avdl_${{ github.ref_name }}_linux.zip
+        asset_path: rue_build_linux.zip
+        asset_name: rue_${{ github.ref_name }}_linux.zip
         asset_content_type: application/gzip
     - name: upload linux steam artifact
       uses: actions/upload-release-asset@v1
@@ -289,8 +325,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: avdl_build_linux_steam.zip
-        asset_name: avdl_${{ github.ref_name }}_linux_steam.zip
+        asset_path: rue_build_linux_steam.zip
+        asset_name: rue_${{ github.ref_name }}_linux_steam.zip
         asset_content_type: application/gzip
     - name: upload windows artifact
       uses: actions/upload-release-asset@v1
@@ -298,8 +334,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: avdl_build_windows.zip
-        asset_name: avdl_${{ github.ref_name }}_windows.zip
+        asset_path: rue_build_windows.zip
+        asset_name: rue_${{ github.ref_name }}_windows.zip
         asset_content_type: application/gzip
     - name: upload windows steam artifact
       uses: actions/upload-release-asset@v1
@@ -307,6 +343,15 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: avdl_build_windows_steam.zip
-        asset_name: avdl_${{ github.ref_name }}_windows_steam.zip
+        asset_path: rue_build_windows_steam.zip
+        asset_name: rue_${{ github.ref_name }}_windows_steam.zip
+        asset_content_type: application/gzip
+    - name: upload android artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rue_android.apk
+        asset_name: rue_${{ github.ref_name }}_android.apk
         asset_content_type: application/gzip

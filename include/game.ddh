@@ -1,4 +1,5 @@
 #(include "intro.ddh")
+(include "button.ddh")
 (include "player.ddh")
 (include "overlayButtons.ddh")
 (include "saveload.ddh")
@@ -143,7 +144,7 @@
 	(def int discardTotal)
 
 	# player meshes
-	(def dd_meshTexture playerMesh[6])
+	(def dd_meshTexture playerMesh[1])
 	(def dd_image playerTexture[6])
 
 	# players
@@ -171,9 +172,24 @@
 	(def dd_string3d labelLose)
 	(def dd_string3d labelConfirm)
 
+	# buttons
+	(def Button button[2])
+	(def int buttonTotal)
+	(def avdl_program buttonProgram)
+	(def float buttonClickCol[3])
+	(def float buttonActiveCol[3])
+	(def float buttonInactiveCol[3])
+
+	(def int selection)
+	(def int selectionClick)
+	(def int isExitMenu)
+	(def dd_string3d labelExitMenu)
+	(def dd_meshTexture bgExitMenu)
+	(def dd_image bgExitMenuTexture)
+
 	(function void create (group))
 	(function void onload (group))
-	#(function void resize (group))
+	(function void resize (group))
 	(function void update (group))
 	(function void draw (group))
 	(function void key_input (group char key))
