@@ -31,20 +31,28 @@
 	)
 
 	(this.button[1].mesh.load (asset "assets/button_play.ply" DD_PLY))
-	(this.button[1].label.setText (this.localisation.getValue "menu_play"))
-	(this.button[1].description.setText (this.localisation.getValue "menu_play_desc"))
+	#(this.button[1].label.setText (this.localisation.getValue "menu_play"))
+	(this.button[1].label.setText "Play")
+	#(this.button[1].description.setText (this.localisation.getValue "menu_play_desc"))
+	(this.button[1].description.setText "Start the Game")
 
 	(this.button[2].mesh.load (asset "assets/button_exit.ply" DD_PLY))
-	(this.button[2].label.setText (this.localisation.getValue "menu_exit"))
-	(this.button[2].description.setText (this.localisation.getValue "menu_exit_desc"))
+	#(this.button[2].label.setText (this.localisation.getValue "menu_exit"))
+	#(this.button[2].description.setText (this.localisation.getValue "menu_exit_desc"))
+	(this.button[2].label.setText "Exit")
+	(this.button[2].description.setText "Exit game")
 
 	(this.button[3].mesh.load (asset "assets/button_options.ply" DD_PLY))
-	(this.button[3].label.setText (this.localisation.getValue "menu_options"))
-	(this.button[3].description.setText (this.localisation.getValue "menu_options_desc"))
+	#(this.button[3].label.setText (this.localisation.getValue "menu_options"))
+	#(this.button[3].description.setText (this.localisation.getValue "menu_options_desc"))
+	(this.button[3].label.setText "Options")
+	(this.button[3].description.setText "Open and modify game settings")
 
 	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[4].label.setText (this.localisation.getValue "menu_credits"))
-	(this.button[4].description.setText (this.localisation.getValue "menu_credits_desc"))
+	#(this.button[4].label.setText (this.localisation.getValue "menu_credits"))
+	#(this.button[4].description.setText (this.localisation.getValue "menu_credits_desc"))
+	(this.button[4].label.setText "Credits")
+	(this.button[4].description.setText "Meet the creators")
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -107,7 +115,7 @@
 	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
 	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
 
-	(this.versionLabel.setText "v0.7.0")
+	(this.versionLabel.setText "v0.8.1")
 	(this.versionLabel.setAlign DD_STRING3D_ALIGN_RIGHT)
 
 	)

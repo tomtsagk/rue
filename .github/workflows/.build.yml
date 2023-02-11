@@ -38,11 +38,14 @@ jobs:
         cd build/android/output
         chmod +x gradlew
         ./gradlew build
+        cd ../../../
+        mkdir rue_output
+        mv build/android/output/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android.apk
-        path: build/android/output/app/build/outputs/apk/release/app-universal-release-unsigned.apk
+        name: rue_android
+        path: rue_output
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -289,8 +292,8 @@ jobs:
         path: rue_build_windows_steam
     - uses: actions/download-artifact@v3
       with:
-        name: rue_android.apk
-        path: rue_android.apk
+        name: rue_android
+        path: rue_android
     - name: zip packages
       run: |
          sudo apt update && sudo apt install -y zip
@@ -351,6 +354,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_android.apk
-        asset_name: rue_${{ github.ref_name }}_android.apk
+        asset_path: rue_android
+        asset_name: rue_${{ github.ref_name }}_android.zip
         asset_content_type: application/gzip
