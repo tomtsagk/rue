@@ -222,7 +222,7 @@
 	# options menu is open
 	(if (this.opt.isEnabled)
 		(group
-		(if (this.opt.mouse_input button type)
+		(if (== (this.opt.mouse_input button type) 1)
 			(group
 			(this.menuHome.enable)
 			)
