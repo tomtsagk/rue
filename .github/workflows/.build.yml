@@ -13,8 +13,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.7.0/avdl_v0.7.0_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.7.0/avdl_v0.7.0_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.7.1/avdl_v0.7.1_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.7.1/avdl_v0.7.1_windows.zip
 
 jobs:
   # Android
