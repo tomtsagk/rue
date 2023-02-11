@@ -18,6 +18,12 @@
 	)
 )
 
+(def int networkTurnIndexMax 15)
+(def MultiplayerMessageGameTurn networkTurnQueue[15])
+(def int currentNetworkTurnIndex 0)
+(def int lastNetworkTurnIndex 0)
+(def int networkTurnQueueSize 0)
+
 # game phases
 (def int PHASE_INIT 0)
 (def int PHASE_PLAN 1)
@@ -73,20 +79,16 @@
 (class_function world_game void create ()
 	(group
 
+	(= currentNetworkTurnIndex 0)
+	(= lastNetworkTurnIndex 0)
+	(= networkTurnQueueSize 0)
+
 	# exit menu buttons
 	(= this.buttonTotal 2)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[0].setSize 1 1)
-	(this.button[0].setProportionalPosition 0.3 0.3)
-	(this.button[0].setProportionalWidth 0.2)
-	(this.button[0].setProportionalSize 0.8)
 	(this.button[0].label.setText "Exit")
 
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[1].setSize 1 1)
-	(this.button[1].setProportionalPosition 0.7 0.3)
-	(this.button[1].setProportionalWidth 0.2)
-	(this.button[1].setProportionalSize 0.8)
 	(this.button[1].label.setText "Resume")
 
 	(this.labelExitMenu.setText "Exit game ?")
@@ -261,7 +263,12 @@
 	# tut cards
 	(if (this.saveLoad.HadTutorial)
 		(= this.guide -1)
-		(= this.guide 0)
+		(group
+		(if isMultiplayerGame
+			(= this.guide -1)
+			(= this.guide 0)
+		)
+		)
 	)
 	(= this.tutCardsTotal 10)
 	(for (def int i 0) (< i this.tutCardsTotal) (= i (+ i 1))
@@ -369,6 +376,10 @@
 
 		(= this.player[i].cardLabels this.cardLabel)
 		(= this.player[i].isNetworkUser isMultiplayerGame)
+
+		(if (== this.player[i].type 10)
+			(this.player[i].font.setText (avdl_multiplayer_getPlayerNameByIndex 0 i))
+		)
 
 		)
 	)
@@ -685,6 +696,36 @@
 
 (class_function world_game void resize ()
 	(group
+	# portrait
+	(if (< (dd_window_width) (dd_window_height))
+		(group
+		# exit button
+		(this.button[0].setSize 1 1)
+		(this.button[0].setProportionalPosition 0.5 0.25)
+		(this.button[0].setProportionalWidth 0.2)
+		(this.button[0].setProportionalSize 0.8)
+
+		# resume button
+		(this.button[1].setSize 1 1)
+		(this.button[1].setProportionalPosition 0.5 0.5)
+		(this.button[1].setProportionalWidth 0.2)
+		(this.button[1].setProportionalSize 0.8)
+		)
+	# landscape
+		(group
+		# exit button
+		(this.button[0].setSize 1 1)
+		(this.button[0].setProportionalPosition 0.7 0.3)
+		(this.button[0].setProportionalWidth 0.2)
+		(this.button[0].setProportionalSize 0.8)
+
+		# resume button
+		(this.button[1].setSize 1 1)
+		(this.button[1].setProportionalPosition 0.3 0.3)
+		(this.button[1].setProportionalWidth 0.2)
+		(this.button[1].setProportionalSize 0.8)
+		)
+	)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
 	)
@@ -954,7 +995,39 @@
 			# network user selects card from themselves, wait for their input
 			(&& (== this.player[this.actions[0].playerIndex].type 10) (== this.actions[0].value this.actions[0].playerIndex))
 				(group
-				(echo "waiting network user to have a turn")
+
+				# there's a move waiting to happen
+				(if (> networkTurnQueueSize 0)
+					(group
+					# update the state of the game based on the received move
+					#(= this.lastSelectedCardPlayerIndex (% (- (+ msg.playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+					(= this.lastSelectedCardPlayerIndex (% (- (+ networkTurnQueue[currentNetworkTurnIndex].playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+					#(= this.lastSelectedCardIndex msg.cardIndex)
+					(= this.lastSelectedCardIndex networkTurnQueue[currentNetworkTurnIndex].cardIndex)
+#					(def int pind this.lastSelectedCardPlayerIndex)
+#					(def int cind this.lastSelectedCardIndex)
+#					(echo "player card index received: " pind " | " cind)
+					(= this.filterCorner -1)
+					(this.ovButtons.unsetCard)
+					(= this.actions[0].actionType ACTION_DELAY)
+					(= this.actions[0].delay 0)
+
+					#(= this.player[0].userLookingAtCard -1)
+					#(= this.player[0].highlightCard -1)
+					(= this.phaseTextCurrent this.phaseTextExecution)
+
+					(= currentNetworkTurnIndex (+ currentNetworkTurnIndex 1))
+					(= networkTurnQueueSize (- networkTurnQueueSize 1))
+					(if (>= currentNetworkTurnIndex networkTurnIndexMax)
+						(= currentNetworkTurnIndex (- currentNetworkTurnIndex networkTurnIndexMax))
+					)
+					(echo "applied queued move")
+					)
+					(group
+					(echo "waiting network user to have a turn")
+					)
+				)
+
 				)
 			# AI has to select a card or user selects randomly or network user selects randomly
 				(group
@@ -1008,7 +1081,7 @@
 							(def MultiplayerMessageGameTurn msg)
 							(= msg.playerIndex this.lastSelectedCardPlayerIndex)
 							(= msg.cardIndex this.lastSelectedCardIndex)
-							(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessageGameTurn)
+							(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
 
 							)
 						# non-host users wait for host to
@@ -1079,7 +1152,7 @@
 							(= msg.cardIndex this.lastSelectedCardIndex)
 
 							(echo "sending ai move to all players")
-							(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessageGameTurn)
+							(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
 
 							)
 						# non-host users wait for host to
@@ -1257,6 +1330,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_THUNDER 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 
 					# the active player is the flirt - nothing happens
@@ -1310,6 +1384,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_THUNDER 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 
@@ -1334,6 +1409,9 @@
 					# rose is in front of user, grab it
 					(if (== this.actions[0].playerIndex this.rosePlayer)
 						(group
+						(if (== this.actions[0].playerIndex 0)
+							(avdl_achievements_set 0 "ACHIEVEMENT_I_FOUND_THE_ROSE")
+						)
 						(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
 						)
 					# otherwise, move one step, rose player grabs rose
@@ -1349,6 +1427,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_FROWN 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 
@@ -1366,6 +1445,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 
@@ -1394,6 +1474,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_HEART 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 
@@ -1408,6 +1489,9 @@
 						(group
 						(this.addInjectAction ACTION_SELECT_CARD this.actions[0].playerIndex this.actions[0].playerIndex 50)
 						(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
+						(if (== this.actions[0].playerIndex 0)
+							(avdl_achievements_set 0 "ACHIEVEMENT_EXTRA_DISCARD")
+						)
 						)
 					)
 
@@ -1448,6 +1532,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_FROWN 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 
@@ -1474,6 +1559,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_HEART 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_ADVANCE_ROSE 0 1 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 
@@ -1489,6 +1575,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 
 					# if selected card is rose, move two steps
@@ -1510,6 +1597,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_TEAR 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 					)
@@ -1520,6 +1608,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_HEART 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 					)
@@ -1530,6 +1619,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_THUNDER 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 					)
@@ -1540,6 +1630,7 @@
 					(this.addInjectAction ACTION_IF_SELECTED_CARD_HAS_CORNER 0 CARD_CORNER_FROWN 0)
 					(this.addInjectAction ACTION_DISCARD_CARD -1 0 50)
 					(this.addInjectAction ACTION_GRAB_ROSE 0 0 50)
+					(this.addInjectAction ACTION_DRAW_CARD this.actions[0].playerIndex 0 50)
 					(this.addInjectAction ACTION_ENDIF 0 0 0)
 					(this.injectActionsToActions)
 					)
@@ -1722,17 +1813,11 @@
 				(this.saveLoad.CompleteGame)
 					# Handle achievements
 					(if (&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 1))
-						(avdl_achievements_set 0 "ACHIEVEMENT_FIRST_STEPS")
+						(avdl_achievements_set 0 "ACHIEVEMENT_FIRST_VICTORY")
 					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 3))
-						(avdl_achievements_set 0 "ACHIEVEMENT_OPTIONAL_EFFECTS")
-					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 5))
-						(avdl_achievements_set 0 "ACHIEVEMENT_TRADE_STEAL")
-					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 8))
-						(avdl_achievements_set 0 "ACHIEVEMENT_GRAB")
-					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 11))
-						(avdl_achievements_set 0 "ACHIEVEMENT_SMART")
-					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 15))
-						(avdl_achievements_set 0 "ACHIEVEMENT_STORY_DONE")
+						(avdl_achievements_set 0 "ACHIEVEMENT_GETTING_BETTER")
+					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 7))
+						(avdl_achievements_set 0 "ACHIEVEMENT_MASTER_PLAYER")
 					)
 					)
 				# nobody won
@@ -1755,7 +1840,11 @@
 				)
 			# desired card is selected - continue as normal
 			(== (this.player[this.lastSelectedCardPlayerIndex].cards[this.lastSelectedCardIndex].getId) this.actions[0].value)
-				()
+				(group
+				(if (== this.actions[0].playerIndex 0)
+					(avdl_achievements_set 0 "ACHIEVEMENT_ROSE_SELECTED")
+				)
+				)
 			# not wanted card is selected - skip to end of if statement
 				(group
 				(for (def int i 0) (&& (|| (< this.actions[0].actionType ACTION_ENDIF) (> this.actions[0].actionType ACTION_ENDIF)) (> this.actionsTotal 0)) (= i i)
@@ -1897,30 +1986,47 @@
 				(def ref MultiplayerMessageGameTurn msg)
 				(= msg (avdl_multiplayer_getMessageData 0))
 
-				# host sends the move to all other players
-				# except the one that just made the move
-				(if (avdl_multiplayer_isHost 0)
+#				# host sends the move to all other players
+#				# except the one that just made the move
+#				(if (avdl_multiplayer_isHost 0)
+#					(group
+#					#(avdl_multiplayer_syncMessage 0 msg MultiplayerMessageGameTurn)
+#					)
+#				)
+
+				(if (>= networkTurnQueueSize networkTurnIndexMax)
 					(group
-					#(avdl_multiplayer_syncMessage 0 msg MultiplayerMessageGameTurn)
+					(echo "no space for more network turns!")
+					)
+					(group
+					# queue move
+					(= networkTurnQueue[lastNetworkTurnIndex].playerIndex msg.playerIndex)
+					(= networkTurnQueue[lastNetworkTurnIndex].cardIndex msg.cardIndex)
+					(= lastNetworkTurnIndex (+ lastNetworkTurnIndex 1))
+					(= networkTurnQueueSize (+ networkTurnQueueSize 1))
+					(if (>= lastNetworkTurnIndex networkTurnIndexMax)
+						(= lastNetworkTurnIndex (- lastNetworkTurnIndex networkTurnIndexMax))
+					)
+					(echo "queued network move")
 					)
 				)
 
-				# update the state of the game based on the received move
-				(= this.lastSelectedCardPlayerIndex (% (- (+ msg.playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
-				#(= this.lastSelectedCardIndex this.player[(+ msg.playerIndex networkOffsetindex)].highlightCard)
-				(= this.lastSelectedCardIndex msg.cardIndex)
-				(def int pind this.lastSelectedCardPlayerIndex)
-				(def int cind this.lastSelectedCardIndex)
-				(echo "player card index received: " pind " | " cind)
-				(= this.filterCorner -1)
-				(this.ovButtons.unsetCard)
-				(= this.actions[0].actionType ACTION_DELAY)
-				(= this.actions[0].delay 0)
-
-				#(= this.player[0].userLookingAtCard -1)
-				#(= this.player[0].highlightCard -1)
-				(= this.phaseTextCurrent this.phaseTextExecution)
-				(echo "received move, and applied it")
+#				# update the state of the game based on the received move
+#				(= this.lastSelectedCardPlayerIndex (% (- (+ msg.playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+#				#(= this.lastSelectedCardIndex this.player[(+ msg.playerIndex networkOffsetindex)].highlightCard)
+#				(= this.lastSelectedCardIndex msg.cardIndex)
+#				(def int pind this.lastSelectedCardPlayerIndex)
+#				(def int cind this.lastSelectedCardIndex)
+#				(echo "player card index received: " pind " | " cind)
+#				(= this.filterCorner -1)
+#				(this.ovButtons.unsetCard)
+#				(= this.actions[0].actionType ACTION_DELAY)
+#				(= this.actions[0].delay 0)
+#
+#				#(= this.player[0].userLookingAtCard -1)
+#				#(= this.player[0].highlightCard -1)
+#				(= this.phaseTextCurrent this.phaseTextExecution)
+#				(echo "received move, and applied it")
 				)
 				(echo "no messages")
 			)
@@ -2039,6 +2145,8 @@
 		(group
 		(dd_matrix_push)
 		(this.player[i].draw)
+		(dd_translatef 0 0 -5 )
+		(this.labelPlayerName.setText (avdl_multiplayer_getPlayerNameByIndex 0 0))
 		(dd_matrix_pop)
 		)
 	)
@@ -2213,6 +2321,8 @@
 
 (class_function world_game void key_input (group char key)
 	(group
+
+	# escape button / back
 	(if (== key 27)
 		(group
 		#(= dd_flag_exit 1) # exit game
@@ -2226,7 +2336,122 @@
 			(= this.isExitMenu 1)
 		)
 		)
+	# left arrow or 'a'
+	(|| (== key 1) (== key 97))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				)
+			# landscape
+				(group
+				(= this.selection 1)
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotX (- this.targetRotX 10))
+		)
+
+		)
+	# right arrow or 'd'
+	(|| (== key 3) (== key 100))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				)
+			# landscape
+				(group
+				(= this.selection 0)
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotX (+ this.targetRotX 10))
+		)
+
+		)
+	# up arrow or 'w'
+	(|| (== key 2) (== key 119))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				(= this.selection 1)
+				)
+			# landscape
+				(group
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotY (+ this.targetRotY 10))
+		)
+
+		)
+	# down arrow or 's'
+	(|| (== key 2) (== key 115))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				(= this.selection 0)
+				)
+			# landscape
+				(group
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotY (- this.targetRotY 10))
+		)
+
+		)
+	# enter or space to confirm
+	(|| (== key 13) (== key 32))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# exit game
+			(if (== this.selection 0)
+				(group
+				(dd_world_prepare world_menu 1.0)
+				(dd_world_ready)
+				)
+			# resume
+			(== this.selection 1)
+				(group
+				(= this.isExitMenu 0)
+				)
+			)
+			)
+			(group
+			(this.confirmSelection)
+			)
+		)
+
+		)
 	) # key input
+
 	)
 )
 
@@ -2304,104 +2529,7 @@
 		# was not rotating - click
 		(if (== this.isRotating 0)
 			(group
-			# someone has won, move to next menu
-			(if (>= this.victoriousPlayer 0)
-				(group
-				(this.saveLoad.CompleteGame)
-				(dd_world_prepare world_menu 1.0)
-				(dd_world_ready)
-				)
-			# nobody has won - proceed with input handling
-				(group
-
-				# showing overlay card
-				(if this.ovButtons.cardToShow
-					(group
-					(if (this.ovButtons.click)
-						(group
-						(if (&& (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.ovButtons.waitUntilCardConfirmed 0))
-							(group
-							(= this.filterCorner -1)
-							(= this.lastSelectedCardPlayerIndex -1)
-							(= this.lastSelectedCardIndex -1)
-							(= this.actions[0].actionType ACTION_DELAY)
-							)
-						)
-						)
-					)
-					)
-				)
-
-				# network user, wait for their input
-				(if (== this.player[this.actions[0].playerIndex].type 10)
-					(return)
-				)
-
-				# waiting user to select a card
-				(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
-					(group
-
-					# just selected a card
-					(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
-						(>= this.player[0].highlightCard 0))
-						(group
-
-						(= this.lastSelectedCardPlayerIndex 0)
-						(= this.lastSelectedCardIndex this.player[0].highlightCard)
-						(= this.filterCorner -1)
-						(this.ovButtons.unsetCard)
-						(= this.actions[0].actionType ACTION_DELAY)
-						(= this.actions[0].delay 0)
-
-						(= this.player[0].userLookingAtCard -1)
-						(= this.player[0].highlightCard -1)
-						(= this.phaseTextCurrent this.phaseTextExecution)
-
-						# multiplayer game, send move to other players
-						(if isMultiplayerGame
-							(group
-
-							# prepare move
-							(def MultiplayerMessageGameTurn msg)
-							(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
-							(= msg.cardIndex this.lastSelectedCardIndex)
-
-							# host sends move to all other players
-							(if (avdl_multiplayer_isHost 0)
-								(group
-								(echo "sending move to all players")
-								(avdl_multiplayer_sendMessageToAllPlayers 0 msg MultiplayerMessageGameTurn)
-								)
-							# non-host players send move to host
-								(group
-								(echo "sending move to host")
-								(avdl_multiplayer_sendMessageToHost 0 msg MultiplayerMessageGameTurn)
-								)
-							)
-
-							)
-						)
-
-						)
-					# just highlighted card
-						(group
-						(if (|| (== this.filterCorner -1) (&&
-						(>= this.filterCorner 0) (>= this.player[0].userLookingAtCard 0)
-						(== this.player[0].cards[this.player[0].userLookingAtCard].cornerId this.filterCorner)))
-							(this.player[0].highlightLookingCard)
-							(= this.player[0].highlightCard -1)
-						)
-						)
-					)
-
-					)
-				# waiting network user to select a card
-				(&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.player[this.actions[0].playerIndex].type 10) )
-					(group)
-				)
-
-				)
-			) # was waiting for user input
+			(this.confirmSelection)
 			)
 		)
 
@@ -2903,5 +3031,113 @@
 	(= this.cards[52].mesh this.cardFront[12])
 	(= this.cards[52].cardDescription2 this.cardLabel[CARD_EMPTY_FROWN])
 
+	)
+)
+
+(class_function world_game void confirmSelection ()
+	(group
+	# someone has won, move to next menu
+	(if (>= this.victoriousPlayer 0)
+		(group
+		(this.saveLoad.CompleteGame)
+		(dd_world_prepare world_menu 1.0)
+		(dd_world_ready)
+		)
+	# nobody has won - proceed with input handling
+		(group
+
+		# showing overlay card
+		(if this.ovButtons.cardToShow
+			(group
+			(if (this.ovButtons.click)
+				(group
+				# skip effect
+				(if (&& (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.ovButtons.waitUntilCardConfirmed 0))
+					(group
+					(= this.filterCorner -1)
+					(= this.lastSelectedCardPlayerIndex -1)
+					(= this.lastSelectedCardIndex -1)
+					(= this.actions[0].actionType ACTION_DELAY)
+					# multiplayer game, send move to other players
+					(if isMultiplayerGame
+						(group
+	
+						# prepare move
+						(def MultiplayerMessageGameTurn msg)
+						(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+						(= msg.cardIndex this.lastSelectedCardIndex)
+	
+						# send move to all other players
+						(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
+	
+						)
+					)
+					)
+				)
+				)
+			)
+			)
+		)
+
+		# network user, wait for their input
+		(if (== this.player[this.actions[0].playerIndex].type 10)
+			(return)
+		)
+
+		# waiting user to select a card
+		(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
+			(group
+
+			# just selected a card
+			(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
+				(>= this.player[0].highlightCard 0))
+				(group
+
+				(= this.lastSelectedCardPlayerIndex 0)
+				(= this.lastSelectedCardIndex this.player[0].highlightCard)
+				(= this.filterCorner -1)
+				(this.ovButtons.unsetCard)
+				(= this.actions[0].actionType ACTION_DELAY)
+				(= this.actions[0].delay 0)
+
+				(= this.player[0].userLookingAtCard -1)
+				(= this.player[0].highlightCard -1)
+				(= this.phaseTextCurrent this.phaseTextExecution)
+
+				# multiplayer game, send move to other players
+				(if isMultiplayerGame
+					(group
+
+					# prepare move
+					(def MultiplayerMessageGameTurn msg)
+					(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+					(= msg.cardIndex this.lastSelectedCardIndex)
+
+					# send move to all other players
+					(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
+
+					)
+				)
+
+				)
+			# just highlighted card
+				(group
+				(if (|| (== this.filterCorner -1) (&&
+				(>= this.filterCorner 0) (>= this.player[0].userLookingAtCard 0)
+				(== this.player[0].cards[this.player[0].userLookingAtCard].cornerId this.filterCorner)))
+					(this.player[0].highlightLookingCard)
+					(= this.player[0].highlightCard -1)
+				)
+				)
+			)
+
+			)
+		# waiting network user to select a card
+		(&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.player[this.actions[0].playerIndex].type 10) )
+			(group)
+		)
+
+		)
+	) # was waiting for user input
 	)
 )

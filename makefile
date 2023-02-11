@@ -2,7 +2,7 @@
 # project data
 #
 NAME=rue
-VERSION=0.7.0
+VERSION=0.8.0
 REVISION=0
 
 #
@@ -71,8 +71,12 @@ ANDROID_ASSETS=${ASSETS:assets/%=${DIRECTORY_ANDROID_OBJ}/%}
 #
 # desktop application data
 #
+icon512x512=metadata/icon-512x512.png
+icon256x256=metadata/icon-256x256.png
 icon128x128=metadata/icon-128x128.png
 icon64x64=metadata/icon-64x64.png
+icon32x32=metadata/icon-32x32.png
+icon16x16=metadata/icon-16x16.png
 desktopfile=metadata/org.darkdimension.rue.desktop
 metadatafile=metadata/org.darkdimension.rue.metainfo.xml
 
@@ -131,16 +135,24 @@ install: ${INSTALL_DIRS}
 	install ${DIRECTORY_NATIVE_OUT}/assets/* ${DESTDIR}${prefix}/share/${NAME}/assets
 	install ${desktopfile} ${DESTDIR}${prefix}/share/applications
 	install ${metadatafile} ${DESTDIR}${prefix}/share/metainfo/
+	install ${icon512x512} ${DESTDIR}${prefix}/share/icons/hicolor/512x512/apps/org.darkdimension.rue.png
+	install ${icon256x256} ${DESTDIR}${prefix}/share/icons/hicolor/256x256/apps/org.darkdimension.rue.png
 	install ${icon128x128} ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
 	install ${icon64x64} ${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/org.darkdimension.rue.png
+	install ${icon32x32} ${DESTDIR}${prefix}/share/icons/hicolor/32x32/apps/org.darkdimension.rue.png
+	install ${icon16x16} ${DESTDIR}${prefix}/share/icons/hicolor/16x16/apps/org.darkdimension.rue.png
 
 uninstall:
 	rm -f ${DESTDIR}${prefix}/bin/${NAME}
 	rm -rf ${DESTDIR}${prefix}/share/${NAME}
 	rm -f ${DESTDIR}${prefix}/share/applications/org.darkdimension.rue.desktop
 	rm -f ${DESTDIR}${prefix}/share/metainfo/org.darkdimension.rue.metainfo.xml
+	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/512x512/apps/org.darkdimension.rue.png
+	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/256x256/apps/org.darkdimension.rue.png
 	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
 	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/org.darkdimension.rue.png
+	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/32x32/apps/org.darkdimension.rue.png
+	rm -f ${DESTDIR}${prefix}/share/icons/hicolor/16x16/apps/org.darkdimension.rue.png
 
 #
 # clean project

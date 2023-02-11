@@ -41,5 +41,8 @@
 	(function void mouse_input (group int button int type))
 	(function void clean (group))
 
+	(function int button_selection_home (int action_id))
+	(function int button_selection_options (int action_id))
+
 	)
 ) # menu world

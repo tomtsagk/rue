@@ -12,6 +12,7 @@
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.font.setText "AI")
 	#(this.font.setColorFront 0.9 0.9 0.9)
 	#(this.font.setColorBack 0.3 0.3 0.3)
 
@@ -113,6 +114,8 @@
 	(dd_translatef 0 2.2 0.3)
 	(dd_scalef 0.5 0.5 0.5)
 	(this.font.drawInt this.cardsTotal)
+	(dd_translatef 0 3 0)
+	(this.font.draw)
 	(dd_matrix_pop)
 
 	)

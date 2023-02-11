@@ -46,13 +46,15 @@
 	(function void resize (group))
 	(function void update (group))
 	(function void draw (group))
-	(function void key_input (group char key))
+	(function int key_input (group char key))
 	(function int mouse_input (group int button int type))
 	(function void clean (group))
 
 	(function int isEnabled (group))
 	(function void enable (group))
 	(function void disable (group))
+
+	(function int button_selection (int button_index))
 
 	)
 ) # options menu

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
 # set the project name
-project(rue VERSION 0.7.0)
+project(rue VERSION 0.8.0)
 
 # compile for windows, with dynamic location
 add_compile_definitions(
@@ -232,11 +232,11 @@ install(FILES
 
 # packaging using `cpack`
 include(InstallRequiredSystemLibraries)
-set(CPACK_PACKAGE_VENDOR "Dark Dimension")
+set(CPACK_PACKAGE_VENDOR "Afloofdev")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A card game about deduction, love and regret")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A card game about decisions, love and regret")
 set(CPACK_PACKAGE_DESCRIPTION "A card game where all the players are sitting around a table. A rose appears on the table that moves around.")
-set(CPACK_PACKAGE_HOMEPAGE_URL "https://darkdimension.org/games/rue.html")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://afloofdev.com/games/rue")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "rue")
 set(CPACK_NSIS_MODIFY_PATH ON)
 include(CPack)

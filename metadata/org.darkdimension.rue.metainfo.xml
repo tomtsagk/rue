@@ -7,7 +7,7 @@
 <!-- main project details -->
 <id>org.darkdimension.rue</id>
 <name>Rue</name>
-<summary>A card game about deduction, love and regret.</summary>
+<summary>A card game about decisions, love and regret.</summary>
 <!--<icon>org.darkdimension.rue</icon>-->
 <description>
 <p>A card game where all the players are sitting around a table. A rose appears on the table that moves around.</p>
@@ -18,17 +18,17 @@
 
 <screenshots>
 	<screenshot type="default" width="800" height="450">
-		<image>https://darkdimension.org/images/games/rue/screenshot_1-800x.png</image>
+		<image>https://afloofdev.com/images/games/rue/screenshot_1-800x.png</image>
 	</screenshot>
 	<screenshot width="800" height="450">
-		<image>https://darkdimension.org/images/games/rue/screenshot_2-800x.png</image>
+		<image>https://afloofdev.com/images/games/rue/screenshot_2-800x.png</image>
 	</screenshot>
 	<screenshot width="800" height="450">
-		<image>https://darkdimension.org/images/games/rue/screenshot_3-800x.png</image>
+		<image>https://afloofdev.com/images/games/rue/screenshot_3-800x.png</image>
 	</screenshot>
 </screenshots>
 
-<developer_name>Dark Dimension</developer_name>
+<developer_name>Afloofdev</developer_name>
 
 <categories>
 	<category>Game</category>
@@ -39,12 +39,27 @@
 
 <!--<translation>-->
 
-<url type="homepage">https://darkdimension.org/games/rue</url>
-<url type="donation">https://ko-fi.com/darkdimension</url>
+<url type="homepage">https://afloofdev.com/games/rue</url>
+<url type="donation">https://ko-fi.com/afloofdev</url>
 
 <!--<launchable>org.darkdimension.rue</launchable>-->
 
 <releases>
+	<release version="0.8.0" date="2022-06-16" type="stable">
+
+		<description>
+			<p>First stable release</p>
+		</description>
+
+		<location>https://github.com/tomtsagk/rue/archive/refs/tags/v0.8.0.tar.gz</location>
+		<checksum type="md5">1f52bc1229b2bcbab58c8be72c15e340</checksum>
+
+		<url type="details">
+			https://github.com/tomtsagk/rue/releases/tag/v0.8.0
+		</url>
+		<!--<size>-->
+		<!--<artifacts>-->
+	</release>
 	<release version="0.3.0" date="2022-06-16" type="stable">
 
 		<description>

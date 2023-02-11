@@ -186,6 +186,7 @@
 	(def dd_string3d labelExitMenu)
 	(def dd_meshTexture bgExitMenu)
 	(def dd_image bgExitMenuTexture)
+	(def dd_string3d labelPlayerName)
 
 	(function void create (group))
 	(function void onload (group))
@@ -216,6 +217,8 @@
 	(function void grabRose (group))
 
 	(function void prepareDeckFull ())
+
+	(function void confirmSelection ())
 
 	)
 ) # game world

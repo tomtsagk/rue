@@ -40,6 +40,12 @@
 	# labels
 	(def dd_string3d numOfLobbiesLabel)
 	(def dd_string3d selfNameLabel)
+	(def dd_string3d playerNames[5])
+	(def dd_string3d playersLabel)
+
+	# menu bg
+	(def dd_meshTexture bgMenu)
+	(def dd_image bgMenuTexture)
 
 	(def int msgDelay)
 

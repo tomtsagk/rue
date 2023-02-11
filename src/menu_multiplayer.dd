@@ -15,8 +15,11 @@
 (def int friendListPage 0)
 (def int attempQuickJoin 0)
 
+(def int playerReady[5])
+
 # for multiplayer
 (def int MESSAGE_ID_START_GAME 0)
+(def int MESSAGE_ID_READY 1)
 (class MultiplayerMessage 0
 	(group
 	(def int messageId)
@@ -31,6 +34,12 @@
 	(def int offsetPlayer)
 	(def avdl_multiplayer_identity playerId[5])
 	(def avdl_multiplayer_identity host[1])
+	)
+)
+(class MultiplayerMessageReady 0
+	(group
+	(def MultiplayerMessage info)
+	(def int playerIndex)
 	)
 )
 
@@ -84,6 +93,13 @@
 	(def int members)
 	(= members (avdl_multiplayer_getLobbyMemberCurrent 0 0))
 	(echo "members: " members)
+
+	(for (def int i 0) (< i 5) (= i (+ i 1))
+		(group
+		(= playerReady[i] 0)
+		)
+	)
+
 	)
 )
 
@@ -111,6 +127,18 @@
 	(group
 
 	(= this.startingGame 0)
+
+	(this.playerNames[0].setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.playerNames[0].setText "No player name")
+
+	(this.playersLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.playersLabel.setText "Players:")
+
+	# bg menu
+	(this.bgMenuTexture.set (asset "assets/bg_exit_menu.png" AVDL_IMAGETYPE_PNG))
+	(this.bgMenu.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.bgMenu.setTransparency 1)
+	(this.bgMenu.setTexture this.bgMenuTexture)
 
 	# init default game values
 	(= numberOfPlayers 3)
@@ -364,7 +392,10 @@
 	(if isInLobby
 		(group
 		(= this.button[BUTTON_BACK].isVisible 0)
-		(= this.button[BUTTON_START_GAME].isVisible 1)
+		(if (avdl_multiplayer_isHost 0)
+			(= this.button[BUTTON_START_GAME].isVisible 1)
+			(= this.button[BUTTON_START_GAME].isVisible 0)
+		)
 		(= this.button[BUTTON_LEAVE_LOBBY].isVisible 1)
 		(= this.button[BUTTON_QUICK_PLAY].isVisible 0)
 		(= this.button[BUTTON_PRIVATE_LOBBY].isVisible 0)
@@ -443,12 +474,43 @@
 					(= playerAi[i] -1)
 				)
 				(dd_math_randPseudoSetSeed msgStart.seed)
-				#(avdl_multiplayer_confirmLobby 0)
-				(avdl_multiplayer_confirmLobby2 0 msgStart.numberOfPlayers msgStart.playerId msgStart.host)
+				(avdl_multiplayer_confirmLobby 0)
+				#(avdl_multiplayer_confirmLobby2 0 msgStart.numberOfPlayers msgStart.playerId msgStart.host)
 				(= isMultiplayerGame 1)
 				(= isHost 0)
+
+				# send ready message to host
+				(echo "send ready message to host")
+				(def MultiplayerMessageReady msgReady)
+				(= msgReady.playerIndex networkOffsetindex)
+				(avdl_multiplayer_sendMessageToHost 0 msg MultiplayerMessageReady)
+
 				(dd_world_prepare world_game 1.0)
 				(dd_world_ready)
+				)
+			# a player is ready
+			(== msg.messageId MESSAGE_ID_READY)
+				(group
+				(def ref MultiplayerMessageReady msgReady)
+				(= msgReady msg)
+				(def int index)
+				(= index (% msgReady.playerIndex 5))
+				(= playerReady[index] 1)
+				(echo "player is ready: " index)
+				(def int readyToStart 1)
+				(for (def int i 0) (< i 5) (= i (+ i 1))
+					(group
+					(if (== playerReady[i] 0)
+						(= readyToStart 0)
+					)
+					)
+				)
+				(if readyToStart
+					(group
+					(dd_world_prepare world_game 1.0)
+					(dd_world_ready)
+					)
+				)
 				)
 				(group
 				(echo "received message with unknown value")
@@ -526,6 +588,13 @@
 
 	(if isFriendListOpen
 		(group
+		# bg
+		(dd_matrix_push)
+		(dd_translatef 0 0 -15)
+		(dd_scalef (dd_screen_width_get 15) (dd_screen_height_get 15) 0)
+		(this.bgMenu.draw)
+		(dd_matrix_pop)
+
 		(dd_matrix_push)
 		(dd_translatef 0 1.5 -5)
 		(dd_scalef 0.2 0.2 0.2)
@@ -615,6 +684,29 @@
 		)
 	)
 
+	(if (&& (== isFriendListOpen 0) isInLobby)
+		(group
+		# draw player names
+		(dd_matrix_push)
+		(this.textButton.applyTransform)
+		(this.textButton.applyMatrixTransform)
+		(dd_translatef 0 2.5 0.1)
+		(dd_scalef 0.3 0.3 0.3)
+		(this.playersLabel.draw)
+		(dd_translatef 3 0 0)
+		(this.playersLabel.drawInt (avdl_multiplayer_getLobbyMemberCurrent 0 0))
+		(dd_translatef -3 -1 0)
+		(for (def int i 0) (< i (avdl_multiplayer_getLobbyMemberCurrent 0 0)) (= i (+ i 1))
+			(group
+			(this.playerNames[0].setText (avdl_multiplayer_getPlayerNameByIndex 0 i))
+			(this.playerNames[0].draw)
+			(dd_translatef 0 -1 0)
+			)
+		)
+		(dd_matrix_pop)
+		)
+	)
+
 	)
 )
 
@@ -685,6 +777,10 @@
 				(group
 				(if (== this.startingGame 0)
 					(group
+					#(echo "setting player name")
+					#(this.playerNames[0].setText (avdl_multiplayer_getPlayerNameByIndex 0 1))
+					#(this.playerNames[0].setText (avdl_multiplayer_getSelfName 0))
+					#(echo "starting lobby with user: " n)
 
 					(= numberOfPlayers (dd_math_max 3 (avdl_multiplayer_getLobbyMemberCurrent 0 0)))
 					#(= startingPlayer (dd_math_rand numberOfPlayers))
@@ -716,8 +812,8 @@
 						(avdl_multiplayer_getPlayerId 0 3 msg.playerId[3])
 						(avdl_multiplayer_getPlayerId 0 4 msg.playerId[4])
 						(avdl_multiplayer_getHostId 0 msg.host[0])
-						(echo "rue: sending start game message")
-						(avdl_multiplayer_sendMessage 0 i msg MultiplayerMessageStartGame)
+						#(echo "rue: sending start game message")
+						(avdl_multiplayer_sendMessageToPlayer 0 i msg MultiplayerMessageStartGame)
 						)
 					)
 					(= networkOffsetindex 0)
@@ -727,7 +823,13 @@
 #					(dd_world_prepare world_game 1.0)
 #					(dd_world_ready)
 #					(= this.startingGame 1)
-					(return 2)
+					#(return 2)
+					# no players - start AI game
+					(if (== memberCount 1)
+						(return 2)
+					# players, wait for them to ready
+						(return 0)
+					)
 
 					)
 				#(avdl_multiplayer_joinLobby 0 0 OnLobbyJoined)

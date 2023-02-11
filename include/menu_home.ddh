@@ -10,6 +10,7 @@
 	(def avdl_localisation localisation)
 
 	# logo
+	(def Button logoUI)
 	(def dd_meshTexture logo)
 	(def dd_image logoTexture)
 
@@ -39,17 +40,19 @@
 	# version
 	(def dd_string3d versionLabel)
 
-	(function void create (group))
-	(function void resize (group))
-	(function void update (group))
-	(function void draw (group))
-	(function void key_input (group char key))
+	(function void create ())
+	(function void resize ())
+	(function void update ())
+	(function void draw ())
+	(function int key_input (group char key))
 	(function int mouse_input (group int button int type))
-	(function void clean (group))
+	(function void clean ())
 
-	(function int isEnabled (group))
-	(function void enable (group))
-	(function void disable (group))
+	(function int isEnabled ())
+	(function void enable ())
+	(function void disable ())
+
+	(function int button_selection (int button_index))
 
 	)
 ) # options menu

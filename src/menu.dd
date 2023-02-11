@@ -172,9 +172,41 @@
 
 (class_function world_menu void key_input (group char key)
 	(group
+
 	(if (== key 27)
 		(= dd_flag_exit 1) # exit game
 	) # key input
+
+	# options menu is open
+	(if (this.opt.isEnabled)
+		(group
+		(this.button_selection_options (this.opt.key_input key))
+		)
+	# home menu is open
+	(this.menuHome.isEnabled)
+		(group
+		(this.button_selection_home (this.menuHome.key_input key))
+		)
+#	(this.menuMultiplayer.isEnabled)
+#		(group
+##		(def int returnMenu (this.menuMultiplayer.mouse_input button type))
+##		# back to home
+##		(if (== returnMenu 1)
+##			(group
+##			(this.menuHome.enable)
+##			)
+##		# start game
+##		(== returnMenu 2)
+##			(group
+##			(dd_world_prepare world_game 1.0)
+##			(dd_world_ready)
+##			)
+##		)
+##
+#		#(this.menuMultiplayer.key_input key)
+#		)
+	)
+
 	)
 )
 
@@ -201,35 +233,7 @@
 	(this.menuHome.isEnabled)
 		(group
 		(def int returnMenu (this.menuHome.mouse_input button type))
-		# custom game
-		(if (== returnMenu 1)
-			(group
-			(this.menuMultiplayer.enable)
-			)
-		# play
-		(== returnMenu 2)
-			(group
-			(= numberOfPlayers (+ 3 (dd_math_rand 3)))
-			(= startingPlayer (dd_math_rand numberOfPlayers))
-			(for (def int i 0) (< i numberOfPlayers) (= i (+ i 1))
-				(= playerAi[i] 0)
-			)
-			(= isMultiplayerGame 0)
-			(dd_world_prepare world_game 1.0)
-			(dd_world_ready)
-			)
-		# options
-		(== returnMenu 3)
-			(group
-			(this.opt.enable)
-			)
-		# credits
-		(== returnMenu 4)
-			(group
-			(dd_world_prepare world_credits 1.0)
-			(dd_world_ready)
-			)
-		)
+		(this.button_selection_home returnMenu)
 		)
 	(this.menuMultiplayer.isEnabled)
 		(group
@@ -252,3 +256,47 @@
 
 	)
 ) # mouse input
+
+(class_function world_menu int button_selection_home (int action_index)
+	(group
+	# multiplayer game
+	(if (== action_index 1)
+		(group
+		(this.menuMultiplayer.enable)
+		)
+	# play
+	(== action_index 2)
+		(group
+		(= numberOfPlayers (+ 3 (dd_math_rand 3)))
+		(= startingPlayer (dd_math_rand numberOfPlayers))
+		(for (def int i 0) (< i numberOfPlayers) (= i (+ i 1))
+			(= playerAi[i] 0)
+		)
+		(= isMultiplayerGame 0)
+		(dd_world_prepare world_game 1.0)
+		(dd_world_ready)
+		)
+	# options
+	(== action_index 3)
+		(group
+		(this.opt.enable)
+		)
+	# credits
+	(== action_index 4)
+		(group
+		(dd_world_prepare world_credits 1.0)
+		(dd_world_ready)
+		)
+	)
+	)
+)
+
+(class_function world_menu int button_selection_options (int action_index)
+	(group
+	(if action_index
+		(group
+		(this.menuHome.enable)
+		)
+	)
+	)
+)

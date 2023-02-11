@@ -165,6 +165,10 @@
 (class_function Button int hasMouseCollided ()
 	(group
 
+	(if (|| (== this.isVisible 0) this.isDisabled)
+		(return 0)
+	)
+
 	# get mouse's proportioned position
 	(def float screenProportionX)
 	(= screenProportionX (- (dd_mouse_xProportion) 0.5))

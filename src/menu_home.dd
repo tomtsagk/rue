@@ -24,38 +24,25 @@
 	(this.button[0].label.setText "Multiplayer")
 	#(this.button[0].description.setText (this.localisation.getValue "menu_custom_game_desc"))
 	(this.button[0].description.setText "Play online with strangers or friends")
-	(if (== (avdl_multiplayer_isEnabled) 0)
+	# multiplayer disabled for everyone for now
+	#(if (== (avdl_multiplayer_isEnabled) 0)
+	(if 1
 		(= this.button[0].isVisible 0)
 	)
 
 	(this.button[1].mesh.load (asset "assets/button_play.ply" DD_PLY))
-	(this.button[1].setSize 1 1)
-	(this.button[1].setProportionalPosition 0.5 0.4)
-	(this.button[1].setProportionalWidth 0.2)
 	(this.button[1].label.setText (this.localisation.getValue "menu_play"))
 	(this.button[1].description.setText (this.localisation.getValue "menu_play_desc"))
 
 	(this.button[2].mesh.load (asset "assets/button_exit.ply" DD_PLY))
-	(this.button[2].setSize 1 1)
-	(this.button[2].setProportionalPosition 0.75 0.4)
-	(this.button[2].setProportionalWidth 0.2)
-	(this.button[2].setProportionalSize 0.8)
 	(this.button[2].label.setText (this.localisation.getValue "menu_exit"))
 	(this.button[2].description.setText (this.localisation.getValue "menu_exit_desc"))
 
 	(this.button[3].mesh.load (asset "assets/button_options.ply" DD_PLY))
-	(this.button[3].setSize 1 1)
-	(this.button[3].setProportionalPosition 0.85 0.85)
-	(this.button[3].setProportionalWidth 0.2)
-	(this.button[3].setProportionalSize 0.8)
 	(this.button[3].label.setText (this.localisation.getValue "menu_options"))
 	(this.button[3].description.setText (this.localisation.getValue "menu_options_desc"))
 
 	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[4].setSize 1 1)
-	(this.button[4].setProportionalPosition 0.15 0.85)
-	(this.button[4].setProportionalWidth 0.2)
-	(this.button[4].setProportionalSize 0.8)
 	(this.button[4].label.setText (this.localisation.getValue "menu_credits"))
 	(this.button[4].description.setText (this.localisation.getValue "menu_credits_desc"))
 
@@ -128,10 +115,78 @@
 
 (class_function menu_home void resize ()
 	(group
+
+	# portrait
+	(if (< (dd_window_width) (dd_window_height))
+		(group
+		# logo
+		(this.logoUI.setSize 1 1)
+		(this.logoUI.setProportionalPosition 0.5 0.79)
+		(this.logoUI.setProportionalWidth 0.4)
+		(this.logoUI.setProportionalSize 1.8)
+
+		# play button
+		(this.button[1].setSize 1 1)
+		(this.button[1].setProportionalPosition 0.5 0.45)
+		(this.button[1].setProportionalWidth 0.5)
+		(this.button[1].setProportionalSize 0.7)
+
+		# exit button
+		(this.button[2].setSize 1 1)
+		(this.button[2].setProportionalPosition 0.5 0.25)
+		(this.button[2].setProportionalWidth 0.5)
+		(this.button[2].setProportionalSize 0.48)
+
+		# options
+		(this.button[3].setSize 1 1)
+		(this.button[3].setProportionalPosition 0.85 0.35)
+		(this.button[3].setProportionalWidth 0.5)
+		(this.button[3].setProportionalSize 0.48)
+
+		# credits
+		(this.button[4].setSize 1 1)
+		(this.button[4].setProportionalPosition 0.15 0.35)
+		(this.button[4].setProportionalWidth 0.5)
+		(this.button[4].setProportionalSize 0.48)
+		)
+	# landscape
+		(group
+		(this.logoUI.setSize 1 1)
+		(this.logoUI.setProportionalPosition 0.5 0.775)
+		(this.logoUI.setProportionalWidth 0.2)
+		(this.logoUI.setProportionalSize 1.5)
+
+		# play button
+		(this.button[1].setSize 1 1)
+		(this.button[1].setProportionalPosition 0.5 0.4)
+		(this.button[1].setProportionalWidth 0.2)
+		(this.button[1].setProportionalSize 1.0)
+
+		# exit button
+		(this.button[2].setSize 1 1)
+		(this.button[2].setProportionalPosition 0.75 0.4)
+		(this.button[2].setProportionalWidth 0.2)
+		(this.button[2].setProportionalSize 0.8)
+
+		# options
+		(this.button[3].setSize 1 1)
+		(this.button[3].setProportionalPosition 0.85 0.85)
+		(this.button[3].setProportionalWidth 0.2)
+		(this.button[3].setProportionalSize 0.8)
+
+		# credits
+		(this.button[4].setSize 1 1)
+		(this.button[4].setProportionalPosition 0.15 0.85)
+		(this.button[4].setProportionalWidth 0.2)
+		(this.button[4].setProportionalSize 0.8)
+		)
+	)
+
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
 	)
 	(this.textButton.resize)
+	(this.logoUI.resize)
 	)
 )
 
@@ -276,20 +331,163 @@
 		-5
 	)
 	(dd_scalef 0.25 0.25 0.25)
+#	# test portrait
+#	(if (< (dd_window_width) (dd_window_height))
+#		(group
+#		(this.versionLabel.setText "portrait")
+#		)
+#	# test landscape
+#		(group
+#		(this.versionLabel.setText "landscape")
+#		)
+#	)
 	(this.versionLabel.draw)
 	(dd_matrix_pop)
 
 	# draw logo
 	(dd_matrix_push)
-	(dd_translatef 0 0.6 -2.5)
+	(this.logoUI.applyTransform)
+	(this.logoUI.applyMatrixTransform)
+	#(dd_translatef 0 0.6 -2.5)
 	(this.logo.draw)
 	(dd_matrix_pop)
 
 	)
 )
 
-(class_function menu_home void key_input (group char key)
+(class_function menu_home int key_input (group char key)
 	(group
+
+	# enter or space to confirm
+	(if (|| (== key 13) (== key 32))
+		(group
+		(return (this.button_selection this.selection))
+		)
+	)
+
+	# navigation - portrait
+	(if (< (dd_window_width) (dd_window_height))
+		(group
+
+		# left arrow or 'a'
+		(if (|| (== key 1) (== key 97))
+			(group
+
+			# options -> play
+			(if (== this.selection 3)
+				(= this.selection 1)
+			# play -> credits
+			(== this.selection 1)
+				(= this.selection 4)
+			# exit -> credits
+			(== this.selection 2)
+				(= this.selection 4)
+			)
+
+			)
+		# right arrow or 'd'
+		(|| (== key 3) (== key 100))
+			(group
+
+			# credits -> play
+			(if (== this.selection 4)
+				(= this.selection 1)
+			# play -> options
+			(== this.selection 1)
+				(= this.selection 3)
+			# exit -> options
+			(== this.selection 2)
+				(= this.selection 3)
+			)
+
+			)
+		# up arrow or 'w'
+		(|| (== key 2) (== key 119))
+			(group
+
+			# * -> play
+			(= this.selection 1)
+
+			)
+		# down arrow or 's'
+		(|| (== key 2) (== key 115))
+			(group
+
+			# * -> exit
+			(= this.selection 2)
+
+			)
+		)
+
+		)
+	# navigation - landscape
+		(group
+
+		# left arrow or 'a'
+		(if (|| (== key 1) (== key 97))
+			(group
+
+			# play -> credits
+			(if (== this.selection 1)
+				(= this.selection 4)
+			# exit -> play
+			(== this.selection 2)
+				(= this.selection 1)
+			# options -> exit
+			(== this.selection 3)
+				(= this.selection 2)
+			)
+
+			)
+		# right arrow or 'd'
+		(|| (== key 3) (== key 100))
+			(group
+
+			# credits -> play
+			(if (== this.selection 4)
+				(= this.selection 1)
+			# play -> exit
+			(== this.selection 1)
+				(= this.selection 2)
+			# exit -> options
+			(== this.selection 2)
+				(= this.selection 3)
+			)
+
+			)
+		# up arrow or 'w'
+		(|| (== key 2) (== key 119))
+			(group
+
+			# play -> credits
+			(if (== this.selection 1)
+				(= this.selection 4)
+			# exit -> options
+			(== this.selection 2)
+				(= this.selection 3)
+			)
+
+			)
+		# down arrow or 's'
+		(|| (== key 2) (== key 115))
+			(group
+
+			# credits -> play
+			(if (== this.selection 4)
+				(= this.selection 1)
+			# options -> exits
+			(== this.selection 3)
+				(= this.selection 2)
+			)
+
+			)
+		)
+
+		)
+	)
+
+	(return 0)
+
 	)
 )
 
@@ -330,41 +528,7 @@
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
-			# custom game
-			(if (== this.selectionClick 0)
-				(group
-				(this.clickBigSound.play)
-				(this.disable)
-				(return 1)
-				)
-			# play
-			(== this.selectionClick 1)
-				(group
-				(this.clickBigSound.play)
-				(this.disable)
-				(return 2)
-				)
-			# exit game
-			(== this.selectionClick 2)
-				(group
-				(this.clickBigSound.play)
-				(= dd_flag_exit 1) # exit game
-				)
-			# options
-			(== this.selectionClick 3)
-				(group
-				(this.clickBigSound.play)
-				(this.disable)
-				(return 3)
-				)
-			# credits
-			(== this.selectionClick 4)
-				(group
-				(this.clickBigSound.play)
-				(this.disable)
-				(return 4)
-				)
-			)
+			(return (this.button_selection this.selectionClick))
 
 			)
 		)
@@ -395,5 +559,46 @@
 (class_function menu_home void disable ()
 	(group
 	(= this.enabled 0)
+	)
+)
+
+(class_function menu_home int button_selection (int button_index)
+	(group
+	# custom game
+	(if (== button_index 0)
+		(group
+		(this.clickBigSound.play)
+		(this.disable)
+		(return 1)
+		)
+	# play
+	(== button_index 1)
+		(group
+		(this.clickBigSound.play)
+		(this.disable)
+		(return 2)
+		)
+	# exit game
+	(== button_index 2)
+		(group
+		(this.clickBigSound.play)
+		(= dd_flag_exit 1) # exit game
+		)
+	# options
+	(== button_index 3)
+		(group
+		(this.clickBigSound.play)
+		(this.disable)
+		(return 3)
+		)
+	# credits
+	(== button_index 4)
+		(group
+		(this.clickBigSound.play)
+		(this.disable)
+		(return 4)
+		)
+	)
+	(return 0)
 	)
 )

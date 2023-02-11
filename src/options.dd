@@ -11,27 +11,15 @@
 	# buttons
 	(= this.buttonTotal 4)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[0].setSize 1 1)
-	(this.button[0].setProportionalPosition 0.3 0.60)
-	(this.button[0].setProportionalWidth 0.2)
-	(this.button[0].setProportionalSize 0.7)
 	(this.button[0].label.setText "Music Playing")
 	(this.button[0].description.setText "Select to mute/unmute music")
 
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[1].setSize 1 1)
-	(this.button[1].setProportionalPosition 0.75 0.60)
-	(this.button[1].setProportionalWidth 0.2)
-	(this.button[1].setProportionalSize 0.7)
 	(this.button[1].label.setText "Audio Playing")
 	(this.button[1].description.setText "Select to mute/unmute audio")
 
 	# toggle fullscreen button
 	(this.button[2].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[2].setSize 1 1)
-	(this.button[2].setProportionalPosition 0.5 0.32)
-	(this.button[2].setProportionalWidth 0.2)
-	(this.button[2].setProportionalSize 0.7)
 	(this.button[2].label.setText "Toggle Fullscreen")
 	(this.button[2].description.setText "Swap window and fullscreen")
 	(if (== (dd_canFullscreenToggle) 0)
@@ -40,9 +28,6 @@
 
 	# back button
 	(this.button[3].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[3].setSize 1 1)
-	(this.button[3].setProportionalPosition 0.12 0.15)
-	(this.button[3].setProportionalWidth 0.2)
 	(this.button[3].label.setText "Back")
 	(this.button[3].description.setText "Return to main menu")
 
@@ -129,6 +114,61 @@
 
 (class_function options void resize ()
 	(group
+	# portrait
+	(if (< (dd_window_width) (dd_window_height))
+		(group
+		# music toggle
+		(this.button[0].setSize 1 1)
+		(this.button[0].setProportionalPosition 0.5 0.7)
+		(this.button[0].setProportionalWidth 0.4)
+		(this.button[0].setProportionalSize 0.6)
+
+		# audio toggle
+		(this.button[1].setSize 1 1)
+		(this.button[1].setProportionalPosition 0.5 0.5)
+		(this.button[1].setProportionalWidth 0.4)
+		(this.button[1].setProportionalSize 0.6)
+
+		# full screen toggle (optional)
+		(this.button[2].setSize 1 1)
+		(this.button[2].setProportionalPosition 0.5 0.3)
+		(this.button[2].setProportionalWidth 0.4)
+		(this.button[2].setProportionalSize 0.6)
+
+		# back button
+		(this.button[3].setSize 1 1)
+		(this.button[3].setProportionalPosition 0.15 0.85)
+		(this.button[3].setProportionalWidth 0.4)
+		(this.button[3].setProportionalSize 0.6)
+		)
+	# landscape
+		(group
+		# music toggle
+		(this.button[0].setSize 1 1)
+		(this.button[0].setProportionalPosition 0.3 0.58)
+		(this.button[0].setProportionalWidth 0.3)
+		(this.button[0].setProportionalSize 0.7)
+
+		# audio toggle
+		(this.button[1].setSize 1 1)
+		(this.button[1].setProportionalPosition 0.7 0.58)
+		(this.button[1].setProportionalWidth 0.3)
+		(this.button[1].setProportionalSize 0.7)
+
+		# full screen toggle (optional)
+		(this.button[2].setSize 1 1)
+		(this.button[2].setProportionalPosition 0.5 0.32)
+		(this.button[2].setProportionalWidth 0.3)
+		(this.button[2].setProportionalSize 0.7)
+
+		# back button
+		(this.button[3].setSize 1 1)
+		(this.button[3].setProportionalPosition 0.15 0.85)
+		(this.button[3].setProportionalWidth 0.2)
+		(this.button[3].setProportionalSize 1.0)
+		)
+	)
+
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(this.button[i].resize)
 	)
@@ -285,8 +325,147 @@
 	)
 )
 
-(class_function options void key_input (group char key)
+(class_function options int key_input (group char key)
 	(group
+
+	# enter or space to confirm
+	(if (|| (== key 13) (== key 32))
+		(group
+		(return (this.button_selection this.selection))
+		)
+	)
+
+	# navigation - portrait
+	(if (< (dd_window_width) (dd_window_height))
+		(group
+
+		# left arrow or 'a'
+		(if (|| (== key 1) (== key 97))
+			(group
+
+			# * -> back
+			(= this.selection 3)
+
+			)
+		# right arrow or 'd'
+		(|| (== key 3) (== key 100))
+			(group
+
+			# back -> music
+			(if (== this.selection 3)
+				(= this.selection 0)
+			)
+
+			)
+		# up arrow or 'w'
+		(|| (== key 2) (== key 119))
+			(group
+
+			# toggle -> audio
+			(if (== this.selection 2)
+				(= this.selection 1)
+			# audio -> music
+			(== this.selection 1)
+				(= this.selection 0)
+			# music -> back
+			(== this.selection 0)
+				(= this.selection 3)
+			)
+
+			)
+		# down arrow or 's'
+		(|| (== key 2) (== key 115))
+			(group
+
+			# audio -> toggle
+			(if (== this.selection 1)
+				(= this.selection 2)
+			# music -> audio
+			(== this.selection 0)
+				(= this.selection 1)
+			# back -> music
+			(== this.selection 3)
+				(= this.selection 0)
+			)
+
+			)
+		)
+
+		)
+	# navigation - landscape
+		(group
+
+		# left arrow or 'a'
+		(if (|| (== key 1) (== key 97))
+			(group
+
+			# audio -> music
+			(if (== this.selection 1)
+				(= this.selection 0)
+			# toggle -> music
+			(== this.selection 2)
+				(= this.selection 0)
+			# music -> back
+			(== this.selection 0)
+				(= this.selection 3)
+			)
+
+			)
+		# right arrow or 'd'
+		(|| (== key 3) (== key 100))
+			(group
+
+			# back -> music
+			(if (== this.selection 3)
+				(= this.selection 0)
+			# music -> audio
+			(== this.selection 0)
+				(= this.selection 1)
+			# toggle -> audio
+			(== this.selection 2)
+				(= this.selection 1)
+			)
+
+			)
+		# up arrow or 'w'
+		(|| (== key 2) (== key 119))
+			(group
+
+			# toggle -> music
+			(if (== this.selection 2)
+				(= this.selection 0)
+			# music -> back
+			(== this.selection 0)
+				(= this.selection 3)
+			# audio -> back
+			(== this.selection 1)
+				(= this.selection 3)
+			)
+
+			)
+		# down arrow or 's'
+		(|| (== key 2) (== key 115))
+			(group
+
+			# back -> music
+			(if (== this.selection 3)
+				(= this.selection 0)
+			# music -> toggle
+			(== this.selection 0)
+				(= this.selection 2)
+			# audio -> toggle
+			(== this.selection 1)
+				(= this.selection 2)
+			)
+
+			)
+		)
+
+		)
+	)
+
+	(return 0)
+
 	)
 )
 
@@ -322,46 +501,18 @@
 	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
 		(group
 
+		(def int selectionClickTemp this.selectionClick)
+		(= this.selectionClick -1)
+
 		# clicked on a button
-		(if (&& (== this.selection this.selectionClick)
+		(if (&& (== this.selection selectionClickTemp)
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
-			(if (== this.selectionClick 0)
-				(group
-				(this.clickSmallSound.play)
-				(if (< this.volumeMusic 10)
-					(= this.volumeMusic 100)
-					(= this.volumeMusic 0)
-				)
-				(avdl_music_setVolume this.volumeMusic)
-				)
-			(== this.selectionClick 1)
-				(group
-				(this.clickSmallSound.play)
-				(if (< this.volumeSound 10)
-					(= this.volumeSound 100)
-					(= this.volumeSound 0)
-				)
-				(avdl_sound_setVolume this.volumeSound)
-				)
-			(== this.selectionClick 2)
-				(group
-				(this.clickSmallSound.play)
-				(dd_fullscreenToggle)
-				)
-			(== this.selectionClick 3)
-				(group
-				(this.clickBigSound.play)
-				(this.disable)
-				(return 1)
-				)
-			)
+			(return (this.button_selection selectionClickTemp))
 
 			)
 		)
-
-		(= this.selectionClick -1)
 
 		)
 	) # mouse button released
@@ -387,5 +538,42 @@
 (class_function options void disable ()
 	(group
 	(= this.enabled 0)
+	)
+)
+
+(class_function options int button_selection (int button_index)
+	(group
+	(if (== button_index 0)
+		(group
+		(this.clickSmallSound.play)
+		(if (< this.volumeMusic 10)
+			(= this.volumeMusic 100)
+			(= this.volumeMusic 0)
+		)
+		(avdl_music_setVolume this.volumeMusic)
+		)
+	(== button_index 1)
+		(group
+		(this.clickSmallSound.play)
+		(if (< this.volumeSound 10)
+			(= this.volumeSound 100)
+			(= this.volumeSound 0)
+		)
+		(avdl_sound_setVolume this.volumeSound)
+		)
+	(== button_index 2)
+		(group
+		(this.clickSmallSound.play)
+		(dd_fullscreenToggle)
+		)
+	(== button_index 3)
+		(group
+		(this.clickBigSound.play)
+		(this.disable)
+		(return 1)
+		)
+	)
+
+	(return 0)
 	)
 )
