@@ -293,9 +293,17 @@
 
 (class_function world_menu int button_selection_options (int action_index)
 	(group
-	(if action_index
+	(if (== action_index 1)
 		(group
 		(this.menuHome.enable)
+		)
+	(== action_index 2)
+		(group
+		(this.theme.stop)
+		)
+	(== action_index 3)
+		(group
+		(this.theme.playLoop -1)
 		)
 	)
 	)

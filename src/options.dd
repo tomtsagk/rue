@@ -275,7 +275,9 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.3 0.3 0.3)
 
-		(this.button[i].label.draw)
+		(if this.button[i].isVisible
+			(this.button[i].label.draw)
+		)
 
 		(dd_matrix_pop)
 		)
@@ -551,6 +553,10 @@
 			(= this.volumeMusic 0)
 		)
 		(avdl_music_setVolume this.volumeMusic)
+		(if (< this.volumeMusic 10)
+			(return 2)
+			(return 3)
+		)
 		)
 	(== button_index 1)
 		(group
@@ -560,6 +566,10 @@
 			(= this.volumeSound 0)
 		)
 		(avdl_sound_setVolume this.volumeSound)
+		(if (< this.volumeSound 10)
+			(return 4)
+			(return 5)
+		)
 		)
 	(== button_index 2)
 		(group
