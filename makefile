@@ -2,7 +2,7 @@
 # project data
 #
 NAME=rue
-VERSION=0.8.1
+VERSION=0.8.2
 REVISION=0
 
 #
@@ -124,8 +124,12 @@ ${DIRECTORY_ALL}:
 
 INSTALL_DIRS = ${DESTDIR}${prefix}/bin ${DESTDIR}${prefix}/share/${NAME}/assets \
 	${DESTDIR}${prefix}/share/applications ${DESTDIR}${prefix}/share/metainfo \
+	${DESTDIR}${prefix}/share/icons/hicolor/512x512/apps/ \
+	${DESTDIR}${prefix}/share/icons/hicolor/256x256/apps/ \
 	${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/ \
 	${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/
+	${DESTDIR}${prefix}/share/icons/hicolor/32x32/apps/
+	${DESTDIR}${prefix}/share/icons/hicolor/16x16/apps/
 
 ${INSTALL_DIRS}:
 	mkdir -p $@
