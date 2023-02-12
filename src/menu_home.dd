@@ -369,6 +369,8 @@
 	# enter or space to confirm
 	(if (|| (== key 13) (== key 32))
 		(group
+		(def int k key)
+		(echo "button selection key: " k)
 		(return (this.button_selection this.selection))
 		)
 	)
@@ -536,6 +538,8 @@
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
+			(def int k this.selectionClick)
+			(echo "button selection click: " k)
 			(return (this.button_selection this.selectionClick))
 
 			)
