@@ -369,8 +369,6 @@
 	# enter or space to confirm
 	(if (|| (== key 13) (== key 32))
 		(group
-		(def int k key)
-		(echo "button selection key: " k)
 		(return (this.button_selection this.selection))
 		)
 	)
@@ -538,8 +536,6 @@
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
-			(def int k this.selectionClick)
-			(echo "button selection click: " k)
 			(return (this.button_selection this.selectionClick))
 
 			)
@@ -576,13 +572,11 @@
 
 (class_function menu_home int button_selection (int button_index)
 	(group
-	(echo "button selection")
 	# custom game
 	(if (== button_index 0)
 		(group
 		(this.clickBigSound.play)
 		(this.disable)
-		(echo "button selection: 1")
 		(return 1)
 		)
 	# play
@@ -590,7 +584,6 @@
 		(group
 		(this.clickBigSound.play)
 		(this.disable)
-		(echo "button selection: 2")
 		(return 2)
 		)
 	# exit game
@@ -604,7 +597,6 @@
 		(group
 		(this.clickBigSound.play)
 		(this.disable)
-		(echo "button selection: 3")
 		(return 3)
 		)
 	# credits
@@ -612,11 +604,9 @@
 		(group
 		(this.clickBigSound.play)
 		(this.disable)
-		(echo "button selection: 4")
 		(return 4)
 		)
 	)
-	(echo "button selection: 0")
 	(return 0)
 	)
 )
