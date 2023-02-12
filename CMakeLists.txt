@@ -209,7 +209,6 @@ install(FILES
 	assets/eng_white.png
 	assets/eye.ply
 	assets/game_theme.opus
-	assets/logo.ply
 	assets/logo_rue_texture.png
 	assets/looking_at.ply
 	assets/main_menu_theme.opus
@@ -226,6 +225,7 @@ install(FILES
 	assets/ui_particle.ply
 	assets/ui_particle_start.ply
 	assets/bg_exit_menu.png
+	assets/afloofdev_logo_texture.png
 	DESTINATION
 	assets
 )
