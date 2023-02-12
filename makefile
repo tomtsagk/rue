@@ -127,8 +127,8 @@ INSTALL_DIRS = ${DESTDIR}${prefix}/bin ${DESTDIR}${prefix}/share/${NAME}/assets 
 	${DESTDIR}${prefix}/share/icons/hicolor/512x512/apps/ \
 	${DESTDIR}${prefix}/share/icons/hicolor/256x256/apps/ \
 	${DESTDIR}${prefix}/share/icons/hicolor/128x128/apps/ \
-	${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/
-	${DESTDIR}${prefix}/share/icons/hicolor/32x32/apps/
+	${DESTDIR}${prefix}/share/icons/hicolor/64x64/apps/ \
+	${DESTDIR}${prefix}/share/icons/hicolor/32x32/apps/ \
 	${DESTDIR}${prefix}/share/icons/hicolor/16x16/apps/
 
 ${INSTALL_DIRS}:
