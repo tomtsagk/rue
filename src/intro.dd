@@ -12,8 +12,12 @@
 	(= this.delay 30)
 
 	# initialise dd logo
-	(this.logo.load (asset "assets/logo.ply" DD_PLY))
-	(this.logo.set_colour 0.067 0.067 0.067)
+	#(this.logo.load (asset "assets/logo.ply" DD_PLY))
+	#(this.logo.set_colour 0.067 0.067 0.067)
+	(this.logo.set_primitive DD_PRIMITIVE_RECTANGLE)
+	(this.logoTexture.set (asset "assets/afloofdev_logo_texture.png" AVDL_IMAGETYPE_PNG))
+	(this.logo.setTexture this.logoTexture)
+	(this.logo.setTransparency 1)
 
 	# initialise dd sound
 	(this.sound.load (asset "assets/dd_theme.ogg" DD_PLY))
@@ -63,15 +67,16 @@
 		(multistring
 			"AVDL_IN vec4 outColour;\n"
 			"uniform float anim;\n"
+			"uniform sampler2D image;\n"
 
 			"void main() {\n"
 			"	vec4 col = outColour;\n"
 
 			#"	if (mod(gl_FragCoord.x +(mod(gl_FragCoord.y, 2) *2), 4) < 2) {\n"
 			#"	if (mod(gl_FragCoord.x, 2) < 1) {\n"
-			"	if (mod(gl_FragCoord.y, 5) < 1 && mod(gl_FragCoord.x +(mod(gl_FragCoord.y, 2) *10), 20) < 1) {\n"
-			"		discard;\n"
-			"	}\n"
+#			"	if (mod(gl_FragCoord.y, 5) < 1 && mod(gl_FragCoord.x +(mod(gl_FragCoord.y, 2) *10), 20) < 1) {\n"
+#			"		discard;\n"
+#			"	}\n"
 
 			# squares
 #			"	col.a = (float(mod(gl_FragCoord.x, 100)) "
@@ -136,7 +141,8 @@
 		(group
 
 		# update clear colour
-		(dd_clearColour (* this.counter 0.8) (* this.counter 0.6) (* this.counter 1) 1)
+		#(dd_clearColour (* this.counter 0.8) (* this.counter 0.6) (* this.counter 1) 1)
+		(dd_clearColour (* this.counter 0.949) (* this.counter 0.921) (* this.counter 0.709) 1)
 
 		# advance animation
 		(if this.positive
@@ -191,15 +197,16 @@
 	(glBlendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA)
 
 	(dd_translatef 0 0 -5)
-	(dd_scalef this.scale this.scale this.scale)
-	(dd_translatef 0 0 0)
-	#(this.logoProgram.useProgram)
-	#(def int colLoc)
-	#(= colLoc (avdl_getUniformLocation this.logoProgram "anim"))
-	#(avdl_setUniform1f colLoc (- 1 (* (- 1 this.logoAnim) (- 1 this.logoAnim))))
-	#(def int sdrTimeLoc)
-	#(= sdrTimeLoc (avdl_getUniformLocation this.logoProgram "time"))
-	#(avdl_setUniform1f sdrTimeLoc this.shaderTime)
+	(dd_scalef 4.2 4.2 1)
+	(dd_scalef (* this.scale 1.577) this.scale this.scale)
+#	(dd_translatef 0 0 0)
+#	(this.logoProgram.useProgram)
+#	(def int colLoc)
+#	(= colLoc (avdl_getUniformLocation this.logoProgram "anim"))
+#	(avdl_setUniform1f colLoc (- 1 (* (- 1 this.logoAnim) (- 1 this.logoAnim))))
+#	(def int sdrTimeLoc)
+#	(= sdrTimeLoc (avdl_getUniformLocation this.logoProgram "time"))
+#	(avdl_setUniform1f sdrTimeLoc this.shaderTime)
 	(this.logo.draw)
 	(avdl_useProgram 0)
 

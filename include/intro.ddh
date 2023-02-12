@@ -8,7 +8,8 @@
 	(def int delay)
 
 	# dark dimension logo
-	(def dd_meshColour logo)
+	(def dd_meshTexture logo)
+	(def dd_image logoTexture)
 
 	(def dd_sound sound)
 	(def int soundPlayed)
