@@ -41,6 +41,8 @@ jobs:
         cd ../../../
         mkdir rue_output
         mv build/android/output/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output
+        mkdir rue_output_debug
+        mv build/android/output/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -49,8 +51,8 @@ jobs:
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android_debug.apk
-        path: build/android/output/app/build/outputs/apk/debug/app-universal-debug.apk
+        name: rue_android_debug
+        path: rue_output_debug
   # Linux
   build_linux:
     runs-on: ubuntu-20.04
@@ -301,6 +303,7 @@ jobs:
          zip rue_build_linux_steam.zip rue_build_linux_steam -r
          zip rue_build_windows.zip rue_build_windows -r
          zip rue_build_windows_steam.zip rue_build_windows_steam -r
+         zip rue_build_android.zip rue_android -r
     - name: create release
       uses: actions/create-release@v1
       id: create_release
@@ -354,6 +357,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_android
+        asset_path: rue_build_android.zip
         asset_name: rue_${{ github.ref_name }}_android.zip
         asset_content_type: application/gzip
