@@ -2,8 +2,9 @@
 # project data
 #
 NAME=rue
-VERSION=0.8.2
+VERSION=1.0.0
 REVISION=0
+VERSION_CODE=8
 
 #
 # system data
@@ -91,7 +92,7 @@ all: native
 native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS}
 
 android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
-	${AVDL_BIN} --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ} --game-version "${VERSION}" --game-version-code 1 --game-package-name "org.darkdimension.rue" --game-icon-foreground "icon_foreground.png" --game-icon-background "icon_background.png" --game-name "${NAME}"
+	${AVDL_BIN} --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ} --game-version "${VERSION}" --game-version-code "${VERSION_CODE}" --game-package-name "org.darkdimension.rue" --game-icon-foreground "icon_foreground.png" --game-icon-background "icon_background.png" --game-name "${NAME}"
 	rm -f ${DIRECTORY_ANDROID_OUT}/app/src/main/res/values/strings.xml.in
 	rm -f ${DIRECTORY_ANDROID_OUT}/app/build.gradle.in
 
