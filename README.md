@@ -9,7 +9,7 @@ The aim of the game is for each player to have the rose in front of them at the 
 
 This game is currently in Alpha and still under active development. 
 
-Visit its official page here: [Rue by Dark Dimension](https://darkdimension.org/games/rue.html)
+Visit its official page here: [Rue by Dark Dimension](https://afloofdev.com/games/rue)
 
 ## Available on these Linux Distros
 
@@ -22,7 +22,7 @@ Make sure to install the [avdl](https://github.com/tomtsagk/avdl) project first.
 Add the Personal Package Archives (PPA) to your system,
 then update repositories and install:
 
-    add-apt-repository ppa:darkdimension/rue
+    add-apt-repository ppa:afloofdev/rue
     apt-get update
     apt-get install rue
 
@@ -49,11 +49,11 @@ used to install packaged from a local file.
 
 ### Fedora 34, Fedora 35, Fedora rawhide
 
-[![Copr build status](https://copr.fedorainfracloud.org/coprs/darkdimension/rue/package/rue/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/darkdimension/rue/package/rue/)
+[![Copr build status](https://copr.fedorainfracloud.org/coprs/afloofdev/rue/package/rue/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/afloofdev/rue/package/rue/)
 
 Enable the repository using the package manager, and install:
 
-    dnf copr enable darkdimension/rue
+    dnf copr enable afloofdev/rue
     dnf install rue
 
 Note: These commands may require `root` permissions.
