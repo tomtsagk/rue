@@ -1,7 +1,7 @@
 Name:           rue
-Version:        0.4.0
+Version:        1.0.0
 Release:        1%{?dist}
-Summary:        A card game about deduction, love and regret
+Summary:        A card game about decisions, love and regret
 
 License:        GPLv3
 URL:            https://afloofdev.com/games/rue
@@ -32,11 +32,19 @@ make %{?_smp_mflags} prefix=/usr DESTDIR=%{buildroot} install
 /usr/share/rue/*
 /usr/share/applications/org.darkdimension.rue.desktop
 /usr/share/metainfo/org.darkdimension.rue.metainfo.xml
+/usr/share/icons/hicolor/512x512/apps/org.darkdimension.rue.png
+/usr/share/icons/hicolor/256x256/apps/org.darkdimension.rue.png
 /usr/share/icons/hicolor/128x128/apps/org.darkdimension.rue.png
 /usr/share/icons/hicolor/64x64/apps/org.darkdimension.rue.png
+/usr/share/icons/hicolor/32x32/apps/org.darkdimension.rue.png
+/usr/share/icons/hicolor/16x16/apps/org.darkdimension.rue.png
 %license LICENSE
 
 %changelog
+* Tue Feb 14 2023 Tom Tsagk <tomtsagk@afloofdev.com>
+- Game was simplified
+- First stable release
+
 * Wed Aug 31 2022 Tom Tsagk <tomtsagk@afloofdev.com>
 - 15 stages implemented.
 - 5 working AI characters.

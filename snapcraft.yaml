@@ -1,7 +1,7 @@
 name: darkdimension-rue
 base: core18
-version: '0.4.0'
-summary: A card game about deduction, love and regret.
+version: '1.0.0'
+summary: A card game about decisions, love and regret.
 description: |
   A card game where all the players are sitting around a table.
   A rose appears on the table that moves around.
@@ -38,7 +38,7 @@ apps:
 #
 parts:
   avdl:
-    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.5.0.tar.gz
+    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.7.2.tar.gz
     plugin: make
     override-build: |
       make prefix=/usr
@@ -64,7 +64,7 @@ parts:
       - libogg0
       - libopusfile0
   rue:
-    source: https://github.com/tomtsagk/rue/archive/refs/tags/v0.4.0.tar.gz
+    source: https://github.com/tomtsagk/rue/archive/refs/tags/v1.0.0.tar.gz
     plugin: make
     override-build: |
       make prefix=/usr

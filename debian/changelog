@@ -1,3 +1,10 @@
+rue (1.0.0-1) focal; urgency=low
+
+  * Game was simplified
+  * First stable release
+
+ -- Tom Tsagk <tomtsagk@afloofdev.com>  Tue, 14 Feb 2023 18:30:00 +0100
+
 rue (0.4.0-1) focal; urgency=low
 
   * 15 stages implemented.
