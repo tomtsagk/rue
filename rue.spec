@@ -80,6 +80,3 @@ make %{?_smp_mflags} prefix=/usr DESTDIR=%{buildroot} install
 
 * Sun Aug 22 2021 Tom Tsagk <tomtsagk@darkdimension.org>
 - Change source to github
-
-* Mon Aug 08 2021 Tom Tsagk <tomtsagk@darkdimension.org>
-- Initial Release
