@@ -73,8 +73,20 @@ parts:
       - libglew-dev
       - libsdl2-dev
       - libsdl2-mixer-dev
+      - libpng-dev
+      - libvorbis-dev
+      - opus-tools
+      - libopus0
+      - libogg0
+      - libopusfile0
     stage-packages:
       - libglu1-mesa
       - libglew-dev
       - libsdl2-dev
       - libsdl2-mixer-dev
+      - libpng-dev
+      - libvorbis-dev
+      - opus-tools
+      - libopus0
+      - libogg0
+      - libopusfile0
