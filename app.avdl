@@ -15,4 +15,4 @@ revision: 0
 package: org.darkdimension.rue
 
 # icon of the project
-icon: my_icon.ico
+#icon: my_icon.ico
