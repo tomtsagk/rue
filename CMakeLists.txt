@@ -36,6 +36,7 @@ set(AVDL_SRC
 	cengine/dd_vec3.c
 	cengine/dd_vec4.c
 	cengine/dd_world.c
+	cengine/avdl_input.c
 	cengine/main.c
 
 	src/button.c
