@@ -2178,7 +2178,7 @@
 	(if (== this.isExitMenu 0)
 		(group
 		(dd_matrix_push)
-		(dd_translatef 0 7 -20)
+		(dd_translatef 0 (* (dd_screen_height_get 20) 0.4) -20)
 		# draw end game
 		(if (>= this.victoriousPlayer 0)
 			(group

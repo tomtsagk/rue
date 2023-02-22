@@ -56,7 +56,7 @@
 
 	# text display
 	(this.textButton.setSize 1 1)
-	(this.textButton.setProportionalPosition 0.5 0.15)
+	(this.textButton.setProportionalPosition 0.5 0.10)
 	(this.textButton.setProportionalWidth 0.2)
 
 	(= this.selection 1)
@@ -127,6 +127,7 @@
 	# portrait
 	(if (< (dd_window_width) (dd_window_height))
 		(group
+
 		# logo
 		(this.logoUI.setSize 1 1)
 		(this.logoUI.setProportionalPosition 0.5 0.79)
@@ -137,25 +138,25 @@
 		(this.button[1].setSize 1 1)
 		(this.button[1].setProportionalPosition 0.5 0.45)
 		(this.button[1].setProportionalWidth 0.5)
-		(this.button[1].setProportionalSize 0.7)
+		(this.button[1].setProportionalSize 0.83)
 
 		# exit button
 		(this.button[2].setSize 1 1)
 		(this.button[2].setProportionalPosition 0.5 0.25)
 		(this.button[2].setProportionalWidth 0.5)
-		(this.button[2].setProportionalSize 0.48)
+		(this.button[2].setProportionalSize 0.63)
 
 		# options
 		(this.button[3].setSize 1 1)
-		(this.button[3].setProportionalPosition 0.85 0.35)
+		(this.button[3].setProportionalPosition 0.80 0.35)
 		(this.button[3].setProportionalWidth 0.5)
-		(this.button[3].setProportionalSize 0.48)
+		(this.button[3].setProportionalSize 0.63)
 
 		# credits
 		(this.button[4].setSize 1 1)
-		(this.button[4].setProportionalPosition 0.15 0.35)
+		(this.button[4].setProportionalPosition 0.20 0.35)
 		(this.button[4].setProportionalWidth 0.5)
-		(this.button[4].setProportionalSize 0.48)
+		(this.button[4].setProportionalSize 0.63)
 		)
 	# landscape
 		(group
