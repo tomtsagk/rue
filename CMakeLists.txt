@@ -99,14 +99,14 @@ if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 	set(SDL2_MIXER_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/SDL2_mixer.lib")
 	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/SDL2_mixer.dll" DESTINATION bin/)
 	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libogg-0.dll" DESTINATION bin/)
-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libopus-0.dll" DESTINATION bin/)
-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libopusfile-0.dll" DESTINATION bin/)
+	#install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libopus-0.dll" DESTINATION bin/)
+	#install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x64/optional/libopusfile-0.dll" DESTINATION bin/)
 else ()
 	set(SDL2_MIXER_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/SDL2_mixer.lib")
 	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/SDL2_mixer.dll" DESTINATION bin/)
 	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libogg-0.dll" DESTINATION bin/)
-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libopus-0.dll" DESTINATION bin/)
-	install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libopusfile-0.dll" DESTINATION bin/)
+	#install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libopus-0.dll" DESTINATION bin/)
+	#install(FILES "${CMAKE_CURRENT_LIST_DIR}/libraries/SDL2_mixer-2.6.0/lib/x86/optional/libopusfile-0.dll" DESTINATION bin/)
 endif ()
 
 # glew dependency
@@ -209,10 +209,10 @@ install(FILES
 	assets/dd_theme.ogg
 	assets/eng_white.png
 	assets/eye.ply
-	assets/game_theme.opus
+	assets/game_theme.ogg
 	assets/logo_rue_texture.png
 	assets/looking_at.ply
-	assets/main_menu_theme.opus
+	assets/main_menu_theme.ogg
 	assets/menu_copy.json
 	assets/overlay_background.ply
 	assets/particle.ply

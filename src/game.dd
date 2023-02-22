@@ -689,7 +689,7 @@
 
 (class_function world_game void onload ()
 	(group
-	(this.theme.load (asset "assets/game_theme.opus" DD_PLY))
+	(this.theme.load (asset "assets/game_theme.ogg" DD_PLY))
 	(this.theme.playLoop -1)
 	)
 )
