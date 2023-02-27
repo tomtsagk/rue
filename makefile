@@ -9,65 +9,21 @@ VERSION_CODE=8
 #
 # system data
 #
-prefix=/usr/local
-assetdir=${prefix}/share/${NAME}/
-savedir=~/.${NAME}/saves/
+prefix=/usr/local/
+assetprefix=share/${NAME}/
 
 #
 # compiler flags
 #
 AVDL_BIN=avdl
-COMPILER_FLAGS= -I include/ --save-loc "${savedir}" --install-loc "${assetdir}" \
-	--game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}"
+COMPILER_FLAGS=--asset-loc "${assetprefix}"
 COMPILER_CUSTOM_FLAGS=
-LINKER_FLAGS= --game-name "${NAME}" --game-version "${VERSION}" --game-revision "${REVISION}" \
-	--install-loc "${assetdir}"
-LINKER_CUSTOM_FLAGS=
 
 #
 # directories - separate for native and android
 #
-DIRECTORY_NATIVE=build/native
-DIRECTORY_NATIVE_OBJ=${DIRECTORY_NATIVE}/objects
-DIRECTORY_NATIVE_OUT=${DIRECTORY_NATIVE}/output
-DIRECTORY_NATIVE_ALL=${DIRECTORY_NATIVE} ${DIRECTORY_NATIVE_OBJ} ${DIRECTORY_NATIVE_OUT}
-
-DIRECTORY_ANDROID=build/android
-DIRECTORY_ANDROID_OBJ=${DIRECTORY_ANDROID}/objects
-DIRECTORY_ANDROID_OUT=${DIRECTORY_ANDROID}/output
-DIRECTORY_ANDROID_ALL=${DIRECTORY_ANDROID} ${DIRECTORY_ANDROID_OBJ}
-
-DIRECTORY_ALL=${DIRECTORY_NATIVE_ALL} ${DIRECTORY_ANDROID_ALL}
-
-#
-# source code files
-#
-SRC=$(wildcard src/*.dd)
-HEADERS=$(wildcard include/*.ddh)
-
-#
-# asset files
-#
-PLY=$(wildcard assets/*.ply)
-BMP=$(wildcard assets/*.bmp) $(wildcard assets/*.png)
-WAV=$(wildcard assets/*.wav) $(wildcard assets/*.opus)
-OGG=$(wildcard assets/*.ogg)
-JSON=$(wildcard assets/*.json)
-ASSETS=${PLY} ${BMP} ${WAV} ${OGG} ${JSON}
-
-#
-# native output files
-#
-NATIVE_OBJ=${SRC:src/%.dd=${DIRECTORY_NATIVE_OBJ}/%.o}
-NATIVE_OBJ_C=${NATIVE_OBJ:%.o=%.c}
-NATIVE_OUT=${DIRECTORY_NATIVE_OUT}/${NAME}
-NATIVE_ASSETS=${ASSETS:assets/%=${DIRECTORY_NATIVE_OBJ}/%}
-
-#
-# android output files
-#
-ANDROID_OBJ=${SRC:src/%.dd=${DIRECTORY_ANDROID_OBJ}/%.o}
-ANDROID_ASSETS=${ASSETS:assets/%=${DIRECTORY_ANDROID_OBJ}/%}
+DIRECTORY_NATIVE=avdl_build
+DIRECTORY_ANDROID=avdl_build_android
 
 #
 # desktop application data
@@ -82,6 +38,11 @@ desktopfile=metadata/org.darkdimension.rue.desktop
 metadatafile=metadata/org.darkdimension.rue.metainfo.xml
 
 #
+# avdl files
+#
+NATIVE_BIN=${DIRECTORY_NATIVE}/bin/${NAME}
+
+#
 # default build - native only
 #
 all: native
@@ -89,39 +50,11 @@ all: native
 #
 # how to make builds for native and android
 #
-native: ${DIRECTORY_NATIVE_ALL} ${NATIVE_OUT} ${NATIVE_ASSETS}
+native:
+	${AVDL_BIN} ${COMPILER_FLAGS} ${COMPILER_CUSTOM_FLAGS}
 
-android: ${DIRECTORY_ANDROID_ALL} ${ANDROID_OBJ} ${ANDROID_ASSETS}
-	${AVDL_BIN} --android -o ${DIRECTORY_ANDROID_OUT} ${ANDROID_OBJ} --game-version "${VERSION}" --game-version-code "${VERSION_CODE}" --game-package-name "org.darkdimension.rue" --game-icon-foreground "icon_foreground.png" --game-icon-background "icon_background.png" --game-name "${NAME}"
-	rm -f ${DIRECTORY_ANDROID_OUT}/app/src/main/res/values/strings.xml.in
-	rm -f ${DIRECTORY_ANDROID_OUT}/app/build.gradle.in
-
-#
-# native - compile files - assets - final executable
-#
-${DIRECTORY_NATIVE_OBJ}/%.o: src/%.dd ${HEADERS}
-	${AVDL_BIN} -c $< -o $@ ${COMPILER_FLAGS} ${COMPILER_CUSTOM_FLAGS}
-
-${DIRECTORY_NATIVE_OBJ}/%: assets/%
-	${AVDL_BIN} -c $< -o ${DIRECTORY_NATIVE_OUT} && touch $@
-
-${NATIVE_OUT}: ${NATIVE_OBJ}
-	${AVDL_BIN} $^ -o ${DIRECTORY_NATIVE_OUT} ${LINKER_FLAGS} ${LINKER_CUSTOM_FLAGS} ${COMPILER_CUSTOM_FLAGS}
-
-#
-# android - compile files
-#
-${DIRECTORY_ANDROID_OBJ}/%.o: src/%.dd ${HEADERS}
-	${AVDL_BIN} --android -c $< -o $@ -I include/
-
-${DIRECTORY_ANDROID_OBJ}/%: assets/%
-	${AVDL_BIN} --android -c $< -o ${DIRECTORY_ANDROID_OUT} && touch $@
-
-#
-# make any directory needed
-#
-${DIRECTORY_ALL}:
-	mkdir -p $@
+android:
+	${AVDL_BIN} --android ${COMPILER_CUSTOM_FLAGS}
 
 INSTALL_DIRS = ${DESTDIR}${prefix}/bin ${DESTDIR}${prefix}/share/${NAME}/assets \
 	${DESTDIR}${prefix}/share/applications ${DESTDIR}${prefix}/share/metainfo \
@@ -136,8 +69,8 @@ ${INSTALL_DIRS}:
 	mkdir -p $@
 
 install: ${INSTALL_DIRS}
-	install ${NATIVE_OUT} ${DESTDIR}${prefix}/bin/${NAME}
-	install ${DIRECTORY_NATIVE_OUT}/assets/* ${DESTDIR}${prefix}/share/${NAME}/assets
+	install ${NATIVE_BIN} ${DESTDIR}${prefix}/bin/${NAME}
+	install ${DIRECTORY_NATIVE}/assets/* ${DESTDIR}${prefix}/share/${NAME}/assets
 	install ${desktopfile} ${DESTDIR}${prefix}/share/applications
 	install ${metadatafile} ${DESTDIR}${prefix}/share/metainfo/
 	install ${icon512x512} ${DESTDIR}${prefix}/share/icons/hicolor/512x512/apps/org.darkdimension.rue.png
@@ -163,7 +96,7 @@ uninstall:
 # clean project
 #
 clean:
-	rm -f ${NATIVE_OBJ} ${NATIVE_OUT} ${NATIVE_ASSETS} ${NATIVE_OBJ_C}
+	rm -rf .avdl_cache avdl_build avdl_build_android
 
 #
 # phony targets
