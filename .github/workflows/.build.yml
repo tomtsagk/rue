@@ -73,9 +73,9 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        ./AVDL_BUILD/bin/avdl -i ../AVDL_BUILD/dependencies/linux/include -L ../AVDL_BUILD/dependencies/linux/lib --standalone
+        ./AVDL_BUILD/bin/avdl -i ./AVDL_BUILD/dependencies/linux/include -L ./AVDL_BUILD/dependencies/linux/lib --standalone
         mkdir avdl_build/dependencies
-        cp ../AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
+        cp ./AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
         rm avdl_build/dependencies/*steam*
     - name: verify
       run: |
@@ -107,9 +107,9 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        ./AVDL_BUILD/bin/avdl -i ../AVDL_BUILD/dependencies/linux/include -L ../AVDL_BUILD/dependencies/linux/lib --standalone --steam
+        ./AVDL_BUILD/bin/avdl -i ./AVDL_BUILD/dependencies/linux/include -L ./AVDL_BUILD/dependencies/linux/lib --standalone --steam
         mkdir avdl_build/dependencies
-        cp ../AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
+        cp ./AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
