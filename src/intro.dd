@@ -5,6 +5,8 @@
 (class_function world_intro void create ()
 	(group
 
+	(echo "initiating intro")
+
 	# initialise animation values
 	(dd_clearColour 0 0 0 1)
 	(= this.counter 0)
@@ -101,6 +103,7 @@
 
 (class_function world_intro void onload ()
 	(group
+	(echo "loaded it all")
 	)
 )
 
