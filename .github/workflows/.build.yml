@@ -13,8 +13,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.7.2/avdl_v0.7.2_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.7.2/avdl_v0.7.2_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.7.3/avdl_v0.7.3_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.7.3/avdl_v0.7.3_windows.zip
 
 jobs:
   # Android
@@ -32,17 +32,17 @@ jobs:
         rmdir avdl_build_linux
         chmod +x AVDL_BUILD/bin/avdl
     - name: generate_android_project
-      run: make AVDL_BIN="AVDL_BUILD/bin/avdl" android
+      run: ./AVDL_BUILD/bin/avdl --android
     - name: compile_apk
       run: |
-        cd build/android/output
+        cd avdl_build_android
         chmod +x gradlew
         ./gradlew build
-        cd ../../../
+        cd ../
         mkdir rue_output
-        mv build/android/output/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output
         mkdir rue_output_debug
-        mv build/android/output/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -72,27 +72,21 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        ls AVDL_BUILD/dependencies/linux/lib
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include --standalone" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib --standalone" assetdir=
-        mkdir build/native/output/bin
-        mv build/native/output/rue build/native/output/bin/
-        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-    - name: package
-      run: |
-        mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
-        rm build/native/output/dependencies/*steam*
+        ./AVDL_BUILD/bin/avdl -i ../AVDL_BUILD/dependencies/linux/include -L ../AVDL_BUILD/dependencies/linux/lib --standalone
+        mkdir avdl_build/dependencies
+        cp ../AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
+        rm avdl_build/dependencies/*steam*
     - name: verify
       run: |
-        cd build/native/output/
+        cd avdl_build/
         chmod +x bin/rue
         LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify
-        cd ../../../
+        cd ../
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: rue_build_linux
-        path: build/native/output
+        path: avdl_build
   # Linux Steam
   build_linux_steam:
     runs-on: ubuntu-20.04
@@ -112,19 +106,14 @@ jobs:
     - name: compile_rue
       run: |
         chmod +x AVDL_BUILD/bin/avdl
-        make AVDL_BIN="AVDL_BUILD/bin/avdl" COMPILER_CUSTOM_FLAGS="-i AVDL_BUILD/include -i AVDL_BUILD/dependencies/linux/include --steam --standalone" LINKER_CUSTOM_FLAGS="-L AVDL_BUILD/dependencies/linux/lib --steam --standalone" assetdir=
-        mkdir build/native/output/bin
-        mv build/native/output/rue build/native/output/bin/
-        echo "LD_LIBRARY_PATH=./dependencies/ ./bin/rue" > build/native/output/rue.sh
-    - name: package
-      run: |
-        mkdir build/native/output/dependencies
-        cp AVDL_BUILD/dependencies/linux/lib/*.so* build/native/output/dependencies
+        ./AVDL_BUILD/bin/avdl -i ../AVDL_BUILD/dependencies/linux/include -L ../AVDL_BUILD/dependencies/linux/lib --standalone --steam
+        mkdir avdl_build/dependencies
+        cp ../AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: rue_build_linux_steam
-        path: build/native/output
+        path: avdl_build
   # Windows
   build_windows:
     runs-on: windows-latest
@@ -187,12 +176,13 @@ jobs:
         mkdir cengine
         cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/include/*.h cengine
         mkdir build
-        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+        AVDL_BUILD/bin/avdl.exe -t
+        cp .avdl_cache/*.c src/
+        for i in src/*.c; do mv $i ${i/.dd.c/.c}; done
         cd build
         cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD"
         cmake --build . --config Release
         cmake --install .
-        cd ..
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -260,7 +250,9 @@ jobs:
         mkdir cengine
         cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
         mkdir build
-        for i in src/*.dd; do AVDL_BUILD/bin/avdl.exe -t -I include/ $i -o ${i/.dd/.c}; echo $i; done
+        ./AVDL_BUILD/bin/avdl.exe -t
+        cp .avdl_cache/*.c src/
+        for i in src/*.c; do mv $i ${i/.dd.c/.c}; done
         cd build
         cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD" -DAVDL_STEAM=1
         cmake --build . --config Release
