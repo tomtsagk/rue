@@ -30,7 +30,6 @@ set(AVDL_SRC
 	cengine/dd_meshTexture.c
 	cengine/dd_mouse.c
 	cengine/dd_music.c
-	cengine/dd_opengl.c
 	cengine/dd_sound.c
 	cengine/dd_string3d.c
 	cengine/dd_vec3.c
