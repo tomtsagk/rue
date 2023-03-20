@@ -2083,7 +2083,7 @@
 	(this.arrowProgramAvdl.useProgram)
 	(def int colLoc)
 	(= colLoc (avdl_getUniformLocation this.arrowProgramAvdl "tint"))
-	(avdl_setUniform3f colLoc this.arrowCurrentCol[0] this.arrowCurrentCol[1] this.arrowCurrentCol[2])
+	(avdl_graphics_SetUniform3f colLoc this.arrowCurrentCol[0] this.arrowCurrentCol[1] this.arrowCurrentCol[2])
 	(this.tableArrow.draw)
 	(avdl_useProgram 0)
 	(this.tableArrowDecoration.draw)
@@ -2262,7 +2262,7 @@
 
 			# change the shader colour when clicked
 			(if (> this.button[i].idleCol 1.0)
-				(avdl_setUniform3f colLoc
+				(avdl_graphics_SetUniform3f colLoc
 					(dd_math_ease_linear
 						(- this.button[i].idleCol 1.0)
 						this.buttonActiveCol[0] this.buttonClickCol[0]
@@ -2277,7 +2277,7 @@
 					)
 				)
 			# change colour when selected
-				(avdl_setUniform3f colLoc
+				(avdl_graphics_SetUniform3f colLoc
 					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
 					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
 					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
