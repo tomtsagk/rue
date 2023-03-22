@@ -39,6 +39,7 @@ set(AVDL_SRC
 	cengine/whereami.c
 	cengine/main.c
 	cengine/avdl_graphics_opengl.c
+	cengine/avdl_engine.c
 
 	src/button.c
 	src/card.c
