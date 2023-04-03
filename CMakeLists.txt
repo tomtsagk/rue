@@ -63,7 +63,6 @@ set(AVDL_SRC
 	src/overlayButtons.c
 	src/player.c
 	src/saveload.c
-	include/pch.h
 	rue.rc
 )
 
