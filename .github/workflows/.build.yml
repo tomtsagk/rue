@@ -188,6 +188,11 @@ jobs:
       with:
         name: rue_build_windows
         path: build/RUE_BUILD
+    - name: upload_artifact_vs
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_build_windows_vs
+        path: build/
   # Windows Steam
   build_windows_steam:
     runs-on: windows-latest

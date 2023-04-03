@@ -143,8 +143,7 @@
 	(dd_matrix_pop)
 
 	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
-	#(avdl_clear_depth)
+	(avdl_graphics_ClearDepth)
 
 	# draw eyes
 	(dd_matrix_push)
@@ -160,8 +159,7 @@
 	(dd_matrix_pop)
 
 	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
-	#(avdl_clear_depth)
+	(avdl_graphics_ClearDepth)
 
 	(this.menuMultiplayer.draw)
 	(this.menuHome.draw)
@@ -174,7 +172,7 @@
 	(group
 
 	(if (== key 27)
-		(= dd_flag_exit 1) # exit game
+		(avdl_exit) # exit game
 	) # key input
 
 	# options menu is open

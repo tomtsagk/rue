@@ -41,11 +41,11 @@
 			"	vec4 pos = matrix *position;\n"
 
 			# waves
-			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
-			"	float anim2 = mod(anim *4.0 +(pos.y *0.5), 1.0);\n"
-			"	float fuzz = mod(int(time *10) *distance /3.14 +0.015, 0.03);\n"
-			"	pos.x += cos(anim2 *2.0 *3.14) *(1 -anim) +fuzz;\n"
-			"	pos.y += fuzz;\n"
+#			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
+#			"	float anim2 = mod(anim *4.0 +(pos.y *0.5), 1.0);\n"
+#			"	float fuzz = mod(int(time *10) *distance /3.14 +0.015, 0.03);\n"
+#			"	pos.x += cos(anim2 *2.0 *3.14) *(1 -anim) +fuzz;\n"
+#			"	pos.y += fuzz;\n"
 
 			# twirl
 #			"	float distance = sqrt(pow(pos.x, 2.0) + pow(pos.y, 2.0));\n"
@@ -199,16 +199,16 @@
 	(dd_translatef 0 0 -5)
 	(dd_scalef 4.2 4.2 1)
 	(dd_scalef (* this.scale 1.577) this.scale this.scale)
-#	(dd_translatef 0 0 0)
+	(dd_translatef 0 0 0)
 #	(this.logoProgram.useProgram)
 #	(def int colLoc)
-#	(= colLoc (avdl_getUniformLocation this.logoProgram "anim"))
-#	(avdl_setUniform1f colLoc (- 1 (* (- 1 this.logoAnim) (- 1 this.logoAnim))))
+#	(= colLoc (avdl_graphics_GetUniformLocation this.logoProgram "anim"))
+#	(avdl_graphics_SetUniform1f colLoc (- 1 (* (- 1 this.logoAnim) (- 1 this.logoAnim))))
 #	(def int sdrTimeLoc)
-#	(= sdrTimeLoc (avdl_getUniformLocation this.logoProgram "time"))
-#	(avdl_setUniform1f sdrTimeLoc this.shaderTime)
+#	(= sdrTimeLoc (avdl_graphics_GetUniformLocation this.logoProgram "time"))
+#	(avdl_graphics_SetUniform1f sdrTimeLoc this.shaderTime)
 	(this.logo.draw)
-	(avdl_useProgram 0)
+#	(avdl_useProgram 0)
 
 	(glDisable GL_BLEND)
 
@@ -218,7 +218,7 @@
 (class_function world_intro void key_input (group char key)
 	(group
 	(if (== key 27)
-		(= dd_flag_exit 1) # exit game
+		(avdl_exit) # exit game
 	)
 	)
 )

@@ -75,8 +75,7 @@
 	(this.bg.draw)
 	(dd_matrix_pop)
 
-	(glClear GL_DEPTH_BUFFER_BIT)
-	#(avdl_clear_depth)
+	(avdl_graphics_ClearDepth)
 
 	# draw the credits themselves
 	(dd_matrix_push)

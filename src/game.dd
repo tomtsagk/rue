@@ -2171,8 +2171,7 @@
 
 	(dd_matrix_pop)
 
-	(glClear GL_DEPTH_BUFFER_BIT)
-	#(avdl_clear_depth)
+	(avdl_graphics_ClearDepth)
 
 	# states
 	(if (== this.isExitMenu 0)
@@ -2221,8 +2220,7 @@
 	)
 
 	# clear depth
-	(glClear GL_DEPTH_BUFFER_BIT)
-	#(avdl_clear_depth)
+	(avdl_graphics_ClearDepth)
 
 	# lookat mesh
 	(dd_matrix_push)
@@ -2235,7 +2233,7 @@
 	(if this.isExitMenu
 		(group
 
-		(glClear GL_DEPTH_BUFFER_BIT)
+		(avdl_graphics_ClearDepth)
 
 		# bg
 		(dd_matrix_push)
@@ -2244,7 +2242,7 @@
 		(this.bgExitMenu.draw)
 		(dd_matrix_pop)
 
-		(glClear GL_DEPTH_BUFFER_BIT)
+		(avdl_graphics_ClearDepth)
 
 		(dd_matrix_push)
 		(dd_translatef 0 3 -15)
