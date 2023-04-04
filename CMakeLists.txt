@@ -7,6 +7,7 @@ project(rue VERSION 1.0.1)
 add_compile_definitions(
 	DD_PLATFORM_NATIVE
 	AVDL_DYNAMIC_PKG_LOCATION
+	AVDL_OS_WINDOWS
 )
 
 set(AVDL_SRC
