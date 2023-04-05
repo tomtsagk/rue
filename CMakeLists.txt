@@ -40,6 +40,7 @@ set(AVDL_SRC
 	cengine/whereami.c
 	cengine/main.c
 	cengine/avdl_graphics_opengl.c
+	cengine/avdl_graphics_direct3d11.c
 	cengine/avdl_engine.c
 	cengine/avdl_engine_cpp.cpp
 	cengine/avdl_achievements_steam.cpp
