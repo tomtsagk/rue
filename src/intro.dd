@@ -12,8 +12,6 @@
 	(= this.delay 30)
 
 	# initialise dd logo
-	#(this.logo.load (asset "assets/logo.ply" DD_PLY))
-	#(this.logo.set_colour 0.067 0.067 0.067)
 	(this.logo.set_primitive DD_PRIMITIVE_RECTANGLE)
 	(this.logoTexture.set (asset "assets/afloofdev_logo_texture.png" AVDL_IMAGETYPE_PNG))
 	(this.logo.setTexture this.logoTexture)
@@ -101,6 +99,7 @@
 
 (class_function world_intro void onload ()
 	(group
+	(dd_world_prepare world_menu 1)
 	)
 )
 
@@ -142,7 +141,8 @@
 
 		# update clear colour
 		#(dd_clearColour (* this.counter 0.8) (* this.counter 0.6) (* this.counter 1) 1)
-		(dd_clearColour (* this.counter 0.949) (* this.counter 0.921) (* this.counter 0.709) 1)
+		#(dd_clearColour (* this.counter 0.949) (* this.counter 0.921) (* this.counter 0.709) 1)
+		(dd_clearColour (* this.counter this.counter 0.949) (* this.counter this.counter 0.921) (* this.counter this.counter 0.709) 1)
 
 		# advance animation
 		(if this.positive
@@ -174,7 +174,8 @@
 			(if (<= this.counter 0)
 				(group
 				(= this.counter 0)
-				(dd_world_prepareReady world_menu 1)
+				#(dd_world_prepareReady world_menu 1)
+				(dd_world_ready)
 				(dd_clearColour 0 0 0 1)
 				)
 			)
