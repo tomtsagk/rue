@@ -24,7 +24,7 @@ set(AVDL_SRC
 	cengine/dd_image.c
 	cengine/dd_json.c
 	cengine/dd_log.c
-	cengine/dd_log.cpp
+	cengine/dd_log_cpp.cpp
 	cengine/dd_math.c
 	cengine/dd_matrix.c
 	cengine/dd_mesh.c
