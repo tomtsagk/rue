@@ -51,6 +51,7 @@ set(AVDL_SRC
 	cengine/avdl_achievements.c
 	cengine/avdl_steam.c
 	cengine/avdl_multiplayer.c
+	cengine/avdl_rigidbody.c
 
 	src/button.c
 	src/card.c
