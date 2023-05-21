@@ -122,7 +122,7 @@
 ) # resize
 
 # update - update animations
-(class_function world_intro void update ()
+(class_function world_intro void update (group float dt)
 	(group
 
 	# update shader time
@@ -135,7 +135,7 @@
 
 	# on delay do nothing
 	(if (> this.delay 0)
-		(= this.delay (- this.delay 1))
+		(= this.delay (- this.delay (* 35 dt)))
 	# else
 		(group
 
@@ -147,7 +147,7 @@
 		# advance animation
 		(if this.positive
 			(group
-			(= this.counter (+ this.counter 0.02))
+			(= this.counter (+ this.counter (* 2.5 dt)))
 
 			(if (> this.counter 0.05)
 				(= this.logoAnimPositive 1)
@@ -163,14 +163,14 @@
 				(group
 				(= this.counter 1)
 				(= this.positive 0)
-				(= this.delay 100)
+				(= this.delay 80)
 				)
 			)
 			)
 		# negative advance of animation
 			(group
 			(= this.logoAnimPositive 0)
-			(= this.counter (- this.counter 0.02))
+			(= this.counter (- this.counter (* 2.5 dt)))
 			(if (<= this.counter 0)
 				(group
 				(= this.counter 0)
@@ -216,7 +216,7 @@
 	)
 )
 
-(class_function world_intro void key_input (group char key)
+(class_function world_intro void key_input (group int key)
 	(group
 	(if (== key 27)
 		(avdl_exit) # exit game

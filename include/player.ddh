@@ -61,6 +61,7 @@
 
 	(function void lookAtCard (group float rotX float rotY))
 	(function void lookAtCardByIndex (group int index))
+	(function void lookAtCardPos (group dd_vec4 pos))
 
 	)
 ) # player

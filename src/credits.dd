@@ -45,13 +45,13 @@
 	)
 )
 
-(class_function world_credits void update ()
+(class_function world_credits void update (group float dt)
 	(group
 
 	# animate credits
 	(if this.fastForward
-		(= this.animation (dd_math_min (+ this.animation 0.005) 1))
-		(= this.animation (dd_math_min (+ this.animation 0.001) 1))
+		(= this.animation (dd_math_min (+ this.animation (* 0.1 dt)) 1))
+		(= this.animation (dd_math_min (+ this.animation (* 0.02 dt)) 1))
 	)
 
 	# credits finished - move back to main menu
@@ -70,8 +70,12 @@
 	# draw background
 	(dd_matrix_push)
 	(dd_translatef 0 -3 -8)
-	(dd_rotatef (* 180 this.animation) 0 1 0)
-	(dd_rotatef 15 -1 0 0)
+	(if (== AVDL_VR 0)
+		(group
+		(dd_rotatef (* 180 this.animation) 0 1 0)
+		(dd_rotatef 15 -1 0 0)
+		)
+	)
 	(this.bg.draw)
 	(dd_matrix_pop)
 
@@ -98,7 +102,7 @@
 	)
 )
 
-(class_function world_credits void key_input (group char key)
+(class_function world_credits void key_input (group int key)
 	(group
 	(if (== key 27)
 		(dd_world_ready)

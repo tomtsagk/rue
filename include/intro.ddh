@@ -5,7 +5,7 @@
 	# tracking timing
 	(def float counter)
 	(def int positive)
-	(def int delay)
+	(def float delay)
 
 	# dark dimension logo
 	(def dd_meshTexture logo)
@@ -27,7 +27,7 @@
 	(function void resize (group))
 
 	# update - update animations
-	(function void update (group))
+	(function void update (group float dt))
 
 	# draw
 	# zoom-out so the world is visible
@@ -35,7 +35,7 @@
 	# draw the cube
 	(function void draw (group))
 
-	(function void key_input (group char key))
+	(function void key_input (group int key))
 
 	(function void clean (group))
 

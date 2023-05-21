@@ -19,6 +19,10 @@
 	(def dd_string3d confirmLabel)
 	(def dd_string3d skipLabel)
 
+	(def float cardX)
+	(def float cardY)
+	(def float cardZ)
+
 	(function void lookAt (group int x int y))
 	(function int click ())
 	(function void unsetCard ())
@@ -29,6 +33,8 @@
 	(function void clean ())
 
 	(function void draw ())
+
+	(function void lookAtPhysical (group dd_vec4 pos))
 
 	)
 ) # overlay buttons

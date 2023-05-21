@@ -139,7 +139,10 @@
 
 	# center of world
 	(dd_matrix_identity this.matCenter)
-	(dd_matrix_translate this.matCenter 0 -4 -5)
+	(if AVDL_VR
+		(dd_matrix_translate this.matCenter 0 -3.2 -4)
+		(dd_matrix_translate this.matCenter 0 -4 -5)
+	)
 
 	# stage
 	(= this.isStageColour 1)
@@ -386,10 +389,16 @@
 
 	# user's custom matrices
 	(dd_matrix_identity this.player[0])
-	(dd_matrix_translate this.player[0] 0 0 5)
+	(if AVDL_VR
+		(dd_matrix_translate this.player[0] 0 0 4.4)
+		(dd_matrix_translate this.player[0] 0 0 5)
+	)
 
 	(dd_matrix_identity this.player[0].actual)
-	(dd_matrix_translate this.player[0].actual 0 0 5)
+	(if AVDL_VR
+		(dd_matrix_translate this.player[0].actual 0 0 4.4)
+		(dd_matrix_translate this.player[0].actual 0 0 5)
+	)
 
 	(dd_matrix_identity this.player[0].selectedMatrix)
 	(dd_matrix_translate this.player[0].selectedMatrix 0 2.01 -3.6)
@@ -419,18 +428,16 @@
 
 	(this.arrowProgramAvdl.setVertexShader
 		(multistring
-			"AVDL_IN vec4 position;\n"
 			"AVDL_IN vec3 colour;\n"
 			"AVDL_IN vec2 texCoord;\n"
 
-			"uniform mat4 matrix;\n"
 			"uniform vec3 tint;\n"
 
 			"AVDL_OUT vec2 outTexCoord;\n"
 			"AVDL_OUT vec4 outColour;\n"
 
 			"void main() {\n"
-			"	vec4 pos = matrix *position;\n"
+			"	vec4 pos = final_position();\n"
 			"       gl_Position = pos;\n"
 			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
 			"	outTexCoord  = texCoord;\n"
@@ -641,18 +648,16 @@
 
 	(this.buttonProgram.setVertexShader
 		(multistring
-			"AVDL_IN vec4 position;\n"
 			"AVDL_IN vec3 colour;\n"
 			"AVDL_IN vec2 texCoord;\n"
 
-			"uniform mat4 matrix;\n"
 			"uniform vec3 tint;\n"
 
 			"AVDL_OUT vec2 outTexCoord;\n"
 			"AVDL_OUT vec4 outColour;\n"
 
 			"void main() {\n"
-			"	vec4 pos = matrix *position;\n"
+			"	vec4 pos = final_position();\n"
 			"       gl_Position = pos;\n"
 			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
 			"	outTexCoord  = texCoord;\n"
@@ -683,6 +688,8 @@
 	(= this.buttonInactiveCol[0] 0.694)
 	(= this.buttonInactiveCol[1] 0.137)
 	(= this.buttonInactiveCol[2] 0.137)
+
+	(this.lookatMesh.load (asset "assets/eye.ply" DD_PLY))
 
 	)
 )
@@ -732,12 +739,14 @@
 	)
 )
 
-(class_function world_game void update ()
+(class_function world_game void update (group float dt)
 	(group
 
 	# currently displaying a card, handle that instead of game state
-	(if this.ovButtons.cardToShow
-		(this.ovButtons.lookAt this.rotX this.rotY)
+	(if (== AVDL_VR 0)
+		(if this.ovButtons.cardToShow
+			(this.ovButtons.lookAt this.rotX this.rotY)
+		)
 	)
 
 	# execute remaining actions
@@ -748,7 +757,7 @@
 		(if (== this.actions[0].actionType ACTION_DELAY)
 			(group
 			(if (> this.actions[0].delay 0)
-				(= this.actions[0].delay (- this.actions[0].delay 1))
+				(= this.actions[0].delay (- this.actions[0].delay (* 70 dt)))
 				(this.removeAction)
 			)
 			)
@@ -1812,11 +1821,11 @@
 
 				(this.saveLoad.CompleteGame)
 					# Handle achievements
-					(if (&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 1))
+					(if (&& (== this.victoriousPlayer 0) (== (this.saveLoad.GetGamesComplete) 1))
 						(avdl_achievements_set 0 "ACHIEVEMENT_FIRST_VICTORY")
-					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 3))
+					(&& (== this.victoriousPlayer 0) (== (this.saveLoad.GetGamesComplete) 3))
 						(avdl_achievements_set 0 "ACHIEVEMENT_GETTING_BETTER")
-					(&& (== this.victoriousPlayer 0) (== this.saveLoad.GetGamesComplete 7))
+					(&& (== this.victoriousPlayer 0) (== (this.saveLoad.GetGamesComplete) 7))
 						(avdl_achievements_set 0 "ACHIEVEMENT_MASTER_PLAYER")
 					)
 					)
@@ -1885,7 +1894,7 @@
 		)
 	)
 
-	(= this.rotating (+ this.rotating 0.05))
+	(= this.rotating (+ this.rotating (* 0.25 dt)))
 
 	# calculate new camera look at point
 	(if (>= this.holdRotX 0)
@@ -1930,43 +1939,42 @@
 		)
 	)
 
-	# slowly approach camera look at point
-	(= this.rotX (dd_math_ease_linear 0.1 this.rotX this.targetRotX))
-	(= this.rotY (dd_math_ease_linear 0.1 this.rotY this.targetRotY))
-
 	#(if this.waitingPlayerCard
-		(this.player[0].lookAtCard this.rotX this.rotY)
-	#)
+	(if (== AVDL_VR 0)
+		(group
+		# slowly approach camera look at point
+		(= this.rotX (dd_math_ease_linear (* 2.0 dt) this.rotX this.targetRotX))
+		(= this.rotY (dd_math_ease_linear (* 2.0 dt) this.rotY this.targetRotY))
 
-	#(def float tempRotX this.rotX)
-	#(def float tempRotY this.rotY)
-	#(echo "rot: " tempRotX " | " tempRotY)
+		(this.player[0].lookAtCard this.rotX this.rotY)
+		)
+	)
 
 	# update all cards to approach target
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_approach this.cards[i] this.cards[i].target 0.1)
+		(dd_matrix_approach this.cards[i] this.cards[i].target (* 3.0 dt))
 		)
 	)
-	(dd_matrix_approach this.roseCard this.roseCard.target 0.1)
+	(dd_matrix_approach this.roseCard this.roseCard.target (* 3.0 dt))
 	(for (def int i 0) (< i this.tutCardsTotal) (= i (+ i 1))
-		(dd_matrix_approach this.tutCards[i] this.tutCards[i].target 0.1)
+		(dd_matrix_approach this.tutCards[i] this.tutCards[i].target (* 3.0 dt))
 	)
 
 	# update table arrow
-	(= this.arrowRotation (dd_math_ease_linear 0.1 this.arrowRotation this.arrowRotationTarget))
+	(= this.arrowRotation (dd_math_ease_linear (* 2.5 dt) this.arrowRotation this.arrowRotationTarget))
 
 	# user is about to play a card
 	(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
 		(group
-		(= this.arrowCurrentCol[0] (dd_math_ease_linear 0.1 this.arrowCurrentCol[0] this.arrowActiveCol[0] ))
-		(= this.arrowCurrentCol[1] (dd_math_ease_linear 0.1 this.arrowCurrentCol[1] this.arrowActiveCol[1] ))
-		(= this.arrowCurrentCol[2] (dd_math_ease_linear 0.1 this.arrowCurrentCol[2] this.arrowActiveCol[2] ))
+		(= this.arrowCurrentCol[0] (dd_math_ease_linear (* 2.5 dt) this.arrowCurrentCol[0] this.arrowActiveCol[0] ))
+		(= this.arrowCurrentCol[1] (dd_math_ease_linear (* 2.5 dt) this.arrowCurrentCol[1] this.arrowActiveCol[1] ))
+		(= this.arrowCurrentCol[2] (dd_math_ease_linear (* 2.5 dt) this.arrowCurrentCol[2] this.arrowActiveCol[2] ))
 		)
 		(group
-		(= this.arrowCurrentCol[0] (dd_math_ease_linear 0.1 this.arrowCurrentCol[0] this.arrowInactiveCol[0] ))
-		(= this.arrowCurrentCol[1] (dd_math_ease_linear 0.1 this.arrowCurrentCol[1] this.arrowInactiveCol[1] ))
-		(= this.arrowCurrentCol[2] (dd_math_ease_linear 0.1 this.arrowCurrentCol[2] this.arrowInactiveCol[2] ))
+		(= this.arrowCurrentCol[0] (dd_math_ease_linear (* 2.5 dt) this.arrowCurrentCol[0] this.arrowInactiveCol[0] ))
+		(= this.arrowCurrentCol[1] (dd_math_ease_linear (* 2.5 dt) this.arrowCurrentCol[1] this.arrowInactiveCol[1] ))
+		(= this.arrowCurrentCol[2] (dd_math_ease_linear (* 2.5 dt) this.arrowCurrentCol[2] this.arrowInactiveCol[2] ))
 		)
 	)
 
@@ -2052,8 +2060,53 @@
 			)
 		)
 
-		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+		(this.button[i].update dt (== this.selection i) (== this.selectionClick i))
 
+		)
+	)
+
+	# on systems with visible controllers (quest 2 for now)
+	(if (dd_matrix_hasVisibleControllers)
+		(for (def int i 1) (< i 2) (= i (+ i 1))
+			(group
+			(if (dd_matrix_isControllerVisible i)
+				(group
+				(this.ovButtons.lookAtPhysical (dd_matrix_getControllerPosition i))
+				(this.player[0].lookAtCardPos (dd_matrix_getControllerPosition i))
+				)
+			)
+			)
+		)
+	)
+
+	# on systems with visible controllers (quest 2 for now)
+	(if (&& (dd_matrix_hasVisibleControllers) this.isExitMenu)
+		(for (def int i 1) (< i 2) (= i (+ i 1))
+			(group
+			(if (dd_matrix_isControllerVisible i)
+				(group
+				# check if mouse is hovering over a button
+				(for (def int j 0) (< j this.buttonTotal) (= j (+ j 1))
+					(group
+
+					(if (== this.selection j)
+						(group
+						)
+						(if (this.button[j].hasPositionCollided (dd_matrix_getControllerPosition i))
+							(group
+							#(this.hoverSound.play)
+							(= this.selection j)
+							)
+						)
+					)
+
+					(this.button[j].update dt (== this.selection j) (== this.selectionClick j))
+
+					)
+				)
+				)
+			)
+			)
 		)
 	)
 
@@ -2066,8 +2119,12 @@
 	(dd_matrix_push)
 
 	# camera
-	(dd_rotatef this.rotY -1 0 0)
-	(dd_rotatef this.rotX 0 1 0)
+	(if (== AVDL_VR 0)
+		(group
+		(dd_rotatef this.rotY -1 0 0)
+		(dd_rotatef this.rotX 0 1 0)
+		)
+	)
 
 	# center of world
 	(dd_multMatrixf this.matCenter)
@@ -2171,13 +2228,23 @@
 
 	(dd_matrix_pop)
 
-	(avdl_graphics_ClearDepth)
+	(if (== AVDL_VR 0)
+		(avdl_graphics_ClearDepth)
+	)
 
 	# states
 	(if (== this.isExitMenu 0)
 		(group
 		(dd_matrix_push)
-		(dd_translatef 0 (* (dd_screen_height_get 20) 0.4) -20)
+		(if AVDL_VR
+			(group
+			(dd_translatef 0 1.5 -3)
+			(dd_scalef 0.2 0.2 0.2)
+			)
+			(group
+			(dd_translatef 0 (* (dd_screen_height_get 20) 0.4) -20)
+			)
+		)
 		# draw end game
 		(if (>= this.victoriousPlayer 0)
 			(group
@@ -2220,13 +2287,18 @@
 	)
 
 	# clear depth
-	(avdl_graphics_ClearDepth)
+	(if (== AVDL_VR 0)
+		(group
+		(avdl_graphics_ClearDepth)
 
-	# lookat mesh
-	(dd_matrix_push)
-	(dd_translatef 0 0 -25)
-	(this.lookat.draw)
-	(dd_matrix_pop)
+		# lookat mesh
+		(dd_matrix_push)
+		(dd_translatef 0 0 -25)
+		(this.lookat.draw)
+		(dd_matrix_pop)
+
+		)
+	)
 
 	(this.player[0].drawLookingAtText)
 
@@ -2237,17 +2309,37 @@
 
 		# bg
 		(dd_matrix_push)
-		(dd_translatef 0 0 -15)
-		(dd_scalef (dd_screen_width_get 15) (dd_screen_height_get 15) 0)
+		(if AVDL_VR
+			(group
+			(dd_translatef 0 0 -5)
+			(dd_scalef (dd_screen_width_get 5) (dd_screen_height_get 5) 0)
+			)
+			(group
+			(dd_translatef 0 0 -15)
+			(dd_scalef (dd_screen_width_get 15) (dd_screen_height_get 15) 0)
+			)
+		)
 		(this.bgExitMenu.draw)
 		(dd_matrix_pop)
 
-		(avdl_graphics_ClearDepth)
+		(if (== AVDL_VR 0)
+			(avdl_graphics_ClearDepth)
+		)
 
 		(dd_matrix_push)
-		(dd_translatef 0 3 -15)
-		(this.labelExitMenu.drawLimit
-			(* (dd_screen_width_get 20) 2 0.8)
+		(if AVDL_VR
+			(group
+			(dd_translatef 0 3 -4.8)
+			(this.labelExitMenu.drawLimit
+				(* (dd_screen_width_get 4.8) 2 0.8)
+			)
+			)
+			(group
+			(dd_translatef 0 3 -15)
+			(this.labelExitMenu.drawLimit
+				(* (dd_screen_width_get 20) 2 0.8)
+			)
+			)
 		)
 		(dd_matrix_pop)
 
@@ -2314,14 +2406,35 @@
 		)
 	)
 
+	# on systems with visible controllers (quest 2 for now)
+	(if (dd_matrix_hasVisibleControllers)
+		(for (def int i 0) (< i 2) (= i (+ i 1))
+			(group
+			(if (dd_matrix_isControllerVisible i)
+				(group
+				(dd_matrix_push)
+				(dd_matrix_applyControllerMatrix i)
+				(dd_rotatef 180 0 1 0)
+				(dd_scalef 0.05 0.05 0.05)
+				(this.lookatMesh.draw)
+				(dd_matrix_pop)
+				)
+			)
+			)
+		)
+	)
+
 	)
 )
 
-(class_function world_game void key_input (group char key)
+(class_function world_game void key_input (group int key)
 	(group
 
 	# escape button / back
-	(if (== key 27)
+	(if (||
+		(&& (== AVDL_VR 0) (== key 27))
+		(&& (== AVDL_VR 1) (== key AVDL_INPUT_QUEST2_MENU))
+		)
 		(group
 		#(= dd_flag_exit 1) # exit game
 		#(dd_world_prepare world_menu 1.0)
@@ -2401,7 +2514,7 @@
 
 		)
 	# down arrow or 's'
-	(|| (== key 2) (== key 115))
+	(|| (== key 4) (== key 115))
 		(group
 
 		# exit menu navigation
@@ -2423,7 +2536,7 @@
 
 		)
 	# enter or space to confirm
-	(|| (== key 13) (== key 32))
+	(|| (== key 13) (== key 32) (== key AVDL_INPUT_QUEST2_TRIGGER_R))
 		(group
 
 		# exit menu navigation

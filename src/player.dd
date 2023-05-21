@@ -212,11 +212,22 @@
 		(group
 		(dd_matrix_identity this.cards[i].target)
 		(dd_matrix_mult this.cards[i].target this)
-		(dd_matrix_translate this.cards[i].target 0 3.7 0)
-		(dd_matrix_rotate this.cards[i].target (- (* -30 i) (* (/ (- this.cardsTotal 1) 2.0) -30)) 0 1 0)
+		(if AVDL_VR
+			(group
+			(dd_matrix_translate this.cards[i].target 0 3.2 0)
+			(dd_matrix_rotate this.cards[i].target (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
+			)
+			(group
+			(dd_matrix_translate this.cards[i].target 0 3.7 0)
+			(dd_matrix_rotate this.cards[i].target (- (* -30 i) (* (/ (- this.cardsTotal 1) 2.0) -30)) 0 1 0)
+			)
+		)
 		(dd_matrix_rotate this.cards[i].target -43 1 0 0)
 		(dd_matrix_translate this.cards[i].target 0 0 -1.2)
 		(dd_matrix_rotate this.cards[i].target 25 1 0 0)
+		(if AVDL_VR
+			(dd_matrix_scale this.cards[i].target 0.7 0.7 0.7)
+		)
 		)
 	)
 	)
@@ -439,3 +450,47 @@
 
 	)
 ) # look at card
+
+(class_function Player void lookAtCardPos (group dd_vec4 pos)
+	(group
+
+	(def float floatX)
+	(def float floatY)
+	(def float floatZ)
+	(= floatX (dd_vec4_getX pos))
+	(= floatY (dd_vec4_getY pos))
+	(= floatZ (dd_vec4_getZ pos))
+
+	(def int lookingAtCard -1)
+
+	(if (== this.cardsTotal 0) (return))
+
+	# looking at the hand's layer (Y-axis)
+	(if (< floatY -0.5)
+		(group
+
+		# looking at the hand - figure out which card
+		(if (&& (> floatX -0.6) (< floatX 0.6))
+			(group
+			(= lookingAtCard (/ (+ (/ (* this.cardsTotal 0.3) 2.0) floatX) 0.3))
+			(= lookingAtCard (dd_math_min lookingAtCard this.cardsTotal))
+			(= lookingAtCard (dd_math_max lookingAtCard 0))
+			)
+		)
+
+		)
+	) # looking at hand's layer
+
+	# looking at the same card as previously
+	(if (== this.userLookingAtCard lookingAtCard)
+		(group
+		)
+	# looking at a new card
+		(group
+		#(this.cardLookSound.play)
+		)
+	)
+
+	(= this.userLookingAtCard lookingAtCard)
+	)
+)

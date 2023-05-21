@@ -32,12 +32,17 @@
 	# theme
 	(def dd_music theme)
 
+	(def int isGrabbed)
+	(def dd_matrix grabby)
+	(def dd_meshColour colliderBoxEmpty)
+	(def dd_meshColour colliderBoxCollision)
+
 	(function void create (group))
 	(function void onload (group))
 	(function void resize (group))
-	(function void update (group))
+	(function void update (group float dt))
 	(function void draw (group))
-	(function void key_input (group char key))
+	(function void key_input (group int key))
 	(function void mouse_input (group int button int type))
 	(function void clean (group))
 

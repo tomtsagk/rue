@@ -348,7 +348,7 @@
 	)
 )
 
-(class_function menu_multiplayer void update ()
+(class_function menu_multiplayer void update (group float dt)
 	(group
 
 	# disabled and animated out, do not update
@@ -383,7 +383,7 @@
 			)
 		)
 
-		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+		(this.button[i].update dt (== this.selection i) (== this.selectionClick i))
 
 		)
 	)
@@ -710,7 +710,7 @@
 	)
 )
 
-(class_function menu_multiplayer void key_input (group char key)
+(class_function menu_multiplayer void key_input (group int key)
 	(group
 	)
 )

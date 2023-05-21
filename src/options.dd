@@ -48,18 +48,16 @@
 
 	(this.buttonProgram.setVertexShader
 		(multistring
-			"AVDL_IN vec4 position;\n"
 			"AVDL_IN vec3 colour;\n"
 			"AVDL_IN vec2 texCoord;\n"
 
-			"uniform mat4 matrix;\n"
 			"uniform vec3 tint;\n"
 
 			"AVDL_OUT vec2 outTexCoord;\n"
 			"AVDL_OUT vec4 outColour;\n"
 
 			"void main() {\n"
-			"	vec4 pos = matrix *position;\n"
+			"	vec4 pos = final_position();\n"
 			"       gl_Position = pos;\n"
 			"       outColour = vec4(colour.rgb *tint.rgb, 1.0);\n"
 			"	outTexCoord  = texCoord;\n"
@@ -115,7 +113,7 @@
 (class_function options void resize ()
 	(group
 	# portrait
-	(if (< (dd_window_width) (dd_window_height))
+	(if (&& (== AVDL_VR 0) (< (dd_window_width) (dd_window_height)))
 		(group
 		# music toggle
 		(this.button[0].setSize 1 1)
@@ -176,7 +174,7 @@
 	)
 )
 
-(class_function options void update ()
+(class_function options void update (group float dt)
 	(group
 
 	# disabled and animated out, do not update
@@ -193,23 +191,58 @@
 	# disabled do not calculate hovering buttons
 	(if (== (this.isEnabled) 0) (return))
 
-	# check if mouse is hovering over a button
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+	(if (== AVDL_VR 0)
 		(group
-
-		(if (== this.selection i)
+		# check if mouse is hovering over a button
+		(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 			(group
-			)
-			(if (this.button[i].hasMouseCollided)
+
+			(if (== this.selection i)
 				(group
-				(this.hoverSound.play)
-				(= this.selection i)
+				)
+				(if (this.button[i].hasMouseCollided)
+					(group
+					(this.hoverSound.play)
+					(= this.selection i)
+					)
 				)
 			)
+
+			(this.button[i].update dt (== this.selection i) (== this.selectionClick i))
+
+			)
 		)
+		)
+	)
 
-		(this.button[i].update (== this.selection i) (== this.selectionClick i))
+	# on systems with visible controllers (quest 2 for now)
+	(if (dd_matrix_hasVisibleControllers)
+		(for (def int i 1) (< i 2) (= i (+ i 1))
+			(group
+			(if (dd_matrix_isControllerVisible i)
+				(group
+				# check if mouse is hovering over a button
+				(for (def int j 0) (< j this.buttonTotal) (= j (+ j 1))
+					(group
 
+					(if (== this.selection j)
+						(group
+						)
+						(if (this.button[j].hasPositionCollided (dd_matrix_getControllerPosition i))
+							(group
+							(this.hoverSound.play)
+							(= this.selection j)
+							)
+						)
+					)
+
+					(this.button[j].update dt (== this.selection j) (== this.selectionClick j))
+
+					)
+				)
+				)
+			)
+			)
 		)
 	)
 
@@ -327,11 +360,11 @@
 	)
 )
 
-(class_function options int key_input (group char key)
+(class_function options int key_input (group int key)
 	(group
 
 	# enter or space to confirm
-	(if (|| (== key 13) (== key 32))
+	(if (|| (== key 13) (== key 32) (== key AVDL_INPUT_QUEST2_TRIGGER_R))
 		(group
 		(return (this.button_selection this.selection))
 		)
@@ -376,7 +409,7 @@
 
 			)
 		# down arrow or 's'
-		(|| (== key 2) (== key 115))
+		(|| (== key 4) (== key 115))
 			(group
 
 			# audio -> toggle
@@ -446,7 +479,7 @@
 
 			)
 		# down arrow or 's'
-		(|| (== key 2) (== key 115))
+		(|| (== key 4) (== key 115))
 			(group
 
 			# back -> music

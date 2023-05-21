@@ -58,7 +58,18 @@
 	(= this.eyeTargetX 0)
 	(= this.eyeTargetY 0)
 
+	# collision boxes
+	(this.colliderBoxEmpty.set_primitive DD_PRIMITIVE_BOX)
+	(this.colliderBoxEmpty.set_colour 0.8 0.8 0.8)
+
+	(this.colliderBoxCollision.set_primitive DD_PRIMITIVE_BOX)
+	(this.colliderBoxCollision.set_colour 0.4 0.8 0.4)
+
 	(this.menuHome.enable)
+
+	(dd_matrix_identity this.grabby)
+	(dd_matrix_translate this.grabby 0 0 -0.5)
+	#(= this.isGrabbed 0)
 
 	)
 )
@@ -78,44 +89,48 @@
 	)
 )
 
-(class_function world_menu void update ()
+(class_function world_menu void update (group float dt)
 	(group
 
-	# constant background rotation
-	(= this.bg_rotation (+ this.bg_rotation 0.01))
-	(if (>= this.bg_rotation 360)
-		(= this.bg_rotation (- this.bg_rotation 360))
+	(if (== AVDL_VR 0)
+		(group
+		# constant background rotation
+		(= this.bg_rotation (+ this.bg_rotation (* 0.25 dt)))
+		(if (>= this.bg_rotation 360)
+			(= this.bg_rotation (- this.bg_rotation 360))
+		)
+		)
 	)
 
 	(this.bgParticleSystem.update)
 
-	(this.menuMultiplayer.update)
-	(this.menuHome.update)
-	(this.opt.update)
+	(this.menuMultiplayer.update dt)
+	(this.menuHome.update dt)
+	(this.opt.update dt)
 
 	# lookat animation
 	(if (this.opt.isEnabled)
 		(group
-		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.opt.button[this.opt.selection].x this.eyeTargetX) 0.1)))
-		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.opt.button[this.opt.selection].y this.eyeTargetY) 0.1)))
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.opt.button[this.opt.selection].x this.eyeTargetX) (* 2.5 dt))))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.opt.button[this.opt.selection].y this.eyeTargetY) (* 2.5 dt))))
 
-		(= this.eyeTargetX (+ this.eyeTargetX (* this.opt.button[this.opt.selection].idleRot -0.003)))
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.opt.button[this.opt.selection].idleRot (* -0.1 dt))))
 		)
 	# lookat home menu buttons
 	(this.menuHome.isEnabled)
 		(group
-		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuHome.button[this.menuHome.selection].x this.eyeTargetX) 0.1)))
-		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuHome.button[this.menuHome.selection].y this.eyeTargetY) 0.1)))
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuHome.button[this.menuHome.selection].x this.eyeTargetX) (* 2.5 dt))))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuHome.button[this.menuHome.selection].y this.eyeTargetY) (* 2.5 dt))))
 
-		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuHome.button[this.menuHome.selection].idleRot -0.003)))
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuHome.button[this.menuHome.selection].idleRot (* -0.1 dt))))
 		)
 	# lookat custom game menu buttons
 	(this.menuMultiplayer.isEnabled)
 		(group
-		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].x this.eyeTargetX) 0.1)))
-		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].y this.eyeTargetY) 0.1)))
+		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].x this.eyeTargetX) (* 2.5 dt))))
+		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].y this.eyeTargetY) (* 2.5 dt))))
 
-		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuMultiplayer.button[this.menuMultiplayer.selection].idleRot -0.003)))
+		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuMultiplayer.button[this.menuMultiplayer.selection].idleRot (* -0.1 dt))))
 		)
 	)
 	(def float tempZ 3)
@@ -165,14 +180,58 @@
 	(this.menuHome.draw)
 	(this.opt.draw)
 
+#	# test grabby object
+#	(dd_matrix_push)
+#	(if this.isGrabbed
+#		(dd_matrix_applyControllerMatrix 1)
+#		(dd_multMatrixf this.grabby)
+#	)
+#	(dd_scalef 0.1 0.1 0.1)
+#	(this.lookatMesh.draw)
+#	(dd_matrix_pop)
+
+	# on systems with visible controllers (quest 2 for now)
+	(if (dd_matrix_hasVisibleControllers)
+		(for (def int i 0) (< i 2) (= i (+ i 1))
+			(group
+			(if (dd_matrix_isControllerVisible i)
+				(group
+				(dd_matrix_push)
+				(dd_matrix_applyControllerMatrix i)
+				(dd_rotatef 180 0 1 0)
+				(dd_scalef 0.05 0.05 0.05)
+				(this.lookatMesh.draw)
+				(dd_matrix_pop)
+				)
+			)
+			)
+		)
+	)
+
 	)
 )
 
-(class_function world_menu void key_input (group char key)
+(class_function world_menu void key_input (group int key)
 	(group
 
 	(if (== key 27)
 		(avdl_exit) # exit game
+#	# grabby
+#	(== key 100)
+#		(group
+#		# was grabbing
+#		(if this.isGrabbed
+#			(group
+#			(= this.isGrabbed 0)
+#			(dd_matrix_copy this.grabby (dd_matrix_getControllerMatrix 1))
+#			)
+#		# just grabbed
+#			(group
+#			(= this.isGrabbed 1)
+#			(dd_matrix_copy this.grabby (dd_matrix_getControllerMatrix 1))
+#			)
+#		)
+#		)
 	) # key input
 
 	# options menu is open
@@ -282,6 +341,7 @@
 		(dd_world_ready)
 		)
 	)
+	(return 0)
 	)
 )
 
@@ -300,5 +360,6 @@
 		(this.theme.playLoop -1)
 		)
 	)
+	(return 0)
 	)
 )

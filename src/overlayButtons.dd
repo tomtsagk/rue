@@ -18,6 +18,19 @@
 	(this.skipLabel.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.skipLabel.setText "Skip effect ?")
 
+	(if AVDL_VR
+		(group
+		(= this.cardX 0)
+		(= this.cardY 3.4)
+		(= this.cardZ 3.5)
+		)
+		(group
+		(= this.cardX 0)
+		(= this.cardY 4.2)
+		(= this.cardZ 3)
+		)
+	)
+
 	)
 )
 
@@ -69,13 +82,19 @@
 		(group
 		(= this.isLookingAtCard 1)
 		(dd_matrix_identity this.cardToShow.target)
-		(dd_matrix_translate this.cardToShow.target 0 4.2 3)
-		(dd_matrix_scale this.cardToShow.target 1.1 1.1 1.1)
+		(dd_matrix_translate this.cardToShow.target this.cardX this.cardY this.cardZ)
+		(if (== AVDL_VR 0)
+			(dd_matrix_scale this.cardToShow.target 1.1 1.1 1.1)
+			(dd_matrix_scale this.cardToShow.target 0.4 0.4 0.4)
+		)
 		)
 		(group
 		(= this.isLookingAtCard 0)
 		(dd_matrix_identity this.cardToShow.target)
-		(dd_matrix_translate this.cardToShow.target 0 4.2 3)
+		(dd_matrix_translate this.cardToShow.target this.cardX this.cardY this.cardZ)
+		(if AVDL_VR
+			(dd_matrix_scale this.cardToShow.target 0.3 0.3 0.3)
+		)
 		)
 	)
 
@@ -128,8 +147,38 @@
 	(= this.isLookingAtCard 0)
 	(dd_matrix_copy this.previousLoc c.target)
 	(dd_matrix_identity c.target)
-	(dd_matrix_translate c.target 0 4.2 3)
+	(dd_matrix_translate c.target this.cardX this.cardY this.cardZ)
+	(if AVDL_VR
+		(dd_matrix_scale c.target 0.3 0.3 0.3)
+	)
 	(= this.cardToShow c)
 	(= this.hasConfirmed 0)
+	)
+)
+
+(class_function OverlayButtons void lookAtPhysical (group dd_vec4 pos)
+	(group
+
+	(if (== this.cardToShow 0)
+		(return)
+	)
+
+	(if (&& (< (dd_math_abs (dd_vec4_getX pos)) 0.1)
+		(< (dd_math_abs (- (dd_vec4_getY pos) 0.2)) 0.1)
+		(< (dd_math_abs (+ (dd_vec4_getZ pos) 0.5)) 0.1)
+		)
+		(group
+		(= this.isLookingAtCard 1)
+		(dd_matrix_identity this.cardToShow.target)
+		(dd_matrix_translate this.cardToShow.target this.cardX this.cardY this.cardZ)
+		(dd_matrix_scale this.cardToShow.target 0.4 0.4 0.4)
+		)
+		(group
+		(= this.isLookingAtCard 0)
+		(dd_matrix_identity this.cardToShow.target)
+		(dd_matrix_translate this.cardToShow.target this.cardX this.cardY this.cardZ)
+		(dd_matrix_scale this.cardToShow.target 0.3 0.3 0.3)
+		)
+	)
 	)
 )

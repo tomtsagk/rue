@@ -34,7 +34,7 @@
 	(function void setProportionalSize (group float propSize))
 
 	(function void create ())
-	(function void update (group int isSelected int isClicked))
+	(function void update (group float dt int isSelected int isClicked))
 	(function void applyTransform ())
 	(function void applyMatrixTransform ())
 	(function void drawRaw ())
@@ -44,6 +44,7 @@
 	(function void resize ())
 
 	(function int hasMouseCollided ())
+	(function int hasPositionCollided (group dd_vec4 pos))
 
 	(function void disable ())
 

@@ -69,7 +69,7 @@
 )
 
 # animate the tiles to the current side
-(class_function Button void update (group int isSelected int isClicked)
+(class_function Button void update (group float dt int isSelected int isClicked)
 	(group
 
 	(if (== this.isVisible 0)
@@ -79,19 +79,19 @@
 	# animate to target if clicked
 	(if isClicked
 		(group
-		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot this.idleRotTarget))
-		(= this.idleCol (dd_math_ease_linear 0.2 this.idleCol 2))
+		(= this.idleRot (dd_math_ease_linear (dd_math_min (* 7 dt) 1) this.idleRot this.idleRotTarget))
+		(= this.idleCol (dd_math_ease_linear (dd_math_min (* 7 dt) 1) this.idleCol 2))
 		)
 	# animate to target if selected
 	isSelected
 		(group
-		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot this.idleRotTarget))
-		(= this.idleCol (dd_math_ease_linear 0.2 this.idleCol 1))
+		(= this.idleRot (dd_math_ease_linear (dd_math_min (* 7 dt) 1) this.idleRot this.idleRotTarget))
+		(= this.idleCol (dd_math_ease_linear (dd_math_min (* 7 dt) 1) this.idleCol 1))
 		)
 	# animate to idle
 		(group
-		(= this.idleRot (dd_math_ease_linear 0.2 this.idleRot 0))
-		(= this.idleCol (dd_math_ease_linear 0.2 this.idleCol 0))
+		(= this.idleRot (dd_math_ease_linear (dd_math_min (* 7 dt) 1) this.idleRot 0))
+		(= this.idleCol (dd_math_ease_linear (dd_math_min (* 7 dt) 1) this.idleCol 0))
 		)
 	)
 
@@ -120,6 +120,13 @@
 		(+ 1.0 (* this.idleCol 0.2))
 		(+ 1.0 (* this.idleCol 0.2))
 		(+ 1.0 (* this.idleCol 0.2))
+	)
+	(if AVDL_VR
+		(dd_scalef
+			0.08
+			0.08
+			0.08
+		)
 	)
 	)
 )
@@ -195,12 +202,49 @@
 	)
 )
 
+(class_function Button int hasPositionCollided (group dd_vec4 pos)
+	(group
+
+	(if (|| (== this.isVisible 0) this.isDisabled)
+		(return 0)
+	)
+
+	(if (&& (> (dd_vec4_getZ pos) -0.6) (< (dd_vec4_getZ pos) -0.4))
+		(group
+		)
+		(group
+		(return 0)
+		)
+	)
+
+	# get pos's proportioned position
+	(def float screenProportionX)
+	(= screenProportionX (* (+ (dd_vec4_getX pos) 0.2) 2.5))
+	(def float screenProportionY)
+	(= screenProportionY (* (+ (dd_vec4_getY pos) 0.2) 2.5))
+
+	# check collision
+	(if (&&
+		(>= screenProportionX (- this.pX (* this.width  0.1)))
+		(<= screenProportionX (+ this.pX (* this.width  0.1)))
+		(>= screenProportionY (- this.pY (* this.height 0.1)))
+		(<= screenProportionY (+ this.pY (* this.height 0.1)))
+		)
+		(return 1)
+		(return 0)
+	)
+	)
+)
+
 (class_function Button void resize ()
 	(group
 
 	# figure out if button should be smaller
 	(def float objScale (dd_math_minf (* (dd_screen_width_get 5) this.pW) 1.0))
 	(= this.z (/ this.pSize objScale))
+	(if AVDL_VR
+		(= this.z -0.5)
+	)
 
 	# place the button on the screen based on the proportions
 	(= this.x (* (dd_screen_width_get (* this.z -1)) (- this.pX 0.5)))

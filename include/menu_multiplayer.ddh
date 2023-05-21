@@ -56,9 +56,9 @@
 
 	(function void create (group))
 	(function void resize (group))
-	(function void update (group))
+	(function void update (group float dt))
 	(function void draw (group))
-	(function void key_input (group char key))
+	(function void key_input (group int key))
 	(function int mouse_input (group int button int type))
 	(function void clean (group))
 

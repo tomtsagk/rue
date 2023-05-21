@@ -25,9 +25,9 @@
 	(function void create ())
 	(function void onload ())
 	(function void resize ())
-	(function void update ())
+	(function void update (group float dt))
 	(function void draw ())
-	(function void key_input (group char key))
+	(function void key_input (group int key))
 	(function void mouse_input (group int button int type))
 	(function void clean ())
 
