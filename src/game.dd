@@ -1897,7 +1897,7 @@
 	(= this.rotating (+ this.rotating (* 0.25 dt)))
 
 	# calculate new camera look at point
-	(if (>= this.holdRotX 0)
+	(if (&& (>= this.holdRotX 0) (== AVDL_VR 0))
 		(group
 
 		# not rotating yet, check threshold

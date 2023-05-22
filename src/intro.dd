@@ -135,14 +135,14 @@
 
 	# on delay do nothing
 	(if (> this.delay 0)
-		(= this.delay (- this.delay (* 35 dt)))
+		(= this.delay (- this.delay (* 35 dt)) )
 	# else
 		(group
 
 		# update clear colour
 		#(dd_clearColour (* this.counter 0.8) (* this.counter 0.6) (* this.counter 1) 1)
 		#(dd_clearColour (* this.counter 0.949) (* this.counter 0.921) (* this.counter 0.709) 1)
-		(dd_clearColour (* this.counter this.counter 0.949) (* this.counter this.counter 0.921) (* this.counter this.counter 0.709) 1)
+		#(dd_clearColour (* this.counter this.counter 0.949) (* this.counter this.counter 0.921) (* this.counter this.counter 0.709) 1)
 
 		# advance animation
 		(if this.positive
@@ -181,6 +181,8 @@
 			)
 			)
 		)
+
+		(dd_clearColour (* this.counter this.counter 0.949) (* this.counter this.counter 0.921) (* this.counter this.counter 0.709) 1)
 		)
 	) # if delay
 

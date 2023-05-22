@@ -225,7 +225,9 @@
 				)
 				(if (this.button[i].hasMouseCollided)
 					(group
-					(this.hoverSound.play)
+					(if (== AVDL_VR 0)
+						(this.hoverSound.play)
+					)
 					(= this.selection i)
 					)
 				)
@@ -253,7 +255,9 @@
 						)
 						(if (this.button[j].hasPositionCollided (dd_matrix_getControllerPosition i))
 							(group
-							(this.hoverSound.play)
+							(if (== AVDL_VR 0)
+								(this.hoverSound.play)
+							)
 							(= this.selection j)
 							)
 						)
@@ -624,34 +628,44 @@
 	# custom game
 	(if (== button_index 0)
 		(group
-		(this.clickBigSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickBigSound.play)
+		)
 		(this.disable)
 		(return 1)
 		)
 	# play
 	(== button_index 1)
 		(group
-		(this.clickBigSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickBigSound.play)
+		)
 		(this.disable)
 		(return 2)
 		)
 	# exit game
 	(== button_index 2)
 		(group
-		(this.clickBigSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickBigSound.play)
+		)
 		(avdl_exit) # exit game
 		)
 	# options
 	(== button_index 3)
 		(group
-		(this.clickBigSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickBigSound.play)
+		)
 		(this.disable)
 		(return 3)
 		)
 	# credits
 	(== button_index 4)
 		(group
-		(this.clickBigSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickBigSound.play)
+		)
 		(this.disable)
 		(return 4)
 		)

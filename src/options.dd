@@ -202,7 +202,9 @@
 				)
 				(if (this.button[i].hasMouseCollided)
 					(group
-					(this.hoverSound.play)
+					(if (== AVDL_VR 0)
+						(this.hoverSound.play)
+					)
 					(= this.selection i)
 					)
 				)
@@ -230,7 +232,9 @@
 						)
 						(if (this.button[j].hasPositionCollided (dd_matrix_getControllerPosition i))
 							(group
-							(this.hoverSound.play)
+							(if (== AVDL_VR 0)
+								(this.hoverSound.play)
+							)
 							(= this.selection j)
 							)
 						)
@@ -580,7 +584,9 @@
 	(group
 	(if (== button_index 0)
 		(group
-		(this.clickSmallSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickSmallSound.play)
+		)
 		(if (< this.volumeMusic 10)
 			(= this.volumeMusic 100)
 			(= this.volumeMusic 0)
@@ -593,7 +599,9 @@
 		)
 	(== button_index 1)
 		(group
-		(this.clickSmallSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickSmallSound.play)
+		)
 		(if (< this.volumeSound 10)
 			(= this.volumeSound 100)
 			(= this.volumeSound 0)
@@ -606,12 +614,16 @@
 		)
 	(== button_index 2)
 		(group
-		(this.clickSmallSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickSmallSound.play)
+		)
 		(dd_fullscreenToggle)
 		)
 	(== button_index 3)
 		(group
-		(this.clickBigSound.play)
+		(if (== AVDL_VR 0)
+			(this.clickBigSound.play)
+		)
 		(this.disable)
 		(return 1)
 		)
