@@ -13,8 +13,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.8.0/avdl_v0.8.0_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.8.0/avdl_v0.8.0_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.9.0/avdl_v0.9.0_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.9.0/avdl_v0.9.0_windows.zip
 
 jobs:
   # Android
@@ -53,6 +53,57 @@ jobs:
       with:
         name: rue_android_debug
         path: rue_output_debug
+
+  # Quest 2
+  build_quest2:
+    runs-on: ubuntu-latest
+    needs: [build_linux]
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v2
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        unzip avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
+        chmod +x AVDL_BUILD/bin/avdl
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'oracle'
+        java-version: '17'
+    - name: generate_quest2_project
+      run: ./AVDL_BUILD/bin/avdl --quest2
+    - name: get_oculus_sdk
+      env:
+        oculus_api_link: ${{ secrets.OCULUS_API_LINK }}
+      run: |
+        wget ${oculus_api_link} --quiet
+        mkdir avdl_oculus_build
+        mv oculus_mobile_sdk.zip avdl_oculus_build
+        cd avdl_oculus_build
+        unzip oculus_mobile_sdk.zip
+        cp ../avdl_build_quest2/ -r avdl_vr_bk/AvdlProject
+    - name: compile_apk
+      run: |
+        cd avdl_oculus_build/avdl_vr_bk/AvdlProject/Projects/Android
+        chmod +x ../../../gradlew
+        ../../../gradlew assembleDebug
+        mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_debug.apk
+        ../../../gradlew assembleRelease
+        mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2.apk
+    - name: upload_artifact_debug
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2_debug
+        path: rue_quest2_debug.apk
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2
+        path: rue_quest2.apk
+
   # Linux
   build_linux:
     runs-on: ubuntu-20.04
@@ -177,6 +228,7 @@ jobs:
         cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
         mkdir build
         AVDL_BUILD/bin/avdl.exe -t
+        AVDL_BUILD/bin/avdl.exe --cmake
         cp .avdl_cache/*.c src/
         for i in src/*.c; do mv $i ${i/.dd.c/.c}; done
         cd build
@@ -256,6 +308,7 @@ jobs:
         cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
         mkdir build
         ./AVDL_BUILD/bin/avdl.exe -t
+        ./AVDL_BUILD/bin/avdl.exe --cmake
         cp .avdl_cache/*.c src/
         for i in src/*.c; do mv $i ${i/.dd.c/.c}; done
         cd build
