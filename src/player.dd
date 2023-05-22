@@ -192,15 +192,18 @@
 	(group
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_identity this.cards[i].target)
-		(dd_matrix_mult this.cards[i].target this)
-		(dd_matrix_translate this.cards[i].target 0 2.5 0.2)
-		(dd_matrix_translate this.cards[i].target (- (* i 0.42) (/ (* (- this.cardsTotal 1) 0.42) 2)) 0 0)
-		(dd_matrix_rotate this.cards[i].target 180 0 1 0)
 
+		(def dd_matrix mat)
+		(dd_matrix_identity mat)
+		(dd_matrix_mult mat this)
+		(dd_matrix_translate mat 0 2.5 0.2)
+		(dd_matrix_translate mat (- (* i 0.42) (/ (* (- this.cardsTotal 1) 0.42) 2)) 0 0)
+		(dd_matrix_rotate mat 180 0 1 0)
 		(if (== this.cards[i].id CARD_ROSE)
-			(dd_matrix_rotate this.cards[i].target 180 0 1 0)
+			(dd_matrix_rotate mat 180 0 1 0)
 		)
+		(this.cards[i].setTarget mat)
+
 		)
 	)
 	)
@@ -210,24 +213,27 @@
 	(group
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_identity this.cards[i].target)
-		(dd_matrix_mult this.cards[i].target this)
+
+		(def dd_matrix mat)
+		(dd_matrix_identity mat)
+		(dd_matrix_mult mat this)
 		(if AVDL_VR
 			(group
-			(dd_matrix_translate this.cards[i].target 0 3.2 0)
-			(dd_matrix_rotate this.cards[i].target (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
+			(dd_matrix_translate mat 0 3.2 0)
+			(dd_matrix_rotate mat (- (* -25 i) (* (/ (- this.cardsTotal 1) 2.0) -25)) 0 1 0)
 			)
 			(group
-			(dd_matrix_translate this.cards[i].target 0 3.7 0)
-			(dd_matrix_rotate this.cards[i].target (- (* -30 i) (* (/ (- this.cardsTotal 1) 2.0) -30)) 0 1 0)
+			(dd_matrix_translate mat 0 3.7 0)
+			(dd_matrix_rotate mat (- (* -30 i) (* (/ (- this.cardsTotal 1) 2.0) -30)) 0 1 0)
 			)
 		)
-		(dd_matrix_rotate this.cards[i].target -43 1 0 0)
-		(dd_matrix_translate this.cards[i].target 0 0 -1.2)
-		(dd_matrix_rotate this.cards[i].target 25 1 0 0)
+		(dd_matrix_rotate mat -43 1 0 0)
+		(dd_matrix_translate mat 0 0 -1.2)
+		(dd_matrix_rotate mat 25 1 0 0)
 		(if AVDL_VR
-			(dd_matrix_scale this.cards[i].target 0.7 0.7 0.7)
+			(dd_matrix_scale mat 0.7 0.7 0.7)
 		)
+		(this.cards[i].setTarget mat)
 		)
 	)
 	)
@@ -250,9 +256,12 @@
 			(group
 
 			(= this.selectedCard2 this.cards[this.highlightCard])
-			(dd_matrix_identity this.selectedCard2.target)
-			(dd_matrix_mult this.selectedCard2.target this.actual)
-			(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
+
+			(def dd_matrix mat)
+			(dd_matrix_identity mat)
+			(dd_matrix_mult mat this.actual)
+			(dd_matrix_mult mat this.selectedMatrix)
+			(this.selectedCard2.setTarget mat)
 
 			# remove card from array
 			(for (def int i (+ this.highlightCard 1)) (< i this.cardsTotal) (= i (+ i 1))
@@ -304,9 +313,11 @@
 	# else
 		(group
 		(= this.selectedCard2 this.cards[index])
-		(dd_matrix_identity this.selectedCard2.target)
-		(dd_matrix_mult this.selectedCard2.target this.actual)
-		(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
+		(def dd_matrix mat)
+		(dd_matrix_identity mat)
+		(dd_matrix_mult mat this.actual)
+		(dd_matrix_mult mat this.selectedMatrix)
+		(this.selectedCard2.setTarget mat)
 
 		# remove card from array
 		(for (def int i (+ index 1)) (< i this.cardsTotal) (= i (+ i 1))
@@ -359,9 +370,11 @@
 		)
 		(= this.selectedCard (dd_math_rand this.cardsTotal))
 		(= this.selectedCard2 this.cards[index])
-		(dd_matrix_identity this.selectedCard2.target)
-		(dd_matrix_mult this.selectedCard2.target this.actual)
-		(dd_matrix_mult this.selectedCard2.target this.selectedMatrix)
+		(def dd_matrix mat)
+		(dd_matrix_identity mat)
+		(dd_matrix_mult mat this.actual)
+		(dd_matrix_mult mat this.selectedMatrix)
+		(this.selectedCard2.setTarget mat)
 
 		# remove card from array
 		(for (def int i (+ index 1)) (< i this.cardsTotal) (= i (+ i 1))

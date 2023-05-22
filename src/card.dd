@@ -12,6 +12,8 @@
 	(= this.id 0)
 	(= this.cornerId -1)
 	(dd_matrix_identity this.target)
+	(dd_matrix_identity this.from)
+	(= this.counter 0)
 
 	(= this.hidden 0)
 
@@ -292,5 +294,29 @@
 		(return this.idFake)
 		(return this.id)
 	)
+	)
+)
+
+(class_function Card void update (group float dt)
+	(group
+	(= this.counter (+ this.counter (* 1.0 dt)))
+	(if (>= this.counter 1)
+		(group
+		(= this.counter 1)
+		)
+	)
+	(def dd_matrix mat)
+	(dd_matrix_copy mat this.from)
+	(dd_matrix_approach mat this.target (- 1 (dd_math_pow (- 1 this.counter) 2)))
+	(dd_matrix_copy this mat)
+	#(dd_matrix_approach this this.target (* 3.0 dt))
+	)
+)
+
+(class_function Card void setTarget (group dd_matrix mat)
+	(group
+	(dd_matrix_copy this.from this)
+	(dd_matrix_copy this.target mat)
+	(= this.counter 0)
 	)
 )

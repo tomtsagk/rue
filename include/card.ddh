@@ -23,7 +23,9 @@
 	(def ref dd_meshTexture meshCorner)
 
 	# it's desired location (where it constantly moves to)
+	(def dd_matrix from)
 	(def dd_matrix target)
+	(def float counter)
 
 	# if true, do not render its actual front side (hidden from user)
 	(def int hidden)
@@ -41,6 +43,7 @@
 	(function void create (group))
 	(function void clean (group))
 
+	(function void update (group float dt))
 	(function void draw (group))
 
 	(function void applyMatrix (group))
@@ -50,6 +53,8 @@
 	(function void setFakeId (group int id dd_meshTexture mesh dd_string3d label))
 	(function void clearFakeId (group))
 	(function int getId ())
+
+	(function void setTarget (group dd_matrix mat))
 
 	)
 ) # card

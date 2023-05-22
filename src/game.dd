@@ -282,11 +282,15 @@
 		(= this.tutCards[i].meshBack this.cardBack)
 		(def int labelIndex (+ 10 i))
 		(= this.tutCards[i].cardDescription2 this.cardLabel[labelIndex])
-		(dd_matrix_identity this.tutCards[i].target)
-		(dd_matrix_translate this.tutCards[i].target -1.75 2.01 2.7)
-		(dd_matrix_rotate this.tutCards[i].target -90 1 0 0)
-		(dd_matrix_rotate this.tutCards[i].target 55 0 0 1)
+
+		(def dd_matrix mat)
+		(dd_matrix_identity mat)
+		(dd_matrix_translate mat -1.75 2.01 2.7)
+		(dd_matrix_rotate mat -90 1 0 0)
+		(dd_matrix_rotate mat 55 0 0 1)
+		(this.tutCards[i].setTarget mat)
 		(dd_matrix_copy this.tutCards[i] this.tutCards[i].target)
+		(= this.tutCards[i].counter 1)
 		)
 	)
 
@@ -306,6 +310,7 @@
 		(group
 		(this.addToDeck this.cards[i])
 		(dd_matrix_copy this.cards[i] this.cards[i].target)
+		(= this.cards[i].counter 1)
 		)
 	)
 	(this.shuffleDeck)
@@ -776,6 +781,7 @@
 				)
 				(this.setRosePlayer startingPlayer)
 				(dd_matrix_copy this.roseCard this.roseCard.target)
+				(= this.roseCard.counter 1)
 
 				# all players draw starting cards
 				(for (def int j 0) (< j 5) (= j (+ j 1))
@@ -1257,7 +1263,12 @@
 			(if (this.player[playerIndex].hasPlannedCard)
 				(group
 				(= this.player[playerIndex].selectedCard2.hidden 0)
-				(dd_matrix_rotate this.player[playerIndex].selectedCard2.target 180 0 1 0)
+
+				(def dd_matrix mat)
+				(dd_matrix_copy mat this.player[playerIndex].selectedCard2.target)
+				(dd_matrix_rotate mat 180 0 1 0)
+				(this.player[playerIndex].selectedCard2.setTarget mat)
+
 				(this.ovButtons.setCard this.player[playerIndex].selectedCard2)
 				)
 			# no planned card - skip this action
@@ -1555,7 +1566,10 @@
 					(def int nextIndex (% (+ (+ this.actions[0].playerIndex this.playersTotal) 1) this.playersTotal))
 					(if (this.player[nextIndex].hasPlannedCard)
 						(group
-						(dd_matrix_rotate this.player[nextIndex].selectedCard2.target 180 0 1 0)
+						(def dd_matrix mat)
+						(dd_matrix_copy mat this.player[nextIndex].selectedCard2.target)
+						(dd_matrix_rotate mat 180 0 1 0)
+						(this.player[nextIndex].selectedCard2.setTarget mat)
 						(= this.player[nextIndex].selectedCard2.hidden 0)
 						(this.addInjectAction ACTION_DISCARD_PLANNED_CARD nextIndex 0 50)
 						)
@@ -1953,12 +1967,12 @@
 	# update all cards to approach target
 	(for (def int i 0) (< i this.cardsTotal) (= i (+ i 1))
 		(group
-		(dd_matrix_approach this.cards[i] this.cards[i].target (* 3.0 dt))
+		(this.cards[i].update dt)
 		)
 	)
-	(dd_matrix_approach this.roseCard this.roseCard.target (* 3.0 dt))
+	(this.roseCard.update dt)
 	(for (def int i 0) (< i this.tutCardsTotal) (= i (+ i 1))
-		(dd_matrix_approach this.tutCards[i] this.tutCards[i].target (* 3.0 dt))
+		(this.tutCards[i].update dt)
 	)
 
 	# update table arrow
@@ -2725,8 +2739,10 @@
 		(group
 		(= this.discard[this.discardTotal] card)
 		(= this.discardTotal (+ this.discardTotal 1))
-		(dd_matrix_copy card.target this.discardMatrix)
-		(dd_matrix_translate card.target 0 0 (+ (* 0.003 (+ this.discardTotal 1)) 0.01))
+		(def dd_matrix mat)
+		(dd_matrix_copy mat this.discardMatrix)
+		(dd_matrix_translate mat 0 0 (+ (* 0.003 (+ this.discardTotal 1)) 0.01))
+		(card.setTarget card mat)
 		)
 	)
 	)
@@ -2742,8 +2758,10 @@
 		(group
 		(= this.deck[this.deckTotal] card)
 		(= this.deckTotal (+ this.deckTotal 1))
-		(dd_matrix_copy card.target this.deckMatrix)
-		(dd_matrix_translate card.target 0 0 (+ (* -0.003 (+ this.deckTotal 1)) -0.01))
+		(def dd_matrix mat)
+		(dd_matrix_copy mat this.deckMatrix)
+		(dd_matrix_translate mat 0 0 (+ (* -0.003 (+ this.deckTotal 1)) -0.01))
+		(card.setTarget card mat)
 		)
 	)
 	)
@@ -2759,18 +2777,22 @@
 	(== playerId 0)
 		(group
 		(= this.rosePlayer playerId)
-		(dd_matrix_identity this.roseCard.target)
-		(dd_matrix_translate this.roseCard.target 0 2.01 2.1)
-		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
+		(def dd_matrix mat)
+		(dd_matrix_identity mat)
+		(dd_matrix_translate mat 0 2.01 2.1)
+		(dd_matrix_rotate mat -90 1 0 0)
+		(this.roseCard.setTarget mat)
 		)
 	# position rose in front of another player
 		(group
 		(= this.rosePlayer playerId)
-		(dd_matrix_identity this.roseCard.target)
-		(dd_matrix_mult this.roseCard.target this.player[playerId].actual)
-		(dd_matrix_translate this.roseCard.target 0 2.01 1.9)
-		(dd_matrix_rotate this.roseCard.target -90 1 0 0)
-		(dd_matrix_rotate this.roseCard.target 180 0 0 1)
+		(def dd_matrix mat)
+		(dd_matrix_identity mat)
+		(dd_matrix_mult mat this.player[playerId].actual)
+		(dd_matrix_translate mat 0 2.01 1.9)
+		(dd_matrix_rotate mat -90 1 0 0)
+		(dd_matrix_rotate mat 180 0 0 1)
+		(this.roseCard.setTarget mat)
 		)
 	)
 
@@ -2782,18 +2804,21 @@
 	(group
 	(for (def int i 0) (< i this.deckTotal) (= i (+ i 1))
 		(group
-		#(def int target (dd_math_rand this.deckTotal))
 		(def int target (dd_math_randPseudo this.deckTotal))
 		(def ref Card temp)
 		(= temp this.deck[i])
 		(= this.deck[i] this.deck[target])
 		(= this.deck[target] temp)
 
-		(dd_matrix_copy this.deck[i].target this.deckMatrix)
-		(dd_matrix_translate this.deck[i].target 0 0 (+ (* -0.003 (+ i 1)) -0.01))
+		(def dd_matrix mat)
+		(dd_matrix_copy mat this.deckMatrix)
+		(dd_matrix_translate mat 0 0 (+ (* -0.003 (+ i 1)) -0.01))
+		(this.deck[i].setTarget mat)
 
-		(dd_matrix_copy this.deck[target].target this.deckMatrix)
-		(dd_matrix_translate this.deck[target].target 0 0 (+ (* -0.003 (+ target 1)) -0.01))
+		(dd_matrix_copy mat this.deckMatrix)
+		(dd_matrix_translate mat 0 0 (+ (* -0.003 (+ target 1)) -0.01))
+		(this.deck[target].setTarget mat)
+
 		)
 	)
 	)
