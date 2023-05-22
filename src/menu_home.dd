@@ -205,10 +205,8 @@
 
 	# animate opening/closing
 	(if (this.isEnabled)
-		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 1))
-		(= this.animationOpen (dd_math_min (+ this.animationOpen 0.08) 1))
-		(= this.animationOpen (dd_math_max (- this.animationOpen 0.08) 0))
-		#(= this.animationOpen (dd_math_ease_linear 0.05 this.animationOpen 0))
+		(= this.animationOpen (dd_math_min (+ this.animationOpen (* 2.0 dt)) 1))
+		(= this.animationOpen (dd_math_max (- this.animationOpen (* 3.0 dt)) 0))
 	)
 
 	# disabled do not calculate hovering buttons

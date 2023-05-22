@@ -2059,23 +2059,25 @@
 		)
 	)
 
-	# check if mouse is hovering over a button
-	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
-		(group
-
-		(if (== this.selection i)
+	(if (== AVDL_VR 0)
+		# check if mouse is hovering over a button
+		(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 			(group
-			)
-			(if (this.button[i].hasMouseCollided)
+
+			(if (== this.selection i)
 				(group
-				#(this.hoverSound.play)
-				(= this.selection i)
+				)
+				(if (this.button[i].hasMouseCollided)
+					(group
+					#(this.hoverSound.play)
+					(= this.selection i)
+					)
 				)
 			)
-		)
 
-		(this.button[i].update dt (== this.selection i) (== this.selectionClick i))
+			(this.button[i].update dt (== this.selection i) (== this.selectionClick i))
 
+			)
 		)
 	)
 
@@ -3197,15 +3199,15 @@
 					# multiplayer game, send move to other players
 					(if isMultiplayerGame
 						(group
-	
+
 						# prepare move
 						(def MultiplayerMessageGameTurn msg)
 						(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
 						(= msg.cardIndex this.lastSelectedCardIndex)
-	
+
 						# send move to all other players
 						(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
-	
+
 						)
 					)
 					)

@@ -71,6 +71,10 @@
 	(dd_matrix_translate this.grabby 0 0 -0.5)
 	#(= this.isGrabbed 0)
 
+	(this.loadingLabel.setText "Loading ...")
+	(this.loadingLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+	(= this.isLoading 0)
+
 	)
 )
 
@@ -208,6 +212,16 @@
 		)
 	)
 
+	# loading label
+	(if this.isLoading
+		(group
+		(dd_matrix_push)
+		(dd_translatef 0 0 -10)
+		(this.loadingLabel.draw)
+		(dd_matrix_pop)
+		)
+	)
+
 	)
 )
 
@@ -301,6 +315,7 @@
 			(group
 			(dd_world_prepare world_game 1.0)
 			(dd_world_ready)
+			(= this.isLoading 1)
 			)
 		)
 
@@ -328,6 +343,7 @@
 		(= isMultiplayerGame 0)
 		(dd_world_prepare world_game 1.0)
 		(dd_world_ready)
+		(= this.isLoading 1)
 		)
 	# options
 	(== action_index 3)
@@ -339,6 +355,7 @@
 		(group
 		(dd_world_prepare world_credits 1.0)
 		(dd_world_ready)
+		(= this.isLoading 1)
 		)
 	)
 	(return 0)

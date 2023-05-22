@@ -37,6 +37,13 @@
 (class_function OverlayButtons void update ()
 	(group
 	(= this.bg_rotation (+ this.bg_rotation 0.3))
+	(if this.cardToShow
+		(group
+		(def float ovCount)
+		(= ovCount this.cardToShow.counter)
+		#(echo "overlay counter: " ovCount)
+		)
+	)
 	)
 )
 
@@ -76,29 +83,38 @@
 (class_function OverlayButtons void lookAt (group int x int y)
 	(group
 
+	(echo "lookat non vr")
 	(if (&& (> x -6) (< x 6)
 	        (> y -3) (< y 14)
 		)
 		(group
-		(= this.isLookingAtCard 1)
-		(def dd_matrix mat)
-		(dd_matrix_identity mat)
-		(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
-		(if (== AVDL_VR 0)
-			(dd_matrix_scale mat 1.1 1.1 1.1)
-			(dd_matrix_scale mat 0.4 0.4 0.4)
+		(if (== this.isLookingAtCard 0)
+			(group
+			(= this.isLookingAtCard 1)
+			(def dd_matrix mat)
+			(dd_matrix_identity mat)
+			(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
+			(if (== AVDL_VR 0)
+				(dd_matrix_scale mat 1.1 1.1 1.1)
+				(dd_matrix_scale mat 0.4 0.4 0.4)
+			)
+			(this.cardToShow.setTarget mat)
+			)
 		)
-		(this.cardToShow.setTarget mat)
 		)
 		(group
-		(= this.isLookingAtCard 0)
-		(def dd_matrix mat)
-		(dd_matrix_identity mat)
-		(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
-		(if AVDL_VR
-			(dd_matrix_scale mat 0.3 0.3 0.3)
+		(if this.isLookingAtCard
+			(group
+			(= this.isLookingAtCard 0)
+			(def dd_matrix mat)
+			(dd_matrix_identity mat)
+			(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
+			(if AVDL_VR
+				(dd_matrix_scale mat 0.3 0.3 0.3)
+			)
+			(this.cardToShow.setTarget mat)
+			)
 		)
-		(this.cardToShow.setTarget mat)
 		)
 	)
 
@@ -174,20 +190,30 @@
 		(< (dd_math_abs (+ (dd_vec4_getZ pos) 0.5)) 0.1)
 		)
 		(group
-		(= this.isLookingAtCard 1)
-		(def dd_matrix mat)
-		(dd_matrix_identity mat)
-		(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
-		(dd_matrix_scale mat 0.4 0.4 0.4)
-		(this.cardToShow.setTarget mat)
+		(if (== this.isLookingAtCard 0)
+			(group
+			(= this.isLookingAtCard 1)
+			(def dd_matrix mat)
+			(dd_matrix_identity mat)
+			(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
+			(dd_matrix_scale mat 0.4 0.4 0.4)
+			(this.cardToShow.setTarget mat)
+			(echo "set target looking")
+			)
+		)
 		)
 		(group
-		(= this.isLookingAtCard 0)
-		(def dd_matrix mat)
-		(dd_matrix_identity mat)
-		(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
-		(dd_matrix_scale mat 0.3 0.3 0.3)
-		(this.cardToShow.setTarget mat)
+		(if this.isLookingAtCard
+			(group
+			(= this.isLookingAtCard 0)
+			(def dd_matrix mat)
+			(dd_matrix_identity mat)
+			(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
+			(dd_matrix_scale mat 0.3 0.3 0.3)
+			(this.cardToShow.setTarget mat)
+			(echo "set target NOT looking")
+			)
+		)
 		)
 	)
 	)

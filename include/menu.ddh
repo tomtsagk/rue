@@ -29,6 +29,9 @@
 	(def options opt)
 	(def menu_multiplayer menuMultiplayer)
 
+	(def dd_string3d loadingLabel)
+	(def int isLoading)
+
 	# theme
 	(def dd_music theme)
 
