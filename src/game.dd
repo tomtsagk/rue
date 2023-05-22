@@ -1972,7 +1972,7 @@
 	)
 	(this.roseCard.update dt)
 	(for (def int i 0) (< i this.tutCardsTotal) (= i (+ i 1))
-		(this.tutCards[i].update dt)
+		(this.tutCards[i].update (* dt 1.2))
 	)
 
 	# update table arrow
