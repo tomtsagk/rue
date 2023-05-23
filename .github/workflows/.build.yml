@@ -13,8 +13,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.9.1/avdl_v0.9.1_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.9.1/avdl_v0.9.1_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.9.2/avdl_v0.9.2_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.9.2/avdl_v0.9.2_windows.zip
 
 jobs:
   # Android
@@ -37,6 +37,47 @@ jobs:
         chmod +x AVDL_BUILD/bin/avdl
     - name: generate_android_project
       run: ./AVDL_BUILD/bin/avdl --android
+    - name: compile_apk
+      run: |
+        cd avdl_build_android
+        chmod +x gradlew
+        ./gradlew build
+        cd ../
+        mkdir rue_output
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output
+        mkdir rue_output_debug
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android
+        path: rue_output
+    - name: upload_artifact_debug
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android_debug
+        path: rue_output_debug
+
+  # Android - Google Play
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v2
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'oracle'
+        java-version: '17'
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        unzip avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
+        chmod +x AVDL_BUILD/bin/avdl
+    - name: generate_android_project
+      run: ./AVDL_BUILD/bin/avdl --android-google-play --google-play-achievement "ACHIEVEMENT_ROSE_SELECTED" ${{ secrets.ACHIEVEMENT_ROSE_SELECTED }} --google-play-achievement "ACHIEVEMENT_EXTRA_DISCARD" ${{ secrets.ACHIEVEMENT_EXTRA_DISCARD }} --google-play-achievement "ACHIEVEMENT_I_FOUND_THE_ROSE" ${{ secrets.ACHIEVEMENT_I_FOUND_THE_ROSE }} --google-play-achievement "ACHIEVEMENT_FIRST_VICTORY" ${{ secrets.ACHIEVEMENT_FIRST_VICTORY }} --google-play-achievement "ACHIEVEMENT_GETTING_BETTER" ${{ secrets.ACHIEVEMENT_GETTING_BETTER }} --google-play-achievement "ACHIEVEMENT_MASTER_PLAYER" ${{ secrets.ACHIEVEMENT_MASTER_PLAYER }}
     - name: compile_apk
       run: |
         cd avdl_build_android
