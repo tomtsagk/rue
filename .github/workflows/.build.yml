@@ -406,6 +406,7 @@ jobs:
          zip rue_build_windows.zip rue_build_windows -r
          zip rue_build_windows_steam.zip rue_build_windows_steam -r
          zip rue_build_android.zip rue_android -r
+         zip rue_build_android_googleplay.zip rue_android_googleplay -r
     - name: create release
       uses: actions/create-release@v1
       id: create_release
@@ -461,4 +462,13 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: rue_build_android.zip
         asset_name: rue_${{ github.ref_name }}_android.zip
+        asset_content_type: application/gzip
+    - name: upload android_googleplay artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rue_build_android_googleplay.zip
+        asset_name: rue_${{ github.ref_name }}_android_googleplay.zip
         asset_content_type: application/gzip
