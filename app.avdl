@@ -7,7 +7,7 @@ version_code: 10
 
 # A human-readable version, usually with the
 # notation [Major].[Minor].[Patch]
-version_name: 1.0.2
+version_name: 1.0.3
 
 # Updates on the project's build
 # while the project remains the same
