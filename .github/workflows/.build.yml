@@ -59,7 +59,7 @@ jobs:
         path: rue_output_debug
 
   # Android - Google Play
-  build_android:
+  build_android_googleplay:
     runs-on: ubuntu-latest
     steps:
     - name: init_rue
@@ -91,12 +91,12 @@ jobs:
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android
+        name: rue_android_googleplay
         path: rue_output
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android_debug
+        name: rue_android_googleplay_debug
         path: rue_output_debug
 
   # Quest 2
@@ -368,7 +368,7 @@ jobs:
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android, build_quest2]
+    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android, build_android_googleplay, build_quest2]
     steps:
     - uses: actions/download-artifact@v3
       with:
@@ -390,6 +390,10 @@ jobs:
       with:
         name: rue_android
         path: rue_android
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_android_googleplay
+        path: rue_android_googleplay
     - uses: actions/download-artifact@v3
       with:
         name: rue_quest2
