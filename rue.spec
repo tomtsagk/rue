@@ -1,5 +1,5 @@
 Name:           rue
-Version:        1.0.0
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        A card game about decisions, love and regret
 
@@ -21,6 +21,7 @@ The aim of the game is for each player to have the rose in front of them at the 
 %autosetup
 
 %build
+avdl --makefile
 make %{?_smp_mflags} prefix=/usr
 
 %install
@@ -41,6 +42,10 @@ make %{?_smp_mflags} prefix=/usr DESTDIR=%{buildroot} install
 %license LICENSE
 
 %changelog
+* Wed Apr 24 2023 Tom Tsagkatos <tomtsagk@afloof.dev>
+- Add link to buy physical game
+- Performance optimisations
+
 * Tue Feb 14 2023 Tom Tsagk <tomtsagk@afloofdev.com>
 - Game was simplified
 - First stable release
