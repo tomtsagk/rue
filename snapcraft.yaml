@@ -38,7 +38,7 @@ apps:
 #
 parts:
   avdl:
-    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.9.4.tar.gz
+    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.9.5.tar.gz
     plugin: make
     override-build: |
       make prefix=/usr
