@@ -350,13 +350,6 @@
 		(group
 		(this.opt.enable)
 		)
-	# credits
-	(== action_index 4)
-		(group
-		(dd_world_prepare world_credits 1.0)
-		(dd_world_ready)
-		(= this.isLoading 1)
-		)
 	)
 	(return 0)
 	)
@@ -375,6 +368,12 @@
 	(== action_index 3)
 		(group
 		(this.theme.playLoop -1)
+		)
+	(== action_index 6)
+		(group
+		(dd_world_prepare world_credits 1.0)
+		(dd_world_ready)
+		(= this.isLoading 1)
 		)
 	)
 	(return 0)

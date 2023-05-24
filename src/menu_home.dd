@@ -1,5 +1,4 @@
 (include "menu_home.ddh")
-(include "credits.ddh")
 
 (class_function menu_home void create ()
 	(group
@@ -49,10 +48,8 @@
 	(this.button[3].description.setText "Open and modify game settings")
 
 	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
-	#(this.button[4].label.setText (this.localisation.getValue "menu_credits"))
-	#(this.button[4].description.setText (this.localisation.getValue "menu_credits_desc"))
-	(this.button[4].label.setText "Credits")
-	(this.button[4].description.setText "Meet the creators")
+	(this.button[4].label.setText "Buy physical card game")
+	(this.button[4].description.setText "Buy the physical card game on afloofdev.etsy.com")
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -150,11 +147,12 @@
 		(this.button[3].setProportionalWidth 0.5)
 		(this.button[3].setProportionalSize 0.63)
 
-		# credits
+		# buy physical game
 		(this.button[4].setSize 1 1)
-		(this.button[4].setProportionalPosition 0.20 0.35)
+		(this.button[4].setProportionalPosition 0.2 0.35)
 		(this.button[4].setProportionalWidth 0.5)
 		(this.button[4].setProportionalSize 0.63)
+
 		)
 	# landscape
 		(group
@@ -181,7 +179,7 @@
 		(this.button[3].setProportionalWidth 0.2)
 		(this.button[3].setProportionalSize 0.8)
 
-		# credits
+		# buy physical game
 		(this.button[4].setSize 1 1)
 		(this.button[4].setProportionalPosition 0.15 0.85)
 		(this.button[4].setProportionalWidth 0.2)
@@ -435,10 +433,10 @@
 			# options -> play
 			(if (== this.selection 3)
 				(= this.selection 1)
-			# play -> credits
+			# play -> buy
 			(== this.selection 1)
 				(= this.selection 4)
-			# exit -> credits
+			# exit -> buy
 			(== this.selection 2)
 				(= this.selection 4)
 			)
@@ -448,7 +446,7 @@
 		(|| (== key 3) (== key 100))
 			(group
 
-			# credits -> play
+			# buy -> play
 			(if (== this.selection 4)
 				(= this.selection 1)
 			# play -> options
@@ -486,7 +484,7 @@
 		(if (|| (== key 1) (== key 97))
 			(group
 
-			# play -> credits
+			# play -> buy
 			(if (== this.selection 1)
 				(= this.selection 4)
 			# exit -> play
@@ -502,7 +500,7 @@
 		(|| (== key 3) (== key 100))
 			(group
 
-			# credits -> play
+			# buy -> play
 			(if (== this.selection 4)
 				(= this.selection 1)
 			# play -> exit
@@ -518,7 +516,7 @@
 		(|| (== key 2) (== key 119))
 			(group
 
-			# play -> credits
+			# play -> buy
 			(if (== this.selection 1)
 				(= this.selection 4)
 			# exit -> options
@@ -531,7 +529,7 @@
 		(|| (== key 4) (== key 115))
 			(group
 
-			# credits -> play
+			# buy -> play
 			(if (== this.selection 4)
 				(= this.selection 1)
 			# options -> exits
@@ -587,7 +585,9 @@
 			(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(group
 
-			(return (this.button_selection this.selectionClick))
+			(def int selectionClickTemp this.selectionClick)
+			(= this.selectionClick -1)
+			(return (this.button_selection selectionClickTemp))
 
 			)
 		)
@@ -658,14 +658,14 @@
 		(this.disable)
 		(return 3)
 		)
-	# credits
+	# buy physical game
 	(== button_index 4)
 		(group
 		(if (== AVDL_VR 0)
 			(this.clickBigSound.play)
 		)
-		(this.disable)
-		(return 4)
+		(avdl_webapi_openurl "https://www.etsy.com/uk/listing/1306329269/rue-card-game-3-to-5-players-short-game")
+		(return 0)
 		)
 	)
 	(return 0)

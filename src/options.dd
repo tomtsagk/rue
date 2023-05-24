@@ -1,4 +1,5 @@
 (include "options.ddh")
+(include "credits.ddh")
 
 (class_function options void create ()
 	(group
@@ -9,7 +10,7 @@
 	#(this.font.setColorBack 0.3 0.3 0.3)
 
 	# buttons
-	(= this.buttonTotal 4)
+	(= this.buttonTotal 5)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[0].label.setText "Music Playing")
 	(this.button[0].description.setText "Select to mute/unmute music")
@@ -31,6 +32,11 @@
 	(this.button[3].label.setText "Back")
 	(this.button[3].description.setText "Return to main menu")
 
+	# credits
+	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[4].label.setText "Credits")
+	(this.button[4].description.setText "Meet the creators")
+
 	# Yes/No labels
 	(this.labelYes.setText "Yes")
 	(this.labelYes.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -39,7 +45,7 @@
 
 	# text display
 	(this.textButton.setSize 1 1)
-	(this.textButton.setProportionalPosition 0.5 0.15)
+	(this.textButton.setProportionalPosition 0.5 0.10)
 	(this.textButton.setProportionalWidth 0.2)
 
 	(= this.selection 0)
@@ -138,6 +144,12 @@
 		(this.button[3].setProportionalPosition 0.15 0.85)
 		(this.button[3].setProportionalWidth 0.4)
 		(this.button[3].setProportionalSize 0.6)
+
+		# credits
+		(this.button[4].setSize 1 1)
+		(this.button[4].setProportionalPosition 0.85 0.85)
+		(this.button[4].setProportionalWidth 0.4)
+		(this.button[4].setProportionalSize 0.6)
 		)
 	# landscape
 		(group
@@ -164,6 +176,12 @@
 		(this.button[3].setProportionalPosition 0.15 0.85)
 		(this.button[3].setProportionalWidth 0.2)
 		(this.button[3].setProportionalSize 1.0)
+
+		# credits
+		(this.button[4].setSize 1 1)
+		(this.button[4].setProportionalPosition 0.85 0.85)
+		(this.button[4].setProportionalWidth 0.2)
+		(this.button[4].setProportionalSize 1.0)
 		)
 	)
 
@@ -380,8 +398,12 @@
 		(if (|| (== key 1) (== key 97))
 			(group
 
+			# credits -> music
+			(if (== this.selection 4)
+				(= this.selection 0)
 			# * -> back
-			(= this.selection 3)
+				(= this.selection 3)
+			)
 
 			)
 		# right arrow or 'd'
@@ -391,6 +413,8 @@
 			# back -> music
 			(if (== this.selection 3)
 				(= this.selection 0)
+			# * -> credits
+				(= this.selection 4)
 			)
 
 			)
@@ -423,6 +447,9 @@
 			# back -> music
 			(== this.selection 3)
 				(= this.selection 0)
+			# credits -> music
+			(== this.selection 4)
+				(= this.selection 0)
 			)
 
 			)
@@ -445,6 +472,9 @@
 			# music -> back
 			(== this.selection 0)
 				(= this.selection 3)
+			# credits -> back
+			(== this.selection 4)
+				(= this.selection 3)
 			)
 
 			)
@@ -461,6 +491,9 @@
 			# toggle -> audio
 			(== this.selection 2)
 				(= this.selection 1)
+			# audio -> credits
+			(== this.selection 1)
+				(= this.selection 4)
 			)
 
 			)
@@ -474,9 +507,9 @@
 			# music -> back
 			(== this.selection 0)
 				(= this.selection 3)
-			# audio -> back
+			# audio -> credits
 			(== this.selection 1)
-				(= this.selection 3)
+				(= this.selection 4)
 			)
 
 			)
@@ -493,6 +526,9 @@
 			# audio -> toggle
 			(== this.selection 1)
 				(= this.selection 2)
+			# credits -> audio
+			(== this.selection 4)
+				(= this.selection 1)
 			)
 
 			)
@@ -624,6 +660,15 @@
 		)
 		(this.disable)
 		(return 1)
+		)
+	# credits
+	(== button_index 4)
+		(group
+		(if (== AVDL_VR 0)
+			(this.clickBigSound.play)
+		)
+		(this.disable)
+		(return 6)
 		)
 	)
 
