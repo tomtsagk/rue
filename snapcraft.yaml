@@ -1,6 +1,6 @@
 name: darkdimension-rue
 base: core18
-version: '1.0.0'
+version: '1.0.5'
 summary: A card game about decisions, love and regret.
 description: |
   A card game where all the players are sitting around a table.
@@ -38,7 +38,7 @@ apps:
 #
 parts:
   avdl:
-    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.7.2.tar.gz
+    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.9.4.tar.gz
     plugin: make
     override-build: |
       make prefix=/usr
@@ -64,9 +64,10 @@ parts:
       - libogg0
       - libopusfile0
   rue:
-    source: https://github.com/tomtsagk/rue/archive/refs/tags/v1.0.0.tar.gz
+    source: https://github.com/tomtsagk/rue/archive/refs/tags/v1.0.5.tar.gz
     plugin: make
     override-build: |
+      avdl --makefile
       make prefix=/usr
       make prefix=/usr DESTDIR="$SNAPCRAFT_PART_INSTALL" install
     build-packages:
