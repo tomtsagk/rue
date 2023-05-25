@@ -41,7 +41,6 @@
 		(group
 		(def float ovCount)
 		(= ovCount this.cardToShow.counter)
-		#(echo "overlay counter: " ovCount)
 		)
 	)
 	)
@@ -83,7 +82,6 @@
 (class_function OverlayButtons void lookAt (group int x int y)
 	(group
 
-	(echo "lookat non vr")
 	(if (&& (> x -6) (< x 6)
 	        (> y -3) (< y 14)
 		)
@@ -198,7 +196,6 @@
 			(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
 			(dd_matrix_scale mat 0.4 0.4 0.4)
 			(this.cardToShow.setTarget mat)
-			(echo "set target looking")
 			)
 		)
 		)
@@ -211,7 +208,6 @@
 			(dd_matrix_translate mat this.cardX this.cardY this.cardZ)
 			(dd_matrix_scale mat 0.3 0.3 0.3)
 			(this.cardToShow.setTarget mat)
-			(echo "set target NOT looking")
 			)
 		)
 		)
