@@ -1,5 +1,5 @@
 Name:           rue
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}
 Summary:        A card game about decisions, love and regret
 
@@ -7,8 +7,8 @@ License:        GPLv3
 URL:            https://afloofdev.com/games/rue
 Source0:        https://github.com/tomtsagk/%{name}/archive/refs/tags/v%{version}.tar.gz
 
-BuildRequires:  make, avdl, gcc, g++, glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, opus, opus-tools, libopusenc, libogg-devel, opusfile
-Requires:       glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, opus, opus-tools, libopusenc, libogg-devel, opusfile
+BuildRequires:  make, avdl, gcc, g++, glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, libogg-devel
+Requires:       glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, libogg-devel
 
 %description
 A card game where all the players are sitting around a table.
