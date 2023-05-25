@@ -1,6 +1,6 @@
 name: darkdimension-rue
 base: core18
-version: '1.0.6'
+version: '1.0.7'
 summary: A card game about decisions, love and regret.
 description: |
   A card game where all the players are sitting around a table.
@@ -58,7 +58,7 @@ parts:
       - libvorbis-dev
       - libogg0
   rue:
-    source: https://github.com/tomtsagk/rue/archive/refs/tags/v1.0.6.tar.gz
+    source: https://github.com/tomtsagk/rue/archive/refs/tags/v1.0.7.tar.gz
     plugin: make
     override-build: |
       avdl --makefile
