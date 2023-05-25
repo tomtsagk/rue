@@ -1,5 +1,5 @@
 Name:           rue
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        A card game about decisions, love and regret
 

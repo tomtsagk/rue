@@ -1,6 +1,6 @@
 name: darkdimension-rue
 base: core18
-version: '1.0.5'
+version: '1.0.6'
 summary: A card game about decisions, love and regret.
 description: |
   A card game where all the players are sitting around a table.
@@ -38,7 +38,7 @@ apps:
 #
 parts:
   avdl:
-    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.9.5.tar.gz
+    source: https://github.com/tomtsagk/avdl/archive/refs/tags/v0.9.6.tar.gz
     plugin: make
     override-build: |
       make prefix=/usr
@@ -49,22 +49,16 @@ parts:
       - libsdl2-mixer-dev
       - libpng-dev
       - libvorbis-dev
-      - opus-tools
-      - libopus0
       - libogg0
-      - libopusfile0
     stage-packages:
       - libglew-dev
       - libsdl2-dev
       - libsdl2-mixer-dev
       - libpng-dev
       - libvorbis-dev
-      - opus-tools
-      - libopus0
       - libogg0
-      - libopusfile0
   rue:
-    source: https://github.com/tomtsagk/rue/archive/refs/tags/v1.0.5.tar.gz
+    source: https://github.com/tomtsagk/rue/archive/refs/tags/v1.0.6.tar.gz
     plugin: make
     override-build: |
       avdl --makefile
@@ -76,10 +70,7 @@ parts:
       - libsdl2-mixer-dev
       - libpng-dev
       - libvorbis-dev
-      - opus-tools
-      - libopus0
       - libogg0
-      - libopusfile0
     stage-packages:
       - libglu1-mesa
       - libglew-dev
@@ -87,7 +78,4 @@ parts:
       - libsdl2-mixer-dev
       - libpng-dev
       - libvorbis-dev
-      - opus-tools
-      - libopus0
       - libogg0
-      - libopusfile0
