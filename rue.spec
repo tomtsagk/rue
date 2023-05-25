@@ -7,7 +7,7 @@ License:        GPLv3
 URL:            https://afloofdev.com/games/rue
 Source0:        https://github.com/tomtsagk/%{name}/archive/refs/tags/v%{version}.tar.gz
 
-BuildRequires:  make, glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, opus, opus-tools, libopusenc, libogg-devel, opusfile
+BuildRequires:  make, avdl, gcc, g++, glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, opus, opus-tools, libopusenc, libogg-devel, opusfile
 Requires:       glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, opus, opus-tools, libopusenc, libogg-devel, opusfile
 
 %description
@@ -42,7 +42,7 @@ make %{?_smp_mflags} prefix=/usr DESTDIR=%{buildroot} install
 %license LICENSE
 
 %changelog
-* Wed Apr 24 2023 Tom Tsagkatos <tomtsagk@afloof.dev>
+* Wed May 24 2023 Tom Tsagkatos <tomtsagk@afloof.dev>
 - Add link to buy physical game
 - Performance optimisations
 
