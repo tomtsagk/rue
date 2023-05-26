@@ -148,6 +148,55 @@ jobs:
         name: rue_quest2
         path: rue_quest2.apk
 
+  # Quest 2 + Oculus platform services
+  build_quest2_oculus:
+    runs-on: ubuntu-latest
+    steps:
+    - name: init_rue
+      uses: actions/checkout@v2
+    - name: get_avdl
+      run: |
+        wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
+        unzip avdl_build_linux.zip
+        mkdir AVDL_BUILD
+        mv avdl_build_linux/* AVDL_BUILD
+        rmdir avdl_build_linux
+        chmod +x AVDL_BUILD/bin/avdl
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'oracle'
+        java-version: '17'
+    - name: generate_quest2_project
+      run: ./AVDL_BUILD/bin/avdl --quest2-oculus
+    - name: get_oculus_sdk
+      env:
+        oculus_api_link: ${{ secrets.OCULUS_API_LINK }}
+      run: |
+        wget ${oculus_api_link} --quiet
+        mkdir avdl_oculus_build
+        mv oculus_mobile_sdk.zip avdl_oculus_build
+        cd avdl_oculus_build
+        unzip oculus_mobile_sdk.zip
+        cp ../avdl_build_quest2/ -r avdl_vr_bk/AvdlProject
+    - name: compile_apk
+      run: |
+        cd avdl_oculus_build/avdl_vr_bk/AvdlProject/Projects/Android
+        chmod +x ../../../gradlew
+        ../../../gradlew assembleDebug
+        mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_oculus_debug.apk
+        ../../../gradlew assembleRelease
+        mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2_oculus.apk
+    - name: upload_artifact_debug
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2_oculus_debug
+        path: rue_quest2_oculus_debug.apk
+    - name: upload_artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2_oculus
+        path: rue_quest2_oculus.apk
+
   # Linux
   build_linux:
     runs-on: ubuntu-20.04
@@ -398,6 +447,10 @@ jobs:
       with:
         name: rue_quest2
         path: rue_quest2
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_quest2_oculus
+        path: rue_quest2_oculus
     - name: zip packages
       run: |
          sudo apt update && sudo apt install -y zip
@@ -408,6 +461,7 @@ jobs:
          cd rue_android             && zip ../rue_build_android.zip            * -r && cd ..
          cd rue_android_googleplay  && zip ../rue_build_android_googleplay.zip * -r && cd ..
          cd rue_quest2              && zip ../rue_build_quest2.zip             * -r && cd ..
+         cd rue_quest2_oculus       && zip ../rue_build_quest2_oculus.zip      * -r && cd ..
     - name: create release
       uses: actions/create-release@v1
       id: create_release
@@ -481,4 +535,13 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: rue_build_quest2.zip
         asset_name: rue_${{ github.ref_name }}_quest2.zip
+        asset_content_type: application/gzip
+    - name: upload quest2 oculus artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rue_build_quest2_oculus.zip
+        asset_name: rue_${{ github.ref_name }}_quest2_oculus.zip
         asset_content_type: application/gzip
