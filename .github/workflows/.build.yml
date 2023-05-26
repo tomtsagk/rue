@@ -13,8 +13,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.9.9/avdl_v0.9.9_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.9.9/avdl_v0.9.9_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.9.10/avdl_v0.9.10_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.9.10/avdl_v0.9.10_windows.zip
 
 jobs:
   # Android
@@ -44,19 +44,19 @@ jobs:
         ./gradlew build
         cd ../
         mkdir rue_output
-        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android.apk
         mkdir rue_output_debug
-        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_debug.apk
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: rue_android
-        path: rue_output
+        path: rue_output/rue_android.apk
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
         name: rue_android_debug
-        path: rue_output_debug
+        path: rue_output_debug/rue_android_debug.apk
 
   # Android - Google Play
   build_android_googleplay:
@@ -85,19 +85,19 @@ jobs:
         ./gradlew build
         cd ../
         mkdir rue_output
-        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android_googleplay.apk
         mkdir rue_output_debug
-        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_googleplay_debug.apk
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: rue_android_googleplay
-        path: rue_output
+        path: rue_output/rue_android_googleplay.apk
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
         name: rue_android_googleplay_debug
-        path: rue_output_debug
+        path: rue_output_debug/rue_android_googleplay_debug.apk
 
   # Quest 2
   build_quest2:
@@ -401,13 +401,13 @@ jobs:
     - name: zip packages
       run: |
          sudo apt update && sudo apt install -y zip
-         zip rue_build_linux.zip rue_build_linux -r
-         zip rue_build_linux_steam.zip rue_build_linux_steam -r
-         zip rue_build_windows.zip rue_build_windows -r
-         zip rue_build_windows_steam.zip rue_build_windows_steam -r
-         zip rue_build_android.zip rue_android -r
-         zip rue_build_android_googleplay.zip rue_android_googleplay -r
-         zip rue_build_quest2.zip rue_quest2 -r
+         cd rue_build_linux         && zip ../rue_build_linux.zip              * -r && cp ..
+         cd rue_build_linux_steam   && zip ../rue_build_linux_steam.zip        * -r && cp ..
+         cd rue_build_windows       && zip ../rue_build_windows.zip            * -r && cp ..
+         cd rue_build_windows_steam && zip ../rue_build_windows_steam.zip      * -r && cp ..
+         cd rue_android             && zip ../rue_build_android.zip            * -r && cp ..
+         cd rue_android_googleplay  && zip ../rue_build_android_googleplay.zip * -r && cp ..
+         cd rue_quest2              && zip ../rue_build_quest2.zip             * -r && cp ..
     - name: create release
       uses: actions/create-release@v1
       id: create_release
