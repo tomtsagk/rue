@@ -417,7 +417,7 @@ jobs:
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android, build_android_googleplay, build_quest2]
+    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android, build_android_googleplay, build_quest2, build_quest2_oculus]
     steps:
     - uses: actions/download-artifact@v3
       with:
