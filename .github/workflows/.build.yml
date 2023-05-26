@@ -401,13 +401,13 @@ jobs:
     - name: zip packages
       run: |
          sudo apt update && sudo apt install -y zip
-         cd rue_build_linux         && zip ../rue_build_linux.zip              * -r && cp ..
-         cd rue_build_linux_steam   && zip ../rue_build_linux_steam.zip        * -r && cp ..
-         cd rue_build_windows       && zip ../rue_build_windows.zip            * -r && cp ..
-         cd rue_build_windows_steam && zip ../rue_build_windows_steam.zip      * -r && cp ..
-         cd rue_android             && zip ../rue_build_android.zip            * -r && cp ..
-         cd rue_android_googleplay  && zip ../rue_build_android_googleplay.zip * -r && cp ..
-         cd rue_quest2              && zip ../rue_build_quest2.zip             * -r && cp ..
+         cd rue_build_linux         && zip ../rue_build_linux.zip              * -r && cd ..
+         cd rue_build_linux_steam   && zip ../rue_build_linux_steam.zip        * -r && cd ..
+         cd rue_build_windows       && zip ../rue_build_windows.zip            * -r && cd ..
+         cd rue_build_windows_steam && zip ../rue_build_windows_steam.zip      * -r && cd ..
+         cd rue_android             && zip ../rue_build_android.zip            * -r && cd ..
+         cd rue_android_googleplay  && zip ../rue_build_android_googleplay.zip * -r && cd ..
+         cd rue_quest2              && zip ../rue_build_quest2.zip             * -r && cd ..
     - name: create release
       uses: actions/create-release@v1
       id: create_release
