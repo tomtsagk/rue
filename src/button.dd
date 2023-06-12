@@ -26,9 +26,9 @@
 	(= this.isVisible 1)
 
 	(this.label.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.label.setAlignVertical DD_STRING3D_ALIGN_CENTER)
+	(this.label.setAlignVertical DD_STRING3D_ALIGN_VERTICAL_CENTER)
 	(this.description.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.description.setAlignVertical DD_STRING3D_ALIGN_CENTER)
+	(this.description.setAlignVertical DD_STRING3D_ALIGN_VERTICAL_CENTER)
 
 	)
 )
