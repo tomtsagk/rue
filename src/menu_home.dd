@@ -110,7 +110,7 @@
 	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
 	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
 
-	(this.versionLabel.setText "v1.0.5")
+	(this.versionLabel.setText "v1.1.0")
 	(this.versionLabel.setAlign DD_STRING3D_ALIGN_RIGHT)
 
 	)
@@ -221,9 +221,7 @@
 				)
 				(if (this.button[i].hasMouseCollided)
 					(group
-					(if (== AVDL_VR 0)
-						(this.hoverSound.play)
-					)
+					(this.hoverSound.play)
 					(= this.selection i)
 					)
 				)
@@ -251,9 +249,7 @@
 						)
 						(if (this.button[j].hasPositionCollided (dd_matrix_getControllerPosition i))
 							(group
-							(if (== AVDL_VR 0)
-								(this.hoverSound.play)
-							)
+							(this.hoverSound.play)
 							(= this.selection j)
 							)
 						)
@@ -626,44 +622,34 @@
 	# custom game
 	(if (== button_index 0)
 		(group
-		(if (== AVDL_VR 0)
-			(this.clickBigSound.play)
-		)
+		(this.clickBigSound.play)
 		(this.disable)
 		(return 1)
 		)
 	# play
 	(== button_index 1)
 		(group
-		(if (== AVDL_VR 0)
-			(this.clickBigSound.play)
-		)
+		(this.clickBigSound.play)
 		(this.disable)
 		(return 2)
 		)
 	# exit game
 	(== button_index 2)
 		(group
-		(if (== AVDL_VR 0)
-			(this.clickBigSound.play)
-		)
+		(this.clickBigSound.play)
 		(avdl_exit) # exit game
 		)
 	# options
 	(== button_index 3)
 		(group
-		(if (== AVDL_VR 0)
-			(this.clickBigSound.play)
-		)
+		(this.clickBigSound.play)
 		(this.disable)
 		(return 3)
 		)
 	# buy physical game
 	(== button_index 4)
 		(group
-		(if (== AVDL_VR 0)
-			(this.clickBigSound.play)
-		)
+		(this.clickBigSound.play)
 		(avdl_webapi_openurl "https://www.etsy.com/uk/listing/1306329269/rue-card-game-3-to-5-players-short-game")
 		(return 0)
 		)

@@ -281,18 +281,14 @@
 		# looking elsewhere - de-highlight card
 			(group
 			(= this.highlightCard -1)
-			#(if (== AVDL_VR 0)
-			#	(this.cardDeselectSound.play)
-			#)
+			(this.cardDeselectSound.play)
 			)
 		)
 		)
 	(&& (>= this.userLookingAtCard 0) (< this.userLookingAtCard this.cardsTotal))
 		(group
 		(= this.highlightCard this.userLookingAtCard)
-		#(if (== AVDL_VR 0)
-		#	(this.cardSelectSound.play)
-		#)
+		(this.cardSelectSound.play)
 		)
 	)
 
@@ -333,9 +329,7 @@
 			(this.calculateCardPositions)
 		)
 
-		#(if (== AVDL_VR 0)
-		#	(this.cardPlaceSound.play)
-		#)
+		(this.cardPlaceSound.play)
 
 		) # selected card
 	)
@@ -437,9 +431,7 @@
 		)
 	# looking at a new card
 		(group
-		#(if (== AVDL_VR 0)
-		#	(this.cardLookSound.play)
-		#)
+		(this.cardLookSound.play)
 		)
 	)
 
@@ -463,9 +455,7 @@
 		)
 	# looking at a new card
 		(group
-		#(if (== AVDL_VR 0)
-		#	(this.cardLookSound.play)
-		#)
+		(this.cardLookSound.play)
 		)
 	)
 
