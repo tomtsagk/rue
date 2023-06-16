@@ -33,7 +33,7 @@
 	(def int isLoading)
 
 	# theme
-	(def dd_music theme)
+	(def dd_sound theme)
 
 	(def int isGrabbed)
 	(def dd_matrix grabby)
