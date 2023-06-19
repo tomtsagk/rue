@@ -155,7 +155,7 @@
 	(def float rotating)
 
 	# theme
-	(def dd_music theme)
+	(def dd_sound theme)
 
 	# card sound effects
 	(def dd_sound cardLookSound)
