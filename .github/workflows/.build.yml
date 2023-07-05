@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - master
+      - test/custom_release
     tags:
       "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
@@ -414,6 +415,51 @@ jobs:
       with:
         name: rue_build_windows_steam
         path: build/RUE_BUILD
+  release_itchio:
+    runs-on: ubuntu-20.04
+    needs: [build_linux, build_windows, build_android, build_quest2]
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_linux
+        path: rue_build_linux
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_windows
+        path: rue_build_windows
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_android
+        path: rue_android
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_quest2
+        path: rue_quest2
+    - name: zip packages
+      run: |
+        sudo apt update && sudo apt install -y zip
+        cd rue_build_linux   && zip ../rue_build_linux.zip   * -r && cd ..
+        cd rue_build_windows && zip ../rue_build_windows.zip * -r && cd ..
+        cd rue_android       && zip ../rue_build_android.zip * -r && cd ..
+        cd rue_quest2        && zip ../rue_build_quest2.zip  * -r && cd ..
+    - name: get butler
+      run: |
+        curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+        unzip butler.zip
+        chmod +x butler
+        ./butler -V
+    - name: upload linux
+      run: |
+        ./butler push rue_build_linux.zip afloofdev/test-project:linux-x86_64 --userversion 0.0.0
+    - name: upload windows
+      run: |
+        ./butler push rue_build_windows.zip afloofdev/test-project:windows-x86_64 --userversion 0.0.0
+    - name: upload android
+      run: |
+        ./butler push rue_android.zip afloofdev/test-project:android --userversion 0.0.0
+    - name: upload quest2
+      run: |
+        ./butler push rue_quest2.zip afloofdev/test-project:quest2 --userversion 0.0.0
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
