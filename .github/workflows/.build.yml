@@ -448,18 +448,14 @@ jobs:
         unzip butler.zip
         chmod +x butler
         ./butler -V
-    - name: upload linux
+    - name: upload_builds
+      env:
+        BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
       run: |
-        ./butler push rue_build_linux.zip afloofdev/test-project:linux-x86_64 --userversion 0.0.0
-    - name: upload windows
-      run: |
+        ./butler push rue_build_linux.zip   afloofdev/test-project:linux-x86_64   --userversion 0.0.0
         ./butler push rue_build_windows.zip afloofdev/test-project:windows-x86_64 --userversion 0.0.0
-    - name: upload android
-      run: |
-        ./butler push rue_android.zip afloofdev/test-project:android --userversion 0.0.0
-    - name: upload quest2
-      run: |
-        ./butler push rue_quest2.zip afloofdev/test-project:quest2 --userversion 0.0.0
+        ./butler push rue_android.zip       afloofdev/test-project:android        --userversion 0.0.0
+        ./butler push rue_quest2.zip        afloofdev/test-project:quest2         --userversion 0.0.0
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
