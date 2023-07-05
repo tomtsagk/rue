@@ -33,8 +33,6 @@ jobs:
          sudo apt update && sudo apt install -y zipalign apksigner
     - name: get_avdl
       run: |
-        zipalign -v 4 rue_output/rue_android.apk rue_output/rue_android_signed.apk
-        apksigner sign --ks keystore rue_output/rue_android_signed.apk
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
         mkdir AVDL_BUILD
@@ -51,6 +49,8 @@ jobs:
         cd ../
         mkdir rue_output
         mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android.apk
+        zipalign -v 4 rue_output/rue_android.apk rue_output/rue_android_signed.apk
+        apksigner sign --ks keystore rue_output/rue_android_signed.apk
         mkdir rue_output_debug
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_debug.apk
     - name: upload_artifact
