@@ -468,7 +468,6 @@ jobs:
         ./butler push rue_build_quest2.zip  afloofdev/test-project:quest2         --userversion 0.0.0
   create_release:
     if: ${{ github.ref_type == 'tag' }}
-    if: ${{ false }}
     runs-on: ubuntu-20.04
     needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android, build_android_googleplay, build_quest2, build_quest2_oculus]
     steps:
