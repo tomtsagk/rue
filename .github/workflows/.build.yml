@@ -46,6 +46,8 @@ jobs:
         cd ../
         mkdir rue_output
         mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android.apk
+        zipalign -v 4 rue_output/rue_android.apk rue_output/rue_android_signed.apk
+        apksigner sign --ks keystore rue_output/rue_android_signed.apk
         mkdir rue_output_debug
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_debug.apk
     - name: upload_artifact
@@ -61,6 +63,7 @@ jobs:
 
   # Android - Google Play
   build_android_googleplay:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_rue
@@ -103,6 +106,7 @@ jobs:
   # Quest 2
   build_quest2:
     runs-on: ubuntu-latest
+    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v2
@@ -152,6 +156,7 @@ jobs:
   # Quest 2 + Oculus platform services
   build_quest2_oculus:
     runs-on: ubuntu-latest
+    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v2
@@ -201,6 +206,7 @@ jobs:
   # Linux
   build_linux:
     runs-on: ubuntu-20.04
+    if: ${{ false }}
     steps:
     - name: update packages
       run: |
@@ -235,6 +241,7 @@ jobs:
   # Linux Steam
   build_linux_steam:
     runs-on: ubuntu-20.04
+    if: ${{ false }}
     steps:
     - name: update packages
       run: |
@@ -262,6 +269,7 @@ jobs:
   # Windows
   build_windows:
     runs-on: windows-latest
+    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v1
@@ -342,6 +350,7 @@ jobs:
   # Windows Steam
   build_windows_steam:
     runs-on: windows-latest
+    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v1
@@ -417,6 +426,7 @@ jobs:
         path: build/RUE_BUILD
   release_itchio:
     runs-on: ubuntu-20.04
+    if: ${{ false }}
     needs: [build_linux, build_windows, build_android, build_quest2]
     steps:
     - uses: actions/download-artifact@v3
@@ -458,6 +468,7 @@ jobs:
         ./butler push rue_build_quest2.zip  afloofdev/test-project:quest2         --userversion 0.0.0
   create_release:
     if: ${{ github.ref_type == 'tag' }}
+    if: ${{ false }}
     runs-on: ubuntu-20.04
     needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android, build_android_googleplay, build_quest2, build_quest2_oculus]
     steps:
