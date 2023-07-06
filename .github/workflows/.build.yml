@@ -77,6 +77,9 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v2
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - uses: actions/setup-java@v3
       with:
         distribution: 'oracle'
@@ -127,6 +130,9 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v2
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
@@ -185,6 +191,9 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v2
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
