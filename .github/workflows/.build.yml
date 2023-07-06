@@ -53,7 +53,7 @@ jobs:
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_debug.apk
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
         zipalign -v 4 rue_output/rue_android.apk rue_output/rue_android_signed.apk
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASS }}' rue_output/rue_android_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output/rue_android_signed.apk
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
