@@ -54,6 +54,7 @@ jobs:
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
         zipalign -v 4 rue_output/rue_android.apk rue_output/rue_android_signed.apk
         apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output/rue_android_signed.apk
+        rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
@@ -72,7 +73,6 @@ jobs:
 
   # Android - Google Play
   build_android_googleplay:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_rue
@@ -101,11 +101,20 @@ jobs:
         mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android_googleplay.apk
         mkdir rue_output_debug
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_googleplay_debug.apk
+        echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
+        zipalign -v 4 rue_output/rue_android_googleplay.apk rue_output/rue_android_googleplay_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output/rue_android_googleplay_signed.apk
+        rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: rue_android_googleplay
         path: rue_output/rue_android_googleplay.apk
+    - name: upload_artifact_signed
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android_googleplay_signed
+        path: rue_output/rue_android_googleplay_signed.apk
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -115,7 +124,6 @@ jobs:
   # Quest 2
   build_quest2:
     runs-on: ubuntu-latest
-    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v2
@@ -151,6 +159,10 @@ jobs:
         mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_debug.apk
         ../../../gradlew assembleRelease
         mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2.apk
+        echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
+        zipalign -v 4 ../../../../../rue_quest2.apk ../../../../../rue_quest2_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_signed.apk
+        rm keystore
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -161,11 +173,15 @@ jobs:
       with:
         name: rue_quest2
         path: rue_quest2.apk
+    - name: upload_artifact_signed
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2_signed
+        path: rue_quest2_signed.apk
 
   # Quest 2 + Oculus platform services
   build_quest2_oculus:
     runs-on: ubuntu-latest
-    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v2
@@ -201,6 +217,10 @@ jobs:
         mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_oculus_debug.apk
         ../../../gradlew assembleRelease
         mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2_oculus.apk
+        echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
+        zipalign -v 4 ../../../../../rue_quest2.apk ../../../../../rue_quest2_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_signed.apk
+        rm keystore
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -211,6 +231,11 @@ jobs:
       with:
         name: rue_quest2_oculus
         path: rue_quest2_oculus.apk
+    - name: upload_artifact_signed
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2_oculus_signed
+        path: rue_quest2_oculus_signed.apk
 
   # Linux
   build_linux:
