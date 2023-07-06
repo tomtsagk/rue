@@ -227,8 +227,8 @@ jobs:
         ../../../gradlew assembleRelease
         mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2_oculus.apk
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
-        zipalign -v 4 ../../../../../rue_quest2.apk ../../../../../rue_quest2_signed.apk
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_signed.apk
+        zipalign -v 4 ../../../../../rue_quest2_oculus.apk ../../../../../rue_quest2_oculus_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_oculus_signed.apk
         rm keystore
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
@@ -249,7 +249,6 @@ jobs:
   # Linux
   build_linux:
     runs-on: ubuntu-20.04
-    if: ${{ false }}
     steps:
     - name: update packages
       run: |
@@ -284,7 +283,6 @@ jobs:
   # Linux Steam
   build_linux_steam:
     runs-on: ubuntu-20.04
-    if: ${{ false }}
     steps:
     - name: update packages
       run: |
@@ -312,7 +310,6 @@ jobs:
   # Windows
   build_windows:
     runs-on: windows-latest
-    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v1
@@ -393,7 +390,6 @@ jobs:
   # Windows Steam
   build_windows_steam:
     runs-on: windows-latest
-    if: ${{ false }}
     steps:
     - name: init_rue
       uses: actions/checkout@v1
@@ -469,7 +465,6 @@ jobs:
         path: build/RUE_BUILD
   release_itchio:
     runs-on: ubuntu-20.04
-    if: ${{ false }}
     needs: [build_linux, build_windows, build_android, build_quest2]
     steps:
     - uses: actions/download-artifact@v3
@@ -482,19 +477,19 @@ jobs:
         path: rue_build_windows
     - uses: actions/download-artifact@v3
       with:
-        name: rue_android
-        path: rue_android
+        name: rue_android_signed
+        path: rue_android_signed
     - uses: actions/download-artifact@v3
       with:
-        name: rue_quest2
-        path: rue_quest2
+        name: rue_quest2_signed
+        path: rue_quest2_signed
     - name: zip packages
       run: |
         sudo apt update && sudo apt install -y zip
-        cd rue_build_linux   && zip ../rue_build_linux.zip   * -r && cd ..
-        cd rue_build_windows && zip ../rue_build_windows.zip * -r && cd ..
-        cd rue_android       && zip ../rue_build_android.zip * -r && cd ..
-        cd rue_quest2        && zip ../rue_build_quest2.zip  * -r && cd ..
+        cd rue_build_linux    && zip ../rue_build_linux.zip   * -r && cd ..
+        cd rue_build_windows  && zip ../rue_build_windows.zip * -r && cd ..
+        cd rue_android_signed && zip ../rue_build_android.zip * -r && cd ..
+        cd rue_quest2_signed  && zip ../rue_build_quest2.zip  * -r && cd ..
     - name: get butler
       run: |
         curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
