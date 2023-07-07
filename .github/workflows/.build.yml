@@ -15,7 +15,8 @@ on:
 
 env:
   AVDL_PROJECT_NAME: rue
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_linux.zip
+  AVDL_VERSION: 0.13.0
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v${{ env.AVDL_VERSION }}/avdl_v${{ env.AVDL_VERSION }}_linux.zip
   AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_windows.zip
 
 jobs:
@@ -63,17 +64,17 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: "${{ env.AVDL_PROJECT_NAME }}_android"
-        path: "${{ env.AVDL_PROJECT_NAME }}_output/${{ env.AVDL_PROJECT_NAME }}_android.apk"
+        path: game_output/game_android.apk
     - name: upload_artifact_signed
       uses: actions/upload-artifact@v3
       with:
         name: "${{ env.AVDL_PROJECT_NAME }}_android_signed"
-        path: "${{ env.AVDL_PROJECT_NAME }}_output_signed"
+        path: game_output_signed
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
         name: "${{ env.AVDL_PROJECT_NAME }}_android_debug"
-        path: "${{ env.AVDL_PROJECT_NAME }}_output_debug/${{ env.AVDL_PROJECT_NAME }}_android_debug.apk"
+        path: game_output_debug/game_android_debug.apk
 
   # Android - Google Play
   build_android_googleplay:
