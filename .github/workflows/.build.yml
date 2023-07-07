@@ -14,8 +14,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.12.1/avdl_v0.12.1_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.12.1/avdl_v0.12.1_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_windows.zip
 
 jobs:
   # Android
@@ -49,6 +49,8 @@ jobs:
         cd ../
         mkdir rue_output
         mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android.apk
+        mv avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip rue_output/native-debug-symbols.zip
+        mv avdl_build_android/app/build/outputs/mapping/release/mapping.txt rue_output/mapping.txt
         mkdir rue_output_debug
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_debug.apk
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
@@ -60,6 +62,16 @@ jobs:
       with:
         name: rue_android
         path: rue_output/rue_android.apk
+    - name: upload_artifact_debug_symbols
+      uses: actions/upload-artifact@v3
+      with:
+        name: native-debug-symbols.zip
+        path: rue_output/native-debug-symbols.zip
+    - name: upload_artifact_mapping
+      uses: actions/upload-artifact@v3
+      with:
+        name: mapping.txt
+        path: rue_output/mapping.txt
     - name: upload_artifact_signed
       uses: actions/upload-artifact@v3
       with:
@@ -464,6 +476,7 @@ jobs:
         name: rue_build_windows_steam
         path: build/RUE_BUILD
   release_itchio:
+    if: ${{ false }}
     runs-on: ubuntu-20.04
     needs: [build_linux, build_windows, build_android, build_quest2]
     steps:
