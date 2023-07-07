@@ -16,6 +16,8 @@ on:
 env:
   AVDL_PROJECT_NAME: rue
   AVDL_VERSION: 0.13.0
+
+env:
   AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v${{ env.AVDL_VERSION }}/avdl_v${{ env.AVDL_VERSION }}_linux.zip
   AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_windows.zip
 
