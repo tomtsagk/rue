@@ -48,16 +48,16 @@ jobs:
         chmod +x gradlew
         ./gradlew build
         cd ../
-        mkdir "${AVDL_PROJECT_NAME}_output"
-        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk "${AVDL_PROJECT_NAME}_output/${AVDL_PROJECT_NAME}_android.apk"
-        mkdir "${AVDL_PROJECT_NAME}_output_debug"
-        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk "${AVDL_PROJECT_NAME}_output_debug/${AVDL_PROJECT_NAME}_android_debug.apk"
-        mkdir "${AVDL_PROJECT_NAME}_output_signed"
-        cp avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip "${AVDL_PROJECT_NAME}_output_signed/native-debug-symbols.zip"
-        cp avdl_build_android/app/build/outputs/mapping/release/mapping.txt "${AVDL_PROJECT_NAME}_output_signed/mapping.txt"
+        mkdir "game_output"
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk "game_output/game_android.apk"
+        mkdir "game_output_debug"
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk "game_output_debug/game_android_debug.apk"
+        mkdir "game_output_signed"
+        cp avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip "game_output_signed/native-debug-symbols.zip"
+        cp avdl_build_android/app/build/outputs/mapping/release/mapping.txt "game_output_signed/mapping.txt"
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
-        zipalign -v 4 "${AVDL_PROJECT_NAME}_output/${AVDL_PROJECT_NAME}_android.apk" "${AVDL_PROJECT_NAME}_output_signed/${AVDL_PROJECT_NAME}_android_signed.apk"
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' "${AVDL_PROJECT_NAME}_output_signed/${AVDL_PROJECT_NAME}_android_signed.apk"
+        zipalign -v 4 "game_output/game_android.apk" "game_output_signed/game_android_signed.apk"
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' "game_output_signed/game_android_signed.apk"
         rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
