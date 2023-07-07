@@ -62,18 +62,18 @@ jobs:
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: "${AVDL_PROJECT_NAME}_android"
-        path: "${AVDL_PROJECT_NAME}_output/${AVDL_PROJECT_NAME}_android.apk"
+        name: "${{ env.AVDL_PROJECT_NAME }}_android"
+        path: "${{ env.AVDL_PROJECT_NAME }}_output/${{ env.AVDL_PROJECT_NAME }}_android.apk"
     - name: upload_artifact_signed
       uses: actions/upload-artifact@v3
       with:
-        name: "${AVDL_PROJECT_NAME}_android_signed"
-        path: "${AVDL_PROJECT_NAME}_output_signed"
+        name: "${{ env.AVDL_PROJECT_NAME }}_android_signed"
+        path: "${{ env.AVDL_PROJECT_NAME }}_output_signed"
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: "${AVDL_PROJECT_NAME}_android_debug"
-        path: "${AVDL_PROJECT_NAME}_output_debug/${AVDL_PROJECT_NAME}_android_debug.apk"
+        name: "${{ env.AVDL_PROJECT_NAME }}_android_debug"
+        path: "${{ env.AVDL_PROJECT_NAME }}_output_debug/${{ env.AVDL_PROJECT_NAME }}_android_debug.apk"
 
   # Android - Google Play
   build_android_googleplay:
