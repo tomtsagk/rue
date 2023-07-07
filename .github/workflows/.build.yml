@@ -5,15 +5,16 @@ on:
     branches:
       - develop
       - master
-      - test/custom_release
+      - feature/auto-release
     tags:
-      "v[0-9]+.[0-9]+.[0-9]+"
+      "v[0-9]+.[0-9]+.[0-9]+*"
   pull_request:
     branches:
       - develop
       - master
 
 env:
+  AVDL_PROJECT_NAME: rue
   AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_linux.zip
   AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_windows.zip
 
@@ -22,7 +23,7 @@ jobs:
   build_android:
     runs-on: ubuntu-latest
     steps:
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v2
     - uses: actions/setup-java@v3
       with:
@@ -47,44 +48,36 @@ jobs:
         chmod +x gradlew
         ./gradlew build
         cd ../
-        mkdir rue_output
-        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android.apk
-        mv avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip rue_output/native-debug-symbols.zip
-        mv avdl_build_android/app/build/outputs/mapping/release/mapping.txt rue_output/mapping.txt
-        mkdir rue_output_debug
-        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_debug.apk
+        mkdir "${AVDL_PROJECT_NAME}_output"
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk "${AVDL_PROJECT_NAME}_output/${AVDL_PROJECT_NAME}_android.apk"
+        mkdir "${AVDL_PROJECT_NAME}_output_debug"
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk "${AVDL_PROJECT_NAME}_output_debug/${AVDL_PROJECT_NAME}_android_debug.apk"
+        mkdir "${AVDL_PROJECT_NAME}_output_signed"
+        cp avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip "${AVDL_PROJECT_NAME}_output_signed/native-debug-symbols.zip"
+        cp avdl_build_android/app/build/outputs/mapping/release/mapping.txt "${AVDL_PROJECT_NAME}_output_signed/mapping.txt"
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
-        zipalign -v 4 rue_output/rue_android.apk rue_output/rue_android_signed.apk
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output/rue_android_signed.apk
+        zipalign -v 4 "${AVDL_PROJECT_NAME}_output/${AVDL_PROJECT_NAME}_android.apk" "${AVDL_PROJECT_NAME}_output_signed/${AVDL_PROJECT_NAME}_android_signed.apk"
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' "${AVDL_PROJECT_NAME}_output_signed/${AVDL_PROJECT_NAME}_android_signed.apk"
         rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android
-        path: rue_output/rue_android.apk
-    - name: upload_artifact_debug_symbols
-      uses: actions/upload-artifact@v3
-      with:
-        name: native-debug-symbols.zip
-        path: rue_output/native-debug-symbols.zip
-    - name: upload_artifact_mapping
-      uses: actions/upload-artifact@v3
-      with:
-        name: mapping.txt
-        path: rue_output/mapping.txt
+        name: "${AVDL_PROJECT_NAME}_android"
+        path: "${AVDL_PROJECT_NAME}_output/${AVDL_PROJECT_NAME}_android.apk"
     - name: upload_artifact_signed
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android_signed
-        path: rue_output/rue_android_signed.apk
+        name: "${AVDL_PROJECT_NAME}_android_signed"
+        path: "${AVDL_PROJECT_NAME}_output_signed"
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android_debug
-        path: rue_output_debug/rue_android_debug.apk
+        name: "${AVDL_PROJECT_NAME}_android_debug"
+        path: "${AVDL_PROJECT_NAME}_output_debug/${AVDL_PROJECT_NAME}_android_debug.apk"
 
   # Android - Google Play
   build_android_googleplay:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_rue
@@ -116,9 +109,12 @@ jobs:
         mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android_googleplay.apk
         mkdir rue_output_debug
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_googleplay_debug.apk
+        mkdir rue_output_signed
+        cp avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip rue_output_signed/native-debug-symbols.zip
+        cp avdl_build_android/app/build/outputs/mapping/release/mapping.txt rue_output_signed/mapping.txt
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
-        zipalign -v 4 rue_output/rue_android_googleplay.apk rue_output/rue_android_googleplay_signed.apk
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output/rue_android_googleplay_signed.apk
+        zipalign -v 4 rue_output/rue_android_googleplay.apk rue_output_signed/rue_android_googleplay_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output_signed/rue_android_googleplay_signed.apk
         rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
@@ -129,7 +125,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: rue_android_googleplay_signed
-        path: rue_output/rue_android_googleplay_signed.apk
+        path: rue_output_signed
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -138,6 +134,7 @@ jobs:
 
   # Quest 2
   build_quest2:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_rue
@@ -199,6 +196,7 @@ jobs:
 
   # Quest 2 + Oculus platform services
   build_quest2_oculus:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_rue
@@ -260,6 +258,7 @@ jobs:
 
   # Linux
   build_linux:
+    if: ${{ false }}
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -294,6 +293,7 @@ jobs:
         path: avdl_build
   # Linux Steam
   build_linux_steam:
+    if: ${{ false }}
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -321,6 +321,7 @@ jobs:
         path: avdl_build
   # Windows
   build_windows:
+    if: ${{ false }}
     runs-on: windows-latest
     steps:
     - name: init_rue
@@ -401,6 +402,7 @@ jobs:
         path: build/
   # Windows Steam
   build_windows_steam:
+    if: ${{ false }}
     runs-on: windows-latest
     steps:
     - name: init_rue
