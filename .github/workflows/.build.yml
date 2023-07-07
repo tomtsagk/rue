@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - master
+      - test/custom_release
     tags:
       "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
@@ -13,8 +14,8 @@ on:
       - master
 
 env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.12.1/avdl_v0.12.1_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.12.1/avdl_v0.12.1_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_windows.zip
 
 jobs:
   # Android
@@ -27,6 +28,9 @@ jobs:
       with:
         distribution: 'oracle'
         java-version: '17'
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
@@ -45,13 +49,34 @@ jobs:
         cd ../
         mkdir rue_output
         mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android.apk
+        mv avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip rue_output/native-debug-symbols.zip
+        mv avdl_build_android/app/build/outputs/mapping/release/mapping.txt rue_output/mapping.txt
         mkdir rue_output_debug
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_debug.apk
+        echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
+        zipalign -v 4 rue_output/rue_android.apk rue_output/rue_android_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output/rue_android_signed.apk
+        rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: rue_android
         path: rue_output/rue_android.apk
+    - name: upload_artifact_debug_symbols
+      uses: actions/upload-artifact@v3
+      with:
+        name: native-debug-symbols.zip
+        path: rue_output/native-debug-symbols.zip
+    - name: upload_artifact_mapping
+      uses: actions/upload-artifact@v3
+      with:
+        name: mapping.txt
+        path: rue_output/mapping.txt
+    - name: upload_artifact_signed
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android_signed
+        path: rue_output/rue_android_signed.apk
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -64,6 +89,9 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v2
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - uses: actions/setup-java@v3
       with:
         distribution: 'oracle'
@@ -88,11 +116,20 @@ jobs:
         mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android_googleplay.apk
         mkdir rue_output_debug
         mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_googleplay_debug.apk
+        echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
+        zipalign -v 4 rue_output/rue_android_googleplay.apk rue_output/rue_android_googleplay_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output/rue_android_googleplay_signed.apk
+        rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: rue_android_googleplay
         path: rue_output/rue_android_googleplay.apk
+    - name: upload_artifact_signed
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_android_googleplay_signed
+        path: rue_output/rue_android_googleplay_signed.apk
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -105,6 +142,9 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v2
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
@@ -137,6 +177,10 @@ jobs:
         mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_debug.apk
         ../../../gradlew assembleRelease
         mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2.apk
+        echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
+        zipalign -v 4 ../../../../../rue_quest2.apk ../../../../../rue_quest2_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_signed.apk
+        rm keystore
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -147,6 +191,11 @@ jobs:
       with:
         name: rue_quest2
         path: rue_quest2.apk
+    - name: upload_artifact_signed
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2_signed
+        path: rue_quest2_signed.apk
 
   # Quest 2 + Oculus platform services
   build_quest2_oculus:
@@ -154,6 +203,9 @@ jobs:
     steps:
     - name: init_rue
       uses: actions/checkout@v2
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
@@ -186,6 +238,10 @@ jobs:
         mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_oculus_debug.apk
         ../../../gradlew assembleRelease
         mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2_oculus.apk
+        echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
+        zipalign -v 4 ../../../../../rue_quest2_oculus.apk ../../../../../rue_quest2_oculus_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_oculus_signed.apk
+        rm keystore
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
@@ -196,6 +252,11 @@ jobs:
       with:
         name: rue_quest2_oculus
         path: rue_quest2_oculus.apk
+    - name: upload_artifact_signed
+      uses: actions/upload-artifact@v3
+      with:
+        name: rue_quest2_oculus_signed
+        path: rue_quest2_oculus_signed.apk
 
   # Linux
   build_linux:
@@ -414,6 +475,48 @@ jobs:
       with:
         name: rue_build_windows_steam
         path: build/RUE_BUILD
+  release_itchio:
+    if: ${{ false }}
+    runs-on: ubuntu-20.04
+    needs: [build_linux, build_windows, build_android, build_quest2]
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_linux
+        path: rue_build_linux
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_build_windows
+        path: rue_build_windows
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_android_signed
+        path: rue_android_signed
+    - uses: actions/download-artifact@v3
+      with:
+        name: rue_quest2_signed
+        path: rue_quest2_signed
+    - name: zip packages
+      run: |
+        sudo apt update && sudo apt install -y zip
+        cd rue_build_linux    && zip ../rue_build_linux.zip   * -r && cd ..
+        cd rue_build_windows  && zip ../rue_build_windows.zip * -r && cd ..
+        cd rue_android_signed && zip ../rue_build_android.zip * -r && cd ..
+        cd rue_quest2_signed  && zip ../rue_build_quest2.zip  * -r && cd ..
+    - name: get butler
+      run: |
+        curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+        unzip butler.zip
+        chmod +x butler
+        ./butler -V
+    - name: upload_builds
+      env:
+        BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+      run: |
+        ./butler push rue_build_linux.zip   afloofdev/test-project:linux-x86_64   --userversion 0.0.0
+        ./butler push rue_build_windows.zip afloofdev/test-project:windows-x86_64 --userversion 0.0.0
+        ./butler push rue_build_android.zip afloofdev/test-project:android        --userversion 0.0.0
+        ./butler push rue_build_quest2.zip  afloofdev/test-project:quest2         --userversion 0.0.0
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
