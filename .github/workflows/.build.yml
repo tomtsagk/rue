@@ -14,8 +14,8 @@ on:
 
 env:
   AVDL_PROJECT_NAME: rue
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.2/avdl_v0.13.2_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.2/avdl_v0.13.2_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.3/avdl_v0.13.3_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.3/avdl_v0.13.3_windows.zip
 
 jobs:
   # Android
