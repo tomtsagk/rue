@@ -590,8 +590,8 @@ jobs:
         sudo apt update && sudo apt install -y zip
         cd ${{ env.AVDL_PROJECT_NAME }}_build_linux    && zip ../${{ env.AVDL_PROJECT_NAME }}_build_linux.zip   * -r && cd ..
         cd ${{ env.AVDL_PROJECT_NAME }}_build_windows  && zip ../${{ env.AVDL_PROJECT_NAME }}_build_windows.zip * -r && cd ..
-        cd ${{ env.AVDL_PROJECT_NAME }}_android_signed && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android.zip game_android_signed.apk -r && cd ..
-        cd ${{ env.AVDL_PROJECT_NAME }}_quest2_signed  && zip ../${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip  * -r && cd ..
+        mv ${{ env.AVDL_PROJECT_NAME }}_android_signed/game_android_signed.apk ${{ env.AVDL_PROJECT_NAME }}_android.apk
+        mv ${{ env.AVDL_PROJECT_NAME }}_quest2_signed/game_quest2_signed.apk ${{ env.AVDL_PROJECT_NAME }}_quest2.apk
     - name: get butler
       run: |
         curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
@@ -605,8 +605,8 @@ jobs:
         VERSION=${{ github.ref_name }}
         ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_linux.zip   afloofdev/rue:linux-x86_64   --userversion ${VERSION:1}
         ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_windows.zip afloofdev/rue:windows-x86_64 --userversion ${VERSION:1}
-        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_android.zip afloofdev/rue:android        --userversion ${VERSION:1}
-        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip  afloofdev/rue:quest2         --userversion ${VERSION:1}
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_android.apk afloofdev/rue:android              --userversion ${VERSION:1}
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_quest2.apk  afloofdev/rue:quest2               --userversion ${VERSION:1}
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
