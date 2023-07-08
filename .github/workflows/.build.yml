@@ -139,12 +139,12 @@ jobs:
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: thekingisgone_android_admob
+        name: "${{ env.AVDL_PROJECT_NAME }}_android_admob"
         path: game_output
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: thekingisgone_android_admob_debug
+        name: "${{ env.AVDL_PROJECT_NAME }}_android_admob_debug"
         path: game_output_debug
 
   # Android - Google Play
