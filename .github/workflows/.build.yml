@@ -336,7 +336,7 @@ jobs:
         distribution: 'oracle'
         java-version: '17'
     - name: generate_quest2_project
-      run: ./AVDL_BUILD/bin/avdl --quest2-oculus ${{ secrets.OCULUS_PROJECT_ID }}
+      run: ./avdl_build_linux/bin/avdl --quest2-oculus ${{ secrets.OCULUS_PROJECT_ID }}
     - name: get_oculus_sdk
       env:
         oculus_api_link: ${{ secrets.OCULUS_API_LINK }}
