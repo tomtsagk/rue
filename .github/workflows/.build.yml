@@ -21,6 +21,7 @@ env:
 jobs:
   # Android
   android:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -75,6 +76,7 @@ jobs:
 
   # Android - Admob
   android_admob:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -149,6 +151,7 @@ jobs:
 
   # Android - Google Play
   android_googleplay:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -203,6 +206,7 @@ jobs:
 
   # Android - Google Play - Admob
   android_googleplay_admob:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -256,11 +260,10 @@ jobs:
         path: game_output_debug/game_android_debug.apk
 
   # Quest 2
-  build_quest2:
-    if: ${{ false }}
+  quest2:
     runs-on: ubuntu-latest
     steps:
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v2
     - name: apt packages
       run: |
@@ -269,16 +272,13 @@ jobs:
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_linux/* AVDL_BUILD
-        rmdir avdl_build_linux
-        chmod +x AVDL_BUILD/bin/avdl
+        chmod +x avdl_build_linux/bin/avdl
     - uses: actions/setup-java@v3
       with:
         distribution: 'oracle'
         java-version: '17'
     - name: generate_quest2_project
-      run: ./AVDL_BUILD/bin/avdl --quest2
+      run: ./avdl_build_linux/bin/avdl --quest2
     - name: get_oculus_sdk
       env:
         oculus_api_link: ${{ secrets.OCULUS_API_LINK }}
@@ -294,35 +294,34 @@ jobs:
         cd avdl_oculus_build/avdl_vr_bk/AvdlProject/Projects/Android
         chmod +x ../../../gradlew
         ../../../gradlew assembleDebug
-        mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_debug.apk
         ../../../gradlew assembleRelease
-        mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2.apk
+        mv build/outputs/apk/debug/Android-debug.apk ../../../../../game_quest2_debug.apk
+        mv build/outputs/apk/release/Android-release.apk ../../../../../game_quest2.apk
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
-        zipalign -v 4 ../../../../../rue_quest2.apk ../../../../../rue_quest2_signed.apk
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_signed.apk
+        zipalign -v 4 ../../../../../game_quest2.apk ../../../../../game_quest2_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../game_quest2_signed.apk
         rm keystore
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: rue_quest2_debug
-        path: rue_quest2_debug.apk
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_debug
+        path: game_quest2_debug.apk
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_quest2
-        path: rue_quest2.apk
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2
+        path: game_quest2.apk
     - name: upload_artifact_signed
       uses: actions/upload-artifact@v3
       with:
-        name: rue_quest2_signed
-        path: rue_quest2_signed.apk
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_signed
+        path: game_quest2_signed.apk
 
   # Quest 2 + Oculus platform services
-  build_quest2_oculus:
-    if: ${{ false }}
+  quest2_oculus:
     runs-on: ubuntu-latest
     steps:
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v2
     - name: apt packages
       run: |
@@ -331,10 +330,7 @@ jobs:
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_linux/* AVDL_BUILD
-        rmdir avdl_build_linux
-        chmod +x AVDL_BUILD/bin/avdl
+        chmod +x avdl_build_linux/bin/avdl
     - uses: actions/setup-java@v3
       with:
         distribution: 'oracle'
@@ -356,28 +352,28 @@ jobs:
         cd avdl_oculus_build/avdl_vr_bk/AvdlProject/Projects/Android
         chmod +x ../../../gradlew
         ../../../gradlew assembleDebug
-        mv build/outputs/apk/debug/Android-debug.apk ../../../../../rue_quest2_oculus_debug.apk
         ../../../gradlew assembleRelease
-        mv build/outputs/apk/release/Android-release.apk ../../../../../rue_quest2_oculus.apk
+        mv build/outputs/apk/debug/Android-debug.apk ../../../../../game_quest2_debug.apk
+        mv build/outputs/apk/release/Android-release.apk ../../../../../game_quest2.apk
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
-        zipalign -v 4 ../../../../../rue_quest2_oculus.apk ../../../../../rue_quest2_oculus_signed.apk
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../rue_quest2_oculus_signed.apk
+        zipalign -v 4 ../../../../../game_quest2.apk ../../../../../game_quest2_signed.apk
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' ../../../../../game_quest2_signed.apk
         rm keystore
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: rue_quest2_oculus_debug
-        path: rue_quest2_oculus_debug.apk
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus_debug
+        path: game_quest2_debug.apk
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_quest2_oculus
-        path: rue_quest2_oculus.apk
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus
+        path: game_quest2.apk
     - name: upload_artifact_signed
       uses: actions/upload-artifact@v3
       with:
-        name: rue_quest2_oculus_signed
-        path: rue_quest2_oculus_signed.apk
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus_signed
+        path: game_quest2_signed.apk
 
   # Linux
   build_linux:
@@ -603,7 +599,7 @@ jobs:
   release_itchio:
     if: ${{ false }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_windows, android, build_quest2]
+    needs: [build_linux, build_windows, android, quest2]
     steps:
     - uses: actions/download-artifact@v3
       with:
@@ -645,7 +641,7 @@ jobs:
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, android, android_googleplay, build_quest2, build_quest2_oculus]
+    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, android, android_googleplay, quest2, quest2_oculus]
     steps:
     - uses: actions/download-artifact@v3
       with:
