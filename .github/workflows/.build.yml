@@ -26,7 +26,7 @@ env:
 jobs:
   # Android
   android:
-    if: ${{ env.AVDL_MAKE_ANDROID }}
+    if: ${{ true }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
