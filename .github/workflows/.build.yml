@@ -376,74 +376,65 @@ jobs:
         path: game_quest2_signed.apk
 
   # Linux
-  build_linux:
-    if: ${{ false }}
+  linux_x86_64:
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
       run: |
          sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v1
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_linux/* AVDL_BUILD
-        rmdir avdl_build_linux
-    - name: compile_rue
+    - name: compile_project
       run: |
-        chmod +x AVDL_BUILD/bin/avdl
-        ./AVDL_BUILD/bin/avdl -i ./AVDL_BUILD/dependencies/linux/include -L ./AVDL_BUILD/dependencies/linux/lib --standalone
+        chmod +x avdl_build_linux/bin/avdl
+        ./avdl_build_linux/bin/avdl -i ./avdl_build_linux/dependencies/linux/include -L ./avdl_build_linux/dependencies/linux/lib --standalone
         mkdir avdl_build/dependencies
-        cp ./AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
+        cp ./avdl_build_linux/dependencies/linux/lib/*.so* avdl_build/dependencies
         rm avdl_build/dependencies/*steam*
     - name: verify
       run: |
         cd avdl_build/
-        chmod +x bin/rue
-        LD_LIBRARY_PATH=./dependencies/ ./bin/rue --verify
+        chmod +x bin/${AVDL_PROJECT_NAME}
+        LD_LIBRARY_PATH=./dependencies/ ./bin/${AVDL_PROJECT_NAME} --verify
         cd ../
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_build_linux
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_linux
         path: avdl_build
   # Linux Steam
-  build_linux_steam:
-    if: ${{ false }}
+  linux_steam_x86_64:
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
       run: |
          sudo apt update && sudo apt install -y gcc libgl1-mesa-dev
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v1
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_linux/* AVDL_BUILD
-        rmdir avdl_build_linux
     - name: compile_rue
       run: |
-        chmod +x AVDL_BUILD/bin/avdl
-        ./AVDL_BUILD/bin/avdl -i ./AVDL_BUILD/dependencies/linux/include -L ./AVDL_BUILD/dependencies/linux/lib --standalone --steam
+        chmod +x avdl_build_linux/bin/avdl
+        ./avdl_build_linux/bin/avdl -i ./avdl_build_linux/dependencies/linux/include -L ./avdl_build_linux/dependencies/linux/lib --standalone --steam
         mkdir avdl_build/dependencies
-        cp ./AVDL_BUILD/dependencies/linux/lib/*.so* avdl_build/dependencies
+        cp ./avdl_build_linux/dependencies/linux/lib/*.so* avdl_build/dependencies
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_build_linux_steam
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_linux_steam
         path: avdl_build
   # Windows
-  build_windows:
-    if: ${{ false }}
+  windows_x86_64:
     runs-on: windows-latest
     steps:
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v1
     - name: prepare_libraries
       shell: bash
@@ -456,19 +447,16 @@ jobs:
       shell: bash
       run: |
         unzip avdl_build_windows.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_windows/* AVDL_BUILD
-        rmdir avdl_build_windows
-        cp -r AVDL_BUILD/dependencies/windows/libpng ./libaries/
-        cp -r AVDL_BUILD/dependencies/windows/zlib ./libaries/
+        cp -r avdl_build_windows/dependencies/windows/libpng ./libaries/
+        cp -r avdl_build_windows/dependencies/windows/zlib ./libaries/
     - name: zlib
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
+        cp -r avdl_build_windows/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
     - name: libpng
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
+        cp -r avdl_build_windows/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
     - name: get_libraries
       run: |
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
@@ -495,36 +483,36 @@ jobs:
         cd libraries
         unzip SDL2_mixer-devel-2.6.0-VC.zip
         cd ..
-    - name: compile_rue
+    - name: compile_project
       shell: bash
       run: |
         mkdir cengine
-        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
+        cp -r avdl_build_windows/share/avdl/cengine/*.c avdl_build_windows/share/avdl/cengine/*.cpp avdl_build_windows/include/*.h cengine
         mkdir build
-        AVDL_BUILD/bin/avdl.exe -t
-        AVDL_BUILD/bin/avdl.exe --cmake
+        avdl_build_windows/bin/avdl.exe -t
+        avdl_build_windows/bin/avdl.exe --cmake
         cp .avdl_cache/*.c src/
         for i in src/*.c; do mv $i ${i/.dd.c/.c}; done
         cd build
-        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD"
+        cmake ../ . -DCMAKE_INSTALL_PREFIX="GAME_BUILD"
         cmake --build . --config Release
         cmake --install .
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_build_windows
-        path: build/RUE_BUILD
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_windows
+        path: build/GAME_BUILD
     - name: upload_artifact_vs
+      if: ${{ false }}
       uses: actions/upload-artifact@v3
       with:
-        name: rue_build_windows_vs
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_windows_vs
         path: build/
   # Windows Steam
-  build_windows_steam:
-    if: ${{ false }}
+  windows_steam_x86_64:
     runs-on: windows-latest
     steps:
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v1
     - name: prepare_libraries
       shell: bash
@@ -537,19 +525,16 @@ jobs:
       shell: bash
       run: |
         unzip avdl_build_windows.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_windows/* AVDL_BUILD
-        rmdir avdl_build_windows
-        cp -r AVDL_BUILD/dependencies/windows/libpng ./libaries/
-        cp -r AVDL_BUILD/dependencies/windows/zlib ./libaries/
+        cp -r avdl_build_windows/dependencies/windows/libpng ./libaries/
+        cp -r avdl_build_windows/dependencies/windows/zlib ./libaries/
     - name: zlib
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
+        cp -r avdl_build_windows/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
     - name: libpng
       shell: bash
       run: |
-        cp -r AVDL_BUILD/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
+        cp -r avdl_build_windows/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
     - name: get_libraries
       run: |
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
@@ -576,30 +561,30 @@ jobs:
         cd libraries
         unzip SDL2_mixer-devel-2.6.0-VC.zip
         cd ..
-    - name: compile_rue
+    - name: compile_project
       shell: bash
       run: |
         mkdir cengine
-        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
+        cp -r avdl_build_windows/share/avdl/cengine/*.c avdl_build_windows/share/avdl/cengine/*.cpp avdl_build_windows/include/*.h cengine
         mkdir build
-        ./AVDL_BUILD/bin/avdl.exe -t
-        ./AVDL_BUILD/bin/avdl.exe --cmake
+        ./avdl_build_windows/bin/avdl.exe -t
+        ./avdl_build_windows/bin/avdl.exe --cmake
         cp .avdl_cache/*.c src/
         for i in src/*.c; do mv $i ${i/.dd.c/.c}; done
         cd build
-        cmake ../ . -DCMAKE_INSTALL_PREFIX="RUE_BUILD" -DAVDL_STEAM=1
+        cmake ../ . -DCMAKE_INSTALL_PREFIX="GAME_BUILD" -DAVDL_STEAM=1
         cmake --build . --config Release
         cmake --install .
         cd ..
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_build_windows_steam
-        path: build/RUE_BUILD
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam
+        path: build/GAME_BUILD
   release_itchio:
     if: ${{ false }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_windows, android, quest2]
+    needs: [linux_x86_64, windows_x86_64, android, quest2]
     steps:
     - uses: actions/download-artifact@v3
       with:
@@ -641,7 +626,7 @@ jobs:
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, android, android_googleplay, quest2, quest2_oculus]
+    needs: [linux_x86_64, linux_steam_x86_64, windows_x86_64, windows_steam_x86_64, android, android_googleplay, quest2, quest2_oculus]
     steps:
     - uses: actions/download-artifact@v3
       with:
