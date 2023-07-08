@@ -14,8 +14,8 @@ on:
 
 env:
   AVDL_PROJECT_NAME: rue
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_linux.zip
-  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_windows.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.1/avdl_v0.13.1_linux.zip
+  AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.1/avdl_v0.13.1_windows.zip
 
 jobs:
   # Android
@@ -602,10 +602,11 @@ jobs:
       env:
         BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
       run: |
-        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_linux.zip   afloofdev/test-project:linux-x86_64   --userversion 0.0.0
-        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_windows.zip afloofdev/test-project:windows-x86_64 --userversion 0.0.0
-        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_android.zip afloofdev/test-project:android        --userversion 0.0.0
-        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip  afloofdev/test-project:quest2         --userversion 0.0.0
+        VERSION=${{ github.ref_name }}
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_linux.zip   afloofdev/rue:linux-x86_64   --userversion ${VERSION:1}
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_windows.zip afloofdev/rue:windows-x86_64 --userversion ${VERSION:1}
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_android.zip afloofdev/rue:android        --userversion ${VERSION:1}
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip  afloofdev/rue:quest2         --userversion ${VERSION:1}
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
