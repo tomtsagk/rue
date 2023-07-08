@@ -261,6 +261,7 @@ jobs:
 
   # Quest 2
   quest2:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -319,6 +320,7 @@ jobs:
 
   # Quest 2 + Oculus platform services
   quest2_oculus:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -377,6 +379,7 @@ jobs:
 
   # Linux
   linux_x86_64:
+    if: ${{ false }}
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -408,6 +411,7 @@ jobs:
         path: avdl_build
   # Linux Steam
   linux_steam_x86_64:
+    if: ${{ false }}
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -432,6 +436,7 @@ jobs:
         path: avdl_build
   # Windows
   windows_x86_64:
+    if: ${{ false }}
     runs-on: windows-latest
     steps:
     - name: init_project
@@ -525,16 +530,17 @@ jobs:
       shell: bash
       run: |
         unzip avdl_build_windows.zip
-        cp -r avdl_build_windows/dependencies/windows/libpng ./libaries/
-        cp -r avdl_build_windows/dependencies/windows/zlib ./libaries/
+        mv avdl_build_windows AVDL_BUILD
+        cp -r AVDL_BUILD/dependencies/windows/libpng ./libaries/
+        cp -r AVDL_BUILD/dependencies/windows/zlib ./libaries/
     - name: zlib
       shell: bash
       run: |
-        cp -r avdl_build_windows/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
+        cp -r AVDL_BUILD/dependencies/windows/zlib "C:/Program Files (x86)/zlib"
     - name: libpng
       shell: bash
       run: |
-        cp -r avdl_build_windows/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
+        cp -r AVDL_BUILD/dependencies/windows/libpng "C:/Program Files (x86)/libpng"
     - name: get_libraries
       run: |
         C:\msys64\usr\bin\wget.exe -q https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
@@ -565,22 +571,27 @@ jobs:
       shell: bash
       run: |
         mkdir cengine
-        cp -r avdl_build_windows/share/avdl/cengine/*.c avdl_build_windows/share/avdl/cengine/*.cpp avdl_build_windows/include/*.h cengine
+        cp -r AVDL_BUILD/share/avdl/cengine/*.c AVDL_BUILD/share/avdl/cengine/*.cpp AVDL_BUILD/include/*.h cengine
         mkdir build
-        ./avdl_build_windows/bin/avdl.exe -t
-        ./avdl_build_windows/bin/avdl.exe --cmake
+        AVDL_BUILD/bin/avdl.exe -t
+        AVDL_BUILD/bin/avdl.exe --cmake
         cp .avdl_cache/*.c src/
         for i in src/*.c; do mv $i ${i/.dd.c/.c}; done
         cd build
         cmake ../ . -DCMAKE_INSTALL_PREFIX="GAME_BUILD" -DAVDL_STEAM=1
         cmake --build . --config Release
         cmake --install .
-        cd ..
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam
         path: build/GAME_BUILD
+    - name: upload_artifact_vs
+      if: ${{ false }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam_vs
+        path: build/
   release_itchio:
     if: ${{ false }}
     runs-on: ubuntu-20.04
