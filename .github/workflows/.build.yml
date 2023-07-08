@@ -21,7 +21,6 @@ env:
 jobs:
   # Android
   android:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -151,7 +150,6 @@ jobs:
 
   # Android - Google Play
   android_googleplay:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -261,7 +259,6 @@ jobs:
 
   # Quest 2
   quest2:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -320,7 +317,6 @@ jobs:
 
   # Quest 2 + Oculus platform services
   quest2_oculus:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -379,7 +375,6 @@ jobs:
 
   # Linux
   linux_x86_64:
-    if: ${{ false }}
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -411,7 +406,6 @@ jobs:
         path: avdl_build
   # Linux Steam
   linux_steam_x86_64:
-    if: ${{ false }}
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -423,7 +417,7 @@ jobs:
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
-    - name: compile_rue
+    - name: compile_project
       run: |
         chmod +x avdl_build_linux/bin/avdl
         ./avdl_build_linux/bin/avdl -i ./avdl_build_linux/dependencies/linux/include -L ./avdl_build_linux/dependencies/linux/lib --standalone --steam
@@ -436,7 +430,6 @@ jobs:
         path: avdl_build
   # Windows
   windows_x86_64:
-    if: ${{ false }}
     runs-on: windows-latest
     steps:
     - name: init_project
@@ -593,33 +586,32 @@ jobs:
         name: ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam_vs
         path: build/
   release_itchio:
-    if: ${{ false }}
     runs-on: ubuntu-20.04
     needs: [linux_x86_64, windows_x86_64, android, quest2]
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: rue_build_linux
-        path: rue_build_linux
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_linux
+        path: ${{ env.AVDL_PROJECT_NAME }}_build_linux
     - uses: actions/download-artifact@v3
       with:
-        name: rue_build_windows
-        path: rue_build_windows
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_windows
+        path: ${{ env.AVDL_PROJECT_NAME }}_build_windows
     - uses: actions/download-artifact@v3
       with:
-        name: rue_android_signed
-        path: rue_android_signed
+        name: ${{ env.AVDL_PROJECT_NAME }}_android_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_android_signed
     - uses: actions/download-artifact@v3
       with:
-        name: rue_quest2_signed
-        path: rue_quest2_signed
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_quest2_signed
     - name: zip packages
       run: |
         sudo apt update && sudo apt install -y zip
-        cd rue_build_linux    && zip ../rue_build_linux.zip   * -r && cd ..
-        cd rue_build_windows  && zip ../rue_build_windows.zip * -r && cd ..
-        cd rue_android_signed && zip ../rue_build_android.zip * -r && cd ..
-        cd rue_quest2_signed  && zip ../rue_build_quest2.zip  * -r && cd ..
+        cd ${{ env.AVDL_PROJECT_NAME }}_build_linux    && zip ../${{ env.AVDL_PROJECT_NAME }}_build_linux.zip   * -r && cd ..
+        cd ${{ env.AVDL_PROJECT_NAME }}_build_windows  && zip ../${{ env.AVDL_PROJECT_NAME }}_build_windows.zip * -r && cd ..
+        cd ${{ env.AVDL_PROJECT_NAME }}_android_signed && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android.zip game_android_signed.apk -r && cd ..
+        cd ${{ env.AVDL_PROJECT_NAME }}_quest2_signed  && zip ../${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip  * -r && cd ..
     - name: get butler
       run: |
         curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
@@ -630,10 +622,10 @@ jobs:
       env:
         BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
       run: |
-        ./butler push rue_build_linux.zip   afloofdev/test-project:linux-x86_64   --userversion 0.0.0
-        ./butler push rue_build_windows.zip afloofdev/test-project:windows-x86_64 --userversion 0.0.0
-        ./butler push rue_build_android.zip afloofdev/test-project:android        --userversion 0.0.0
-        ./butler push rue_build_quest2.zip  afloofdev/test-project:quest2         --userversion 0.0.0
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_linux.zip   afloofdev/test-project:linux-x86_64   --userversion 0.0.0
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_windows.zip afloofdev/test-project:windows-x86_64 --userversion 0.0.0
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_android.zip afloofdev/test-project:android        --userversion 0.0.0
+        ./butler push ${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip  afloofdev/test-project:quest2         --userversion 0.0.0
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
@@ -641,47 +633,79 @@ jobs:
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: rue_build_linux
-        path: rue_build_linux
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_linux
+        path: ${{ env.AVDL_PROJECT_NAME }}_build_linux
     - uses: actions/download-artifact@v3
       with:
-        name: rue_build_linux_steam
-        path: rue_build_linux_steam
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_linux_steam
+        path: ${{ env.AVDL_PROJECT_NAME }}_build_linux_steam
     - uses: actions/download-artifact@v3
       with:
-        name: rue_build_windows
-        path: rue_build_windows
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_windows
+        path: ${{ env.AVDL_PROJECT_NAME }}_build_windows
     - uses: actions/download-artifact@v3
       with:
-        name: rue_build_windows_steam
-        path: rue_build_windows_steam
+        name: ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam
+        path: ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam
     - uses: actions/download-artifact@v3
       with:
-        name: rue_android
-        path: rue_android
+        name: ${{ env.AVDL_PROJECT_NAME }}_android
+        path: ${{ env.AVDL_PROJECT_NAME }}_android
     - uses: actions/download-artifact@v3
       with:
-        name: rue_android_googleplay
-        path: rue_android_googleplay
+        name: ${{ env.AVDL_PROJECT_NAME }}_android_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_android_signed
+    - uses: actions/download-artifact@v3
+      if: ${{ false }}
+      with:
+        name: ${{ env.AVDL_PROJECT_NAME }}_android_admob_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_android_admob_signed
     - uses: actions/download-artifact@v3
       with:
-        name: rue_quest2
-        path: rue_quest2
+        name: ${{ env.AVDL_PROJECT_NAME }}_android_googleplay
+        path: ${{ env.AVDL_PROJECT_NAME }}_android_googleplay
     - uses: actions/download-artifact@v3
       with:
-        name: rue_quest2_oculus
-        path: rue_quest2_oculus
+        name: ${{ env.AVDL_PROJECT_NAME }}_android_googleplay_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_android_googleplay_signed
+    - uses: actions/download-artifact@v3
+      if: ${{ false }}
+      with:
+        name: ${{ env.AVDL_PROJECT_NAME }}_android_googleplay_admob_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_android_googleplay_admob_signed
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2
+        path: ${{ env.AVDL_PROJECT_NAME }}_quest2
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_quest2_signed
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus
+        path: ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus_signed
+        path: ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus_signed
     - name: zip packages
       run: |
          sudo apt update && sudo apt install -y zip
-         cd rue_build_linux         && zip ../rue_build_linux.zip              * -r && cd ..
-         cd rue_build_linux_steam   && zip ../rue_build_linux_steam.zip        * -r && cd ..
-         cd rue_build_windows       && zip ../rue_build_windows.zip            * -r && cd ..
-         cd rue_build_windows_steam && zip ../rue_build_windows_steam.zip      * -r && cd ..
-         cd rue_android             && zip ../rue_build_android.zip            * -r && cd ..
-         cd rue_android_googleplay  && zip ../rue_build_android_googleplay.zip * -r && cd ..
-         cd rue_quest2              && zip ../rue_build_quest2.zip             * -r && cd ..
-         cd rue_quest2_oculus       && zip ../rue_build_quest2_oculus.zip      * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_build_linux          && zip ../${{ env.AVDL_PROJECT_NAME }}_build_linux.zip              * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_build_linux_steam    && zip ../${{ env.AVDL_PROJECT_NAME }}_build_linux_steam.zip        * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_build_windows        && zip ../${{ env.AVDL_PROJECT_NAME }}_build_windows.zip            * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam  && zip ../${{ env.AVDL_PROJECT_NAME }}_build_windows_steam.zip      * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_android              && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android.zip            * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_android_signed       && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android_signed.zip     * -r && cd ..
+         #cd ${{ env.AVDL_PROJECT_NAME }}_android_admob_signed && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android_admob_signed.zip * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_android_googleplay   && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android_googleplay.zip * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_android_googleplay_signed  && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android_googleplay_signed.zip * -r && cd ..
+         #cd ${{ env.AVDL_PROJECT_NAME }}_android_googleplay_admob_signed && zip ../${{ env.AVDL_PROJECT_NAME }}_build_android_googleplay_admob_signed.zip * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_quest2               && zip ../${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip             * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_quest2_signed        && zip ../${{ env.AVDL_PROJECT_NAME }}_build_quest2_signed.zip      * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus        && zip ../${{ env.AVDL_PROJECT_NAME }}_build_quest2_oculus.zip      * -r && cd ..
+         cd ${{ env.AVDL_PROJECT_NAME }}_quest2_oculus_signed && zip ../${{ env.AVDL_PROJECT_NAME }}_build_quest2_oculus_signed.zip * -r && cd ..
     - name: create release
       uses: actions/create-release@v1
       id: create_release
@@ -690,7 +714,7 @@ jobs:
         prerelease: false
         release_name: ${{ steps.version.outputs.version }}
         tag_name: ${{ github.ref }}
-#        body_path: CHANGELOG.md
+        body_path: CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: upload linux artifact
@@ -699,8 +723,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_linux.zip
-        asset_name: rue_${{ github.ref_name }}_linux.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_linux.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_linux.zip
         asset_content_type: application/gzip
     - name: upload linux steam artifact
       uses: actions/upload-release-asset@v1
@@ -708,8 +732,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_linux_steam.zip
-        asset_name: rue_${{ github.ref_name }}_linux_steam.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_linux_steam.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_linux_steam.zip
         asset_content_type: application/gzip
     - name: upload windows artifact
       uses: actions/upload-release-asset@v1
@@ -717,8 +741,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_windows.zip
-        asset_name: rue_${{ github.ref_name }}_windows.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_windows.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_windows.zip
         asset_content_type: application/gzip
     - name: upload windows steam artifact
       uses: actions/upload-release-asset@v1
@@ -726,8 +750,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_windows_steam.zip
-        asset_name: rue_${{ github.ref_name }}_windows_steam.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_windows_steam.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_windows_steam.zip
         asset_content_type: application/gzip
     - name: upload android artifact
       uses: actions/upload-release-asset@v1
@@ -735,8 +759,27 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_android.zip
-        asset_name: rue_${{ github.ref_name }}_android.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_android.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_android.zip
+        asset_content_type: application/gzip
+    - name: upload android signed artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_android_signed.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_android_signed.zip
+        asset_content_type: application/gzip
+    - name: upload android admob signed artifact
+      if: ${{ false }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_android_admob_signed.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_android_admob_signed.zip
         asset_content_type: application/gzip
     - name: upload android_googleplay artifact
       uses: actions/upload-release-asset@v1
@@ -744,8 +787,27 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_android_googleplay.zip
-        asset_name: rue_${{ github.ref_name }}_android_googleplay.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_android_googleplay.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_android_googleplay.zip
+        asset_content_type: application/gzip
+    - name: upload android_googleplay signed artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_android_googleplay_signed.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_android_googleplay_signed.zip
+        asset_content_type: application/gzip
+    - name: upload android_googleplay admob signed artifact
+      if: ${{ false }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_android_googleplay_admob_signed.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_android_googleplay_admob_signed.zip
         asset_content_type: application/gzip
     - name: upload quest2 artifact
       uses: actions/upload-release-asset@v1
@@ -753,8 +815,17 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_quest2.zip
-        asset_name: rue_${{ github.ref_name }}_quest2.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_quest2.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_quest2.zip
+        asset_content_type: application/gzip
+    - name: upload quest2 artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_quest2_signed.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_quest2_signed.zip
         asset_content_type: application/gzip
     - name: upload quest2 oculus artifact
       uses: actions/upload-release-asset@v1
@@ -762,6 +833,15 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rue_build_quest2_oculus.zip
-        asset_name: rue_${{ github.ref_name }}_quest2_oculus.zip
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_quest2_oculus.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_quest2_oculus.zip
+        asset_content_type: application/gzip
+    - name: upload quest2 oculus artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.AVDL_PROJECT_NAME }}_build_quest2_oculus_signed.zip
+        asset_name: ${{ env.AVDL_PROJECT_NAME }}_${{ github.ref_name }}_quest2_oculus_signed.zip
         asset_content_type: application/gzip
