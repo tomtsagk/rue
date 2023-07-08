@@ -15,10 +15,7 @@ on:
 
 env:
   AVDL_PROJECT_NAME: rue
-  AVDL_VERSION: 0.13.0
-
-env:
-  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v${{ env.AVDL_VERSION }}/avdl_v${{ env.AVDL_VERSION }}_linux.zip
+  AVDL_BUILD_URL_LINUX: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_linux.zip
   AVDL_BUILD_URL_WINDOWS: https://github.com/tomtsagk/avdl/releases/download/v0.13.0/avdl_v0.13.0_windows.zip
 
 jobs:
@@ -39,23 +36,21 @@ jobs:
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_linux/* AVDL_BUILD
-        rmdir avdl_build_linux
-        chmod +x AVDL_BUILD/bin/avdl
+        chmod +x avdl_build_linux/bin/avdl
     - name: generate_android_project
-      run: ./AVDL_BUILD/bin/avdl --android
-    - name: compile_apk
+      run: ./avdl_build_linux/bin/avdl --android
+    - name: compile
       run: |
         cd avdl_build_android
         chmod +x gradlew
         ./gradlew build
-        cd ../
+    - name: package_builds
+      run: |
         mkdir "game_output"
-        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk "game_output/game_android.apk"
         mkdir "game_output_debug"
-        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk "game_output_debug/game_android_debug.apk"
         mkdir "game_output_signed"
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk "game_output/game_android.apk"
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk "game_output_debug/game_android_debug.apk"
         cp avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip "game_output_signed/native-debug-symbols.zip"
         cp avdl_build_android/app/build/outputs/mapping/release/mapping.txt "game_output_signed/mapping.txt"
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
