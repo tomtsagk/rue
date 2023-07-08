@@ -20,7 +20,7 @@ env:
 
 jobs:
   # Android
-  build_android:
+  android:
     if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
@@ -75,7 +75,8 @@ jobs:
         path: game_output_debug/game_android_debug.apk
 
   # Android - Google Play
-  build_android_googleplay:
+  android_googleplay:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -476,7 +477,7 @@ jobs:
   release_itchio:
     if: ${{ false }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_windows, build_android, build_quest2]
+    needs: [build_linux, build_windows, android, build_quest2]
     steps:
     - uses: actions/download-artifact@v3
       with:
@@ -518,7 +519,7 @@ jobs:
   create_release:
     if: ${{ github.ref_type == 'tag' }}
     runs-on: ubuntu-20.04
-    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, build_android, build_android_googleplay, build_quest2, build_quest2_oculus]
+    needs: [build_linux, build_linux_steam, build_windows, build_windows_steam, android, android_googleplay, build_quest2, build_quest2_oculus]
     steps:
     - uses: actions/download-artifact@v3
       with:
