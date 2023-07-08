@@ -21,6 +21,7 @@ env:
 jobs:
   # Android
   build_android:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -75,60 +76,57 @@ jobs:
 
   # Android - Google Play
   build_android_googleplay:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
-    - name: init_rue
+    - name: init_project
       uses: actions/checkout@v2
-    - name: apt packages
-      run: |
-         sudo apt update && sudo apt install -y zipalign apksigner
     - uses: actions/setup-java@v3
       with:
         distribution: 'oracle'
         java-version: '17'
+    - name: apt packages
+      run: |
+         sudo apt update && sudo apt install -y zipalign apksigner
     - name: get_avdl
       run: |
         wget $AVDL_BUILD_URL_LINUX -O avdl_build_linux.zip
         unzip avdl_build_linux.zip
-        mkdir AVDL_BUILD
-        mv avdl_build_linux/* AVDL_BUILD
-        rmdir avdl_build_linux
-        chmod +x AVDL_BUILD/bin/avdl
+        chmod +x avdl_build_linux/bin/avdl
     - name: generate_android_project
-      run: ./AVDL_BUILD/bin/avdl --android-google-play ${{ secrets.GOOGLE_PLAY_ID }} --google-play-achievement "ACHIEVEMENT_ROSE_SELECTED" ${{ secrets.ACHIEVEMENT_ROSE_SELECTED }} --google-play-achievement "ACHIEVEMENT_EXTRA_DISCARD" ${{ secrets.ACHIEVEMENT_EXTRA_DISCARD }} --google-play-achievement "ACHIEVEMENT_I_FOUND_THE_ROSE" ${{ secrets.ACHIEVEMENT_I_FOUND_THE_ROSE }} --google-play-achievement "ACHIEVEMENT_FIRST_VICTORY" ${{ secrets.ACHIEVEMENT_FIRST_VICTORY }} --google-play-achievement "ACHIEVEMENT_GETTING_BETTER" ${{ secrets.ACHIEVEMENT_GETTING_BETTER }} --google-play-achievement "ACHIEVEMENT_MASTER_PLAYER" ${{ secrets.ACHIEVEMENT_MASTER_PLAYER }}
-    - name: compile_apk
+      run: ./avdl_build_linux/bin/avdl --android-google-play ${{ secrets.GOOGLE_PLAY_ID }} --google-play-achievement "ACHIEVEMENT_ROSE_SELECTED" ${{ secrets.ACHIEVEMENT_ROSE_SELECTED }} --google-play-achievement "ACHIEVEMENT_EXTRA_DISCARD" ${{ secrets.ACHIEVEMENT_EXTRA_DISCARD }} --google-play-achievement "ACHIEVEMENT_I_FOUND_THE_ROSE" ${{ secrets.ACHIEVEMENT_I_FOUND_THE_ROSE }} --google-play-achievement "ACHIEVEMENT_FIRST_VICTORY" ${{ secrets.ACHIEVEMENT_FIRST_VICTORY }} --google-play-achievement "ACHIEVEMENT_GETTING_BETTER" ${{ secrets.ACHIEVEMENT_GETTING_BETTER }} --google-play-achievement "ACHIEVEMENT_MASTER_PLAYER" ${{ secrets.ACHIEVEMENT_MASTER_PLAYER }}
+    - name: compile
       run: |
         cd avdl_build_android
         chmod +x gradlew
         ./gradlew build
-        cd ../
-        mkdir rue_output
-        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk rue_output/rue_android_googleplay.apk
-        mkdir rue_output_debug
-        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk rue_output_debug/rue_android_googleplay_debug.apk
-        mkdir rue_output_signed
-        cp avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip rue_output_signed/native-debug-symbols.zip
-        cp avdl_build_android/app/build/outputs/mapping/release/mapping.txt rue_output_signed/mapping.txt
+    - name: package_builds
+      run: |
+        mkdir "game_output"
+        mkdir "game_output_debug"
+        mkdir "game_output_signed"
+        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk "game_output/game_android.apk"
+        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk "game_output_debug/game_android_debug.apk"
+        cp avdl_build_android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip "game_output_signed/native-debug-symbols.zip"
+        cp avdl_build_android/app/build/outputs/mapping/release/mapping.txt "game_output_signed/mapping.txt"
         echo '${{ secrets.KEYSTORE }}' | base64 -d > keystore
-        zipalign -v 4 rue_output/rue_android_googleplay.apk rue_output_signed/rue_android_googleplay_signed.apk
-        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' rue_output_signed/rue_android_googleplay_signed.apk
+        zipalign -v 4 "game_output/game_android.apk" "game_output_signed/game_android_signed.apk"
+        apksigner sign --ks keystore --ks-pass 'pass:${{ secrets.KEYSTORE_PASSWORD }}' "game_output_signed/game_android_signed.apk"
         rm keystore
     - name: upload_artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android_googleplay
-        path: rue_output/rue_android_googleplay.apk
+        name: "${{ env.AVDL_PROJECT_NAME }}_android_googleplay"
+        path: game_output/game_android.apk
     - name: upload_artifact_signed
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android_googleplay_signed
-        path: rue_output_signed
+        name: "${{ env.AVDL_PROJECT_NAME }}_android_googleplay_signed"
+        path: game_output_signed
     - name: upload_artifact_debug
       uses: actions/upload-artifact@v3
       with:
-        name: rue_android_googleplay_debug
-        path: rue_output_debug/rue_android_googleplay_debug.apk
+        name: "${{ env.AVDL_PROJECT_NAME }}_android_googleplay_debug"
+        path: game_output_debug/game_android_debug.apk
 
   # Quest 2
   build_quest2:
