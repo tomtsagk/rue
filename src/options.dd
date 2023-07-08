@@ -342,7 +342,6 @@
 		(this.labelYes.draw)
 		(this.labelNo.draw)
 	)
-
 	(dd_matrix_pop)
 
 	)
@@ -584,6 +583,19 @@
 
 (class_function options int button_selection (int button_index)
 	(group
+#	(if (== button_index 0)
+#		(group
+#		(this.clickSmallSound.play)
+#		(if (< this.volumeMusic 10)
+#			(= this.volumeMusic 100)
+#			(= this.volumeMusic 0)
+#		)
+#		(avdl_music_setVolume this.volumeMusic)
+#		(if (< this.volumeMusic 10)
+#			(return 2)
+#			(return 3)
+#		)
+#		)
 	(if (== button_index 0)
 		(group
 		(this.clickSmallSound.play)
