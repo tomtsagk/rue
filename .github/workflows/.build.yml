@@ -126,26 +126,6 @@ jobs:
       with:
         name: "${{ env.AVDL_PROJECT_NAME }}_android_admob_debug"
         path: game_output_debug/game_android_debug.apk
-    - name: compile_apk
-      run: |
-        cd avdl_build_android
-        chmod +x gradlew
-        ./gradlew build
-        cd ../
-        mkdir game_output
-        mv avdl_build_android/app/build/outputs/apk/release/app-universal-release-unsigned.apk game_output
-        mkdir game_output_debug
-        mv avdl_build_android/app/build/outputs/apk/debug/app-universal-debug.apk game_output_debug
-    - name: upload_artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: "${{ env.AVDL_PROJECT_NAME }}_android_admob"
-        path: game_output
-    - name: upload_artifact_debug
-      uses: actions/upload-artifact@v3
-      with:
-        name: "${{ env.AVDL_PROJECT_NAME }}_android_admob_debug"
-        path: game_output_debug
 
   # Android - Google Play
   android_googleplay:
@@ -286,7 +266,7 @@ jobs:
         cd avdl_oculus_build
         unzip oculus_mobile_sdk.zip
         cp ../avdl_build_quest2/ -r avdl_vr_bk/AvdlProject
-    - name: compile_apk
+    - name: compile
       run: |
         cd avdl_oculus_build/avdl_vr_bk/AvdlProject/Projects/Android
         chmod +x ../../../gradlew
@@ -344,7 +324,7 @@ jobs:
         cd avdl_oculus_build
         unzip oculus_mobile_sdk.zip
         cp ../avdl_build_quest2/ -r avdl_vr_bk/AvdlProject
-    - name: compile_apk
+    - name: compile
       run: |
         cd avdl_oculus_build/avdl_vr_bk/AvdlProject/Projects/Android
         chmod +x ../../../gradlew
