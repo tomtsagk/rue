@@ -81,7 +81,7 @@ jobs:
 
   # Android - Admob
   android_admob:
-    if: ${{ env.AVDL_MAKE_ANDROID }} && ${{ env.AVDL_HAS_ADMOB }}
+    if: env.AVDL_MAKE_ANDROID && env.AVDL_HAS_ADMOB
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -156,7 +156,7 @@ jobs:
 
   # Android - Google Play
   android_googleplay:
-    if: ${{ env.AVDL_MAKE_ANDROID }}
+    if: env.AVDL_MAKE_ANDROID
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -211,7 +211,7 @@ jobs:
 
   # Android - Google Play - Admob
   android_googleplay_admob:
-    if: ${{ env.AVDL_MAKE_ANDROID }} && ${{ env.AVDL_HAS_ADMOB }}
+    if: env.AVDL_MAKE_ANDROID && env.AVDL_HAS_ADMOB
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -266,7 +266,7 @@ jobs:
 
   # Quest 2
   quest2:
-    if: ${{ env.AVDL_MAKE_ANDROID }}
+    if: env.AVDL_MAKE_QUEST2
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -325,7 +325,7 @@ jobs:
 
   # Quest 2 + Oculus platform services
   quest2_oculus:
-    if: ${{ env.AVDL_MAKE_ANDROID }}
+    if: env.AVDL_MAKE_QUEST2
     runs-on: ubuntu-latest
     steps:
     - name: init_project
@@ -384,7 +384,7 @@ jobs:
 
   # Linux
   linux_x86_64:
-    if: ${{ env.AVDL_MAKE_LINUX }}
+    if: env.AVDL_MAKE_LINUX
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -416,7 +416,7 @@ jobs:
         path: avdl_build
   # Linux Steam
   linux_steam_x86_64:
-    if: ${{ env.AVDL_MAKE_LINUX }}
+    if: env.AVDL_MAKE_LINUX
     runs-on: ubuntu-20.04
     steps:
     - name: update packages
@@ -441,7 +441,7 @@ jobs:
         path: avdl_build
   # Windows
   windows_x86_64:
-    if: ${{ env.AVDL_MAKE_WINDOWS }}
+    if: env.AVDL_MAKE_WINDOWS
     runs-on: windows-latest
     steps:
     - name: init_project
@@ -520,7 +520,7 @@ jobs:
         path: build/
   # Windows Steam
   windows_steam_x86_64:
-    if: ${{ env.AVDL_MAKE_WINDOWS }}
+    if: env.AVDL_MAKE_WINDOWS
     runs-on: windows-latest
     steps:
     - name: init_project
