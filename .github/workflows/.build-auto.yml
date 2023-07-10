@@ -7,7 +7,7 @@ on:
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@16c72c72afdffb21f1d5be8d6b3fd66d637f8673
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@df3b9cdc5203b04f3ddc30035e354b2892d104c3
     with:
         project_name: rue
         build_android: true
@@ -21,3 +21,5 @@ jobs:
     secrets:
         ANDROID_KEYSTORE: ${{ secrets.KEYSTORE }}
         ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        ADMOB_PROJECT_ID: ${{ secrets.ADMOB_PROJECT_ID }}
+        ADMOB_INTERSTITIAL_AD_ID: ${{ secrets.ADMOB_INTERSTITIAL_AD_ID }}
