@@ -7,17 +7,19 @@ on:
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@ed2afb8c60b462346e617f45d4ec269b961100a2
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@2705468a62f163122e6ebf56c8905d688f4af1b9
     with:
         project_name: rue
-        build_android: false
-        build_android_googleplay: true
-        build_ads: true
+        build_android: true
+        build_android_googleplay: false
+        build_ads: false
         build_steam: false
         build_linux: false
         build_windows: false
         build_quest2: false
         build_quest2_oculus: false
+        itchio_user: afloofdev
+        itchio_project: rue
     secrets:
         # required for android
         ANDROID_KEYSTORE: ${{ secrets.KEYSTORE }}
