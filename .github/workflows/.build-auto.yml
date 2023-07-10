@@ -7,7 +7,7 @@ on:
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@0282e1e684a1b31509b0291db737d3977f830003
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@70355d355b5424ee0f1ae5321f53c905a65b4243
     with:
         project_name: rue
         build_android: true
@@ -18,6 +18,3 @@ jobs:
         build_windows: false
         build_quest2: false
         build_quest2_oculus: false
-    secrets:
-        KEYSTORE: ${{ secrets.KEYSTORE }}
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
