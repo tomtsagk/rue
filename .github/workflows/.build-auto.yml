@@ -7,6 +7,16 @@ on:
 
 jobs:
   call-workflow-in-another-repo:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@d4d4dca2c0642cc684001f779eec7ef85d26d3cc
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@aac52ba6c99741753ded0f75df4b244057ed482c
     with:
         project_name: rue
+        build_android: true
+        build_android_googleplay: false
+        build_ads: false
+        build_steam: false
+        build_linux: false
+        build_windows: false
+        build_quest2: false
+        build_quest2_oculus: false
+        KEYSTORE: ${{ secrets.KEYSTORE }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
