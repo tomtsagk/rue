@@ -19,5 +19,5 @@ jobs:
         build_quest2: false
         build_quest2_oculus: false
     secrets:
-        KEYSTORE: ${{ secrets.KEYSTORE }}
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        ANDROID_KEYSTORE: ${{ secrets.KEYSTORE }}
+        ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
