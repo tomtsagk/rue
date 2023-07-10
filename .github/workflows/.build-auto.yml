@@ -7,22 +7,24 @@ on:
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@c2c182fbf7c663f746b20bbb2f2e73cfecfad658
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@ed2afb8c60b462346e617f45d4ec269b961100a2
     with:
         project_name: rue
         build_android: false
-        build_android_googleplay: false
-        build_ads: false
+        build_android_googleplay: true
+        build_ads: true
         build_steam: false
         build_linux: false
         build_windows: false
-        build_quest2: true
-        build_quest2_oculus: true
+        build_quest2: false
+        build_quest2_oculus: false
     secrets:
         # required for android
         ANDROID_KEYSTORE: ${{ secrets.KEYSTORE }}
         ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         OCULUS_API_LINK: ${{ secrets.OCULUS_API_LINK }}
         OCULUS_PROJECT_ID: ${{ secrets.OCULUS_PROJECT_ID }}
+        GOOGLE_PLAY_ID: ${{ secrets.GOOGLE_PLAY_ID }}
+        AVDL_GOOGLE_PLAY_ACHIEVEMENTS: --google-play-achievement "ACHIEVEMENT_ROSE_SELECTED" ${{ secrets.ACHIEVEMENT_ROSE_SELECTED }} --google-play-achievement "ACHIEVEMENT_EXTRA_DISCARD" ${{ secrets.ACHIEVEMENT_EXTRA_DISCARD }} --google-play-achievement "ACHIEVEMENT_I_FOUND_THE_ROSE" ${{ secrets.ACHIEVEMENT_I_FOUND_THE_ROSE }} --google-play-achievement "ACHIEVEMENT_FIRST_VICTORY" ${{ secrets.ACHIEVEMENT_FIRST_VICTORY }} --google-play-achievement "ACHIEVEMENT_GETTING_BETTER" ${{ secrets.ACHIEVEMENT_GETTING_BETTER }} --google-play-achievement "ACHIEVEMENT_MASTER_PLAYER" ${{ secrets.ACHIEVEMENT_MASTER_PLAYER }}
         #ADMOB_PROJECT_ID: ${{ secrets.ADMOB_PROJECT_ID }}
         #ADMOB_INTERSTITIAL_AD_ID: ${{ secrets.ADMOB_INTERSTITIAL_AD_ID }}
