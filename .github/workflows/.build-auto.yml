@@ -6,7 +6,7 @@ on:
       - feature/reuse_github_workflows
 
 jobs:
-  call-workflow-in-another-repo:
+  avdl:
     uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@aac52ba6c99741753ded0f75df4b244057ed482c
     with:
         project_name: rue
@@ -18,5 +18,6 @@ jobs:
         build_windows: false
         build_quest2: false
         build_quest2_oculus: false
+    secrets:
         KEYSTORE: ${{ secrets.KEYSTORE }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
