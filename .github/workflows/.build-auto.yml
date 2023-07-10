@@ -7,7 +7,7 @@ on:
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@320d04be68d3134290d980e6cd2d2bf620259a01
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@617b59be9b0c14f8d55f4393dbb39aa41e93dbff
     with:
         project_name: rue
         build_android: true
