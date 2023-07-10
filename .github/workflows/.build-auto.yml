@@ -4,28 +4,34 @@ on:
   push:
     branches:
       - feature/reuse_github_workflows
+    tags:
+      "v[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@a023163016f641a420a9c396bcc95852aab2b278
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@8a65a5b45392fbcd3f3dc518fec272e6c794e7af
     with:
         project_name: rue
         build_android: true
         build_android_googleplay: true
         build_ads: false
         build_steam: false
-        build_linux: false
-        build_windows: false
-        build_quest2: false
+        build_linux: true
+        build_windows: true
+        build_quest2: true
         build_quest2_oculus: false
         itchio_user: afloofdev
-        itchio_project: rue
+        itchio_project: test-project
     secrets:
         # required for android
         ANDROID_KEYSTORE: ${{ secrets.KEYSTORE }}
         ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        # required for itchio release
+        BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        # required for oculus
         OCULUS_API_LINK: ${{ secrets.OCULUS_API_LINK }}
         OCULUS_PROJECT_ID: ${{ secrets.OCULUS_PROJECT_ID }}
+        # required for google play
         GOOGLE_PLAY_ID: ${{ secrets.GOOGLE_PLAY_ID }}
         AVDL_GOOGLE_PLAY_ACHIEVEMENTS: --google-play-achievement "ACHIEVEMENT_ROSE_SELECTED" ${{ secrets.ACHIEVEMENT_ROSE_SELECTED }} --google-play-achievement "ACHIEVEMENT_EXTRA_DISCARD" ${{ secrets.ACHIEVEMENT_EXTRA_DISCARD }} --google-play-achievement "ACHIEVEMENT_I_FOUND_THE_ROSE" ${{ secrets.ACHIEVEMENT_I_FOUND_THE_ROSE }} --google-play-achievement "ACHIEVEMENT_FIRST_VICTORY" ${{ secrets.ACHIEVEMENT_FIRST_VICTORY }} --google-play-achievement "ACHIEVEMENT_GETTING_BETTER" ${{ secrets.ACHIEVEMENT_GETTING_BETTER }} --google-play-achievement "ACHIEVEMENT_MASTER_PLAYER" ${{ secrets.ACHIEVEMENT_MASTER_PLAYER }}
         #ADMOB_PROJECT_ID: ${{ secrets.ADMOB_PROJECT_ID }}
