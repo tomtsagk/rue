@@ -9,11 +9,11 @@ on:
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@477b62a62c7a6a69797f01f9cedcc9663887cd92
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@8f613cb6213536a5f97737be05a3aa2db9c304e6
     with:
         project_name: rue
-        build_android: true
-        build_android_googleplay: true
+        build_android: false
+        build_android_googleplay: false
         build_ads: false
         build_steam: false
         build_linux: true
