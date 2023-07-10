@@ -7,19 +7,20 @@ on:
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@df3b9cdc5203b04f3ddc30035e354b2892d104c3
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@b3b1011df2213ccd8bd1ae844a676383adab5188
     with:
         project_name: rue
-        build_android: true
+        build_android: false
         build_android_googleplay: false
-        build_ads: true
-        build_steam: false
-        build_linux: false
-        build_windows: false
-        build_quest2: false
-        build_quest2_oculus: false
+        build_ads: false
+        build_steam: true
+        build_linux: true
+        build_windows: true
+        build_quest2: true
+        build_quest2_oculus: true
     secrets:
+        # required for android
         ANDROID_KEYSTORE: ${{ secrets.KEYSTORE }}
         ANDROID_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        ADMOB_PROJECT_ID: ${{ secrets.ADMOB_PROJECT_ID }}
-        ADMOB_INTERSTITIAL_AD_ID: ${{ secrets.ADMOB_INTERSTITIAL_AD_ID }}
+        #ADMOB_PROJECT_ID: ${{ secrets.ADMOB_PROJECT_ID }}
+        #ADMOB_INTERSTITIAL_AD_ID: ${{ secrets.ADMOB_INTERSTITIAL_AD_ID }}
