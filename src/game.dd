@@ -79,6 +79,12 @@
 (class_function world_game void create ()
 	(group
 
+	(this.font.set (asset "assets/nishiki_teki.ttf" DD_PLY) 4)
+
+	(this.label_int.setFont this.font)
+	(this.label_int.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.label_int.setTextInt)
+
 	(= currentNetworkTurnIndex 0)
 	(= lastNetworkTurnIndex 0)
 	(= networkTurnQueueSize 0)
@@ -86,11 +92,14 @@
 	# exit menu buttons
 	(= this.buttonTotal 2)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[0].label.setFont this.font)
 	(this.button[0].label.setText "Exit")
 
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[1].label.setFont this.font)
 	(this.button[1].label.setText "Resume")
 
+	(this.labelExitMenu.setFont this.font)
 	(this.labelExitMenu.setText "Exit game ?")
 	(this.labelExitMenu.setAlign DD_STRING3D_ALIGN_CENTER)
 
@@ -107,14 +116,19 @@
 	(= this.victoriousPlayer -1)
 	(= this.msgDelay 0)
 
+	(this.phaseTextSetup.setFont this.font )
 	(this.phaseTextSetup.setText "Setting up table ..." )
 	(this.phaseTextSetup.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextPlanning.setFont this.font )
 	(this.phaseTextPlanning.setText "Planning Phase" )
 	(this.phaseTextPlanning.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextExecution.setFont this.font )
 	(this.phaseTextExecution.setText "Execution Phase" )
 	(this.phaseTextExecution.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextEnd.setFont this.font )
 	(this.phaseTextEnd.setText "End Phase" )
 	(this.phaseTextEnd.setAlign DD_STRING3D_ALIGN_CENTER )
+	(this.phaseTextError.setFont this.font )
 	(this.phaseTextError.setText "Error Phase?" )
 	(this.phaseTextError.setAlign DD_STRING3D_ALIGN_CENTER )
 
@@ -386,8 +400,10 @@
 		(= this.player[i].isNetworkUser isMultiplayerGame)
 
 		(if (== this.player[i].type 10)
-			(this.player[i].font.setText (avdl_multiplayer_getPlayerNameByIndex 0 i))
+			(this.player[i].label_name.setText (avdl_multiplayer_getPlayerNameByIndex 0 i))
 		)
+
+		(this.player[i].setFont this.font)
 
 		)
 	)
@@ -478,12 +494,15 @@
 	(= this.arrowRotation 0)
 	(= this.arrowRotationTarget 0)
 
+	(this.cardLabel[0].setFont this.font)
 	(this.cardLabel[0].setText "Move The Rose 1 step.")
 	(this.cardLabel[0].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[1].setFont this.font)
 	(this.cardLabel[1].setText "Move The Rose 3 steps.")
 	(this.cardLabel[1].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[2].setFont this.font)
 	(this.cardLabel[2].setText (multistring
 		"Thunder: The Flirt grabs the Rose."
 		"Exchange 1 random card with The Flirt. "
@@ -492,6 +511,7 @@
 	))
 	(this.cardLabel[2].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[3].setFont this.font)
 	(this.cardLabel[3].setText (multistring
 		"If the player to your right is The Flirt, "
 		"move The Rose 1 step."
@@ -501,6 +521,7 @@
 	))
 	(this.cardLabel[3].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[4].setFont this.font)
 	(this.cardLabel[4].setText (multistring
 		"Draw one card and "
 		"discard this card. "
@@ -510,6 +531,7 @@
 	))
 	(this.cardLabel[4].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[5].setFont this.font)
 	(this.cardLabel[5].setText (multistring
 		"If you are The Flirt "
 		"grab The Rose. Otherwise "
@@ -519,9 +541,11 @@
 	))
 	(this.cardLabel[5].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[6].setFont this.font)
 	(this.cardLabel[6].setText "The Flirt grabs The Rose. Tear: Move The Rose 1 step.")
 	(this.cardLabel[6].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[7].setFont this.font)
 	(this.cardLabel[7].setText (multistring
 		"If you are the Flirt, "
 		"move The Rose 3 steps. "
@@ -531,6 +555,7 @@
 	))
 	(this.cardLabel[7].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[8].setFont this.font)
 	(this.cardLabel[8].setText (multistring
 		"If you are holding "
 		"The Rose, "
@@ -540,11 +565,13 @@
 	))
 	(this.cardLabel[8].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[9].setFont this.font)
 	(this.cardLabel[9].setText (multistring
 		"A beautiful red rose that smells amazing."
 	))
 	(this.cardLabel[9].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[10].setFont this.font)
 	(this.cardLabel[10].setText (multistring
 		"At start every player draws 5 cards. "
 		"One player gets the Rose card in front of them. "
@@ -552,12 +579,14 @@
 	))
 	(this.cardLabel[10].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[11].setFont this.font)
 	(this.cardLabel[11].setText (multistring
 		"In the planning phase, starting with the Flirt, "
 		"every player picks a card and plans it face down on the table."
 	))
 	(this.cardLabel[11].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[12].setFont this.font)
 	(this.cardLabel[12].setText (multistring
 		"The rose always moves clockwise. "
 		"If a player holds the rose moving it one step will "
@@ -565,12 +594,14 @@
 	))
 	(this.cardLabel[12].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[13].setFont this.font)
 	(this.cardLabel[13].setText (multistring
 		"In the execution phase starting with the Flirt,"
 		"reveal each card and execute its effect."
 	))
 	(this.cardLabel[13].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[14].setFont this.font)
 	(this.cardLabel[14].setText (multistring
 		"In the end phase every player draws one card except the "
 		"Flirt. If a player has 2 or less cards in their hand "
@@ -578,22 +609,26 @@
 	))
 	(this.cardLabel[14].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[15].setFont this.font)
 	(this.cardLabel[15].setText (multistring
 		"The first enemy will only play a card to move the Rose 1 step."
 	))
 	(this.cardLabel[15].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[16].setFont this.font)
 	(this.cardLabel[16].setText (multistring
 		"The second enemy will only play a card to move the Rose 3 steps."
 	))
 	(this.cardLabel[16].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[17].setFont this.font)
 	(this.cardLabel[17].setText (multistring
 		"If The Flirt is holding The Rose, move it 2 steps. "
 		"Otherwise, move the Rose 1 step."
 	))
 	(this.cardLabel[17].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[18].setFont this.font)
 	(this.cardLabel[18].setText (multistring
 		"If The Flirt is holding The Rose, move it 2 steps "
 		"and The Flirt now grabs The Rose. "
@@ -601,6 +636,7 @@
 	))
 	(this.cardLabel[18].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[19].setFont this.font)
 	(this.cardLabel[19].setText (multistring
 		"Ignore the effect of the next card. "
 		"Move the Rose 1 step. "
@@ -608,6 +644,7 @@
 	))
 	(this.cardLabel[19].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[20].setFont this.font)
 	(this.cardLabel[20].setText (multistring
 		"Tear: The Flirt grabs The Rose."
 		"Select 1 random card from "
@@ -616,40 +653,48 @@
 	))
 	(this.cardLabel[20].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[21].setFont this.font)
 	(this.cardLabel[21].setText (multistring
 		"Heart: The Flirt grabs The Rose."
 	))
 	(this.cardLabel[21].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[22].setFont this.font)
 	(this.cardLabel[22].setText (multistring
 		"Tear: The Flirt grabs The Rose."
 	))
 	(this.cardLabel[22].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[23].setFont this.font)
 	(this.cardLabel[23].setText (multistring
 		"Thunder: The Flirt grabs The Rose."
 	))
 	(this.cardLabel[23].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.cardLabel[24].setFont this.font)
 	(this.cardLabel[24].setText (multistring
 		"Frown: The Flirt grabs The Rose."
 	))
 	(this.cardLabel[24].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.labelWin.setFont this.font)
 	(this.labelWin.setText "You won! Click anywhere to continue.")
 	(this.labelWin.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.labelLose.setFont this.font)
 	(this.labelLose.setText "You lost! Click anywhere to continue.")
 	(this.labelLose.setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.labelConfirm.setFont this.font)
 	(this.labelConfirm.setText "Confirm?")
 	(this.labelConfirm.setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.phaseTextCornerEffectOrSkip.setFont this.font)
 	(this.phaseTextCornerEffectOrSkip.setText "Discard card to activate extra effect or skip.")
 	(this.phaseTextCornerEffectOrSkip.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(= this.filterCorner -1)
 
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
+	#(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.buttonProgram.setVertexShader
 		(multistring
@@ -695,6 +740,8 @@
 	(= this.buttonInactiveCol[2] 0.137)
 
 	(this.lookatMesh.load (asset "assets/eye.ply" DD_PLY))
+
+	(this.ovButtons.setFont this.font)
 
 	)
 )
@@ -2192,7 +2239,8 @@
 	(dd_translatef 0 0 (+ (* 0.003 this.deckTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
 	(dd_scalef 0.20 0.20 0.20)
-	(this.font.drawInt this.deckTotal)
+	#(this.font.drawInt this.deckTotal)
+	(this.label_int.drawInt this.deckTotal)
 	(dd_matrix_pop)
 
 	# draw discard
@@ -2210,7 +2258,8 @@
 	(dd_translatef 0 0 (+ (* 0.003 this.discardTotal) 0.12))
 	(dd_rotatef 90 1 0 0)
 	(dd_scalef 0.2 0.2 0.2)
-	(this.font.drawInt this.discardTotal)
+	#(this.font.drawInt this.discardTotal)
+	(this.label_int.drawInt this.discardTotal)
 	(dd_matrix_pop)
 
 	# draw every player apart from self
@@ -2266,10 +2315,10 @@
 			(group
 			(if (== this.victoriousPlayer 0)
 				(this.labelWin.drawLimit
-					(* (dd_screen_width_get 20) 2 0.8)
+					(* (dd_screen_width_get 20) 0.9)
 				)
 				(this.labelLose.drawLimit
-					(* (dd_screen_width_get 20) 2 0.8)
+					(* (dd_screen_width_get 20) 0.9)
 				)
 			)
 			)
@@ -2278,7 +2327,7 @@
 			(if this.ovButtons.cardToShow.cardDescription2
 				(group
 				(this.ovButtons.cardToShow.cardDescription2.drawLimit
-					(* (dd_screen_width_get 20) 2 0.8)
+					(* (dd_screen_width_get 20) 0.9)
 				)
 				)
 			)
@@ -2287,14 +2336,14 @@
 			(if this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2
 				(group
 				(this.player[0].cards[this.player[0].userLookingAtCard].cardDescription2.drawLimit
-					(* (dd_screen_width_get 20) 2 0.8)
+					(* (dd_screen_width_get 20) 0.9)
 				)
 				)
 			)
 		# draw phase
 			(group
 			(this.phaseTextCurrent.drawLimit
-				(* (dd_screen_width_get 20) 2 0.8)
+				(* (dd_screen_width_get 20) 0.9)
 			)
 			)
 		)
@@ -2347,13 +2396,13 @@
 			(group
 			(dd_translatef 0 3 -4.8)
 			(this.labelExitMenu.drawLimit
-				(* (dd_screen_width_get 4.8) 2 0.8)
+				(* (dd_screen_width_get 4.8) 0.9)
 			)
 			)
 			(group
 			(dd_translatef 0 3 -15)
 			(this.labelExitMenu.drawLimit
-				(* (dd_screen_width_get 20) 2 0.8)
+				(* (dd_screen_width_get 20) 0.9)
 			)
 			)
 		)

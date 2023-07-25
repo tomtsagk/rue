@@ -31,7 +31,11 @@
 (class_function world_menu void create ()
 	(group
 
+	(avdl_sound_setVolume 0)
+
 	(dd_math_randPseudoSetSeed (dd_math_rand 1000000))
+
+	(this.font.set (asset "assets/nishiki_teki.ttf" DD_PLY) 4)
 
 	# background
 	(= this.bg_rotation 0)
@@ -65,12 +69,16 @@
 	(this.colliderBoxCollision.set_primitive DD_PRIMITIVE_BOX)
 	(this.colliderBoxCollision.set_colour 0.4 0.8 0.4)
 
+	# give font to other menu
+	(this.menuHome.setFont this.font)
+	(this.opt.setFont this.font)
 	(this.menuHome.enable)
 
 	(dd_matrix_identity this.grabby)
 	(dd_matrix_translate this.grabby 0 0 -0.5)
 	#(= this.isGrabbed 0)
 
+	(this.loadingLabel.setFont this.font)
 	(this.loadingLabel.setText "Loading ...")
 	(this.loadingLabel.setAlign DD_STRING3D_ALIGN_CENTER)
 	(= this.isLoading 0)

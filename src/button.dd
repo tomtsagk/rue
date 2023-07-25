@@ -27,8 +27,10 @@
 
 	(this.label.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.label.setAlignVertical DD_STRING3D_ALIGN_VERTICAL_CENTER)
+	#(this.label.setAlignVertical DD_STRING3D_ALIGN_VERTICAL_TOP)
 	(this.description.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.description.setAlignVertical DD_STRING3D_ALIGN_VERTICAL_CENTER)
+	#(this.description.setAlignVertical DD_STRING3D_ALIGN_VERTICAL_TOP)
 
 	)
 )
@@ -162,7 +164,7 @@
 	(if (== this.isVisible 0)
 		(return)
 	)
-	(this.label.drawLimit 10)
+	(this.label.drawLimit 6)
 	)
 )
 

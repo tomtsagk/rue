@@ -52,7 +52,9 @@
 	(function void enable ())
 	(function void disable ())
 
-	(function int button_selection (int button_index))
+	(function int button_selection (group int button_index))
+
+	(function void setFont (group avdl_font f))
 
 	)
 ) # options menu

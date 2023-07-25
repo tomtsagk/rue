@@ -36,5 +36,7 @@
 
 	(function void lookAtPhysical (group dd_vec4 pos))
 
+	(function void setFont (group avdl_font f))
+
 	)
 ) # overlay buttons

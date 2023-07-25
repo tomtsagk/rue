@@ -104,7 +104,7 @@
 	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
 	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
 
-	(= this.volumeMusic (avdl_music_getVolume))
+#	(= this.volumeMusic (avdl_music_getVolume))
 	(= this.volumeSound (avdl_sound_getVolume))
 	(this.volumeParticle.load (asset "assets/ui_particle.ply" DD_PLY))
 	(this.volumeParticleStart.load (asset "assets/ui_particle_start.ply" DD_PLY))
@@ -305,12 +305,10 @@
 		(dd_scalef anim anim anim)
 		(this.button[i].drawRaw)
 
-		(dd_translatef 0 0 0.1)
+		(dd_translatef 0 -0.05 0.1)
 		(dd_scalef 0.3 0.3 0.3)
 
-		(if this.button[i].isVisible
-			(this.button[i].label.draw)
-		)
+		(this.button[i].drawText)
 
 		(dd_matrix_pop)
 		)
@@ -630,5 +628,16 @@
 	)
 
 	(return 0)
+	)
+)
+
+(class_function options void setFont (group avdl_font font)
+	(group
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+		(this.button[i].label.setFont font)
+		(this.button[i].description.setFont font)
+		)
+	)
 	)
 )

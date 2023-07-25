@@ -10,9 +10,11 @@
 	# individual cards
 	(= this.cardsTotal 0)
 
-	# font
-	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.font.setText "AI")
+	# labels
+	(this.label_name.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.label_name.setText "AI")
+	(this.label_int.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.label_int.setTextInt)
 	#(this.font.setColorFront 0.9 0.9 0.9)
 	#(this.font.setColorBack 0.3 0.3 0.3)
 
@@ -113,9 +115,9 @@
 	(this.mesh.draw)
 	(dd_translatef 0 2.2 0.3)
 	(dd_scalef 0.5 0.5 0.5)
-	(this.font.drawInt this.cardsTotal)
+	(this.label_int.drawInt this.cardsTotal)
 	(dd_translatef 0 3 0)
-	(this.font.draw)
+	(this.label_name.draw)
 	(dd_matrix_pop)
 
 	)
@@ -505,5 +507,12 @@
 	)
 
 	(= this.userLookingAtCard lookingAtCard)
+	)
+)
+
+(class_function Player void setFont (group avdl_font font)
+	(group
+	(this.label_name.setFont font)
+	(this.label_int.setFont font)
 	)
 )

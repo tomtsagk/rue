@@ -21,8 +21,9 @@
 	(def ref Card cards[10])
 	(def int userLookingAtCard)
 
-	# font
-	(def dd_string3d font)
+	# labels
+	(def dd_string3d label_name)
+	(def dd_string3d label_int)
 
 	(def int highlightCard)
 	(def int selectedCard)
@@ -62,6 +63,8 @@
 	(function void lookAtCard (group float rotX float rotY))
 	(function void lookAtCardByIndex (group int index))
 	(function void lookAtCardPos (group dd_vec4 pos))
+
+	(function void setFont (group avdl_font f))
 
 	)
 ) # player

@@ -214,3 +214,10 @@
 	)
 	)
 )
+
+(class_function OverlayButtons void setFont (group avdl_font font)
+	(group
+	(this.confirmLabel.setFont font)
+	(this.skipLabel.setFont font)
+	)
+)

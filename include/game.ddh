@@ -39,6 +39,10 @@
 (class world_game dd_world
 	(group
 
+	# font
+	(def avdl_font font)
+	(def dd_string3d label_int)
+
 	# save-load data
 	(def SaveLoad saveLoad)
 
@@ -75,9 +79,6 @@
 	(def int actionsTotal)
 	(def GameAction injectActions[100])
 	(def int injectActionsTotal)
-
-	# font
-	(def dd_string3d font)
 
 	# card font
 	(def dd_string3d cardFont)

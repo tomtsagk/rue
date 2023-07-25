@@ -29,6 +29,7 @@
 	(def options opt)
 	(def menu_multiplayer menuMultiplayer)
 
+	(def avdl_font font)
 	(def dd_string3d loadingLabel)
 	(def int isLoading)
 

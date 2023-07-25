@@ -49,6 +49,7 @@
 
 	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[4].label.setText "Buy physical card game")
+	#(this.button[4].label.setText "1 2 3 4 5 6 7 8 9 0 a a a a a a a a a")
 	(this.button[4].description.setText "Buy the physical card game on afloofdev.etsy.com")
 
 	# text display
@@ -324,7 +325,7 @@
 		(dd_scalef anim anim anim)
 		(this.button[i].drawRaw)
 
-		(dd_translatef 0 0 0.1)
+		(dd_translatef 0 -0.05 0.1)
 		(dd_scalef 0.3 0.3 0.3)
 
 		(this.button[i].drawText)
@@ -343,7 +344,7 @@
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.3 0.3 0.3)
 		#(def int limit (* (dd_screen_width_get this.textButton.z) -2))
-		(this.button[this.selection].description.drawLimit 25)
+		(this.button[this.selection].description.drawLimit 20)
 #		(if 0#this.isMovingToNewWorld
 #			(this.font.drawLimit "loading" limit)
 #		(== this.selection 0)
@@ -617,7 +618,7 @@
 	)
 )
 
-(class_function menu_home int button_selection (int button_index)
+(class_function menu_home int button_selection (group int button_index)
 	(group
 	# custom game
 	(if (== button_index 0)
@@ -655,5 +656,16 @@
 		)
 	)
 	(return 0)
+	)
+)
+
+(class_function menu_home void setFont (group avdl_font font)
+	(group
+	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
+		(group
+		(this.button[i].label.setFont font)
+		(this.button[i].description.setFont font)
+		)
+	)
 	)
 )
