@@ -661,6 +661,7 @@
 
 (class_function menu_home void setFont (group avdl_font font)
 	(group
+	(this.versionLabel.setFont font)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group
 		(this.button[i].label.setFont font)
