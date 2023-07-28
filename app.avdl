@@ -3,11 +3,11 @@ name: Rue
 
 # An ever increasing integer
 # used to be able to compare versions
-version_code: 21
+version_code: 22
 
 # A human-readable version, usually with the
 # notation [Major].[Minor].[Patch]
-version_name: 1.2.4
+version_name: 1.3.0
 
 # Updates on the project's build
 # while the project remains the same
