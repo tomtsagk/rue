@@ -30,6 +30,13 @@
 	(= this.animation 0)
 	(= this.fastForward 0)
 
+	(this.font.set (asset "assets/nishiki_teki.ttf" DD_PLY) 4)
+	(this.labelCredits.setFont this.font)
+	(this.labelTom.setFont this.font)
+	(this.labelProgrammer.setFont this.font)
+	(this.labelShiitakespacewarrior.setFont this.font)
+	(this.labelMusicSfx.setFont this.font)
+
 	)
 )
 

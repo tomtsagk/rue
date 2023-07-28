@@ -22,6 +22,8 @@
 
 	(def int fastForward)
 
+	(def avdl_font font)
+
 	(function void create ())
 	(function void onload ())
 	(function void resize ())
