@@ -14,14 +14,14 @@ jobs:
     uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@bd724289e7469736025b51a9cad990a37ee4d7cf
     with:
         project_name: rue
-        build_android: false
-        build_android_googleplay: false
+        build_android: true
+        build_android_googleplay: true
         build_ads: false
         build_steam: true
         build_linux: true
         build_windows: true
-        build_quest2: false
-        build_quest2_oculus: false
+        build_quest2: true
+        build_quest2_oculus: true
         itchio_user: afloofdev
         itchio_project: rue
     secrets:
