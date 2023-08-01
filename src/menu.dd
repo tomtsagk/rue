@@ -31,8 +31,6 @@
 (class_function world_menu void create ()
 	(group
 
-	(avdl_sound_setVolume 0)
-
 	(dd_math_randPseudoSetSeed (dd_math_rand 1000000))
 
 	(this.font.set (asset "assets/nishiki_teki.ttf" DD_PLY) 4)
