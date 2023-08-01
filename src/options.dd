@@ -4,6 +4,9 @@
 (class_function options void create ()
 	(group
 
+	# localisation
+	(this.localisation.set "menu_options_copy")
+
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
 	#(this.font.setColorFront 0.8 0.8 0.8)
@@ -12,31 +15,31 @@
 	# buttons
 	(= this.buttonTotal 4)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[0].label.setText "Audio Playing")
-	(this.button[0].description.setText "Select to mute/unmute audio")
+	(this.button[0].label.setText (this.localisation.getValue "menu_options_audio"))
+	(this.button[0].description.setText (this.localisation.getValue "menu_options_audio_desc"))
 
 	# toggle fullscreen button
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[1].label.setText "Toggle Fullscreen")
-	(this.button[1].description.setText "Swap window and fullscreen")
+	(this.button[1].label.setText (this.localisation.getValue "menu_options_toggle_fullscreen"))
+	(this.button[1].description.setText (this.localisation.getValue "menu_options_toggle_fullscreen_desc"))
 	(if (== (dd_canFullscreenToggle) 0)
 		(= this.button[1].isVisible 0)
 	)
 
 	# back button
 	(this.button[2].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[2].label.setText "Back")
-	(this.button[2].description.setText "Return to main menu")
+	(this.button[2].label.setText (this.localisation.getValue "menu_options_back"))
+	(this.button[2].description.setText (this.localisation.getValue "menu_options_back_desc"))
 
 	# credits
 	(this.button[3].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[3].label.setText "Credits")
-	(this.button[3].description.setText "Meet the creators")
+	(this.button[3].label.setText (this.localisation.getValue "menu_options_credits"))
+	(this.button[3].description.setText (this.localisation.getValue "menu_options_credtis_desc"))
 
 	# Yes/No labels
-	(this.labelYes.setText "Yes")
+	(this.labelYes.setText (this.localisation.getValue "menu_options_audio_on"))
 	(this.labelYes.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.labelNo.setText "No")
+	(this.labelNo.setText (this.localisation.getValue "menu_options_audio_off"))
 	(this.labelNo.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	# text display
@@ -308,6 +311,19 @@
 		(dd_translatef 0 -0.05 0.1)
 		(dd_scalef 0.3 0.3 0.3)
 
+		# draw audio label
+		(if (== i 0)
+			(group
+			(dd_matrix_push)
+			(dd_translatef 0 -1.5 0.1)
+			(if (> this.volumeSound 2)
+				(this.labelYes.draw)
+				(this.labelNo.draw)
+			)
+			(dd_matrix_pop)
+			)
+		)
+
 		(this.button[i].drawText)
 
 		(dd_matrix_pop)
@@ -323,24 +339,10 @@
 		(this.textButton.applyMatrixTransform)
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.3 0.3 0.3)
-		#(def float limit (* (dd_screen_width_get this.textButton.z) 1.8))
-		#(this.button[this.selection].description.draw)
-		(this.button[this.selection].description.drawLimit 25)
+		(this.button[this.selection].description.drawLimit 16)
 		(dd_matrix_pop)
 		)
 	)
-
-	# draw audio label
-	(dd_matrix_push)
-	(this.button[0].applyTransform)
-	(this.button[0].applyMatrixTransform)
-	(dd_translatef 0 -0.4 0.1)
-	(dd_scalef 0.4 0.4 0.4)
-	(if (> this.volumeSound 2)
-		(this.labelYes.draw)
-		(this.labelNo.draw)
-	)
-	(dd_matrix_pop)
 
 	)
 )
@@ -633,6 +635,8 @@
 
 (class_function options void setFont (group avdl_font font)
 	(group
+	(this.labelYes.setFont font)
+	(this.labelNo.setFont font)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group
 		(this.button[i].label.setFont font)

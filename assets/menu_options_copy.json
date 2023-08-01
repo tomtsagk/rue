@@ -1,0 +1,12 @@
+{
+	"menu_options_back": "Back",
+	"menu_options_back_desc": "Return to the main menu",
+	"menu_options_credits": "Credits",
+	"menu_options_credtis_desc": "Meet the creators",
+	"menu_options_audio": "Audio",
+	"menu_options_audio_on": "On",
+	"menu_options_audio_off": "Off",
+	"menu_options_audio_desc": "Toggle audio on/off",
+	"menu_options_toggle_fullscreen": "Toggle Fullscreen",
+	"menu_options_toggle_fullscreen_desc": "Swap between windowed and fullscreen mode"
+}

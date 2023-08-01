@@ -1,0 +1,11 @@
+{
+	"menu_play": "Play",
+	"menu_play_desc": "Start the Game",
+	"menu_exit": "Exit",
+	"menu_exit_desc": "Quit the game",
+	"menu_options": "Options",
+	"menu_options_desc": "Open and modify game settings",
+	"menu_physical_game": "Get a copy on Etsy",
+	"menu_physical_game_desc": "Buy Rue the physical card game on afloofdev.etsy.com",
+	"menu_loading": "Loading ..."
+}

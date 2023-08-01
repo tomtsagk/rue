@@ -31,6 +31,8 @@
 (class_function world_menu void create ()
 	(group
 
+	(avdl_sound_setVolume 0)
+
 	(dd_math_randPseudoSetSeed (dd_math_rand 1000000))
 
 	(this.font.set (asset "assets/nishiki_teki.ttf" DD_PLY) 4)
@@ -77,7 +79,7 @@
 	#(= this.isGrabbed 0)
 
 	(this.loadingLabel.setFont this.font)
-	(this.loadingLabel.setText "Loading ...")
+	(this.loadingLabel.setText (this.menuHome.localisation.getValue "menu_loading"))
 	(this.loadingLabel.setAlign DD_STRING3D_ALIGN_CENTER)
 	(= this.isLoading 0)
 
@@ -93,7 +95,7 @@
 
 (class_function world_menu void resize ()
 	(group
-	(this.menuMultiplayer.resize)
+	#(this.menuMultiplayer.resize)
 	(this.menuHome.resize)
 	(this.opt.resize)
 	)
@@ -114,7 +116,7 @@
 
 	(this.bgParticleSystem.update)
 
-	(this.menuMultiplayer.update dt)
+	#(this.menuMultiplayer.update dt)
 	(this.menuHome.update dt)
 	(this.opt.update dt)
 
@@ -134,14 +136,14 @@
 
 		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuHome.button[this.menuHome.selection].idleRot (* -0.1 dt))))
 		)
-	# lookat custom game menu buttons
-	(this.menuMultiplayer.isEnabled)
-		(group
-		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].x this.eyeTargetX) (* 2.5 dt))))
-		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].y this.eyeTargetY) (* 2.5 dt))))
-
-		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuMultiplayer.button[this.menuMultiplayer.selection].idleRot (* -0.1 dt))))
-		)
+#	# lookat custom game menu buttons
+#	(this.menuMultiplayer.isEnabled)
+#		(group
+#		(= this.eyeTargetX (+ this.eyeTargetX (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].x this.eyeTargetX) (* 2.5 dt))))
+#		(= this.eyeTargetY (+ this.eyeTargetY (* (- this.menuMultiplayer.button[this.menuMultiplayer.selection].y this.eyeTargetY) (* 2.5 dt))))
+#
+#		(= this.eyeTargetX (+ this.eyeTargetX (* this.menuMultiplayer.button[this.menuMultiplayer.selection].idleRot (* -0.1 dt))))
+#		)
 	)
 	(def float tempZ 3)
 
@@ -186,7 +188,7 @@
 	# clear depth
 	(avdl_graphics_ClearDepth)
 
-	(this.menuMultiplayer.draw)
+	#(this.menuMultiplayer.draw)
 	(this.menuHome.draw)
 	(this.opt.draw)
 
@@ -309,24 +311,24 @@
 		(def int returnMenu (this.menuHome.mouse_input button type))
 		(this.button_selection_home returnMenu)
 		)
-	(this.menuMultiplayer.isEnabled)
-		(group
-		(def int returnMenu (this.menuMultiplayer.mouse_input button type))
-		# back to home
-		(if (== returnMenu 1)
-			(group
-			(this.menuHome.enable)
-			)
-		# start game
-		(== returnMenu 2)
-			(group
-			(dd_world_prepare world_game 1.0)
-			(dd_world_ready)
-			(= this.isLoading 1)
-			)
-		)
-
-		)
+#	(this.menuMultiplayer.isEnabled)
+#		(group
+#		(def int returnMenu (this.menuMultiplayer.mouse_input button type))
+#		# back to home
+#		(if (== returnMenu 1)
+#			(group
+#			(this.menuHome.enable)
+#			)
+#		# start game
+#		(== returnMenu 2)
+#			(group
+#			(dd_world_prepare world_game 1.0)
+#			(dd_world_ready)
+#			(= this.isLoading 1)
+#			)
+#		)
+#
+#		)
 	)
 
 	)
@@ -337,7 +339,7 @@
 	# multiplayer game
 	(if (== action_index 1)
 		(group
-		(this.menuMultiplayer.enable)
+		#(this.menuMultiplayer.enable)
 		)
 	# play
 	(== action_index 2)

@@ -79,7 +79,19 @@
 (class_function world_game void create ()
 	(group
 
+	# localisation
+	(this.localisation.set "game_copy")
+
+	(this.cardCornerTexture[0].set (asset "assets/card_corner_tear.png" AVDL_IMAGETYPE_PNG))
+	(this.cardCornerTexture[1].set (asset "assets/card_corner_thunder.png" AVDL_IMAGETYPE_PNG))
+	(this.cardCornerTexture[2].set (asset "assets/card_corner_frown.png" AVDL_IMAGETYPE_PNG))
+	(this.cardCornerTexture[3].set (asset "assets/card_corner_heart.png" AVDL_IMAGETYPE_PNG))
+
 	(this.font.set (asset "assets/nishiki_teki.ttf" DD_PLY) 4)
+	(this.font.addCustomIcon "[tear]" this.cardCornerTexture[0])
+	(this.font.addCustomIcon "[thunder]" this.cardCornerTexture[1])
+	(this.font.addCustomIcon "[frown]" this.cardCornerTexture[2])
+	(this.font.addCustomIcon "[heart]" this.cardCornerTexture[3])
 
 	(this.label_int.setFont this.font)
 	(this.label_int.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -93,14 +105,14 @@
 	(= this.buttonTotal 2)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[0].label.setFont this.font)
-	(this.button[0].label.setText "Exit")
+	(this.button[0].label.setText (this.localisation.getValue "game_exit"))
 
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[1].label.setFont this.font)
-	(this.button[1].label.setText "Resume")
+	(this.button[1].label.setText (this.localisation.getValue "game_resume"))
 
 	(this.labelExitMenu.setFont this.font)
-	(this.labelExitMenu.setText "Exit game ?")
+	(this.labelExitMenu.setText (this.localisation.getValue "game_exit_confirm"))
 	(this.labelExitMenu.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.bgExitMenuTexture.set (asset "assets/bg_exit_menu.png" AVDL_IMAGETYPE_PNG))
@@ -117,23 +129,22 @@
 	(= this.msgDelay 0)
 
 	(this.phaseTextSetup.setFont this.font )
-	(this.phaseTextSetup.setText "Setting up table ..." )
+	(this.phaseTextSetup.setText (this.localisation.getValue "game_phase_setup"))
 	(this.phaseTextSetup.setAlign DD_STRING3D_ALIGN_CENTER )
 	(this.phaseTextPlanning.setFont this.font )
-	(this.phaseTextPlanning.setText "Planning Phase" )
+	(this.phaseTextPlanning.setText (this.localisation.getValue "game_phase_planning"))
 	(this.phaseTextPlanning.setAlign DD_STRING3D_ALIGN_CENTER )
 	(this.phaseTextExecution.setFont this.font )
-	(this.phaseTextExecution.setText "Execution Phase" )
+	#(this.phaseTextExecution.setText (this.localisation.getValue "game_phase_execution"))
 	(this.phaseTextExecution.setAlign DD_STRING3D_ALIGN_CENTER )
 	(this.phaseTextEnd.setFont this.font )
-	(this.phaseTextEnd.setText "End Phase" )
+	(this.phaseTextEnd.setText (this.localisation.getValue "game_phase_end"))
 	(this.phaseTextEnd.setAlign DD_STRING3D_ALIGN_CENTER )
 	(this.phaseTextError.setFont this.font )
-	(this.phaseTextError.setText "Error Phase?" )
+	#(this.phaseTextError.setText "" )
 	(this.phaseTextError.setAlign DD_STRING3D_ALIGN_CENTER )
 
 	# game phases text
-	(= this.phaseText "setting up the table")
 	(= this.phaseTextCurrent this.phaseTextSetup)
 
 	# game actions init
@@ -236,22 +247,18 @@
 
 	(this.cardCorner[0].set_primitive DD_PRIMITIVE_RECTANGLE)
 	(this.cardCorner[0].setTransparency 1)
-	(this.cardCornerTexture[0].set (asset "assets/card_corner_tear.png" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[0].setTexture this.cardCornerTexture[0])
 
 	(this.cardCorner[1].set_primitive DD_PRIMITIVE_RECTANGLE)
 	(this.cardCorner[1].setTransparency 1)
-	(this.cardCornerTexture[1].set (asset "assets/card_corner_thunder.png" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[1].setTexture this.cardCornerTexture[1])
 
 	(this.cardCorner[2].set_primitive DD_PRIMITIVE_RECTANGLE)
 	(this.cardCorner[2].setTransparency 1)
-	(this.cardCornerTexture[2].set (asset "assets/card_corner_frown.png" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[2].setTexture this.cardCornerTexture[2])
 
 	(this.cardCorner[3].set_primitive DD_PRIMITIVE_RECTANGLE)
 	(this.cardCorner[3].setTransparency 1)
-	(this.cardCornerTexture[3].set (asset "assets/card_corner_heart.png" AVDL_IMAGETYPE_PNG))
 	(this.cardCorner[3].setTexture this.cardCornerTexture[3])
 
 	# cards
@@ -405,6 +412,8 @@
 
 		(this.player[i].setFont this.font)
 
+		(this.player[i].label_name.setText (this.localisation.getValue "game_play_ai"))
+
 		)
 	)
 
@@ -495,201 +504,117 @@
 	(= this.arrowRotationTarget 0)
 
 	(this.cardLabel[0].setFont this.font)
-	(this.cardLabel[0].setText "Move The Rose 1 step.")
+	(this.cardLabel[0].setText (this.localisation.getValue "game_card_moverose1"))
 	(this.cardLabel[0].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[1].setFont this.font)
-	(this.cardLabel[1].setText "Move The Rose 3 steps.")
+	(this.cardLabel[1].setText (this.localisation.getValue "game_card_moverose3"))
 	(this.cardLabel[1].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[2].setFont this.font)
-	(this.cardLabel[2].setText (multistring
-		"Thunder: The Flirt grabs the Rose."
-		"Exchange 1 random card with The Flirt. "
-		"If a player received The Rose, "
-		"they take 1 additional random card. "
-	))
+	(this.cardLabel[2].setText (this.localisation.getValue "game_card_trade"))
 	(this.cardLabel[2].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[3].setFont this.font)
-	(this.cardLabel[3].setText (multistring
-		"If the player to your right is The Flirt, "
-		"move The Rose 1 step."
-		"Otherwise "
-		"move The Rose 3 steps. "
-		"Thunder: The Flirt grabs the Rose."
-	))
+	(this.cardLabel[3].setText (this.localisation.getValue "game_card_one_step_cond"))
 	(this.cardLabel[3].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[4].setFont this.font)
-	(this.cardLabel[4].setText (multistring
-		"Draw one card and "
-		"discard this card. "
-
-		"Plan and execute "
-		"another card from your hand."
-	))
+	(this.cardLabel[4].setText (this.localisation.getValue "game_card_replace"))
 	(this.cardLabel[4].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[5].setFont this.font)
-	(this.cardLabel[5].setText (multistring
-		"If you are The Flirt "
-		"grab The Rose. Otherwise "
-		"move The Rose 1 step and "
-		"The Flirt grabs it. "
-		"Frown: Move the Rose 1 step."
-	))
+	(this.cardLabel[5].setText (this.localisation.getValue "game_card_grab"))
 	(this.cardLabel[5].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[6].setFont this.font)
-	(this.cardLabel[6].setText "The Flirt grabs The Rose. Tear: Move The Rose 1 step.")
+	(this.cardLabel[6].setText (this.localisation.getValue "game_card_grab_gen"))
 	(this.cardLabel[6].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[7].setFont this.font)
-	(this.cardLabel[7].setText (multistring
-		"If you are the Flirt, "
-		"move The Rose 3 steps. "
-		"Otherwise "
-		"move The Rose 1 step. "
-		"Heart: The Flirt grabs The Rose. "
-	))
+	(this.cardLabel[7].setText (this.localisation.getValue "game_card_approach"))
 	(this.cardLabel[7].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[8].setFont this.font)
-	(this.cardLabel[8].setText (multistring
-		"If you are holding "
-		"The Rose, "
-		"discard 1 card. "
-
-		"Move The Rose 1 step."
-	))
+	(this.cardLabel[8].setText (this.localisation.getValue "game_card_win"))
 	(this.cardLabel[8].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[9].setFont this.font)
-	(this.cardLabel[9].setText (multistring
-		"A beautiful red rose that smells amazing."
-	))
+	(this.cardLabel[9].setText (this.localisation.getValue "game_card_rose"))
 	(this.cardLabel[9].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[10].setFont this.font)
-	(this.cardLabel[10].setText (multistring
-		"At start every player draws 5 cards. "
-		"One player gets the Rose card in front of them. "
-		"Whoever has the Rose is known as the Flirt."
-	))
+	(this.cardLabel[10].setText (this.localisation.getValue "game_tutorial_setup"))
 	(this.cardLabel[10].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[11].setFont this.font)
-	(this.cardLabel[11].setText (multistring
-		"In the planning phase, starting with the Flirt, "
-		"every player picks a card and plans it face down on the table."
-	))
+	(this.cardLabel[11].setText (this.localisation.getValue "game_tutorial_planning"))
 	(this.cardLabel[11].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[12].setFont this.font)
-	(this.cardLabel[12].setText (multistring
-		"The rose always moves clockwise. "
-		"If a player holds the rose moving it one step will "
-		"make it move in front of that player."
-	))
+	(this.cardLabel[12].setText (this.localisation.getValue "game_tutorial_rose"))
 	(this.cardLabel[12].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[13].setFont this.font)
-	(this.cardLabel[13].setText (multistring
-		"In the execution phase starting with the Flirt,"
-		"reveal each card and execute its effect."
-	))
+	(this.cardLabel[13].setText (this.localisation.getValue "game_tutorial_execution"))
 	(this.cardLabel[13].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[14].setFont this.font)
-	(this.cardLabel[14].setText (multistring
-		"In the end phase every player draws one card except the "
-		"Flirt. If a player has 2 or less cards in their hand "
-		"they win."
-	))
+	(this.cardLabel[14].setText (this.localisation.getValue "game_tutorial_end"))
 	(this.cardLabel[14].setAlign DD_STRING3D_ALIGN_CENTER)
 
+	# enemies - not used anymore
 	(this.cardLabel[15].setFont this.font)
-	(this.cardLabel[15].setText (multistring
-		"The first enemy will only play a card to move the Rose 1 step."
-	))
 	(this.cardLabel[15].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[16].setFont this.font)
-	(this.cardLabel[16].setText (multistring
-		"The second enemy will only play a card to move the Rose 3 steps."
-	))
 	(this.cardLabel[16].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[17].setFont this.font)
-	(this.cardLabel[17].setText (multistring
-		"If The Flirt is holding The Rose, move it 2 steps. "
-		"Otherwise, move the Rose 1 step."
-	))
+	(this.cardLabel[17].setText (this.localisation.getValue "game_card_always_one"))
 	(this.cardLabel[17].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[18].setFont this.font)
-	(this.cardLabel[18].setText (multistring
-		"If The Flirt is holding The Rose, move it 2 steps "
-		"and The Flirt now grabs The Rose. "
-		"Frown: Move The Rose 1 step."
-	))
+	(this.cardLabel[18].setText (this.localisation.getValue "game_card_next_hand"))
 	(this.cardLabel[18].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[19].setFont this.font)
-	(this.cardLabel[19].setText (multistring
-		"Ignore the effect of the next card. "
-		"Move the Rose 1 step. "
-		"Heart: Move the Rose 1 step."
-	))
+	(this.cardLabel[19].setText (this.localisation.getValue "game_card_ignore_move"))
 	(this.cardLabel[19].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[20].setFont this.font)
-	(this.cardLabel[20].setText (multistring
-		"Tear: The Flirt grabs The Rose."
-		"Select 1 random card from "
-		"The Flirt's hand. If it was The Rose, "
-		"move it 2 steps."
-	))
+	(this.cardLabel[20].setText (this.localisation.getValue "game_card_steal"))
 	(this.cardLabel[20].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[21].setFont this.font)
-	(this.cardLabel[21].setText (multistring
-		"Heart: The Flirt grabs The Rose."
-	))
+	(this.cardLabel[21].setText (this.localisation.getValue "game_card_empty_heart"))
 	(this.cardLabel[21].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[22].setFont this.font)
-	(this.cardLabel[22].setText (multistring
-		"Tear: The Flirt grabs The Rose."
-	))
+	(this.cardLabel[22].setText (this.localisation.getValue "game_card_empty_tear"))
 	(this.cardLabel[22].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[23].setFont this.font)
-	(this.cardLabel[23].setText (multistring
-		"Thunder: The Flirt grabs The Rose."
-	))
+	(this.cardLabel[23].setText (this.localisation.getValue "game_card_empty_thunder"))
 	(this.cardLabel[23].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.cardLabel[24].setFont this.font)
-	(this.cardLabel[24].setText (multistring
-		"Frown: The Flirt grabs The Rose."
-	))
+	(this.cardLabel[24].setText (this.localisation.getValue "game_card_empty_frown"))
 	(this.cardLabel[24].setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.labelWin.setFont this.font)
-	(this.labelWin.setText "You won! Click anywhere to continue.")
+	(this.labelWin.setText (this.localisation.getValue "game_end_win"))
 	(this.labelWin.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.labelLose.setFont this.font)
-	(this.labelLose.setText "You lost! Click anywhere to continue.")
+	(this.labelWin.setText (this.localisation.getValue "game_end_lose"))
 	(this.labelLose.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.labelConfirm.setFont this.font)
-	(this.labelConfirm.setText "Confirm?")
+	(this.labelConfirm.setText (this.localisation.getValue "game_play_confirm"))
 	(this.labelConfirm.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.phaseTextCornerEffectOrSkip.setFont this.font)
-	(this.phaseTextCornerEffectOrSkip.setText "Discard card to activate extra effect or skip.")
+	(this.phaseTextCornerEffectOrSkip.setText (this.localisation.getValue "game_phase_corner_effect"))
 	(this.phaseTextCornerEffectOrSkip.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(= this.filterCorner -1)
@@ -742,6 +667,8 @@
 	(this.lookatMesh.load (asset "assets/eye.ply" DD_PLY))
 
 	(this.ovButtons.setFont this.font)
+	(this.ovButtons.confirmLabel.setText (this.localisation.getValue "game_play_confirm"))
+	(this.ovButtons.skipLabel.setText (this.localisation.getValue "game_play_skip_effect"))
 
 	)
 )
@@ -820,7 +747,6 @@
 			# initialise phase
 			(if (== this.actions[0].value PHASE_INIT)
 				(group
-				(= this.phaseText "initialising game")
 
 				# decide starting player
 				(if (== startingPlayer -1)
@@ -853,7 +779,6 @@
 			# planning phase
 			(== this.actions[0].value PHASE_PLAN)
 				(group
-				(= this.phaseText "planning phase")
 				(= this.phaseTextCurrent this.phaseTextPlanning)
 
 				# ask all players to plan a card
@@ -880,7 +805,6 @@
 			# execution phase
 			(== this.actions[0].value PHASE_EXECUTION)
 				(group
-				(= this.phaseText "execution phase")
 				(= this.phaseTextCurrent this.phaseTextExecution)
 
 				# reveal all planned cards, and execute their actions
@@ -908,7 +832,6 @@
 			# end phase
 			(== this.actions[0].value PHASE_END)
 				(group
-				(= this.phaseText "end phase")
 				(= this.phaseTextCurrent this.phaseTextEnd)
 
 				# all players, apart from the rose player, draw a card
@@ -940,7 +863,6 @@
 				)
 			# error phase (should never trigger)
 				(group
-				(= this.phaseText "error phase")
 				(= this.phaseTextCurrent this.phaseTextError)
 				)
 			)

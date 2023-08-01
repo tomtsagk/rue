@@ -1,0 +1,42 @@
+{
+	"game_exit": "Exit",
+	"game_exit_confirm": "Exit game ?",
+	"game_resume": "Resume",
+	"game_phase_setup": "Setting up table ...",
+	"game_phase_planning": "Planning Phase",
+	"game_phase_execution": "Execution Phase",
+	"game_phase_end": "End Phase",
+	"game_phase_corner_effect": "Discard card to activate extra effect or skip.",
+
+	"game_card_moverose1": "Move The Rose 1 step.",
+	"game_card_moverose3": "Move The Rose 3 steps.",
+	"game_card_trade": "[thunder] : The Flirt grabs the Rose.\nExchange 1 random card with The Flirt. If a player received The Rose, they take 1 additional random card.",
+	"game_card_one_step_cond": "If the player to your right is The Flirt, move The Rose 1 step. Otherwise move The Rose 3 steps.\n[thunder] : The Flirt grabs the Rose.",
+	"game_card_replace": "Draw one card and discard this card.\n\nPlan and execute another card from your hand.",
+	"game_card_grab": "If you are The Flirt grab The Rose. Otherwise move The Rose 1 step and The Flirt grabs it.\n[frown] : Move the Rose 1 step.",
+	"game_card_grab_gen": "The Flirt grabs The Rose.\n[tear] : Move The Rose 1 step.",
+	"game_card_approach": "If you are the Flirt, move The Rose 3 steps.\nOtherwise\nmove The Rose 1 step.\n[heart] : The Flirt grabs The Rose. ",
+	"game_card_win": "If you are holding The Rose, discard 1 card.\n\nMove The Rose 1 step.",
+	"game_card_rose": "A beautiful red rose that smells amazing.",
+	"game_card_always_one": "If The Flirt is holding The Rose, move it 2 steps. Otherwise, move the Rose 1 step.",
+	"game_card_next_hand": "If The Flirt is holding The Rose, move it 2 steps and The Flirt now grabs The Rose.\n[frown] : Move The Rose 1 step.",
+	"game_card_ignore_move": "Ignore the effect of the next card. Move the Rose 1 step.\n[heart] : Move the Rose 1 step.",
+	"game_card_steal": "[tear] : The Flirt grabs The Rose.\nSelect 1 random card from The Flirt's hand. If it was The Rose, move it 2 steps.",
+	"game_card_empty_heart": "[heart] : The Flirt grabs The Rose.",
+	"game_card_empty_tear": "[tear] : The Flirt grabs The Rose.",
+	"game_card_empty_thunder": "[thunder] : The Flirt grabs The Rose.",
+	"game_card_empty_frown": "[frown] : The Flirt grabs The Rose.",
+
+	"game_tutorial_setup": "At start every player draws 5 cards. One player gets the Rose card in front of them. Whoever has the Rose is known as the Flirt.",
+	"game_tutorial_planning": "In the planning phase, starting with the Flirt, every player picks a card and plans it face down on the table.",
+	"game_tutorial_rose": "The rose always moves clockwise. If a player holds the rose moving it one step will make it move in front of that player.",
+	"game_tutorial_execution": "In the execution phase starting with the Flirt, reveal each card and execute its effect.",
+	"game_tutorial_end": "In the end phase every player draws one card except the Flirt. If a player has 2 or less cards in their hand they win.",
+
+	"game_end_win": "You won! Click anywhere to continue.",
+	"game_end_lose": "You lost! Click anywhere to continue.",
+
+	"game_play_confirm": "Confirm ?",
+	"game_play_skip_effect": "Skip effect ?",
+	"game_play_ai": "AI"
+}

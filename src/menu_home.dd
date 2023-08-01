@@ -4,7 +4,10 @@
 	(group
 
 	# localisation
-	(this.localisation.set "menu_copy")
+	(this.localisation.set "menu_home_copy")
+
+	#(this.test_label.setText "A")
+	#(= this.test_label.isOnce 1)
 
 	# logo
 	(this.logo.set_primitive DD_PRIMITIVE_RECTANGLE)
@@ -19,38 +22,25 @@
 	(this.button[0].setProportionalPosition 0.25 0.4)
 	(this.button[0].setProportionalWidth 0.2)
 	(this.button[0].setProportionalSize 0.8)
-	#(this.button[0].label.setText (this.localisation.getValue "menu_custom_game"))
-	(this.button[0].label.setText "Multiplayer")
-	#(this.button[0].description.setText (this.localisation.getValue "menu_custom_game_desc"))
-	(this.button[0].description.setText "Play online with strangers or friends")
-	# multiplayer disabled for everyone for now
-	#(if (== (avdl_multiplayer_isEnabled) 0)
 	(if 1
 		(= this.button[0].isVisible 0)
 	)
 
 	(this.button[1].mesh.load (asset "assets/button_play.ply" DD_PLY))
-	#(this.button[1].label.setText (this.localisation.getValue "menu_play"))
-	(this.button[1].label.setText "Play")
-	#(this.button[1].description.setText (this.localisation.getValue "menu_play_desc"))
-	(this.button[1].description.setText "Start the Game")
+	(this.button[1].label.setText (this.localisation.getValue "menu_play"))
+	(this.button[1].description.setText (this.localisation.getValue "menu_play_desc"))
 
 	(this.button[2].mesh.load (asset "assets/button_exit.ply" DD_PLY))
-	#(this.button[2].label.setText (this.localisation.getValue "menu_exit"))
-	#(this.button[2].description.setText (this.localisation.getValue "menu_exit_desc"))
-	(this.button[2].label.setText "Exit")
-	(this.button[2].description.setText "Exit game")
+	(this.button[2].label.setText (this.localisation.getValue "menu_exit"))
+	(this.button[2].description.setText (this.localisation.getValue "menu_exit_desc"))
 
 	(this.button[3].mesh.load (asset "assets/button_options.ply" DD_PLY))
-	#(this.button[3].label.setText (this.localisation.getValue "menu_options"))
-	#(this.button[3].description.setText (this.localisation.getValue "menu_options_desc"))
-	(this.button[3].label.setText "Options")
-	(this.button[3].description.setText "Open and modify game settings")
+	(this.button[3].label.setText (this.localisation.getValue "menu_options"))
+	(this.button[3].description.setText (this.localisation.getValue "menu_options_desc"))
 
 	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[4].label.setText "Buy physical card game")
-	#(this.button[4].label.setText "1 2 3 4 5 6 7 8 9 0 a a a a a a a a a")
-	(this.button[4].description.setText "Buy the physical card game on afloofdev.etsy.com")
+	(this.button[4].label.setText (this.localisation.getValue "menu_physical_game"))
+	(this.button[4].description.setText (this.localisation.getValue "menu_physical_game_desc"))
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -275,6 +265,11 @@
 	# do not draw if animated out
 	(if (< this.animationOpen 0.01) (return))
 
+	#(dd_matrix_push)
+	#(dd_translatef 0 -0 -3)
+	#(this.test_label.draw)
+	#(dd_matrix_pop)
+
 	# draw buttons
 	(this.buttonProgram.useProgram)
 	(def int colLoc)
@@ -343,21 +338,7 @@
 		(this.textButton.applyMatrixTransform)
 		(dd_translatef 0 0 0.1)
 		(dd_scalef 0.3 0.3 0.3)
-		#(def int limit (* (dd_screen_width_get this.textButton.z) -2))
-		(this.button[this.selection].description.drawLimit 20)
-#		(if 0#this.isMovingToNewWorld
-#			(this.font.drawLimit "loading" limit)
-#		(== this.selection 0)
-#			(this.font.drawLimit (this.localisation.getValue "menu_custom_game_desc") limit)
-#		(== this.selection 1)
-#			(this.font.drawLimit (this.localisation.getValue "menu_play_desc") limit)
-#		(== this.selection 2)
-#			(this.font.drawLimit (this.localisation.getValue "menu_exit_desc") limit)
-#		(== this.selection 3)
-#			(this.font.drawLimit (this.localisation.getValue "menu_options_desc") limit)
-#			(this.font.drawLimit (this.localisation.getValue "menu_credits_desc") limit)
-#		)
-
+		(this.button[this.selection].description.drawLimit 16)
 		(dd_matrix_pop)
 		)
 	)
@@ -661,6 +642,7 @@
 
 (class_function menu_home void setFont (group avdl_font font)
 	(group
+	#(this.test_label.setFont font)
 	(this.versionLabel.setFont font)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 		(group

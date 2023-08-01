@@ -14,9 +14,7 @@
 	(= this.waitUntilCardConfirmed 1)
 
 	(this.confirmLabel.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.confirmLabel.setText "Confirm ?")
 	(this.skipLabel.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.skipLabel.setText "Skip effect ?")
 
 	(if AVDL_VR
 		(group

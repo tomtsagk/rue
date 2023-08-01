@@ -39,6 +39,9 @@
 (class world_game dd_world
 	(group
 
+	# localisation
+	(def avdl_localisation localisation)
+
 	# font
 	(def avdl_font font)
 	(def dd_string3d label_int)
@@ -59,7 +62,6 @@
 	(def float arrowCurrentCol[3])
 
 	# game phases
-	(def ref char phaseText)
 	(def ref dd_string3d phaseTextCurrent)
 	(def dd_string3d phaseTextSetup)
 	(def dd_string3d phaseTextPlanning)

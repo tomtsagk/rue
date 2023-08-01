@@ -6,6 +6,9 @@
 (class options dd_matrix
 	(group
 
+	# localisation
+	(def avdl_localisation localisation)
+
 	# options buttons
 	(def Button button[6])
 	(def int buttonTotal)

@@ -39,6 +39,7 @@
 
 	# version
 	(def dd_string3d versionLabel)
+	#(def dd_string3d test_label)
 
 	(function void create ())
 	(function void resize ())
