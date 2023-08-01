@@ -1,12 +1,12 @@
 {
-	"menu_options_back": "Back",
-	"menu_options_back_desc": "Return to the main menu",
-	"menu_options_credits": "Credits",
-	"menu_options_credtis_desc": "Meet the creators",
-	"menu_options_audio": "Audio",
-	"menu_options_audio_on": "On",
-	"menu_options_audio_off": "Off",
-	"menu_options_audio_desc": "Toggle audio on/off",
-	"menu_options_toggle_fullscreen": "Toggle Fullscreen",
-	"menu_options_toggle_fullscreen_desc": "Swap between windowed and fullscreen mode"
+	"menu_options_back": "Πίσω",
+	"menu_options_back_desc": "Γύρισε στο κυρίως μενού",
+	"menu_options_credits": "Τίτλοι",
+	"menu_options_credtis_desc": "Γνώρισε τους δημιουργούς",
+	"menu_options_audio": "Ήχος",
+	"menu_options_audio_on": "Ενεργό",
+	"menu_options_audio_off": "Ανενεργό",
+	"menu_options_audio_desc": "Ενεργοποίηση/απενεργοποίηση ήχου",
+	"menu_options_toggle_fullscreen": "Εναλλαγή πλήρους οθόνης",
+	"menu_options_toggle_fullscreen_desc": "Εναλλαγή μεταξύ της λειτουργίας παραθύρου και πλήρους οθόνης"
 }
