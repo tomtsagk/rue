@@ -5,13 +5,12 @@ on:
     branches:
       - master
       - develop
-      - feature/steamcmd
     tags:
       "v[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
   avdl:
-    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@e1a62af5f3a0d51ab14342cb525ec86005691de8
+    uses: tomtsagk/avdl/.github/workflows/.compile_avdl_project.yml@027e8215098a2a7497bd2173cb558af038748d52
     with:
         project_name: rue
         build_android: true
@@ -24,6 +23,7 @@ jobs:
         build_quest2_oculus: true
         itchio_user: afloofdev
         itchio_project: rue
+        oculus_channel: store
     secrets:
         # required for android
         ANDROID_KEYSTORE: ${{ secrets.KEYSTORE }}
@@ -43,3 +43,7 @@ jobs:
         STEAMWORKS_DEPOTID_WINDOWS: ${{ secrets.STEAMWORKS_DEPOTID_WINDOWS }}
         STEAMWORKS_USERNAME: ${{ secrets.STEAMWORKS_USERNAME }}
         STEAMWORKS_TOKEN: ${{ secrets.STEAMWORKS_TOKEN }}
+        # oculus release
+        OCULUS_APPID: ${{ secrets.OCULUS_APPID }}
+        OCULUS_APPSECRET: ${{ secrets.OCULUS_APPSECRET }}
+        OCULUS_CLI_URL: ${{ secrets.OCULUS_CLI_URL }}
