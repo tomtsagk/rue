@@ -1,0 +1,19 @@
+"lang"
+{
+	"Language"	"english"
+	"Tokens"
+	{
+		"NEW_ACHIEVEMENT_3_6_NAME"	"I found The Rose!"
+		"NEW_ACHIEVEMENT_3_6_DESC"	"The Rose was selected from another player's hand."
+		"NEW_ACHIEVEMENT_3_7_NAME"	"One step closer!"
+		"NEW_ACHIEVEMENT_3_7_DESC"	"Discard a card without drawing another one."
+		"NEW_ACHIEVEMENT_3_8_NAME"	"I grabbed The Rose!"
+		"NEW_ACHIEVEMENT_3_8_DESC"	"Grab The Rose with the grabbing card."
+		"NEW_ACHIEVEMENT_3_9_NAME"	"First Victory!"
+		"NEW_ACHIEVEMENT_3_9_DESC"	"Beat the game once."
+		"NEW_ACHIEVEMENT_3_10_NAME"	"I know what I'm doing"
+		"NEW_ACHIEVEMENT_3_10_DESC"	"Beat the game three times."
+		"NEW_ACHIEVEMENT_3_11_NAME"	"Master of the Game"
+		"NEW_ACHIEVEMENT_3_11_DESC"	"Beat the game seven times."
+	}
+}
