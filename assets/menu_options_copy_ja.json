@@ -1,12 +1,12 @@
 {
 	"menu_options_back": "戻る",
-	"menu_options_back_desc": "メインメニューに戻る",
+	"menu_options_back_desc": "\jメイン メニューに 戻る",
 	"menu_options_credits": "クレジット",
-	"menu_options_credtis_desc": "作り手たちに会おう",
+	"menu_options_credtis_desc": "\j作り 手たちに 会おう",
 	"menu_options_audio": "オーディオ",
 	"menu_options_audio_on": "有効",
 	"menu_options_audio_off": "無効",
-	"menu_options_audio_desc": "オーディオを有効化／無効化",
-	"menu_options_toggle_fullscreen": "フルスクリーン切り替え",
-	"menu_options_toggle_fullscreen_desc": "ウィンドウモードとフルスクリーンモードの切り替え"
+	"menu_options_audio_desc": "\jオーディオを 有効化 ／ 無効化",
+	"menu_options_toggle_fullscreen": "\jフル スクリーン 切り 替え",
+	"menu_options_toggle_fullscreen_desc": "\jウィンドウ モードと フル スクリーン モードの 切り 替え"
 }

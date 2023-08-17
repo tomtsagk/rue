@@ -1,11 +1,11 @@
 {
-	"menu_play": "遊ぼう",
-	"menu_play_desc": "ゲームを始める",
+	"menu_play": "\j遊ぼう",
+	"menu_play_desc": "\jゲームを 始める",
 	"menu_exit": "出口",
-	"menu_exit_desc": "ゲームを終了する",
+	"menu_exit_desc": "\jゲームを 終了する",
 	"menu_options": "オプション",
-	"menu_options_desc": "ゲームの設定を開いたり変更したりする",
-	"menu_physical_game": "Etsy でコピーを入手",
-	"menu_physical_game_desc": "afloofdev.etsy.comで「ルー」の物理カードゲームを買う",
+	"menu_options_desc": "\jゲームの 設定を 開いたり 変更した りする",
+	"menu_physical_game": "\jEtsy で\nコピーを 入手",
+	"menu_physical_game_desc": "\jafloofdev.etsy.comで 「ルー」の 物理カードゲームを 買う",
 	"menu_loading": "ロード中…"
 }
