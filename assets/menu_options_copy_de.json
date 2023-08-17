@@ -1,12 +1,12 @@
 {
-	"menu_options_back": "Back",
-	"menu_options_back_desc": "Return to the main menu",
+	"menu_options_back": "Zurück",
+	"menu_options_back_desc": "Zurück zum Hauptmenü",
 	"menu_options_credits": "Credits",
-	"menu_options_credtis_desc": "Meet the creators",
+	"menu_options_credtis_desc": "Die Schöpfer treffen",
 	"menu_options_audio": "Audio",
-	"menu_options_audio_on": "On",
-	"menu_options_audio_off": "Off",
-	"menu_options_audio_desc": "Toggle audio on/off",
-	"menu_options_toggle_fullscreen": "Toggle Fullscreen",
-	"menu_options_toggle_fullscreen_desc": "Swap between windowed and fullscreen mode"
+	"menu_options_audio_on": "An",
+	"menu_options_audio_off": "Aus",
+	"menu_options_audio_desc": "Audio An/Aus",
+	"menu_options_toggle_fullscreen": "Vollbild umschalten",
+	"menu_options_toggle_fullscreen_desc": "Wechsle zwischen Fenster und Vollbildmodus"
 }

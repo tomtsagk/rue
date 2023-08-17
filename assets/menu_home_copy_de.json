@@ -1,11 +1,11 @@
 {
-	"menu_play": "Play",
-	"menu_play_desc": "Start the Game",
-	"menu_exit": "Exit",
-	"menu_exit_desc": "Quit the game",
-	"menu_options": "Options",
-	"menu_options_desc": "Open and modify game settings",
-	"menu_physical_game": "Get a copy on Etsy",
-	"menu_physical_game_desc": "Buy Rue the physical card game on afloofdev.etsy.com",
-	"menu_loading": "Loading ..."
+	"menu_play": "Spiele",
+	"menu_play_desc": "Starte das Spiel",
+	"menu_exit": "Ausgang",
+	"menu_exit_desc": "Das Spiel verlassen",
+	"menu_options": "Optionen",
+	"menu_options_desc": "Spieleinstellungen öffnen und ändern",
+	"menu_physical_game": "Eine Kopie auf Etsy holen",
+	"menu_physical_game_desc": "Kaufe Reue das physische Kartenspiel auf afloofdev.etsy.com",
+	"menu_loading": "Laden ..."
 }
