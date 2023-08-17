@@ -331,7 +331,7 @@
 	(avdl_useProgram 0)
 
 	# draw button description
-	(if (>= this.selection 0)
+	(if (&& (>= this.selection 0) (> this.animationOpen 0.8))
 		(group
 		(dd_matrix_push)
 		(this.textButton.applyTransform)
@@ -383,6 +383,11 @@
 	#(dd_translatef 0 0.6 -2.5)
 	(if AVDL_VR
 		(dd_scalef 1.2 1.2 1.2)
+	)
+	(dd_scalef
+		(* this.animationOpen this.animationOpen)
+		(* this.animationOpen this.animationOpen)
+		(* this.animationOpen this.animationOpen)
 	)
 	(this.logo.draw)
 	(dd_matrix_pop)

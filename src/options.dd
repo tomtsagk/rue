@@ -332,7 +332,7 @@
 	(avdl_useProgram 0)
 
 	# draw button description
-	(if (>= this.selection 0)
+	(if (&& (>= this.selection 0) (> this.animationOpen 0.8))
 		(group
 		(dd_matrix_push)
 		(this.textButton.applyTransform)
