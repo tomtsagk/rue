@@ -1,3 +1,14 @@
+rue (1.5.3-1) focal; urgency=low
+
+  * Add freetype for rendering better fonts
+  * Add localisation for Greek
+  * Add localisation for German
+  * Add localisation for Japanese
+  * Improvements in animations
+  * Add icons on the card text
+
+ -- Tom Tsagkatos <tomtsagkatos@afloof.dev>  Fri, 18 Aug 2023 13:00:00 +0100
+
 rue (1.0.9-1) focal; urgency=low
 
   * Fix performance issue on Quest 2

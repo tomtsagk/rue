@@ -1,14 +1,14 @@
 Name:           rue
-Version:        1.0.9
+Version:        1.5.3
 Release:        1%{?dist}
 Summary:        A card game about decisions, love and regret
 
 License:        GPLv3
-URL:            https://afloofdev.com/games/rue
+URL:            https://afloof.dev/games/rue
 Source0:        https://github.com/tomtsagk/%{name}/archive/refs/tags/v%{version}.tar.gz
 
-BuildRequires:  make, avdl, gcc, g++, glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, libogg-devel
-Requires:       glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, libogg-devel
+BuildRequires:  make, avdl, gcc, g++, glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, libogg-devel, freetype-devel 
+Requires:       glew-devel, SDL2-devel, SDL2_mixer-devel, libpng-devel, libvorbis-devel, libogg-devel, freetype-devel 
 
 %description
 A card game where all the players are sitting around a table.
@@ -42,6 +42,14 @@ make %{?_smp_mflags} prefix=/usr DESTDIR=%{buildroot} install
 %license LICENSE
 
 %changelog
+* Fri Aug 18 2023 Tom Tsagkatos <tomtsagk@afloof.dev>
+- Add freetype for rendering better fonts
+- Add localisation for Greek
+- Add localisation for German
+- Add localisation for Japanese
+- Improvements in animations
+- Add icons on the card text
+
 * Wed May 24 2023 Tom Tsagkatos <tomtsagk@afloof.dev>
 - Add link to buy physical game
 - Performance optimisations
