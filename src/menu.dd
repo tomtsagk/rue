@@ -406,8 +406,3 @@
 	(return 0)
 	)
 )
-
-(class_function world_menu void onLocaleChange ()
-	(group
-	)
-)
