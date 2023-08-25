@@ -9,10 +9,6 @@
 
 	# labels
 	(def dd_string3d labelCredits)
-	(def dd_string3d labelTom)
-	(def dd_string3d labelProgrammer)
-	(def dd_string3d labelShiitakespacewarrior)
-	(def dd_string3d labelMusicSfx)
 
 	# credits anchor
 	(def Button anchorCredits)

@@ -1,11 +1,66 @@
 (include "options.ddh")
 (include "credits.ddh")
 
+(class OptionsData 0
+	(group
+	(def int fpsIndex)
+	(def int langIndex)
+	(def int audioOn)
+	)
+)
+
 (class_function options void create ()
 	(group
 
-	# localisation
-	(this.localisation.set "menu_options_copy")
+	# fps counter
+	(= this.fps 0)
+	(= this.fps_dt 0)
+	(= this.frames_count 0)
+	(this.fps_label.setText "FPS:")
+	(this.fps_label_int.setTextInt)
+
+	# attempt to load data
+	(def OptionsData myOptionsData)
+
+	# success to load - copy loaded data
+	(if (== (avdl_data_load myOptionsData OptionsData (savefile "options")) 0)
+		(group
+
+		# fps
+		(if (|| (< myOptionsData.fpsIndex 0) (>= myOptionsData.fpsIndex 3))
+			(= this.fpsIndex 0)
+			(= this.fpsIndex myOptionsData.fpsIndex)
+		)
+
+		# language
+		(if (|| (< myOptionsData.langIndex 0) (>= myOptionsData.langIndex 5))
+			(= this.langIndex 0)
+			(= this.langIndex myOptionsData.langIndex)
+		)
+		(if myOptionsData.audioOn
+			(avdl_sound_setVolume 100)
+			(avdl_sound_setVolume 0)
+		)
+		)
+	# fail to load - supply defaults
+		(group
+		(= this.fpsIndex 0)
+		(= this.langIndex 0)
+		(avdl_sound_setVolume 100)
+		)
+	)
+
+	(if (== this.langIndex 0)
+		(avdl_locale_set 0)
+	(== this.langIndex 1)
+		(avdl_locale_set "en")
+	(== this.langIndex 2)
+		(avdl_locale_set "el")
+	(== this.langIndex 3)
+		(avdl_locale_set "de")
+	(== this.langIndex 4)
+		(avdl_locale_set "ja")
+	)
 
 	# font
 	(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -13,34 +68,40 @@
 	#(this.font.setColorBack 0.3 0.3 0.3)
 
 	# buttons
-	(= this.buttonTotal 4)
+	(= this.buttonTotal 6)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[0].label.setText (this.localisation.getValue "menu_options_audio"))
-	(this.button[0].description.setText (this.localisation.getValue "menu_options_audio_desc"))
 
 	# toggle fullscreen button
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[1].label.setText (this.localisation.getValue "menu_options_toggle_fullscreen"))
-	(this.button[1].description.setText (this.localisation.getValue "menu_options_toggle_fullscreen_desc"))
 	(if (== (dd_canFullscreenToggle) 0)
 		(= this.button[1].isVisible 0)
 	)
 
 	# back button
 	(this.button[2].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[2].label.setText (this.localisation.getValue "menu_options_back"))
-	(this.button[2].description.setText (this.localisation.getValue "menu_options_back_desc"))
 
 	# credits
 	(this.button[3].mesh.load (asset "assets/button.ply" DD_PLY))
-	(this.button[3].label.setText (this.localisation.getValue "menu_options_credits"))
-	(this.button[3].description.setText (this.localisation.getValue "menu_options_credtis_desc"))
 
-	# Yes/No labels
-	(this.labelYes.setText (this.localisation.getValue "menu_options_audio_on"))
-	(this.labelYes.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.labelNo.setText (this.localisation.getValue "menu_options_audio_off"))
-	(this.labelNo.setAlign DD_STRING3D_ALIGN_CENTER)
+	# fps settings
+	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
+
+	# language settings
+	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
+
+	# fps label
+	(this.fpsLabel.setTextInt)
+	(this.fpsLabel.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	# language labels
+	(this.langLabelEn.setText "English")
+	(this.langLabelEn.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.langLabelEl.setText "Greek")
+	(this.langLabelEl.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.langLabelDe.setText "German")
+	(this.langLabelDe.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.langLabelJa.setText "Japanese")
+	(this.langLabelJa.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	# text display
 	(this.textButton.setSize 1 1)
@@ -78,12 +139,6 @@
 
 			"void main() {\n"
 			"	avdl_frag_color = outColour +avdl_texture(image, outTexCoord);\n"
-
-			# For some reason the following line makes the shader to not compile on the following system:
-			#  GeForce GTX 960/PCIe/SSE2
-			#  GL version: 4.6.0 NVIDIA 456.71
-			#  glsl version: 4.60 NVIDIA
-			#"	avdl_frag_color = outColour;\n"
 			"}\n"
 		)
 	)
@@ -107,7 +162,6 @@
 	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
 	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
 
-#	(= this.volumeMusic (avdl_music_getVolume))
 	(= this.volumeSound (avdl_sound_getVolume))
 	(this.volumeParticle.load (asset "assets/ui_particle.ply" DD_PLY))
 	(this.volumeParticleStart.load (asset "assets/ui_particle_start.ply" DD_PLY))
@@ -122,39 +176,56 @@
 		(group
 		# audio toggle
 		(this.button[0].setSize 1 1)
-		(this.button[0].setProportionalPosition 0.5 0.5)
+		#(this.button[0].setProportionalPosition 0.5 0.5)
+		(this.button[0].setProportionalPosition 0.75 0.32)
 		(this.button[0].setProportionalWidth 0.4)
 		(this.button[0].setProportionalSize 0.6)
 
 		# full screen toggle (optional)
 		(this.button[1].setSize 1 1)
-		(this.button[1].setProportionalPosition 0.5 0.3)
+		#(this.button[1].setProportionalPosition 0.5 0.3)
+		(this.button[1].setProportionalPosition 0.50 0.32)
 		(this.button[1].setProportionalWidth 0.4)
 		(this.button[1].setProportionalSize 0.6)
 
 		# back button
 		(this.button[2].setSize 1 1)
+		#(this.button[2].setProportionalPosition 0.15 0.85)
 		(this.button[2].setProportionalPosition 0.15 0.85)
 		(this.button[2].setProportionalWidth 0.4)
-		(this.button[2].setProportionalSize 0.6)
+		(this.button[2].setProportionalSize 0.7)
 
 		# credits
 		(this.button[3].setSize 1 1)
 		(this.button[3].setProportionalPosition 0.85 0.85)
 		(this.button[3].setProportionalWidth 0.4)
-		(this.button[3].setProportionalSize 0.6)
+		(this.button[3].setProportionalSize 0.7)
+
+		# fps
+		(this.button[4].setSize 1 1)
+		#(this.button[4].setProportionalPosition 0.25 0.25)
+		(this.button[4].setProportionalPosition 0.25 0.32)
+		(this.button[4].setProportionalWidth 0.4)
+		(this.button[4].setProportionalSize 0.6)
+
+		# language
+		(this.button[5].setSize 1 1)
+		#(this.button[5].setProportionalPosition 0.45 0.25)
+		(this.button[5].setProportionalPosition 0.5 0.58)
+		(this.button[5].setProportionalWidth 0.4)
+		(this.button[5].setProportionalSize 0.6)
 		)
 	# landscape
 		(group
 		# audio toggle
 		(this.button[0].setSize 1 1)
-		(this.button[0].setProportionalPosition 0.7 0.58)
+		(this.button[0].setProportionalPosition 0.75 0.32)
 		(this.button[0].setProportionalWidth 0.3)
 		(this.button[0].setProportionalSize 0.7)
 
 		# full screen toggle (optional)
 		(this.button[1].setSize 1 1)
-		(this.button[1].setProportionalPosition 0.5 0.32)
+		(this.button[1].setProportionalPosition 0.50 0.32)
 		(this.button[1].setProportionalWidth 0.3)
 		(this.button[1].setProportionalSize 0.7)
 
@@ -162,13 +233,25 @@
 		(this.button[2].setSize 1 1)
 		(this.button[2].setProportionalPosition 0.15 0.85)
 		(this.button[2].setProportionalWidth 0.2)
-		(this.button[2].setProportionalSize 1.0)
+		(this.button[2].setProportionalSize 0.8)
 
 		# credits
 		(this.button[3].setSize 1 1)
 		(this.button[3].setProportionalPosition 0.85 0.85)
 		(this.button[3].setProportionalWidth 0.2)
-		(this.button[3].setProportionalSize 1.0)
+		(this.button[3].setProportionalSize 0.8)
+
+		# fps
+		(this.button[4].setSize 1 1)
+		(this.button[4].setProportionalPosition 0.25 0.32)
+		(this.button[4].setProportionalWidth 0.4)
+		(this.button[4].setProportionalSize 0.7)
+
+		# language
+		(this.button[5].setSize 1 1)
+		(this.button[5].setProportionalPosition 0.5 0.58)
+		(this.button[5].setProportionalWidth 0.4)
+		(this.button[5].setProportionalSize 0.7)
 		)
 	)
 
@@ -181,6 +264,17 @@
 
 (class_function options void update (group float dt)
 	(group
+
+	# fps calculations
+	(= this.fps_dt (+ this.fps_dt dt))
+	(= this.frames_count (+ this.frames_count 1))
+	(if (>= this.fps_dt 1.0)
+		(group
+		(= this.fps this.frames_count)
+		(= this.frames_count 0)
+		(= this.fps_dt (- this.fps_dt 1.0))
+		)
+	)
 
 	# disabled and animated out, do not update
 	(if (&& (== (this.isEnabled) 0) (< this.animationOpen 0.01)) (return))
@@ -258,6 +352,20 @@
 	# do not draw if animated out
 	(if (< this.animationOpen 0.01) (return))
 
+#	# fps counter
+#	(dd_matrix_push)
+#	(dd_translatef
+#		(* (dd_screen_width_get 5) -0.5 0.8)
+#		(* (dd_screen_height_get 5) 0.5 0.8)
+#		-5
+#	)
+#	(dd_scalef 0.2 0.2 0.2)
+#	(dd_translatef 0 -5 0)
+#	(this.fps_label.draw)
+#	(dd_translatef 3 0 0)
+#	(this.fps_label_int.drawInt this.fps)
+#	(dd_matrix_pop)
+
 	# draw buttons
 	(this.buttonProgram.useProgram)
 	(def int colLoc)
@@ -319,6 +427,38 @@
 			(if (> this.volumeSound 2)
 				(this.labelYes.draw)
 				(this.labelNo.draw)
+			)
+			(dd_matrix_pop)
+			)
+		# fps
+		(== i 4)
+			(group
+			(dd_matrix_push)
+			(dd_translatef 0 -1.5 0.1)
+			(if (== this.fpsIndex 0)
+				(this.fpsLabel.drawInt 60)
+			(== this.fpsIndex 1)
+				(this.fpsLabel.drawInt 30)
+			(== this.fpsIndex 2)
+				(this.fpsLabel.drawInt 45)
+			)
+			(dd_matrix_pop)
+			)
+		# language
+		(== i 5)
+			(group
+			(dd_matrix_push)
+			(dd_translatef 0 -1.5 0.1)
+			(if (== this.langIndex 0)
+				(this.langLabelSystem.draw)
+			(== this.langIndex 1)
+				(this.langLabelEn.draw)
+			(== this.langIndex 2)
+				(this.langLabelEl.draw)
+			(== this.langIndex 3)
+				(this.langLabelDe.draw)
+			(== this.langIndex 4)
+				(this.langLabelJa.draw)
 			)
 			(dd_matrix_pop)
 			)
@@ -583,19 +723,6 @@
 
 (class_function options int button_selection (int button_index)
 	(group
-#	(if (== button_index 0)
-#		(group
-#		(this.clickSmallSound.play)
-#		(if (< this.volumeMusic 10)
-#			(= this.volumeMusic 100)
-#			(= this.volumeMusic 0)
-#		)
-#		(avdl_music_setVolume this.volumeMusic)
-#		(if (< this.volumeMusic 10)
-#			(return 2)
-#			(return 3)
-#		)
-#		)
 	(if (== button_index 0)
 		(group
 		(this.clickSmallSound.play)
@@ -614,10 +741,22 @@
 		(this.clickSmallSound.play)
 		(dd_fullscreenToggle)
 		)
+	# back button
 	(== button_index 2)
 		(group
 		(this.clickBigSound.play)
 		(this.disable)
+
+		# save options
+		(def OptionsData myOptionsData)
+		(= myOptionsData.fpsIndex this.fpsIndex)
+		(= myOptionsData.langIndex this.langIndex)
+		(if (< this.volumeSound 10)
+			(= myOptionsData.audioOn 0)
+			(= myOptionsData.audioOn 1)
+		)
+		(avdl_data_save myOptionsData OptionsData (savefile "options"))
+
 		(return 1)
 		)
 	# credits
@@ -626,6 +765,36 @@
 		(this.clickBigSound.play)
 		(this.disable)
 		(return 6)
+		)
+	# fps
+	(== button_index 4)
+		(group
+		(= this.fpsIndex (% (+ this.fpsIndex 1) 3))
+		(if (== this.fpsIndex 0)
+			(avdl_engine_setFPS 60)
+		(== this.fpsIndex 1)
+			(avdl_engine_setFPS 30)
+		(== this.fpsIndex 2)
+			(avdl_engine_setFPS 45)
+		)
+		)
+	# language
+	(== button_index 5)
+		(group
+		(= this.langIndex (% (+ this.langIndex 1) 5))
+		(if (== this.langIndex 0)
+			(avdl_locale_set 0)
+		(== this.langIndex 1)
+			(avdl_locale_set "en")
+		(== this.langIndex 2)
+			(avdl_locale_set "el")
+		(== this.langIndex 3)
+			(avdl_locale_set "de")
+		(== this.langIndex 4)
+			(avdl_locale_set "ja")
+		)
+		(this.onLocaleChange)
+		(return 7)
 		)
 	)
 
@@ -643,5 +812,47 @@
 		(this.button[i].description.setFont font)
 		)
 	)
+
+	(this.fpsLabel.setFont font)
+	(this.langLabelSystem.setFont font)
+	(this.langLabelEn.setFont font)
+	(this.langLabelEl.setFont font)
+	(this.langLabelDe.setFont font)
+	(this.langLabelJa.setFont font)
+
+	(this.fps_label.setFont font)
+	(this.fps_label_int.setFont font)
+	)
+)
+
+(class_function options void onLocaleChange ()
+	(group
+	# localisation
+	(this.localisation.set "menu_options_copy")
+
+	# buttons
+	(this.button[0].label.setText (this.localisation.getValue "menu_options_audio"))
+	(this.button[0].description.setText (this.localisation.getValue "menu_options_audio_desc"))
+	(this.button[1].label.setText (this.localisation.getValue "menu_options_toggle_fullscreen"))
+	(this.button[1].description.setText (this.localisation.getValue "menu_options_toggle_fullscreen_desc"))
+	(this.button[2].label.setText (this.localisation.getValue "menu_options_back"))
+	(this.button[2].description.setText (this.localisation.getValue "menu_options_back_desc"))
+	(this.button[3].label.setText (this.localisation.getValue "menu_options_credits"))
+	(this.button[3].description.setText (this.localisation.getValue "menu_options_credtis_desc"))
+	(this.button[4].label.setText (this.localisation.getValue "menu_options_fps"))
+	(this.button[4].description.setText (this.localisation.getValue "menu_options_fps_desc"))
+	(this.button[5].label.setText (this.localisation.getValue "menu_options_lang"))
+	(this.button[5].description.setText (this.localisation.getValue "menu_options_lang_desc"))
+
+	# Yes/No labels
+	(this.labelYes.setText (this.localisation.getValue "menu_options_audio_on"))
+	(this.labelYes.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.labelNo.setText (this.localisation.getValue "menu_options_audio_off"))
+	(this.labelNo.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	# system language
+	(this.langLabelSystem.setText (this.localisation.getValue "menu_options_lang_system"))
+	(this.langLabelSystem.setAlign DD_STRING3D_ALIGN_CENTER)
+
 	)
 )

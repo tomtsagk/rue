@@ -6,6 +6,13 @@
 (class options dd_matrix
 	(group
 
+	# debug fps counter
+	(def dd_string3d fps_label)
+	(def dd_string3d fps_label_int)
+	(def int fps)
+	(def int frames_count)
+	(def float fps_dt)
+
 	# localisation
 	(def avdl_localisation localisation)
 
@@ -40,26 +47,38 @@
 	(def dd_sound clickBigSound)
 
 	# volume data
-	(def int volumeMusic)
 	(def int volumeSound)
 	(def dd_meshColour volumeParticle)
 	(def dd_meshColour volumeParticleStart)
 
-	(function void create (group))
-	(function void resize (group))
+	# fps label
+	(def int fpsIndex)
+	(def dd_string3d fpsLabel)
+
+	# languages label
+	(def int langIndex)
+	(def dd_string3d langLabelSystem)
+	(def dd_string3d langLabelEn)
+	(def dd_string3d langLabelEl)
+	(def dd_string3d langLabelDe)
+	(def dd_string3d langLabelJa)
+
+	(function void create ())
+	(function void resize ())
 	(function void update (group float dt))
-	(function void draw (group))
+	(function void draw ())
 	(function int key_input (group int key))
 	(function int mouse_input (group int button int type))
-	(function void clean (group))
+	(function void clean ())
 
-	(function int isEnabled (group))
-	(function void enable (group))
-	(function void disable (group))
+	(function int isEnabled ())
+	(function void enable ())
+	(function void disable ())
 
 	(function int button_selection (int button_index))
 
 	(function void setFont (group avdl_font f))
+	(function void onLocaleChange ())
 
 	)
 ) # options menu

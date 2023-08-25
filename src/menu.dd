@@ -81,6 +81,9 @@
 	(this.loadingLabel.setAlign DD_STRING3D_ALIGN_CENTER)
 	(= this.isLoading 0)
 
+	(this.menuHome.onLocaleChange)
+	(this.opt.onLocaleChange)
+
 	)
 )
 
@@ -376,11 +379,18 @@
 		(group
 		(this.theme.playLoop -1)
 		)
+	# credits
 	(== action_index 6)
 		(group
 		(dd_world_prepare world_credits 1.0)
 		(dd_world_ready)
 		(= this.isLoading 1)
+		)
+	# language change
+	(== action_index 7)
+		(group
+		(this.menuHome.onLocaleChange)
+		(this.loadingLabel.setText (this.menuHome.localisation.getValue "menu_loading"))
 		)
 	)
 	(return 0)

@@ -8,5 +8,10 @@
 	"menu_options_audio_off": "Off",
 	"menu_options_audio_desc": "Toggle audio on/off",
 	"menu_options_toggle_fullscreen": "Toggle Fullscreen",
-	"menu_options_toggle_fullscreen_desc": "Swap between windowed and fullscreen mode"
+	"menu_options_toggle_fullscreen_desc": "Swap between windowed and fullscreen mode",
+	"menu_options_fps": "FPS",
+	"menu_options_fps_desc": "Change the Frames Per Second the game runs in",
+	"menu_options_lang": "Language",
+	"menu_options_lang_desc": "Change the game's language",
+	"menu_options_lang_system": "System"
 }

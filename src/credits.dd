@@ -7,20 +7,19 @@
 	# background
 	(this.bg.load (asset "assets/stage_2.ply" DD_PLY))
 
-	(this.labelCredits.setText "Credits:")
+	(this.labelCredits.setText (multistring
+		"Credits:\\n\\n"
+
+		"Designer & Programmer\\n"
+		"Tom Tsagkatos\\n\\n"
+
+		"Music & SFX\\n"
+		"shiitakespacewarrior\\n\\n"
+
+		"Special thanks to\\n"
+		"Tim\\n"
+	))
 	(this.labelCredits.setAlign DD_STRING3D_ALIGN_CENTER)
-
-	(this.labelTom.setText "Tom Tsagk")
-	(this.labelTom.setAlign DD_STRING3D_ALIGN_CENTER)
-
-	(this.labelProgrammer.setText "Programmer")
-	(this.labelProgrammer.setAlign DD_STRING3D_ALIGN_CENTER)
-
-	(this.labelShiitakespacewarrior.setText "shiitakespacewarrior")
-	(this.labelShiitakespacewarrior.setAlign DD_STRING3D_ALIGN_CENTER)
-
-	(this.labelMusicSfx.setText "Music & SFX")
-	(this.labelMusicSfx.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.anchorCredits.setSize 1 1)
 	(this.anchorCredits.setProportionalPosition 0.5 0.5)
@@ -32,10 +31,6 @@
 
 	(this.font.set (asset "assets/nishiki_teki.ttf" DD_PLY) 4)
 	(this.labelCredits.setFont this.font)
-	(this.labelTom.setFont this.font)
-	(this.labelProgrammer.setFont this.font)
-	(this.labelShiitakespacewarrior.setFont this.font)
-	(this.labelMusicSfx.setFont this.font)
 
 	)
 )
@@ -96,14 +91,6 @@
 	(this.anchorCredits.applyTransform)
 	(dd_translatef 0 -1 1)
 	(this.labelCredits.draw)
-	(dd_translatef 0 -2.0 0)
-	(this.labelTom.draw)
-	(dd_translatef 0 -1 0)
-	(this.labelProgrammer.draw)
-	(dd_translatef 0 -2.0 0)
-	(this.labelShiitakespacewarrior.draw)
-	(dd_translatef 0 -1 0)
-	(this.labelMusicSfx.draw)
 	(dd_matrix_pop)
 
 	)
