@@ -42,8 +42,8 @@
 	# background particles
 	(this.bgParticleMesh.load (asset "assets/particle.ply" DD_PLY))
 	(this.bgParticleSystem.assignAsset this.bgParticleMesh)
-	(this.bgParticleSystem.setParticleLife 1000)
-	(this.bgParticleSystem.setDelay 30)
+	(this.bgParticleSystem.setParticleLife 20)
+	(this.bgParticleSystem.setDelay 1.5)
 	(this.bgParticleSystem.setParticlePosition 0 4 -5)
 	(this.bgParticleSystem.setParticlePositionFuzz 16 4 11)
 	(this.bgParticleSystem.setParticlePositionYFunc particleMovementY)
@@ -51,9 +51,9 @@
 	(this.bgParticleSystem.setParticleScaleFunc particleScale)
 	(this.bgParticleSystem.setParticlesTotal 20)
 
-	(for (def int i 0) (< i 100) (= i (+ i 1))
-		(this.bgParticleSystem.update)
-	)
+	#(for (def int i 0) (< i 100) (= i (+ i 1))
+	#	(this.bgParticleSystem.update)
+	#)
 
 	# eyes
 	(this.lookatMesh.load (asset "assets/eye.ply" DD_PLY))
@@ -77,12 +77,13 @@
 	#(= this.isGrabbed 0)
 
 	(this.loadingLabel.setFont this.font)
-	(this.loadingLabel.setText (this.menuHome.localisation.getValue "menu_loading"))
-	(this.loadingLabel.setAlign DD_STRING3D_ALIGN_CENTER)
 	(= this.isLoading 0)
 
 	(this.menuHome.onLocaleChange)
 	(this.opt.onLocaleChange)
+
+	(this.loadingLabel.setText (this.menuHome.localisation.getValue "menu_loading"))
+	(this.loadingLabel.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	)
 )
@@ -115,7 +116,7 @@
 		)
 	)
 
-	(this.bgParticleSystem.update)
+	(this.bgParticleSystem.update dt)
 
 	#(this.menuMultiplayer.update dt)
 	(this.menuHome.update dt)
@@ -403,5 +404,10 @@
 		)
 	)
 	(return 0)
+	)
+)
+
+(class_function world_menu void onLocaleChange ()
+	(group
 	)
 )
