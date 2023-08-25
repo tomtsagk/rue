@@ -96,11 +96,11 @@
 	# language labels
 	(this.langLabelEn.setText "English")
 	(this.langLabelEn.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.langLabelEl.setText "Greek")
+	(this.langLabelEl.setText "Ελληνικά")
 	(this.langLabelEl.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.langLabelDe.setText "German")
+	(this.langLabelDe.setText "Deutsch")
 	(this.langLabelDe.setAlign DD_STRING3D_ALIGN_CENTER)
-	(this.langLabelJa.setText "Japanese")
+	(this.langLabelJa.setText "日本語")
 	(this.langLabelJa.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	# text display
@@ -756,6 +756,7 @@
 	(== button_index 3)
 		(group
 		(this.clickBigSound.play)
+		(this.saveOptions)
 		(this.disable)
 		(return 6)
 		)
