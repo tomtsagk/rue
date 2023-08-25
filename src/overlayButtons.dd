@@ -7,6 +7,7 @@
 	(= this.cardToShow 0)
 	(= this.isLookingAtCard 0)
 	(= this.hasConfirmed 0)
+	(= this.isTutorialCard 0)
 
 	(this.bgMesh.load (asset "assets/overlay_background.ply" DD_PLY))
 	(= this.bg_rotation 0)
@@ -126,6 +127,7 @@
 		(if this.hasConfirmed
 			(group
 			(this.unsetCard)
+			(= this.isTutorialCard 0)
 			(return 1)
 			)
 		# unconfirmed choice - confirm it

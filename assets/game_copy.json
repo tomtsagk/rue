@@ -7,6 +7,7 @@
 	"game_phase_execution": "Execution Phase",
 	"game_phase_end": "End Phase",
 	"game_phase_corner_effect": "Discard card to activate extra effect or skip.",
+	"game_phase_tutorial": "Look at the tutorial card.",
 
 	"game_card_moverose1": "Move The Rose 1 step.",
 	"game_card_moverose3": "Move The Rose 3 steps.",

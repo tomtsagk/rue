@@ -3,6 +3,8 @@
 (class_function menu_home void create ()
 	(group
 
+	(avdl_engine_setFPS 60)
+
 	# localisation
 	(this.localisation.set "menu_home_copy")
 

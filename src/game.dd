@@ -617,6 +617,10 @@
 	(this.phaseTextCornerEffectOrSkip.setText (this.localisation.getValue "game_phase_corner_effect"))
 	(this.phaseTextCornerEffectOrSkip.setAlign DD_STRING3D_ALIGN_CENTER)
 
+	(this.phaseTutorial.setFont this.font)
+	(this.phaseTutorial.setText (this.localisation.getValue "game_phase_tutorial"))
+	(this.phaseTutorial.setAlign DD_STRING3D_ALIGN_CENTER)
+
 	(= this.filterCorner -1)
 
 	#(this.font.setAlign DD_STRING3D_ALIGN_CENTER)
@@ -770,6 +774,7 @@
 				(if (== this.guide 0)
 					(group
 					(this.ovButtons.setCard this.tutCards[0])
+					(= this.ovButtons.isTutorialCard 1)
 					(= this.guide (+ this.guide 1))
 					)
 				)
@@ -797,6 +802,7 @@
 				(if (== this.guide 1)
 					(group
 					(this.ovButtons.setCard this.tutCards[1])
+					(= this.ovButtons.isTutorialCard 1)
 					(= this.guide (+ this.guide 1))
 					)
 				)
@@ -824,6 +830,7 @@
 				(if (== this.guide 3)
 					(group
 					(this.ovButtons.setCard this.tutCards[3])
+					(= this.ovButtons.isTutorialCard 1)
 					(= this.guide (+ this.guide 1))
 					)
 				)
@@ -856,6 +863,7 @@
 				(if (== this.guide 4)
 					(group
 					(this.ovButtons.setCard this.tutCards[4])
+					(= this.ovButtons.isTutorialCard 1)
 					(= this.guide (+ this.guide 1))
 					)
 				)
@@ -972,6 +980,7 @@
 				(if (== this.guide 2)
 					(group
 					(this.ovButtons.setCard this.tutCards[2])
+					(= this.ovButtons.isTutorialCard 1)
 					(= this.guide (+ this.guide 1))
 					)
 				)
@@ -2261,6 +2270,13 @@
 					(* (dd_screen_width_get 20) 0.9)
 				)
 				)
+			)
+		# tutorial card active
+		this.ovButtons.isTutorialCard
+			(group
+			(this.phaseTutorial.drawLimit
+				(* (dd_screen_width_get 20) 0.9)
+			)
 			)
 		# draw phase
 			(group
