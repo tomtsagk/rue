@@ -49,10 +49,8 @@
 	# mark stage as complete
 	(= this.gamesWon (+ this.gamesWon 1))
 
-	# save data
-	(def SaveLoadData mySaveData)
-	(= mySaveData.gamesWon this.gamesWon)
-	(avdl_data_save mySaveData SaveLoadData (savefile "defaultv2"))
+	# save new game victory
+	(this.SaveData)
 
 	)
 )
@@ -60,5 +58,21 @@
 (class_function SaveLoad int HadTutorial ()
 	(group
 	(return this.hadTutorial)
+	)
+)
+
+(class_function SaveLoad void SetTutorialDone ()
+	(group
+	(= this.hadTutorial 1)
+	(this.SaveData)
+	)
+)
+
+(class_function SaveLoad void SaveData ()
+	(group
+	(def SaveLoadData mySaveData)
+	(= mySaveData.gamesWon this.gamesWon)
+	(= mySaveData.hadTutorial this.hadTutorial)
+	(avdl_data_save mySaveData SaveLoadData (savefile "defaultv2"))
 	)
 )

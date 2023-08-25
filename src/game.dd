@@ -864,7 +864,8 @@
 					(group
 					(this.ovButtons.setCard this.tutCards[4])
 					(= this.ovButtons.isTutorialCard 1)
-					(= this.guide (+ this.guide 1))
+					(= this.guide -1)
+					(this.saveLoad.SetTutorialDone)
 					)
 				)
 
@@ -1811,7 +1812,9 @@
 					(group
 					(= this.victoriousPlayer winningPlayer)
 
-				(this.saveLoad.CompleteGame)
+					(if (== this.victoriousPlayer 0)
+						(this.saveLoad.CompleteGame)
+					)
 					# Handle achievements
 					(if (&& (== this.victoriousPlayer 0) (== (this.saveLoad.GetGamesComplete) 1))
 						(avdl_achievements_set 0 "ACHIEVEMENT_FIRST_VICTORY")

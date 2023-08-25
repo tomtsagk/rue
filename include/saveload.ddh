@@ -11,5 +11,9 @@
 	(function void CompleteGame ())
 	(function int HadTutorial ())
 
+	(function void SetTutorialDone ())
+
+	(function void SaveData ())
+
 	)
 )
