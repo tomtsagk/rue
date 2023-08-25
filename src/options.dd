@@ -748,14 +748,7 @@
 		(this.disable)
 
 		# save options
-		(def OptionsData myOptionsData)
-		(= myOptionsData.fpsIndex this.fpsIndex)
-		(= myOptionsData.langIndex this.langIndex)
-		(if (< this.volumeSound 10)
-			(= myOptionsData.audioOn 0)
-			(= myOptionsData.audioOn 1)
-		)
-		(avdl_data_save myOptionsData OptionsData (savefile "options"))
+		(this.saveOptions)
 
 		(return 1)
 		)
@@ -853,6 +846,22 @@
 	# system language
 	(this.langLabelSystem.setText (this.localisation.getValue "menu_options_lang_system"))
 	(this.langLabelSystem.setAlign DD_STRING3D_ALIGN_CENTER)
+
+	)
+)
+
+(class_function options void saveOptions ()
+	(group
+
+	# save options
+	(def OptionsData myOptionsData)
+	(= myOptionsData.fpsIndex this.fpsIndex)
+	(= myOptionsData.langIndex this.langIndex)
+	(if (< this.volumeSound 10)
+		(= myOptionsData.audioOn 0)
+		(= myOptionsData.audioOn 1)
+	)
+	(avdl_data_save myOptionsData OptionsData (savefile "options"))
 
 	)
 )

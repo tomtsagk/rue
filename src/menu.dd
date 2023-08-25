@@ -239,7 +239,10 @@
 
 	(if (== key 27)
 		(if (== this.isLoading 0)
+			(group
+			(this.opt.saveOptions)
 			(avdl_exit) # exit game
+			)
 		)
 #	# grabby
 #	(== key 100)
@@ -359,6 +362,12 @@
 	(== action_index 3)
 		(group
 		(this.opt.enable)
+		)
+	# exit
+	(== action_index 4)
+		(group
+		(this.opt.saveOptions)
+		(avdl_exit)
 		)
 	)
 	(return 0)

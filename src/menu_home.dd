@@ -615,7 +615,7 @@
 	(== button_index 2)
 		(group
 		(this.clickBigSound.play)
-		(avdl_exit) # exit game
+		(return 4)
 		)
 	# options
 	(== button_index 3)

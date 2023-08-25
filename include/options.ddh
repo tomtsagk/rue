@@ -80,5 +80,7 @@
 	(function void setFont (group avdl_font f))
 	(function void onLocaleChange ())
 
+	(function void saveOptions ())
+
 	)
 ) # options menu
