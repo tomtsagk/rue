@@ -8,5 +8,10 @@
 	"menu_options_audio_off": "Aus",
 	"menu_options_audio_desc": "Audio An/Aus",
 	"menu_options_toggle_fullscreen": "Vollbild umschalten",
-	"menu_options_toggle_fullscreen_desc": "Wechsle zwischen Fenster und Vollbildmodus"
+	"menu_options_toggle_fullscreen_desc": "Wechsle zwischen Fenster und Vollbildmodus",
+	"menu_options_fps": "FPS",
+	"menu_options_fps_desc": "Ändere die Frames pro Sekunde, in denen das Spiel läuft",
+	"menu_options_lang": "Sprache",
+	"menu_options_lang_desc": "Ändere die Sprache des Spiels",
+	"menu_options_lang_system": "System"
 }

@@ -7,7 +7,7 @@
 	"game_phase_execution": "\j実行 段階",
 	"game_phase_end": "\j終了 段階",
 	"game_phase_corner_effect": "\jカードを 捨て追加の 効果を 有効に するか スキップ する。",
-	"game_phase_tutorial": "Look at the tutorial card.",
+	"game_phase_tutorial": "\jチュートリアル カードを 見る。",
 	"game_card_moverose1": "\jローズ 1ステップを 移動する。",
 	"game_card_moverose3": "\jローズ 3ステップを 移動する。",
 	"game_card_trade": "\j[thunder] : フラートは ローズを 掴む。\nフラートと ランダムな カードを 交換 する。 ローズを 受け 取った プレイヤーは ランダムな カードを もう 1枚受 け取る。",

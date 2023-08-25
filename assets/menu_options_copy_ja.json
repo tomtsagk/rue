@@ -8,5 +8,10 @@
 	"menu_options_audio_off": "無効",
 	"menu_options_audio_desc": "\jオーディオを 有効化 ／ 無効化",
 	"menu_options_toggle_fullscreen": "\jフル スクリーン 切り 替え",
-	"menu_options_toggle_fullscreen_desc": "\jウィンドウ モードと フル スクリーン モードの 切り 替え"
+	"menu_options_toggle_fullscreen_desc": "\jウィンドウ モードと フル スクリーン モードの 切り 替え",
+	"menu_options_fps": "FPS",
+	"menu_options_fps_desc": "\jゲームを 実行する 1秒 あたりの フレーム数を 変更する",
+	"menu_options_lang": "言語",
+	"menu_options_lang_desc": "\jゲームの 言語を 変更する",
+	"menu_options_lang_system": "システム"
 }

@@ -8,5 +8,10 @@
 	"menu_options_audio_off": "Ανενεργό",
 	"menu_options_audio_desc": "Ενεργοποίηση / απενεργοποίηση ήχου",
 	"menu_options_toggle_fullscreen": "Εναλλαγή πλήρους οθόνης",
-	"menu_options_toggle_fullscreen_desc": "Εναλλαγή μεταξύ της λειτουργίας παραθύρου και πλήρους οθόνης"
+	"menu_options_toggle_fullscreen_desc": "Εναλλαγή μεταξύ της λειτουργίας παραθύρου και πλήρους οθόνης",
+	"menu_options_fps": "FPS",
+	"menu_options_fps_desc": "Άλλαξε τα καρέ ανά δευτερόλεπτο που χρησιμοποιεί το παιχνίδι",
+	"menu_options_lang": "Γλώσσα",
+	"menu_options_lang_desc": "Άλλαξε τη γλώσσα του παιχνιδιού",
+	"menu_options_lang_system": "Σύστημα"
 }
