@@ -1,4 +1,3 @@
-* Add greek localisation
-* Add icons when reading the card text, for the special effects
-* Improved the copy around the game to look a bit smoother
-* On Steam, the default language is auto-detected and used
+* Add ability to change FPS in-game
+* Language can now change from the options menu
+* Options are now saved and loaded
