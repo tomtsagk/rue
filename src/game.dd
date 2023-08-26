@@ -135,13 +135,13 @@
 	(this.phaseTextPlanning.setText (this.localisation.getValue "game_phase_planning"))
 	(this.phaseTextPlanning.setAlign DD_STRING3D_ALIGN_CENTER )
 	(this.phaseTextExecution.setFont this.font )
-	#(this.phaseTextExecution.setText (this.localisation.getValue "game_phase_execution"))
+	(this.phaseTextExecution.setText (this.localisation.getValue "game_phase_execution"))
 	(this.phaseTextExecution.setAlign DD_STRING3D_ALIGN_CENTER )
 	(this.phaseTextEnd.setFont this.font )
 	(this.phaseTextEnd.setText (this.localisation.getValue "game_phase_end"))
 	(this.phaseTextEnd.setAlign DD_STRING3D_ALIGN_CENTER )
 	(this.phaseTextError.setFont this.font )
-	#(this.phaseTextError.setText "" )
+	#(this.phaseTextError.setText " ")
 	(this.phaseTextError.setAlign DD_STRING3D_ALIGN_CENTER )
 
 	# game phases text
@@ -673,6 +673,7 @@
 	(this.ovButtons.setFont this.font)
 	(this.ovButtons.confirmLabel.setText (this.localisation.getValue "game_play_confirm"))
 	(this.ovButtons.skipLabel.setText (this.localisation.getValue "game_play_skip_effect"))
+	(= this.ovButtons.isEffectCard 0)
 
 	)
 )
@@ -1178,7 +1179,7 @@
 			(group
 
 			(if (== this.actions[0].playerIndex 0)
-				(= this.phaseTextCurrent this.phaseTextCornerEffectOrSkip)
+				(= this.ovButtons.isEffectCard 1)
 			)
 
 			(= this.filterCorner this.actions[0].value)
@@ -2281,6 +2282,13 @@
 				(* (dd_screen_width_get 20) 0.9)
 			)
 			)
+		# effect card active
+		this.ovButtons.isEffectCard
+			(group
+			(this.phaseTextCornerEffectOrSkip.drawLimit
+				(* (dd_screen_width_get 20) 0.9)
+			)
+			)
 		# draw phase
 			(group
 			(this.phaseTextCurrent.drawLimit
@@ -2836,7 +2844,7 @@
 	)
 )
 
-(class_function world_game void addAction (group int actionType int playerIndex int valueAmount int delay)
+(class_function world_game void addAction (group int actionType int playerIndex int valueAmount float delay)
 	(group
 	(if (>= this.actionsTotal 100)
 		(group
@@ -2871,7 +2879,7 @@
 	)
 )
 
-(class_function world_game void addInjectAction (group int actionType int playerIndex int valueAmount int delay)
+(class_function world_game void addInjectAction (group int actionType int playerIndex int valueAmount float delay)
 	(group
 	(if (>= this.injectActionsTotal 100)
 		(group
@@ -2959,7 +2967,7 @@
 	)
 )
 
-(class_function GameAction void set (group int actionType int playerIndex int valueAmount int delay)
+(class_function GameAction void set (group int actionType int playerIndex int valueAmount float delay)
 	(group
 	(= this.actionType actionType)
 	(= this.playerIndex playerIndex)

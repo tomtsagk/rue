@@ -14,6 +14,7 @@
 	(def ref Card cardToShow)
 	(def int isLookingAtCard)
 	(def int isTutorialCard)
+	(def int isEffectCard)
 	(def int hasConfirmed)
 	(def int waitUntilCardConfirmed)
 

@@ -155,6 +155,8 @@
 		(= this.isLookingAtCard 0)
 		(this.cardToShow.setTarget this.previousLoc)
 		(= this.cardToShow 0)
+		(= this.isEffectCard 0)
+		(= this.isTutorialCard 0)
 		)
 	)
 	)

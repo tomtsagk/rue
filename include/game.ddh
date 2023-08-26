@@ -27,11 +27,11 @@
 	(def int actionType)
 	(def int playerIndex)
 	(def int value)
-	(def int delay)
+	(def float delay)
 
 	(function void create ())
 	(function void clean ())
-	(function void set (group int actionType int playerIndex int valueAmount int delay))
+	(function void set (group int actionType int playerIndex int valueAmount float delay))
 	)
 )
 
@@ -216,9 +216,9 @@
 	(function void applyChooseCard (group int optionIndedx))
 
 	# action functions
-	(function void addAction (group int actionType int playerIndex int valueAmount int delay))
+	(function void addAction (group int actionType int playerIndex int valueAmount float delay))
 	(function void removeAction (group))
-	(function void addInjectAction (group int actionType int playerIndex int valueAmount int delay))
+	(function void addInjectAction (group int actionType int playerIndex int valueAmount float delay))
 	(function void injectActionsToActions (group))
 
 	(function void grabRose (group))
