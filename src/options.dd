@@ -16,8 +16,8 @@
 	(= this.fps 0)
 	(= this.fps_dt 0)
 	(= this.frames_count 0)
-	(this.fps_label.setText "FPS:")
-	(this.fps_label_int.setTextInt)
+	#(this.fps_label.setText "FPS:")
+	#(this.fps_label_int.setTextInt)
 
 	# attempt to load data
 	(def OptionsData myOptionsData)
@@ -85,6 +85,9 @@
 
 	# fps settings
 	(this.button[4].mesh.load (asset "assets/button.ply" DD_PLY))
+	(if AVDL_VR
+		(= this.button[4].isVisible 0)
+	)
 
 	# language settings
 	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
@@ -431,7 +434,7 @@
 			(dd_matrix_pop)
 			)
 		# fps
-		(== i 4)
+		(&& (== i 4) this.button[4].isVisible)
 			(group
 			(dd_matrix_push)
 			(dd_translatef 0 -1.5 0.1)
@@ -814,8 +817,8 @@
 	(this.langLabelDe.setFont font)
 	(this.langLabelJa.setFont font)
 
-	(this.fps_label.setFont font)
-	(this.fps_label_int.setFont font)
+	#(this.fps_label.setFont font)
+	#(this.fps_label_int.setFont font)
 	)
 )
 
