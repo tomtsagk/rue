@@ -460,7 +460,7 @@
 		(== aiNames[nameIndex] 2)
 			(this.player[i].label_name.setText (this.localisation.getValue "game_play_liam"))
 		(== aiNames[nameIndex] 3)
-			(this.player[i].label_name.setText (this.localisation.getValue "game_play_lisa"))
+			(this.player[i].label_name.setText (this.localisation.getValue "game_play_liis"))
 		)
 
 		)
