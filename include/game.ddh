@@ -177,7 +177,7 @@
 	(def dd_string3d labelConfirm)
 
 	# buttons
-	(def Button button[2])
+	(def Button button[4])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
 	(def float buttonClickCol[3])

@@ -15,7 +15,7 @@ jobs:
         project_name: rue
         build_android: true
         build_android_googleplay: true
-        build_ads: false
+        build_ads: true
         build_steam: true
         build_linux: true
         build_windows: true
@@ -36,8 +36,9 @@ jobs:
         # required for google play
         GOOGLE_PLAY_ID: ${{ secrets.GOOGLE_PLAY_ID }}
         AVDL_GOOGLE_PLAY_ACHIEVEMENTS: --google-play-achievement "ACHIEVEMENT_ROSE_SELECTED" ${{ secrets.ACHIEVEMENT_ROSE_SELECTED }} --google-play-achievement "ACHIEVEMENT_EXTRA_DISCARD" ${{ secrets.ACHIEVEMENT_EXTRA_DISCARD }} --google-play-achievement "ACHIEVEMENT_I_FOUND_THE_ROSE" ${{ secrets.ACHIEVEMENT_I_FOUND_THE_ROSE }} --google-play-achievement "ACHIEVEMENT_FIRST_VICTORY" ${{ secrets.ACHIEVEMENT_FIRST_VICTORY }} --google-play-achievement "ACHIEVEMENT_GETTING_BETTER" ${{ secrets.ACHIEVEMENT_GETTING_BETTER }} --google-play-achievement "ACHIEVEMENT_MASTER_PLAYER" ${{ secrets.ACHIEVEMENT_MASTER_PLAYER }}
-        #ADMOB_PROJECT_ID: ${{ secrets.ADMOB_PROJECT_ID }}
-        #ADMOB_INTERSTITIAL_AD_ID: ${{ secrets.ADMOB_INTERSTITIAL_AD_ID }}
+        ADMOB_PROJECT_ID: ${{ secrets.ADMOB_PROJECT_ID }}
+        ADMOB_INTERSTITIAL_AD_ID: 0
+        ADMOB_REWARDED_AD_ID: ${{ secrets.ADMOB_REWARDED_AD_ID }}
         STEAMWORKS_APPID: ${{ secrets.STEAMWORKS_APPID }}
         STEAMWORKS_DEPOTID_LINUX: ${{ secrets.STEAMWORKS_DEPOTID_LINUX }}
         STEAMWORKS_DEPOTID_WINDOWS: ${{ secrets.STEAMWORKS_DEPOTID_WINDOWS }}

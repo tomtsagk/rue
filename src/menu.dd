@@ -227,6 +227,11 @@
 		(group
 		(dd_matrix_push)
 		(dd_translatef 0 0 -10)
+		(dd_scalef
+			(- 1 this.menuHome.animationOpen)
+			(- 1 this.menuHome.animationOpen)
+			(- 1 this.menuHome.animationOpen)
+		)
 		(this.loadingLabel.draw)
 		(dd_matrix_pop)
 		)

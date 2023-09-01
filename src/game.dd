@@ -102,18 +102,34 @@
 	(= networkTurnQueueSize 0)
 
 	# exit menu buttons
-	(= this.buttonTotal 2)
+	(= this.buttonTotal 4)
+
+	# exit game
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[0].label.setFont this.font)
 	(this.button[0].label.setText (this.localisation.getValue "game_exit"))
 
+	# resume game
 	(this.button[1].mesh.load (asset "assets/button.ply" DD_PLY))
 	(this.button[1].label.setFont this.font)
 	(this.button[1].label.setText (this.localisation.getValue "game_resume"))
 
+	# observe button
+	(this.button[2].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[2].label.setFont this.font)
+	(this.button[2].label.setText (this.localisation.getValue "game_observe"))
+	(= this.button[2].isVisible 0)
+
+	# retry button
+	(this.button[3].mesh.load (asset "assets/button.ply" DD_PLY))
+	(this.button[3].label.setFont this.font)
+	(this.button[3].label.setText (this.localisation.getValue "game_view_ad"))
+	(= this.button[3].isVisible 0)
+
 	(this.labelExitMenu.setFont this.font)
 	(this.labelExitMenu.setText (this.localisation.getValue "game_exit_confirm"))
 	(this.labelExitMenu.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.labelExitMenu.setAlignVertical DD_STRING3D_ALIGN_CENTER)
 
 	(this.bgExitMenuTexture.set (asset "assets/bg_exit_menu.png" AVDL_IMAGETYPE_PNG))
 	(this.bgExitMenu.set_primitive DD_PRIMITIVE_RECTANGLE)
@@ -358,6 +374,29 @@
 
 	(def int mg isMultiplayerGame)
 
+	# shuffle ai names
+	(def int aiNamesTotal 4)
+	(def int aiNames[4])
+	(for (def int i 0) (< i aiNamesTotal) (= i (+ i 1))
+		(group
+		(= aiNames[i] i)
+		)
+	)
+	(for (def int i 0) (< i aiNamesTotal) (= i (+ i 1))
+		(group
+
+		(def int j)
+		(= j (dd_math_rand aiNamesTotal))
+
+		(def int temp)
+
+		# swap
+		(= temp aiNames[i])
+		(= aiNames[i] aiNames[j])
+		(= aiNames[j] temp)
+		)
+	)
+
 	# init player positions
 	(for (def int i 1) (< i this.playersTotal) (= i (+ i 1))
 		(group
@@ -412,7 +451,17 @@
 
 		(this.player[i].setFont this.font)
 
-		(this.player[i].label_name.setText (this.localisation.getValue "game_play_ai"))
+		(def int nameIndex)
+		(= nameIndex (- i 1))
+		(if (== aiNames[nameIndex] 0)
+			(this.player[i].label_name.setText (this.localisation.getValue "game_play_adam"))
+		(== aiNames[nameIndex] 1)
+			(this.player[i].label_name.setText (this.localisation.getValue "game_play_tom"))
+		(== aiNames[nameIndex] 2)
+			(this.player[i].label_name.setText (this.localisation.getValue "game_play_liam"))
+		(== aiNames[nameIndex] 3)
+			(this.player[i].label_name.setText (this.localisation.getValue "game_play_lisa"))
+		)
 
 		)
 	)
@@ -606,7 +655,7 @@
 	(this.labelWin.setText (this.localisation.getValue "game_end_win"))
 	(this.labelWin.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.labelLose.setFont this.font)
-	(this.labelWin.setText (this.localisation.getValue "game_end_lose"))
+	(this.labelLose.setText (this.localisation.getValue "game_end_lose"))
 	(this.labelLose.setAlign DD_STRING3D_ALIGN_CENTER)
 
 	(this.labelConfirm.setFont this.font)
@@ -675,6 +724,10 @@
 	(this.ovButtons.skipLabel.setText (this.localisation.getValue "game_play_skip_effect"))
 	(= this.ovButtons.isEffectCard 0)
 
+	(if (avdl_ads_enabled)
+		(avdl_ads_loadRewardedAd)
+	)
+
 	)
 )
 
@@ -692,15 +745,27 @@
 		(group
 		# exit button
 		(this.button[0].setSize 1 1)
-		(this.button[0].setProportionalPosition 0.5 0.25)
+		(this.button[0].setProportionalPosition 0.5 0.20)
 		(this.button[0].setProportionalWidth 0.2)
 		(this.button[0].setProportionalSize 0.8)
 
 		# resume button
 		(this.button[1].setSize 1 1)
-		(this.button[1].setProportionalPosition 0.5 0.5)
+		(this.button[1].setProportionalPosition 0.5 0.40)
 		(this.button[1].setProportionalWidth 0.2)
 		(this.button[1].setProportionalSize 0.8)
+
+		# observe button
+		(this.button[2].setSize 1 1)
+		(this.button[2].setProportionalPosition 0.5 0.40)
+		(this.button[2].setProportionalWidth 0.2)
+		(this.button[2].setProportionalSize 0.8)
+
+		# retry button
+		(this.button[3].setSize 1 1)
+		(this.button[3].setProportionalPosition 0.25 0.3)
+		(this.button[3].setProportionalWidth 0.2)
+		(this.button[3].setProportionalSize 0.8)
 		)
 	# landscape
 		(group
@@ -715,6 +780,18 @@
 		(this.button[1].setProportionalPosition 0.3 0.3)
 		(this.button[1].setProportionalWidth 0.2)
 		(this.button[1].setProportionalSize 0.8)
+
+		# observe button
+		(this.button[2].setSize 1 1)
+		(this.button[2].setProportionalPosition 0.3 0.3)
+		(this.button[2].setProportionalWidth 0.2)
+		(this.button[2].setProportionalSize 0.8)
+
+		# retry button
+		(this.button[3].setSize 1 1)
+		(this.button[3].setProportionalPosition 0.5 0.3)
+		(this.button[3].setProportionalWidth 0.2)
+		(this.button[3].setProportionalSize 0.8)
 		)
 	)
 	(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
@@ -725,6 +802,36 @@
 
 (class_function world_game void update (group float dt)
 	(group
+
+	(if (avdl_ads_enabled)
+		(group
+
+		# got a reward from an ad
+		(if (avdl_ads_hasReward)
+			(group
+			(def int amount)
+			(= amount (avdl_ads_getRewardAmount))
+			(if (&& (== amount 1) (avdl_ads_isRewardTypeEqualTo "Life"))
+				(group
+
+				# give the winning player a card - never the player
+				(if (> this.victoriousPlayer 0)
+					(group
+					(this.drawCard this.victoriousPlayer)
+					(= this.victoriousPlayer -1)
+					(= this.isExitMenu 0)
+					(avdl_ads_loadRewardedAd)
+					)
+				)
+
+				)
+			)
+			(avdl_ads_consumeReward)
+			)
+		)
+
+		)
+	)
 
 	# currently displaying a card, handle that instead of game state
 	(if (== AVDL_VR 0)
@@ -1813,6 +1920,18 @@
 					(group
 					(= this.victoriousPlayer winningPlayer)
 
+					# prepare exit menu
+					(= this.isExitMenu 1)
+					(= this.button[1].isVisible 0)
+					(= this.button[2].isVisible 1)
+					# show ad button if user didn't win
+					(if (> this.victoriousPlayer 0)
+						(= this.button[3].isVisible 1)
+					)
+					(= this.holdRotX -1)
+					(= this.holdRotY -1)
+					(= this.isRotating 0)
+
 					(if (== this.victoriousPlayer 0)
 						(this.saveLoad.CompleteGame)
 					)
@@ -2046,18 +2165,24 @@
 		(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 			(group
 
-			(if (== this.selection i)
+			(if this.button[i].isVisible
 				(group
-				)
-				(if (this.button[i].hasMouseCollided)
+
+				(if (== this.selection i)
 					(group
-					#(this.hoverSound.play)
-					(= this.selection i)
+					)
+					(if (this.button[i].hasMouseCollided)
+						(group
+						#(this.hoverSound.play)
+						(= this.selection i)
+						)
 					)
 				)
-			)
 
-			(this.button[i].update dt (== this.selection i) (== this.selectionClick i))
+				(this.button[i].update dt (== this.selection i) (== this.selectionClick i))
+
+				)
+			)
 
 			)
 		)
@@ -2087,18 +2212,23 @@
 				(for (def int j 0) (< j this.buttonTotal) (= j (+ j 1))
 					(group
 
-					(if (== this.selection j)
+					(if this.button[i].isVisible
 						(group
-						)
-						(if (this.button[j].hasPositionCollided (dd_matrix_getControllerPosition i))
+
+						(if (== this.selection j)
 							(group
-							#(this.hoverSound.play)
-							(= this.selection j)
+							)
+							(if (this.button[j].hasPositionCollided (dd_matrix_getControllerPosition i))
+								(group
+								#(this.hoverSound.play)
+								(= this.selection j)
+								)
 							)
 						)
-					)
 
-					(this.button[j].update dt (== this.selection j) (== this.selectionClick j))
+						(this.button[j].update dt (== this.selection j) (== this.selectionClick j))
+						)
+					)
 
 					)
 				)
@@ -2349,9 +2479,32 @@
 			)
 			)
 			(group
-			(dd_translatef 0 3 -15)
-			(this.labelExitMenu.drawLimit
-				(* (dd_screen_width_get 20) 0.9)
+			(dd_translatef
+				0
+				(* (dd_screen_height_get 15) 0.25)
+				-15
+			)
+
+			# user won
+			(if (== this.victoriousPlayer 0)
+				(group
+				(this.labelWin.drawLimit
+					(* (dd_screen_width_get 15) 0.9)
+				)
+				)
+			# someone else won
+			(> this.victoriousPlayer 0)
+				(group
+				(this.labelLose.drawLimit
+					(* (dd_screen_width_get 15) 0.9)
+				)
+				)
+			# nobody won yet
+				(group
+				(this.labelExitMenu.drawLimit
+					(* (dd_screen_width_get 15) 0.9)
+				)
+				)
 			)
 			)
 		)
@@ -2362,57 +2515,61 @@
 		(= colLoc (avdl_getUniformLocation this.buttonProgram "tint"))
 		(for (def int i 0) (< i this.buttonTotal) (= i (+ i 1))
 			(group
-			(dd_matrix_push)
+			(if this.button[i].isVisible
+				(group
+				(dd_matrix_push)
 
-			# change the shader colour when clicked
-			(if (> this.button[i].idleCol 1.0)
-				(avdl_graphics_SetUniform3f colLoc
-					(dd_math_ease_linear
-						(- this.button[i].idleCol 1.0)
-						this.buttonActiveCol[0] this.buttonClickCol[0]
+				# change the shader colour when clicked
+				(if (> this.button[i].idleCol 1.0)
+					(avdl_graphics_SetUniform3f colLoc
+						(dd_math_ease_linear
+							(- this.button[i].idleCol 1.0)
+							this.buttonActiveCol[0] this.buttonClickCol[0]
+						)
+						(dd_math_ease_linear
+							(- this.button[i].idleCol 1.0)
+							this.buttonActiveCol[1] this.buttonClickCol[1]
+						)
+						(dd_math_ease_linear
+							(- this.button[i].idleCol 1.0)
+							this.buttonActiveCol[2] this.buttonClickCol[2]
+						)
 					)
-					(dd_math_ease_linear
-						(- this.button[i].idleCol 1.0)
-						this.buttonActiveCol[1] this.buttonClickCol[1]
-					)
-					(dd_math_ease_linear
-						(- this.button[i].idleCol 1.0)
-						this.buttonActiveCol[2] this.buttonClickCol[2]
+				# change colour when selected
+					(avdl_graphics_SetUniform3f colLoc
+						(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
+						(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
+						(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
 					)
 				)
-			# change colour when selected
-				(avdl_graphics_SetUniform3f colLoc
-					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[0] this.buttonActiveCol[0])
-					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[1] this.buttonActiveCol[1])
-					(dd_math_ease_linear this.button[i].idleCol this.buttonInactiveCol[2] this.buttonActiveCol[2])
-				)
-			)
 
-			(this.button[i].applyTransform)
-			(this.button[i].applyMatrixTransform)
-			(def float anim)
-			# big numbers make animation faster, but blends less together (max 4 - number of buttons)
-			# small numbers make animation slower. At 1.0, all buttons animate together
-			(def float animationSpeed 2.0)
-			(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
-			(= anim (dd_math_min
-					(dd_math_max
+				(this.button[i].applyTransform)
+				(this.button[i].applyMatrixTransform)
+				(def float anim)
+				# big numbers make animation faster, but blends less together (max 4 - number of buttons)
+				# small numbers make animation slower. At 1.0, all buttons animate together
+				(def float animationSpeed 2.0)
+				(def float animationSpeedMult (- 1.0 (/ 1.0 animationSpeed)))
+				(= anim (dd_math_min
+						(dd_math_max
+							1
+							#(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
+							0
+						)
 						1
-						#(* (- this.animationOpen (* (/ animationSpeedMult (- this.buttonTotal 1)) i)) animationSpeed)
-						0
 					)
-					1
+				)
+				(dd_scalef anim anim anim)
+				(this.button[i].drawRaw)
+
+				(dd_translatef 0 0 0.1)
+				(dd_scalef 0.3 0.3 0.3)
+
+				(this.button[i].drawText)
+
+				(dd_matrix_pop)
 				)
 			)
-			(dd_scalef anim anim anim)
-			(this.button[i].drawRaw)
-
-			(dd_translatef 0 0 0.1)
-			(dd_scalef 0.3 0.3 0.3)
-
-			(this.button[i].drawText)
-
-			(dd_matrix_pop)
 			)
 		)
 		(avdl_useProgram 0)
@@ -2458,7 +2615,14 @@
 			(dd_world_prepare world_menu 1.0)
 			(dd_world_ready)
 			)
+			(group
 			(= this.isExitMenu 1)
+
+			# stop looking around input
+			(= this.holdRotX -1)
+			(= this.holdRotY -1)
+			(= this.isRotating 0)
+			)
 		)
 		)
 	# left arrow or 'a'
@@ -2567,6 +2731,16 @@
 				(group
 				(= this.isExitMenu 0)
 				)
+			# observe
+			(== this.selection 2)
+				(group
+				(= this.isExitMenu 0)
+				)
+			# retry
+			(== this.selection 3)
+				(group
+				(avdl_ads_showRewardedAd)
+				)
 			)
 			)
 			(group
@@ -2627,6 +2801,16 @@
 				(== this.selectionClick 1)
 					(group
 					(= this.isExitMenu 0)
+					)
+				# observe
+				(== this.selectionClick 2)
+					(group
+					(= this.isExitMenu 0)
+					)
+				# retry
+				(== this.selectionClick 3)
+					(group
+					(avdl_ads_showRewardedAd)
 					)
 				)
 				)
@@ -3172,74 +3356,19 @@
 
 (class_function world_game void confirmSelection ()
 	(group
-	# someone has won, move to next menu
-	(if (>= this.victoriousPlayer 0)
+
+	# showing overlay card
+	(if this.ovButtons.cardToShow
 		(group
-		(this.saveLoad.CompleteGame)
-		(dd_world_prepare world_menu 1.0)
-		(dd_world_ready)
-		)
-	# nobody has won - proceed with input handling
-		(group
-
-		# showing overlay card
-		(if this.ovButtons.cardToShow
+		(if (this.ovButtons.click)
 			(group
-			(if (this.ovButtons.click)
+			# skip effect
+			(if (&& (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.ovButtons.waitUntilCardConfirmed 0))
 				(group
-				# skip effect
-				(if (&& (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.ovButtons.waitUntilCardConfirmed 0))
-					(group
-					(= this.filterCorner -1)
-					(= this.lastSelectedCardPlayerIndex -1)
-					(= this.lastSelectedCardIndex -1)
-					(= this.actions[0].actionType ACTION_DELAY)
-					# multiplayer game, send move to other players
-					(if isMultiplayerGame
-						(group
-
-						# prepare move
-						(def MultiplayerMessageGameTurn msg)
-						(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
-						(= msg.cardIndex this.lastSelectedCardIndex)
-
-						# send move to all other players
-						(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
-
-						)
-					)
-					)
-				)
-				)
-			)
-			)
-		)
-
-		# network user, wait for their input
-		(if (== this.player[this.actions[0].playerIndex].type 10)
-			(return)
-		)
-
-		# waiting user to select a card
-		(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
-			(group
-
-			# just selected a card
-			(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
-				(>= this.player[0].highlightCard 0))
-				(group
-
-				(= this.lastSelectedCardPlayerIndex 0)
-				(= this.lastSelectedCardIndex this.player[0].highlightCard)
 				(= this.filterCorner -1)
-				(this.ovButtons.unsetCard)
+				(= this.lastSelectedCardPlayerIndex -1)
+				(= this.lastSelectedCardIndex -1)
 				(= this.actions[0].actionType ACTION_DELAY)
-				(= this.actions[0].delay 0)
-
-				(= this.player[0].userLookingAtCard -1)
-				(= this.player[0].highlightCard -1)
-				(= this.phaseTextCurrent this.phaseTextExecution)
-
 				# multiplayer game, send move to other players
 				(if isMultiplayerGame
 					(group
@@ -3254,26 +3383,70 @@
 
 					)
 				)
-
 				)
-			# just highlighted card
+			)
+			)
+		)
+		)
+	)
+
+	# network user, wait for their input
+	(if (== this.player[this.actions[0].playerIndex].type 10)
+		(return)
+	)
+
+	# waiting user to select a card
+	(if (&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.actions[0].playerIndex 0))
+		(group
+
+		# just selected a card
+		(if (&& (== this.player[0].userLookingAtCard this.player[0].highlightCard)
+			(>= this.player[0].highlightCard 0))
+			(group
+
+			(= this.lastSelectedCardPlayerIndex 0)
+			(= this.lastSelectedCardIndex this.player[0].highlightCard)
+			(= this.filterCorner -1)
+			(this.ovButtons.unsetCard)
+			(= this.actions[0].actionType ACTION_DELAY)
+			(= this.actions[0].delay 0)
+
+			(= this.player[0].userLookingAtCard -1)
+			(= this.player[0].highlightCard -1)
+			(= this.phaseTextCurrent this.phaseTextExecution)
+
+			# multiplayer game, send move to other players
+			(if isMultiplayerGame
 				(group
-				(if (|| (== this.filterCorner -1) (&&
-				(>= this.filterCorner 0) (>= this.player[0].userLookingAtCard 0)
-				(== this.player[0].cards[this.player[0].userLookingAtCard].cornerId this.filterCorner)))
-					(this.player[0].highlightLookingCard)
-					(= this.player[0].highlightCard -1)
-				)
+
+				# prepare move
+				(def MultiplayerMessageGameTurn msg)
+				(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+				(= msg.cardIndex this.lastSelectedCardIndex)
+
+				# send move to all other players
+				(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
+
 				)
 			)
 
 			)
-		# waiting network user to select a card
-		(&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.player[this.actions[0].playerIndex].type 10) )
-			(group)
+		# just highlighted card
+			(group
+			(if (|| (== this.filterCorner -1) (&&
+			(>= this.filterCorner 0) (>= this.player[0].userLookingAtCard 0)
+			(== this.player[0].cards[this.player[0].userLookingAtCard].cornerId this.filterCorner)))
+				(this.player[0].highlightLookingCard)
+				(= this.player[0].highlightCard -1)
+			)
+			)
 		)
 
 		)
-	) # was waiting for user input
+	# waiting network user to select a card
+	(&& (> this.actionsTotal 0) (== this.actions[0].actionType ACTION_SELECT_CARD) (== this.player[this.actions[0].playerIndex].type 10) )
+		(group)
+	)
+
 	)
 )

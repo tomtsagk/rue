@@ -2,6 +2,8 @@
 	"game_exit": "Exit",
 	"game_exit_confirm": "Exit game ?",
 	"game_resume": "Resume",
+	"game_observe" : "Observe Game",
+	"game_view_ad" : "View ad to give that player a card",
 	"game_phase_setup": "Setting up table ...",
 	"game_phase_planning": "Planning Phase",
 	"game_phase_execution": "Execution Phase",
@@ -34,10 +36,14 @@
 	"game_tutorial_execution": "In the execution phase starting with The Flirt, reveal each card and execute its effect.",
 	"game_tutorial_end": "In the end phase every player draws one card except The Flirt. If a player has 2 or less cards in their hand they win.",
 
-	"game_end_win": "You won! Click anywhere to continue.",
-	"game_end_lose": "You lost! Click anywhere to continue.",
+	"game_end_win": "You have two or less cards in your hand, which makes you victorious!",
+	"game_end_lose": "Another player has two or less cards in their hand, you lost!",
 
 	"game_play_confirm": "Confirm ?",
 	"game_play_skip_effect": "Skip effect ?",
-	"game_play_ai": "AI"
+
+	"game_play_adam": "Adam",
+	"game_play_tom": "Tom",
+	"game_play_liam": "Liam",
+	"game_play_lisa": "Lisa"
 }
