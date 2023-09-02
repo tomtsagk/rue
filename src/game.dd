@@ -1925,7 +1925,7 @@
 					(= this.button[1].isVisible 0)
 					(= this.button[2].isVisible 1)
 					# show ad button if user didn't win
-					(if (> this.victoriousPlayer 0)
+					(if (&& (> this.victoriousPlayer 0) (avdl_ads_enabled))
 						(= this.button[3].isVisible 1)
 					)
 					(= this.holdRotX -1)
@@ -2212,7 +2212,7 @@
 				(for (def int j 0) (< j this.buttonTotal) (= j (+ j 1))
 					(group
 
-					(if this.button[i].isVisible
+					(if this.button[j].isVisible
 						(group
 
 						(if (== this.selection j)
