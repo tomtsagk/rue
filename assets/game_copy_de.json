@@ -2,6 +2,8 @@
 	"game_exit": "Ausgang",
 	"game_exit_confirm": "Spiel beenden ?",
 	"game_resume": "Fortsetzen",
+	"game_observe": "Spiel beobachten",
+	"game_view_ad": "Sieh die Anzeige an, um diesem Spieler eine Karte zu geben",
 	"game_phase_setup": "Den Tisch wird vorbereitet ...",
 	"game_phase_planning": "Planungsphase",
 	"game_phase_execution": "Ausführungsphase",
@@ -31,9 +33,12 @@
 	"game_tutorial_rose": "Die Rose bewegt sich immer im Uhrzeigersinn. Wenn ein Spieler die Rose in der Hand hält, wird sie sich mit einem Schritt vor diesem Spieler bewegen.",
 	"game_tutorial_execution": "In der Ausführungsphase, die mit Dem Flirt beginnt, zeige jede Karte auf und führe ihren Effekt aus.",
 	"game_tutorial_end": "In der Endphase zieht jeder Spieler außer Dem Flirt eine Karte. Wenn ein Spieler 2 oder weniger Karten auf seiner Hand hat, gewinnt er.",
-	"game_end_win": "Du hast gewonnen! Klicke irgendwo um fortzufahren.",
-	"game_end_lose": "Du hast verloren! Klicke irgendwo um fortzufahren.",
+	"game_end_win": "Du hast zwei oder weniger Karten auf der Hand, was dich zum Sieger macht!",
+	"game_end_lose": "Ein anderer Spieler hat zwei oder weniger Karten auf der Hand, hast du verloren!",
 	"game_play_confirm": "Bestätigen ?",
 	"game_play_skip_effect": "Effekt überspringen?",
-	"game_play_ai": "KI"
+	"game_play_adam": "Adam",
+	"game_play_tom": "Tom",
+	"game_play_liam": "Liam",
+	"game_play_liis": "Liis"
 }

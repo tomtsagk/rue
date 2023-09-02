@@ -2,6 +2,8 @@
 	"game_exit": "終了",
 	"game_exit_confirm": "\jゲームを 終了 しますか？",
 	"game_resume": "続ける",
+	"game_observe": "\jゲームを 観察する",
+	"game_view_ad": "\j広告を 見て そのプレイヤーに カードを 与える",
 	"game_phase_setup": "\jテーブルを 準備中 ...",
 	"game_phase_planning": "\j計画 段階",
 	"game_phase_execution": "\j実行 段階",
@@ -31,9 +33,12 @@
 	"game_tutorial_rose": "\jローズは 常に 時計 回りに 移動 する。 もし プレイヤーが ローズを 保持して いる 場合、 その プレイヤーの 前に 一歩 移動 する。",
 	"game_tutorial_execution": "\jフラートで 始まる 実行 段階 では、 各カードを 明らかにし、 その 効果を 実行 します。",
 	"game_tutorial_end": "\j終了 段階 では、 すべての プレイヤーは フラートを 除いて 1枚の カードを 引きます。 プレイヤーが 手札に 2枚 以下の カードを 持っている 場合、 彼らは 勝利 します。",
-	"game_end_win": "\j勝った！ どこかを クリックして 続ける。",
-	"game_end_lose": "zj負けた！ どこかを クリックして 続ける。",
+	"game_end_win": "\j手札に あるカードが 2枚 以下である、 あなたが 勝つ。",
+	"game_end_lose": "\j他の プレイヤーの 手札が 2枚 以下の場合、 あなたの 負けと なる。",
 	"game_play_confirm": "確認？",
 	"game_play_skip_effect": "効果をスキップ ？",
-	"game_play_ai": "AI"
+	"game_play_adam": "アダム",
+	"game_play_tom": "トム",
+	"game_play_liam": "リアム",
+	"game_play_liis": "リス"
 }
