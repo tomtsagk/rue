@@ -196,9 +196,6 @@
 (class_function world_intro void draw ()
 	(group
 
-	(glEnable GL_BLEND)
-	(glBlendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA)
-
 	(dd_translatef 0 0 -5)
 	(dd_scalef 4.2 4.2 1)
 	(dd_scalef (* this.scale 1.577) this.scale this.scale)
@@ -212,8 +209,6 @@
 #	(avdl_graphics_SetUniform1f sdrTimeLoc this.shaderTime)
 	(this.logo.draw)
 #	(avdl_useProgram 0)
-
-	(glDisable GL_BLEND)
 
 	)
 )
