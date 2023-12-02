@@ -1,5 +1,15 @@
 (include "button.ddh")
 
+(class SettingsData 0
+	(group
+	(def int fpsIndex)
+	(def int langIndex)
+	(def int audioOn)
+	(def int antialiasIndex)
+	(def int vsync)
+	)
+)
+
 # options menu
 # has to open on any menu and draw everything
 # but the background
@@ -17,7 +27,7 @@
 	(def avdl_localisation localisation)
 
 	# options buttons
-	(def Button button[6])
+	(def Button button[9])
 	(def int buttonTotal)
 	(def avdl_program buttonProgram)
 	(def float buttonClickCol[3])
@@ -54,6 +64,15 @@
 	# fps label
 	(def int fpsIndex)
 	(def dd_string3d fpsLabel)
+
+	# vsync label
+	(def int vsync)
+
+	# anti-alias
+	(def int antialiasIndex)
+	(def dd_string3d antialiasLabelMSAAx4)
+	(def dd_string3d antialiasLabelMSAAx8)
+	(def dd_string3d antialiasLabelNoAA)
 
 	# languages label
 	(def int langIndex)

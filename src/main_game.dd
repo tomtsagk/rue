@@ -4,6 +4,7 @@
 (include "intro.ddh")
 #(include "game.ddh")
 (include "menu.ddh")
+(include "options.ddh")
 
 #
 # Initialise the game and its stats
@@ -15,6 +16,86 @@
 	(dd_world_set_default world_intro)
 	#(dd_world_set_default world_game)
 	#(dd_world_set_default world_menu)
+
+	# attempt to load settings
+	(def SettingsData mySettingsData)
+
+	# success to load - apply settings
+	(if (== (avdl_data_load mySettingsData SettingsData (savefile "optionsv2")) 0)
+		(group
+
+		# audio
+		(if mySettingsData.audioOn
+			(avdl_sound_setVolume 100)
+			(avdl_sound_setVolume 0)
+		)
+
+		# anti alias
+		(if (|| (< mySettingsData.antialiasIndex 0) (>= mySettingsData.antialiasIndex 3))
+			(avdl_graphics_SetMSAntiAlias 8)
+			(if (== mySettingsData.antialiasIndex 0)
+				(avdl_graphics_SetMSAntiAlias 8)
+			(== mySettingsData.antialiasIndex 1)
+				(avdl_graphics_SetNoAntiAlias)
+			(== mySettingsData.antialiasIndex 2)
+				(avdl_graphics_SetMSAntiAlias 4)
+			)
+		)
+
+		# fps
+		(if (|| (< mySettingsData.fpsIndex 0) (>= mySettingsData.fpsIndex 4))
+			(avdl_engine_setFPS 60)
+			(if (== mySettingsData.fpsIndex 0)
+				(avdl_engine_setFPS 60)
+			(== mySettingsData.fpsIndex 1)
+				(avdl_engine_setFPS 120)
+			(== mySettingsData.fpsIndex 2)
+				(avdl_engine_setFPS 30)
+			(== mySettingsData.fpsIndex 3)
+				(avdl_engine_setFPS 45)
+			)
+		)
+
+		# vsync
+		(if mySettingsData.vsync
+			(avdl_engine_setVSync 1)
+			(avdl_engine_setVSync 0)
+		)
+
+		# language
+		(def int langIndex)
+		(= langIndex (dd_math_min (dd_math_max mySettingsData.langIndex 0) 4))
+		(if (== langIndex 0)
+			(avdl_locale_set 0)
+		(== langIndex 1)
+			(avdl_locale_set "en")
+		(== langIndex 2)
+			(avdl_locale_set "el")
+		(== langIndex 3)
+			(avdl_locale_set "de")
+		(== langIndex 4)
+			(avdl_locale_set "ja")
+		)
+
+		)
+	# fail to load - default settings
+		(group
+
+		# audio
+		(avdl_sound_setVolume 100)
+
+		# anti alias
+		(avdl_graphics_SetMSAntiAlias 8)
+
+		# fps and vsync
+		(avdl_engine_setVSync 1)
+		(avdl_engine_setFPS 60)
+
+		# language
+		(avdl_locale_set 0)
+
+		)
+	)
 
 	)
 )

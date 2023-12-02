@@ -1,13 +1,6 @@
 (include "options.ddh")
 (include "credits.ddh")
-
-(class OptionsData 0
-	(group
-	(def int fpsIndex)
-	(def int langIndex)
-	(def int audioOn)
-	)
-)
+(include "menu.ddh")
 
 (class_function options void create ()
 	(group
@@ -20,33 +13,47 @@
 	#(this.fps_label_int.setTextInt)
 
 	# attempt to load data
-	(def OptionsData myOptionsData)
+	(def SettingsData mySettingsData)
 
 	# success to load - copy loaded data
-	(if (== (avdl_data_load myOptionsData OptionsData (savefile "options")) 0)
+	(if (== (avdl_data_load mySettingsData SettingsData (savefile "optionsv2")) 0)
 		(group
 
 		# fps
-		(if (|| (< myOptionsData.fpsIndex 0) (>= myOptionsData.fpsIndex 3))
+		(if (|| (< mySettingsData.fpsIndex 0) (>= mySettingsData.fpsIndex 4))
 			(= this.fpsIndex 0)
-			(= this.fpsIndex myOptionsData.fpsIndex)
+			(= this.fpsIndex mySettingsData.fpsIndex)
 		)
 
+		# vsync
+		(= this.vsync mySettingsData.vsync)
+
 		# language
-		(if (|| (< myOptionsData.langIndex 0) (>= myOptionsData.langIndex 5))
+		(if (|| (< mySettingsData.langIndex 0) (>= mySettingsData.langIndex 5))
 			(= this.langIndex 0)
-			(= this.langIndex myOptionsData.langIndex)
+			(= this.langIndex mySettingsData.langIndex)
 		)
-		(if myOptionsData.audioOn
-			(avdl_sound_setVolume 100)
-			(avdl_sound_setVolume 0)
+
+		# audio
+		(if mySettingsData.audioOn
+			(= this.volumeSound 100)
+			(= this.volumeSound 0)
 		)
+
+		# anti alias
+		(if (|| (< mySettingsData.antialiasIndex 0) (>= mySettingsData.antialiasIndex 3))
+			(= this.antialiasIndex 0)
+			(= this.antialiasIndex mySettingsData.antialiasIndex)
+		)
+
 		)
 	# fail to load - supply defaults
 		(group
 		(= this.fpsIndex 0)
 		(= this.langIndex 0)
-		(avdl_sound_setVolume 100)
+		(= this.volumeSound 100)
+		(= this.vsync 1)
+		(= this.antialiasIndex 0)
 		)
 	)
 
@@ -68,7 +75,7 @@
 	#(this.font.setColorBack 0.3 0.3 0.3)
 
 	# buttons
-	(= this.buttonTotal 6)
+	(= this.buttonTotal 9)
 	(this.button[0].mesh.load (asset "assets/button.ply" DD_PLY))
 
 	# toggle fullscreen button
@@ -91,6 +98,15 @@
 
 	# language settings
 	(this.button[5].mesh.load (asset "assets/button.ply" DD_PLY))
+
+	# vsync
+	(this.button[6].mesh.load (asset "assets/button.ply" DD_PLY))
+
+	# antialias
+	(this.button[7].mesh.load (asset "assets/button.ply" DD_PLY))
+
+	# apply
+	(this.button[8].mesh.load (asset "assets/button.ply" DD_PLY))
 
 	# fps label
 	(this.fpsLabel.setTextInt)
@@ -146,17 +162,17 @@
 		)
 	)
 
-	(= this.buttonClickCol[0] 0.389)
-	(= this.buttonClickCol[1] 0.055)
-	(= this.buttonClickCol[2] 0.682)
+	(= this.buttonClickCol[0] (dd_math_pow 0.389 2.2))
+	(= this.buttonClickCol[1] (dd_math_pow 0.055 2.2))
+	(= this.buttonClickCol[2] (dd_math_pow 0.682 2.2))
 
-	(= this.buttonActiveCol[0] 0.916)
-	(= this.buttonActiveCol[1] 0.516)
-	(= this.buttonActiveCol[2] 0.074)
+	(= this.buttonActiveCol[0] (dd_math_pow 0.916 2.2))
+	(= this.buttonActiveCol[1] (dd_math_pow 0.516 2.2))
+	(= this.buttonActiveCol[2] (dd_math_pow 0.074 2.2))
 
-	(= this.buttonInactiveCol[0] 0.694)
-	(= this.buttonInactiveCol[1] 0.137)
-	(= this.buttonInactiveCol[2] 0.137)
+	(= this.buttonInactiveCol[0] (dd_math_pow 0.694 2.2))
+	(= this.buttonInactiveCol[1] (dd_math_pow 0.137 2.2))
+	(= this.buttonInactiveCol[2] (dd_math_pow 0.137 2.2))
 
 	(= this.enabled 0)
 	(= this.animationOpen 0)
@@ -165,7 +181,7 @@
 	(this.clickSmallSound.load (asset "assets/button_click_small.ogg" DD_PLY))
 	(this.clickBigSound.load (asset "assets/button_click_big.ogg" DD_PLY))
 
-	(= this.volumeSound (avdl_sound_getVolume))
+	#(= this.volumeSound (avdl_sound_getVolume))
 	(this.volumeParticle.load (asset "assets/ui_particle.ply" DD_PLY))
 	(this.volumeParticleStart.load (asset "assets/ui_particle_start.ply" DD_PLY))
 
@@ -255,6 +271,25 @@
 		(this.button[5].setProportionalPosition 0.5 0.58)
 		(this.button[5].setProportionalWidth 0.4)
 		(this.button[5].setProportionalSize 0.7)
+
+		# vsync
+		(this.button[6].setSize 1 1)
+		(this.button[6].setProportionalPosition 0.25 0.58)
+		(this.button[6].setProportionalWidth 0.4)
+		(this.button[6].setProportionalSize 0.7)
+
+		# antialias
+		(this.button[7].setSize 1 1)
+		(this.button[7].setProportionalPosition 0.75 0.58)
+		(this.button[7].setProportionalWidth 0.4)
+		(this.button[7].setProportionalSize 0.7)
+
+		# apply
+		(this.button[8].setSize 1 1)
+		(this.button[8].setProportionalPosition 0.85 0.15)
+		(this.button[8].setProportionalWidth 0.4)
+		(this.button[8].setProportionalSize 0.7)
+
 		)
 	)
 
@@ -355,19 +390,19 @@
 	# do not draw if animated out
 	(if (< this.animationOpen 0.01) (return))
 
-#	# fps counter
-#	(dd_matrix_push)
-#	(dd_translatef
-#		(* (dd_screen_width_get 5) -0.5 0.8)
-#		(* (dd_screen_height_get 5) 0.5 0.8)
-#		-5
-#	)
-#	(dd_scalef 0.2 0.2 0.2)
-#	(dd_translatef 0 -5 0)
-#	(this.fps_label.draw)
-#	(dd_translatef 3 0 0)
-#	(this.fps_label_int.drawInt this.fps)
-#	(dd_matrix_pop)
+	# fps counter
+	(dd_matrix_push)
+	(dd_translatef
+		(* (dd_screen_width_get 5) -0.5 0.8)
+		(* (dd_screen_height_get 5) 0.5 0.8)
+		-5
+	)
+	(dd_scalef 0.2 0.2 0.2)
+	(dd_translatef 0 -5 0)
+	#(this.fps_label.draw)
+	(dd_translatef 3 0 0)
+	#(this.fps_label_int.drawInt this.fps)
+	(dd_matrix_pop)
 
 	# draw buttons
 	(this.buttonProgram.useProgram)
@@ -427,7 +462,7 @@
 			(group
 			(dd_matrix_push)
 			(dd_translatef 0 -1.5 0.1)
-			(if (> this.volumeSound 2)
+			(if (> this.volumeSound 10)
 				(this.labelYes.draw)
 				(this.labelNo.draw)
 			)
@@ -462,6 +497,31 @@
 				(this.langLabelDe.draw)
 			(== this.langIndex 4)
 				(this.langLabelJa.draw)
+			)
+			(dd_matrix_pop)
+			)
+		# vsync
+		(== i 6)
+			(group
+			(dd_matrix_push)
+			(dd_translatef 0 -1.5 0.1)
+			(if this.vsync
+				(this.labelYes.draw)
+				(this.labelNo.draw)
+			)
+			(dd_matrix_pop)
+			)
+		# antialias
+		(== i 7)
+			(group
+			(dd_matrix_push)
+			(dd_translatef 0 -1.5 0.1)
+			(if (== this.antialiasIndex 0)
+				(this.antialiasLabelMSAAx8.draw)
+			(== this.antialiasIndex 1)
+				(this.antialiasLabelNoAA.draw)
+			(== this.antialiasIndex 2)
+				(this.antialiasLabelMSAAx4.draw)
 			)
 			(dd_matrix_pop)
 			)
@@ -766,13 +826,28 @@
 	# fps
 	(== button_index 4)
 		(group
-		(= this.fpsIndex (% (+ this.fpsIndex 1) 3))
+		(= this.fpsIndex (% (+ this.fpsIndex 1) 4))
+		# vsync
 		(if (== this.fpsIndex 0)
-			(avdl_engine_setFPS 60)
+			(group
+			(avdl_engine_setFPS -1)
+			(avdl_engine_setVSync 1)
+			)
 		(== this.fpsIndex 1)
-			(avdl_engine_setFPS 30)
+			(group
+			(avdl_engine_setFPS 60)
+			(avdl_engine_setVSync 0)
+			)
 		(== this.fpsIndex 2)
+			(group
+			(avdl_engine_setFPS 30)
+			(avdl_engine_setVSync 0)
+			)
+		(== this.fpsIndex 3)
+			(group
 			(avdl_engine_setFPS 45)
+			(avdl_engine_setVSync 0)
+			)
 		)
 		)
 	# language
@@ -792,6 +867,35 @@
 		)
 		(this.onLocaleChange)
 		(return 7)
+		)
+	# vsync
+	(== button_index 6)
+		(group
+		(if this.vsync
+			(= this.vsync 0)
+			(= this.vsync 1)
+		)
+		(avdl_engine_setVSync this.vsync)
+		)
+	# anti alias
+	(== button_index 7)
+		(group
+		(= this.antialiasIndex (% (+ this.antialiasIndex 1) 3))
+		(if (== this.antialiasIndex 0)
+			(avdl_graphics_SetMSAntiAlias 8)
+		(== this.antialiasIndex 1)
+			(avdl_graphics_SetNoAntiAlias)
+		(== this.antialiasIndex 2)
+			(avdl_graphics_SetMSAntiAlias 4)
+		)
+		)
+	# apply
+	(== button_index 8)
+		(group
+		(this.saveOptions)
+		(avdl_graphics_Refresh)
+		(dd_world_prepare world_menu 1.0)
+		(dd_world_ready)
 		)
 	)
 
@@ -817,6 +921,10 @@
 	(this.langLabelDe.setFont font)
 	(this.langLabelJa.setFont font)
 
+	(this.antialiasLabelMSAAx4.setFont font)
+	(this.antialiasLabelMSAAx8.setFont font)
+	(this.antialiasLabelNoAA.setFont font)
+
 	#(this.fps_label.setFont font)
 	#(this.fps_label_int.setFont font)
 	)
@@ -840,6 +948,12 @@
 	(this.button[4].description.setText (this.localisation.getValue "menu_options_fps_desc"))
 	(this.button[5].label.setText (this.localisation.getValue "menu_options_lang"))
 	(this.button[5].description.setText (this.localisation.getValue "menu_options_lang_desc"))
+	(this.button[6].label.setText "VSync")
+	(this.button[6].description.setText "Sync frames to monitor, recommended to [On]")
+	(this.button[7].label.setText "Anti-Alias")
+	(this.button[7].description.setText "How fuzzy are objects' edges")
+	(this.button[8].label.setText "apply")
+	(this.button[8].description.setText "apply settings")
 
 	# Yes/No labels
 	(this.labelYes.setText (this.localisation.getValue "menu_options_audio_on"))
@@ -851,6 +965,14 @@
 	(this.langLabelSystem.setText (this.localisation.getValue "menu_options_lang_system"))
 	(this.langLabelSystem.setAlign DD_STRING3D_ALIGN_CENTER)
 
+	# antialias
+	(this.antialiasLabelMSAAx4.setText "MSAAx4")
+	(this.antialiasLabelMSAAx4.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.antialiasLabelMSAAx8.setText "MSAAx8")
+	(this.antialiasLabelMSAAx8.setAlign DD_STRING3D_ALIGN_CENTER)
+	(this.antialiasLabelNoAA.setText "Disabled")
+	(this.antialiasLabelNoAA.setAlign DD_STRING3D_ALIGN_CENTER)
+
 	)
 )
 
@@ -858,14 +980,17 @@
 	(group
 
 	# save options
-	(def OptionsData myOptionsData)
-	(= myOptionsData.fpsIndex this.fpsIndex)
-	(= myOptionsData.langIndex this.langIndex)
+	(def SettingsData mySettingsData)
+	(= mySettingsData.fpsIndex this.fpsIndex)
+	(= mySettingsData.langIndex this.langIndex)
 	(if (< this.volumeSound 10)
-		(= myOptionsData.audioOn 0)
-		(= myOptionsData.audioOn 1)
+		(= mySettingsData.audioOn 0)
+		(= mySettingsData.audioOn 1)
 	)
-	(avdl_data_save myOptionsData OptionsData (savefile "options"))
+	(def int vs this.volumeSound)
+	(= mySettingsData.vsync this.vsync)
+	(= mySettingsData.antialiasIndex this.antialiasIndex)
+	(avdl_data_save mySettingsData SettingsData (savefile "optionsv2"))
 
 	)
 )

@@ -3,8 +3,6 @@
 (class_function menu_home void create ()
 	(group
 
-	(avdl_engine_setFPS 60)
-
 	#(this.test_label.setText "A")
 	#(= this.test_label.isOnce 1)
 
