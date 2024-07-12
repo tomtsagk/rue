@@ -8,6 +8,8 @@
 	(def int hadTutorial)
 	)
 )
+# dummy constructor for now
+(function void SaveLoadData_create {ref SaveLoadData data} {})
 
 (class_function SaveLoad void create ()
 	(group

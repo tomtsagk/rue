@@ -71,17 +71,17 @@
 		)
 	)
 
-	(= this.buttonClickCol[0] 0.389)
-	(= this.buttonClickCol[1] 0.055)
-	(= this.buttonClickCol[2] 0.682)
+	(= this.buttonClickCol[0] (dd_math_pow 0.389 2.2))
+	(= this.buttonClickCol[1] (dd_math_pow 0.055 2.2))
+	(= this.buttonClickCol[2] (dd_math_pow 0.682 2.2))
 
-	(= this.buttonActiveCol[0] 0.916)
-	(= this.buttonActiveCol[1] 0.516)
-	(= this.buttonActiveCol[2] 0.074)
+	(= this.buttonActiveCol[0] (dd_math_pow 0.916 2.2))
+	(= this.buttonActiveCol[1] (dd_math_pow 0.516 2.2))
+	(= this.buttonActiveCol[2] (dd_math_pow 0.074 2.2))
 
-	(= this.buttonInactiveCol[0] 0.694)
-	(= this.buttonInactiveCol[1] 0.137)
-	(= this.buttonInactiveCol[2] 0.137)
+	(= this.buttonInactiveCol[0] (dd_math_pow 0.694 2.2))
+	(= this.buttonInactiveCol[1] (dd_math_pow 0.137 2.2))
+	(= this.buttonInactiveCol[2] (dd_math_pow 0.137 2.2))
 
 	(= this.enabled 0)
 	(= this.animationOpen 0)

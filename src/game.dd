@@ -10,19 +10,20 @@
 (def int isHost)
 (def int networkOffsetindex)
 
-# multiplayer
-(class MultiplayerMessageGameTurn 0
-	(group
-	(def int playerIndex)
-	(def int cardIndex)
-	)
-)
-
-(def int networkTurnIndexMax 15)
-(def MultiplayerMessageGameTurn networkTurnQueue[15])
-(def int currentNetworkTurnIndex 0)
-(def int lastNetworkTurnIndex 0)
-(def int networkTurnQueueSize 0)
+## multiplayer
+#(class MultiplayerMessageGameTurn 0
+#	(group
+#	(def int playerIndex)
+#	(def int cardIndex)
+#	)
+#)
+##(function void MultiplayerMessageGameTurn_create {ref MultiplayerMessageGameTurn turn} {})
+#
+#(def int networkTurnIndexMax 15)
+#(def MultiplayerMessageGameTurn networkTurnQueue[15])
+#(def int currentNetworkTurnIndex 0)
+#(def int lastNetworkTurnIndex 0)
+#(def int networkTurnQueueSize 0)
 
 # game phases
 (def int PHASE_INIT 0)
@@ -97,9 +98,9 @@
 	(this.label_int.setAlign DD_STRING3D_ALIGN_CENTER)
 	(this.label_int.setTextInt)
 
-	(= currentNetworkTurnIndex 0)
-	(= lastNetworkTurnIndex 0)
-	(= networkTurnQueueSize 0)
+	#(= currentNetworkTurnIndex 0)
+	#(= lastNetworkTurnIndex 0)
+	#(= networkTurnQueueSize 0)
 
 	# exit menu buttons
 	(= this.buttonTotal 4)
@@ -537,17 +538,17 @@
 		)
 	)
 
-	(= this.arrowActiveCol[0] 0.403)
-	(= this.arrowActiveCol[1] 0.698)
-	(= this.arrowActiveCol[2] 0.349)
+	(= this.arrowActiveCol[0] (dd_math_pow 0.403 2.2))
+	(= this.arrowActiveCol[1] (dd_math_pow 0.698 2.2))
+	(= this.arrowActiveCol[2] (dd_math_pow 0.349 2.2))
 
-	(= this.arrowInactiveCol[0] 0.694)
-	(= this.arrowInactiveCol[1] 0.137)
-	(= this.arrowInactiveCol[2] 0.137)
+	(= this.arrowInactiveCol[0] (dd_math_pow 0.694 2.2))
+	(= this.arrowInactiveCol[1] (dd_math_pow 0.137 2.2))
+	(= this.arrowInactiveCol[2] (dd_math_pow 0.137 2.2))
 
-	(= this.arrowCurrentCol[0] 0.0)
-	(= this.arrowCurrentCol[1] 0.0)
-	(= this.arrowCurrentCol[2] 0.0)
+	(= this.arrowCurrentCol[0] (dd_math_pow 0.0 2.2))
+	(= this.arrowCurrentCol[1] (dd_math_pow 0.0 2.2))
+	(= this.arrowCurrentCol[2] (dd_math_pow 0.0 2.2))
 
 	(= this.arrowRotation 0)
 	(= this.arrowRotationTarget 0)
@@ -705,17 +706,17 @@
 		)
 	)
 
-	(= this.buttonClickCol[0] 0.389)
-	(= this.buttonClickCol[1] 0.055)
-	(= this.buttonClickCol[2] 0.682)
+	(= this.buttonClickCol[0] (dd_math_pow 0.389 2.2))
+	(= this.buttonClickCol[1] (dd_math_pow 0.055 2.2))
+	(= this.buttonClickCol[2] (dd_math_pow 0.682 2.2))
 
-	(= this.buttonActiveCol[0] 0.916)
-	(= this.buttonActiveCol[1] 0.516)
-	(= this.buttonActiveCol[2] 0.074)
+	(= this.buttonActiveCol[0] (dd_math_pow 0.916 2.2))
+	(= this.buttonActiveCol[1] (dd_math_pow 0.516 2.2))
+	(= this.buttonActiveCol[2] (dd_math_pow 0.074 2.2))
 
-	(= this.buttonInactiveCol[0] 0.694)
-	(= this.buttonInactiveCol[1] 0.137)
-	(= this.buttonInactiveCol[2] 0.137)
+	(= this.buttonInactiveCol[0] (dd_math_pow 0.694 2.2))
+	(= this.buttonInactiveCol[1] (dd_math_pow 0.137 2.2))
+	(= this.buttonInactiveCol[2] (dd_math_pow 0.137 2.2))
 
 	(this.lookatMesh.load (asset "assets/eye.ply" DD_PLY))
 
@@ -1098,37 +1099,37 @@
 			(&& (== this.player[this.actions[0].playerIndex].type 10) (== this.actions[0].value this.actions[0].playerIndex))
 				(group
 
-				# there's a move waiting to happen
-				(if (> networkTurnQueueSize 0)
-					(group
-					# update the state of the game based on the received move
-					#(= this.lastSelectedCardPlayerIndex (% (- (+ msg.playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
-					(= this.lastSelectedCardPlayerIndex (% (- (+ networkTurnQueue[currentNetworkTurnIndex].playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
-					#(= this.lastSelectedCardIndex msg.cardIndex)
-					(= this.lastSelectedCardIndex networkTurnQueue[currentNetworkTurnIndex].cardIndex)
-#					(def int pind this.lastSelectedCardPlayerIndex)
-#					(def int cind this.lastSelectedCardIndex)
-#					(echo "player card index received: " pind " | " cind)
-					(= this.filterCorner -1)
-					(this.ovButtons.unsetCard)
-					(= this.actions[0].actionType ACTION_DELAY)
-					(= this.actions[0].delay 0)
-
-					#(= this.player[0].userLookingAtCard -1)
-					#(= this.player[0].highlightCard -1)
-					(= this.phaseTextCurrent this.phaseTextExecution)
-
-					(= currentNetworkTurnIndex (+ currentNetworkTurnIndex 1))
-					(= networkTurnQueueSize (- networkTurnQueueSize 1))
-					(if (>= currentNetworkTurnIndex networkTurnIndexMax)
-						(= currentNetworkTurnIndex (- currentNetworkTurnIndex networkTurnIndexMax))
-					)
-					(echo "applied queued move")
-					)
-					(group
-					(echo "waiting network user to have a turn")
-					)
-				)
+#				# there's a move waiting to happen
+#				(if (> networkTurnQueueSize 0)
+#					(group
+#					# update the state of the game based on the received move
+#					#(= this.lastSelectedCardPlayerIndex (% (- (+ msg.playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+#					(= this.lastSelectedCardPlayerIndex (% (- (+ networkTurnQueue[currentNetworkTurnIndex].playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+#					#(= this.lastSelectedCardIndex msg.cardIndex)
+#					(= this.lastSelectedCardIndex networkTurnQueue[currentNetworkTurnIndex].cardIndex)
+##					(def int pind this.lastSelectedCardPlayerIndex)
+##					(def int cind this.lastSelectedCardIndex)
+##					(echo "player card index received: " pind " | " cind)
+#					(= this.filterCorner -1)
+#					(this.ovButtons.unsetCard)
+#					(= this.actions[0].actionType ACTION_DELAY)
+#					(= this.actions[0].delay 0)
+#
+#					#(= this.player[0].userLookingAtCard -1)
+#					#(= this.player[0].highlightCard -1)
+#					(= this.phaseTextCurrent this.phaseTextExecution)
+#
+#					(= currentNetworkTurnIndex (+ currentNetworkTurnIndex 1))
+#					(= networkTurnQueueSize (- networkTurnQueueSize 1))
+#					(if (>= currentNetworkTurnIndex networkTurnIndexMax)
+#						(= currentNetworkTurnIndex (- currentNetworkTurnIndex networkTurnIndexMax))
+#					)
+#					(echo "applied queued move")
+#					)
+#					(group
+#					(echo "waiting network user to have a turn")
+#					)
+#				)
 
 				)
 			# AI has to select a card or user selects randomly or network user selects randomly
@@ -1143,54 +1144,54 @@
 					(if isMultiplayerGame
 						(group
 
-						(if isHost
-							(group
-
-							# find number of available cards
-							(def int cornerCards 0)
-							(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
-								(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
-									(= cornerCards (+ cornerCards 1))
-								)
-							)
-
-							# has cards with corner to play - pick one randomly
-							(if cornerCards
-								(group
-								(= this.lastSelectedCardPlayerIndex this.actions[0].value)
-								(= this.lastSelectedCardIndex (dd_math_rand cornerCards))
-								(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
-									(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
-										(group
-										(= cornerCards (- cornerCards 1))
-										(if (<= cornerCards 0)
-											(= this.lastSelectedCardIndex i)
-										)
-										)
-									)
-								)
-								)
-							# doesn't have card with corner - skip selecting a card
-								(group
-								(= this.lastSelectedCardPlayerIndex -1)
-								(= this.lastSelectedCardIndex -1)
-								)
-							)
-							(= this.filterCorner -1)
-							(this.ovButtons.unsetCard)
-
-							(echo "sending ai corner move to all players")
-							(def MultiplayerMessageGameTurn msg)
-							(= msg.playerIndex this.lastSelectedCardPlayerIndex)
-							(= msg.cardIndex this.lastSelectedCardIndex)
-							(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
-
-							)
-						# non-host users wait for host to
-						# send ai moves
-							(group
-							)
-						)
+#						(if isHost
+#							(group
+#
+#							# find number of available cards
+#							(def int cornerCards 0)
+#							(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+#								(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+#									(= cornerCards (+ cornerCards 1))
+#								)
+#							)
+#
+#							# has cards with corner to play - pick one randomly
+#							(if cornerCards
+#								(group
+#								(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+#								(= this.lastSelectedCardIndex (dd_math_rand cornerCards))
+#								(for (def int i 0) (< i this.player[this.actions[0].playerIndex].cardsTotal) (= i (+ i 1))
+#									(if (== this.player[this.actions[0].playerIndex].cards[i].cornerId this.filterCorner)
+#										(group
+#										(= cornerCards (- cornerCards 1))
+#										(if (<= cornerCards 0)
+#											(= this.lastSelectedCardIndex i)
+#										)
+#										)
+#									)
+#								)
+#								)
+#							# doesn't have card with corner - skip selecting a card
+#								(group
+#								(= this.lastSelectedCardPlayerIndex -1)
+#								(= this.lastSelectedCardIndex -1)
+#								)
+#							)
+#							(= this.filterCorner -1)
+#							(this.ovButtons.unsetCard)
+#
+#							(echo "sending ai corner move to all players")
+#							(def MultiplayerMessageGameTurn msg)
+#							(= msg.playerIndex this.lastSelectedCardPlayerIndex)
+#							(= msg.cardIndex this.lastSelectedCardIndex)
+#							(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
+#
+#							)
+#						# non-host users wait for host to
+#						# send ai moves
+#							(group
+#							)
+#						)
 
 						)
 					# not network game - continue as normal
@@ -1240,28 +1241,28 @@
 					(if isMultiplayerGame
 						(group
 
-						# host allows ai to make decisions and
-						# sends moves to other users
-						(if isHost
-							(group
-							(= this.lastSelectedCardPlayerIndex this.actions[0].value)
-							(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
-							(= this.filterCorner -1)
-							(this.ovButtons.unsetCard)
-
-							(def MultiplayerMessageGameTurn msg)
-							(= msg.playerIndex this.lastSelectedCardPlayerIndex)
-							(= msg.cardIndex this.lastSelectedCardIndex)
-
-							(echo "sending ai move to all players")
-							(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
-
-							)
-						# non-host users wait for host to
-						# send ai moves
-							(group
-							)
-						)
+#						# host allows ai to make decisions and
+#						# sends moves to other users
+#						(if isHost
+#							(group
+#							(= this.lastSelectedCardPlayerIndex this.actions[0].value)
+#							(= this.lastSelectedCardIndex (dd_math_rand this.player[this.lastSelectedCardPlayerIndex].cardsTotal))
+#							(= this.filterCorner -1)
+#							(this.ovButtons.unsetCard)
+#
+#							(def MultiplayerMessageGameTurn msg)
+#							(= msg.playerIndex this.lastSelectedCardPlayerIndex)
+#							(= msg.cardIndex this.lastSelectedCardIndex)
+#
+#							(echo "sending ai move to all players")
+#							(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
+#
+#							)
+#						# non-host users wait for host to
+#						# send ai moves
+#							(group
+#							)
+#						)
 
 						)
 					# not network game - make ai decision
@@ -2106,33 +2107,33 @@
 				(group
 				(echo "got message, checking magic word")
 
-				(def ref MultiplayerMessageGameTurn msg)
-				(= msg (avdl_multiplayer_getMessageData 0))
-
-#				# host sends the move to all other players
-#				# except the one that just made the move
-#				(if (avdl_multiplayer_isHost 0)
+#				(def ref MultiplayerMessageGameTurn msg)
+#				(= msg (avdl_multiplayer_getMessageData 0))
+#
+##				# host sends the move to all other players
+##				# except the one that just made the move
+##				(if (avdl_multiplayer_isHost 0)
+##					(group
+##					#(avdl_multiplayer_syncMessage 0 msg MultiplayerMessageGameTurn)
+##					)
+##				)
+#
+#				(if (>= networkTurnQueueSize networkTurnIndexMax)
 #					(group
-#					#(avdl_multiplayer_syncMessage 0 msg MultiplayerMessageGameTurn)
+#					(echo "no space for more network turns!")
+#					)
+#					(group
+#					# queue move
+#					(= networkTurnQueue[lastNetworkTurnIndex].playerIndex msg.playerIndex)
+#					(= networkTurnQueue[lastNetworkTurnIndex].cardIndex msg.cardIndex)
+#					(= lastNetworkTurnIndex (+ lastNetworkTurnIndex 1))
+#					(= networkTurnQueueSize (+ networkTurnQueueSize 1))
+#					(if (>= lastNetworkTurnIndex networkTurnIndexMax)
+#						(= lastNetworkTurnIndex (- lastNetworkTurnIndex networkTurnIndexMax))
+#					)
+#					(echo "queued network move")
 #					)
 #				)
-
-				(if (>= networkTurnQueueSize networkTurnIndexMax)
-					(group
-					(echo "no space for more network turns!")
-					)
-					(group
-					# queue move
-					(= networkTurnQueue[lastNetworkTurnIndex].playerIndex msg.playerIndex)
-					(= networkTurnQueue[lastNetworkTurnIndex].cardIndex msg.cardIndex)
-					(= lastNetworkTurnIndex (+ lastNetworkTurnIndex 1))
-					(= networkTurnQueueSize (+ networkTurnQueueSize 1))
-					(if (>= lastNetworkTurnIndex networkTurnIndexMax)
-						(= lastNetworkTurnIndex (- lastNetworkTurnIndex networkTurnIndexMax))
-					)
-					(echo "queued network move")
-					)
-				)
 
 #				# update the state of the game based on the received move
 #				(= this.lastSelectedCardPlayerIndex (% (- (+ msg.playerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
@@ -3370,19 +3371,19 @@
 				(= this.lastSelectedCardIndex -1)
 				(= this.actions[0].actionType ACTION_DELAY)
 				# multiplayer game, send move to other players
-				(if isMultiplayerGame
-					(group
-
-					# prepare move
-					(def MultiplayerMessageGameTurn msg)
-					(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
-					(= msg.cardIndex this.lastSelectedCardIndex)
-
-					# send move to all other players
-					(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
-
-					)
-				)
+#				(if isMultiplayerGame
+#					(group
+#
+#					# prepare move
+#					(def MultiplayerMessageGameTurn msg)
+#					(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+#					(= msg.cardIndex this.lastSelectedCardIndex)
+#
+#					# send move to all other players
+#					(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
+#
+#					)
+#				)
 				)
 			)
 			)
@@ -3415,20 +3416,20 @@
 			(= this.player[0].highlightCard -1)
 			(= this.phaseTextCurrent this.phaseTextExecution)
 
-			# multiplayer game, send move to other players
-			(if isMultiplayerGame
-				(group
-
-				# prepare move
-				(def MultiplayerMessageGameTurn msg)
-				(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
-				(= msg.cardIndex this.lastSelectedCardIndex)
-
-				# send move to all other players
-				(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
-
-				)
-			)
+#			# multiplayer game, send move to other players
+#			(if isMultiplayerGame
+#				(group
+#
+#				# prepare move
+#				(def MultiplayerMessageGameTurn msg)
+#				(= msg.playerIndex (% (+ (+ this.lastSelectedCardPlayerIndex this.playersTotal) networkOffsetindex) this.playersTotal))
+#				(= msg.cardIndex this.lastSelectedCardIndex)
+#
+#				# send move to all other players
+#				(avdl_multiplayer_sendMessage 0 msg MultiplayerMessageGameTurn)
+#
+#				)
+#			)
 
 			)
 		# just highlighted card

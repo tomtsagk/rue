@@ -994,3 +994,6 @@
 
 	)
 )
+
+(class_function SettingsData void create () {})
+(class_function SettingsData void clean () {})
