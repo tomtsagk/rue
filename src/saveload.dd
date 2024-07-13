@@ -2,14 +2,12 @@
 
 # the form of our save data
 # if this changes, it will break old saves
-(class SaveLoadData 0
+(struct SaveLoadData 0
 	(group
 	(def int gamesWon)
 	(def int hadTutorial)
 	)
 )
-# dummy constructor for now
-(function void SaveLoadData_create {ref SaveLoadData data} {})
 
 (class_function SaveLoad void create ()
 	(group

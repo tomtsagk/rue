@@ -1,15 +1,12 @@
 (include "button.ddh")
 
-(class SettingsData 0
+(struct SettingsData 0
 	(group
 	(def int fpsIndex)
 	(def int langIndex)
 	(def int audioOn)
 	(def int antialiasIndex)
 	(def int vsync)
-
-	(function void create ())
-	(function void clean ())
 	)
 )
 
