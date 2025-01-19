@@ -2599,170 +2599,13 @@
 	)
 )
 
-(class_function world_game void key_input (group int key)
-	(group
-
-	# escape button / back
-	(if (||
-		(&& (== AVDL_VR 0) (== key 27))
-		(&& (== AVDL_VR 1) (== key AVDL_INPUT_QUEST2_MENU))
-		)
-		(group
-		#(= dd_flag_exit 1) # exit game
-		#(dd_world_prepare world_menu 1.0)
-		#(dd_world_ready)
-		(if this.isExitMenu
-			(group
-			(dd_world_prepare world_menu 1.0)
-			(dd_world_ready)
-			)
-			(group
-			(= this.isExitMenu 1)
-
-			# stop looking around input
-			(= this.holdRotX -1)
-			(= this.holdRotY -1)
-			(= this.isRotating 0)
-			)
-		)
-		)
-	# left arrow or 'a'
-	(|| (== key 1) (== key 97))
-		(group
-
-		# exit menu navigation
-		(if this.isExitMenu
-			(group
-			# portrait
-			(if (< (dd_window_width) (dd_window_height))
-				(group
-				)
-			# landscape
-				(group
-				(= this.selection 1)
-				)
-			)
-			)
-		# not in exit menu - control camera
-			(= this.targetRotX (- this.targetRotX 10))
-		)
-
-		)
-	# right arrow or 'd'
-	(|| (== key 3) (== key 100))
-		(group
-
-		# exit menu navigation
-		(if this.isExitMenu
-			(group
-			# portrait
-			(if (< (dd_window_width) (dd_window_height))
-				(group
-				)
-			# landscape
-				(group
-				(= this.selection 0)
-				)
-			)
-			)
-		# not in exit menu - control camera
-			(= this.targetRotX (+ this.targetRotX 10))
-		)
-
-		)
-	# up arrow or 'w'
-	(|| (== key 2) (== key 119))
-		(group
-
-		# exit menu navigation
-		(if this.isExitMenu
-			(group
-			# portrait
-			(if (< (dd_window_width) (dd_window_height))
-				(group
-				(= this.selection 1)
-				)
-			# landscape
-				(group
-				)
-			)
-			)
-		# not in exit menu - control camera
-			(= this.targetRotY (+ this.targetRotY 10))
-		)
-
-		)
-	# down arrow or 's'
-	(|| (== key 4) (== key 115))
-		(group
-
-		# exit menu navigation
-		(if this.isExitMenu
-			(group
-			# portrait
-			(if (< (dd_window_width) (dd_window_height))
-				(group
-				(= this.selection 0)
-				)
-			# landscape
-				(group
-				)
-			)
-			)
-		# not in exit menu - control camera
-			(= this.targetRotY (- this.targetRotY 10))
-		)
-
-		)
-	# enter or space to confirm
-	(|| (== key 13) (== key 32) (== key AVDL_INPUT_QUEST2_TRIGGER_R))
-		(group
-
-		# exit menu navigation
-		(if this.isExitMenu
-			(group
-			# exit game
-			(if (== this.selection 0)
-				(group
-				(dd_world_prepare world_menu 1.0)
-				(dd_world_ready)
-				)
-			# resume
-			(== this.selection 1)
-				(group
-				(= this.isExitMenu 0)
-				)
-			# observe
-			(== this.selection 2)
-				(group
-				(= this.isExitMenu 0)
-				)
-			# retry
-			(== this.selection 3)
-				(group
-				(avdl_ads_showRewardedAd)
-				)
-			)
-			)
-			(group
-			(this.confirmSelection)
-			)
-		)
-
-		)
-	) # key input
-
-	)
-)
-
 (class_function world_game void clean ()
 	(group
 	(this.theme.stop)
 	)
 )
 
-(class_function world_game void mouse_input (group int button int type)
-	(group
+(class_function world_game void input (group int button int type) {
 
 	# re-check selection, this allows the user to directly click on a button
 	# in a touch screen device
@@ -2781,13 +2624,13 @@
 	# pass input to exit menu
 	(if this.isExitMenu
 		(group
-		(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+		(if (== type AVDL_INPUT_STATE_DOWN)
 			(group
 			(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 				(= this.selectionClick this.selection)
 			)
 			)
-		(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+		(== type AVDL_INPUT_STATE_UP)
 			(group
 			(if (&& (== this.selection this.selectionClick)
 				(>= this.selection 0) (this.button[this.selection].hasMouseCollided))
@@ -2824,13 +2667,13 @@
 	)
 
 	# control the camera look at point when click and dragging
-	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+	(if (== type AVDL_INPUT_STATE_DOWN)
 		(group
 		(= this.holdRotX (dd_mouse_x))
 		(= this.holdRotY (dd_mouse_y))
 		(= this.isRotating 0)
 		)
-	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+	(== type AVDL_INPUT_STATE_UP)
 		(group
 
 		(= this.holdRotX -1)
@@ -2846,8 +2689,156 @@
 		)
 	) # mouse button released
 
-	)
-) # mouse input
+	# escape button / back
+	(if (||
+		(&& (== AVDL_VR 0) (== button 27))
+		(&& (== AVDL_VR 1) (== button AVDL_INPUT_QUEST2_MENU))
+		)
+		(group
+		#(= dd_flag_exit 1) # exit game
+		#(dd_world_prepare world_menu 1.0)
+		#(dd_world_ready)
+		(if this.isExitMenu
+			(group
+			(dd_world_prepare world_menu 1.0)
+			(dd_world_ready)
+			)
+			(group
+			(= this.isExitMenu 1)
+
+			# stop looking around input
+			(= this.holdRotX -1)
+			(= this.holdRotY -1)
+			(= this.isRotating 0)
+			)
+		)
+		)
+	# left arrow or 'a'
+	(|| (== button 1) (== button 97))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				)
+			# landscape
+				(group
+				(= this.selection 1)
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotX (- this.targetRotX 10))
+		)
+
+		)
+	# right arrow or 'd'
+	(|| (== button 3) (== button 100))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				)
+			# landscape
+				(group
+				(= this.selection 0)
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotX (+ this.targetRotX 10))
+		)
+
+		)
+	# up arrow or 'w'
+	(|| (== button 2) (== button 119))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				(= this.selection 1)
+				)
+			# landscape
+				(group
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotY (+ this.targetRotY 10))
+		)
+
+		)
+	# down arrow or 's'
+	(|| (== button 4) (== button 115))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# portrait
+			(if (< (dd_window_width) (dd_window_height))
+				(group
+				(= this.selection 0)
+				)
+			# landscape
+				(group
+				)
+			)
+			)
+		# not in exit menu - control camera
+			(= this.targetRotY (- this.targetRotY 10))
+		)
+
+		)
+	# enter or space to confirm
+	(|| (== button 13) (== button 32) (== button AVDL_INPUT_QUEST2_TRIGGER_R))
+		(group
+
+		# exit menu navigation
+		(if this.isExitMenu
+			(group
+			# exit game
+			(if (== this.selection 0)
+				(group
+				(dd_world_prepare world_menu 1.0)
+				(dd_world_ready)
+				)
+			# resume
+			(== this.selection 1)
+				(group
+				(= this.isExitMenu 0)
+				)
+			# observe
+			(== this.selection 2)
+				(group
+				(= this.isExitMenu 0)
+				)
+			# retry
+			(== this.selection 3)
+				(group
+				(avdl_ads_showRewardedAd)
+				)
+			)
+			)
+			(group
+			(this.confirmSelection)
+			)
+		)
+
+		)
+	) # key input
+})
 
 #
 # call it to make a player draw a card from the deck

@@ -111,9 +111,9 @@
 
 (class_function world_credits void mouse_input (group int button int type)
 	(group
-	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+	(if (== type AVDL_INPUT_STATE_DOWN)
 		(= this.fastForward 1)
-	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+	(== type AVDL_INPUT_STATE_UP)
 		(= this.fastForward 0)
 	)
 	)

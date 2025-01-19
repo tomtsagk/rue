@@ -200,8 +200,7 @@
 	(function void resize (group))
 	(function void update (group float dt))
 	(function void draw (group))
-	(function void key_input (group int key))
-	(function void mouse_input (group int button int type))
+	(function void input {int button int type})
 	(function void clean (group))
 
 	(function void drawCard (group int playerIndex))

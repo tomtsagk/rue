@@ -240,16 +240,26 @@
 	)
 )
 
-(class_function world_menu void key_input (group int key)
-	(group
+(class_function world_menu void input {int button int type} {
 
-	(if (== key 27)
-		(if (== this.isLoading 0)
-			(group
+	# escape
+	(if (== button 27)
+		(if (== this.isLoading 0) {
 			(this.opt.saveOptions)
 			(avdl_exit) # exit game
-			)
-		)
+		})
+	(== button AVDL_INPUT_MOUSE_LEFT) {
+		# options menu is open
+		(if (this.opt.isEnabled) {
+			(this.button_selection_options (this.opt.mouse_input button type))
+			(return)
+		}
+		# home menu is open
+		(this.menuHome.isEnabled) {
+			(def int returnMenu (this.menuHome.mouse_input button type))
+			(this.button_selection_home returnMenu)
+		})
+	}
 #	# grabby
 #	(== key 100)
 #		(group
@@ -267,15 +277,13 @@
 #		)
 #		)
 	# options menu is open
-	(this.opt.isEnabled)
-		(group
-		(this.button_selection_options (this.opt.key_input key))
-		)
+	(&& (this.opt.isEnabled) (== type AVDL_INPUT_STATE_UP)) {
+		(this.button_selection_options (this.opt.key_input button))
+	}
 	# home menu is open
-	(this.menuHome.isEnabled)
-		(group
-		(this.button_selection_home (this.menuHome.key_input key))
-		)
+	(&& (this.menuHome.isEnabled) (== type AVDL_INPUT_STATE_UP)) {
+		(this.button_selection_home (this.menuHome.key_input button))
+	}
 #	(this.menuMultiplayer.isEnabled)
 #		(group
 ##		(def int returnMenu (this.menuMultiplayer.mouse_input button type))
@@ -296,31 +304,6 @@
 #		)
 	) # key input
 
-
-	)
-)
-
-(class_function world_menu void clean ()
-	(group
-	(this.theme.stop)
-	)
-)
-
-(class_function world_menu void mouse_input (group int button int type)
-	(group
-
-	# options menu is open
-	(if (this.opt.isEnabled)
-		(group
-		(this.button_selection_options (this.opt.mouse_input button type))
-		(return)
-		)
-	# home menu is open
-	(this.menuHome.isEnabled)
-		(group
-		(def int returnMenu (this.menuHome.mouse_input button type))
-		(this.button_selection_home returnMenu)
-		)
 #	(this.menuMultiplayer.isEnabled)
 #		(group
 #		(def int returnMenu (this.menuMultiplayer.mouse_input button type))
@@ -339,10 +322,13 @@
 #		)
 #
 #		)
-	)
+})
 
+(class_function world_menu void clean ()
+	(group
+	(this.theme.stop)
 	)
-) # mouse input
+)
 
 (class_function world_menu int button_selection_home (int action_index)
 	(group

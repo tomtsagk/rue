@@ -543,13 +543,13 @@
 	)
 
 	# control the camera look at point when click and dragging
-	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
+	(if (== type AVDL_INPUT_STATE_DOWN)
 		(group
 		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(= this.selectionClick this.selection)
 		)
 		)
-	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
+	(== type AVDL_INPUT_STATE_UP)
 		(group
 
 		# clicked on a button

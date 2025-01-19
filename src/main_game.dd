@@ -3,14 +3,13 @@
 #
 (include "intro.ddh")
 #(include "game.ddh")
-(include "menu.ddh")
+#(include "menu.ddh")
 (include "options.ddh")
 
 #
 # Initialise the game and its stats
 #
-(function void dd_gameInit ()
-	(group
+(function void dd_gameInit () {
 
 	(dd_setGameTitle (multistring "Rue - v" AVDL_GAME_VERSION))
 	(dd_world_set_default world_intro)
@@ -97,5 +96,4 @@
 		)
 	)
 
-	)
-)
+})

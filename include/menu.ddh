@@ -15,7 +15,7 @@
 
 	# background particles
 	(def avdl_particle_system bgParticleSystem)
-	(def dd_meshColour bgParticleMesh)
+	(def avdl_mesh bgParticleMesh)
 
 	# eyes
 	(def dd_meshColour lookatMesh)
@@ -46,8 +46,7 @@
 	(function void resize (group))
 	(function void update (group float dt))
 	(function void draw (group))
-	(function void key_input (group int key))
-	(function void mouse_input (group int button int type))
+	(function void input {int button int type})
 	(function void clean (group))
 
 	(function int button_selection_home (int action_id))

@@ -735,14 +735,12 @@
 	)
 
 	# control the camera look at point when click and dragging
-	(if (== type DD_INPUT_MOUSE_TYPE_PRESSED)
-		(group
+	(if (&& (== button AVDL_INPUT_MOUSE_LEFT) (== type AVDL_INPUT_STATE_DOWN)) {
 		(if (&& (>= this.selection 0) (this.button[this.selection].hasMouseCollided))
 			(= this.selectionClick this.selection)
 		)
-		)
-	(== type DD_INPUT_MOUSE_TYPE_RELEASED)
-		(group
+	}
+	(&& (== button AVDL_INPUT_MOUSE_LEFT) (== type AVDL_INPUT_STATE_UP)) {
 
 		(def int selectionClickTemp this.selectionClick)
 		(= this.selectionClick -1)
@@ -757,8 +755,7 @@
 			)
 		)
 
-		)
-	) # mouse button released
+	}) # mouse button released
 
 	(return 0)
 
