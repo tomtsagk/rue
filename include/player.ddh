@@ -14,7 +14,7 @@
 	(def dd_matrix actual)
 
 	# player itself
-	(def ref dd_meshTexture mesh)
+	(def ref avdl_mesh mesh)
 
 	# cards
 	(def int cardsTotal)
@@ -30,7 +30,7 @@
 	(def dd_matrix selectedMatrix)
 	(def ref Card selectedCard2)
 
-	(def ref dd_meshTexture cardFronts)
+	(def ref avdl_mesh cardFronts)
 	(def ref dd_string3d cardLabels)
 
 	(def ref dd_sound cardLookSound)

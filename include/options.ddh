@@ -58,8 +58,8 @@
 
 	# volume data
 	(def int volumeSound)
-	(def dd_meshColour volumeParticle)
-	(def dd_meshColour volumeParticleStart)
+	(def avdl_mesh volumeParticle)
+	(def avdl_mesh volumeParticleStart)
 
 	# fps label
 	(def int fpsIndex)

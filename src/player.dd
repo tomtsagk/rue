@@ -128,7 +128,7 @@
 )
 
 # add new card to the hand
-(def ref dd_meshColour newCardMesh)
+(def ref avdl_mesh newCardMesh)
 (def ref Card newCard)
 
 (class_function Player void addCard (group Card card)

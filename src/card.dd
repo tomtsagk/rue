@@ -251,7 +251,7 @@
 	)
 )
 
-(class_function Card void setFakeId (group int givenId dd_meshTexture mesh dd_string3d label)
+(class_function Card void setFakeId (group int givenId avdl_mesh mesh dd_string3d label)
 	(group
 	(= this.idFake this.id)
 	(this.setId givenId)

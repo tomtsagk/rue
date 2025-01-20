@@ -5,7 +5,7 @@
 	(group
 
 	# background
-	(def dd_meshColour bg)
+	(def avdl_mesh bg)
 
 	# labels
 	(def dd_string3d labelCredits)

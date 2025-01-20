@@ -96,36 +96,36 @@
 	(def int isRotating)
 
 	# rose player
-	(def dd_meshTexture roseCardMesh)
+	(def avdl_mesh roseCardMesh)
 	(def dd_image roseCardTexture)
 	(def int rosePlayer)
 	(def Card roseCard)
 	(def int isRoseFlat)
 
 	# looking at
-	(def dd_meshColour lookat)
+	(def avdl_mesh lookat)
 
 	# center of world
 	(def dd_matrix matCenter)
 
 	# stage
 	(def int isStageColour)
-	(def dd_meshColour stageCol)
-	(def dd_meshTexture stage)
+	(def avdl_mesh stageCol)
+	(def avdl_mesh stage)
 	(def dd_image stageTexture)
-	(def dd_meshTexture table)
+	(def avdl_mesh table)
 	(def dd_image tableTexture)
-	(def dd_meshColour tableArrow)
-	(def dd_meshColour tableArrowDecoration)
+	(def avdl_mesh tableArrow)
+	(def avdl_mesh tableArrowDecoration)
 	(def float arrowRotation)
 	(def float arrowRotationTarget)
 
 	# card meshes
-	(def dd_meshTexture cardBack)
+	(def avdl_mesh cardBack)
 	(def dd_image cardBackTexture)
-	(def dd_meshTexture cardFront[15])
+	(def avdl_mesh cardFront[15])
 	(def dd_image cardFrontTexture[15])
-	(def dd_meshTexture cardCorner[4])
+	(def avdl_mesh cardCorner[4])
 	(def dd_image cardCornerTexture[4])
 
 	# cards
@@ -148,7 +148,7 @@
 	(def int discardTotal)
 
 	# player meshes
-	(def dd_meshTexture playerMesh[1])
+	(def avdl_mesh playerMesh[1])
 	(def dd_image playerTexture[6])
 
 	# players
@@ -188,12 +188,12 @@
 	(def int selectionClick)
 	(def int isExitMenu)
 	(def dd_string3d labelExitMenu)
-	(def dd_meshTexture bgExitMenu)
+	(def avdl_mesh bgExitMenu)
 	(def dd_image bgExitMenuTexture)
 	(def dd_string3d labelPlayerName)
 
 	# eye
-	(def dd_meshColour lookatMesh)
+	(def avdl_mesh lookatMesh)
 
 	(function void create (group))
 	(function void onload (group))

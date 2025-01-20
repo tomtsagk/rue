@@ -5,7 +5,7 @@
 	(group
 
 	# bg mesh
-	(def dd_meshColour bgMesh)
+	(def avdl_mesh bgMesh)
 	(def float bg_rotation)
 
 	# id of card - determines its effect

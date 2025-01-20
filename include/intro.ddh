@@ -8,7 +8,7 @@
 	(def float delay)
 
 	# dark dimension logo
-	(def dd_meshTexture logo)
+	(def avdl_mesh logo)
 	(def dd_image logoTexture)
 
 	(def dd_sound sound)

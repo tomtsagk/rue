@@ -75,7 +75,7 @@
 (def int ACTION_SELECT_CARD_CORNER 20)
 (def int ACTION_REREVEAL_PLANNED_CARD 21)
 
-(def extern ref dd_meshColour newCardMesh)
+(def extern ref avdl_mesh newCardMesh)
 (def extern ref Card newCard)
 (class_function world_game void create ()
 	(group

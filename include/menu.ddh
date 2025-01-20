@@ -11,14 +11,14 @@
 
 	# background
 	(def float bg_rotation)
-	(def dd_meshColour bg)
+	(def avdl_mesh bg)
 
 	# background particles
 	(def avdl_particle_system bgParticleSystem)
 	(def avdl_mesh bgParticleMesh)
 
 	# eyes
-	(def dd_meshColour lookatMesh)
+	(def avdl_mesh lookatMesh)
 	(def dd_matrix matrixEyeL)
 	(def dd_matrix matrixEyeR)
 	(def float eyeTargetX)
@@ -38,8 +38,8 @@
 
 	(def int isGrabbed)
 	(def dd_matrix grabby)
-	(def dd_meshColour colliderBoxEmpty)
-	(def dd_meshColour colliderBoxCollision)
+	(def avdl_mesh colliderBoxEmpty)
+	(def avdl_mesh colliderBoxCollision)
 
 	(function void create (group))
 	(function void onload (group))

@@ -11,7 +11,7 @@
 
 	# logo
 	(def Button logoUI)
-	(def dd_meshTexture logo)
+	(def avdl_mesh logo)
 	(def dd_image logoTexture)
 
 	# home buttons

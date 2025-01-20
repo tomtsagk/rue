@@ -1,7 +1,7 @@
 (class Button dd_matrix
 	(group
 
-	(def dd_meshColour mesh)
+	(def avdl_mesh mesh)
 
 	(def float width)
 	(def float height)
